@@ -46,8 +46,6 @@ export default class MessagePageViewModel {
       chatMessage.sender == this.chatViewModel.settingsViewModel.username.value
     );
 
-    console.log(chatMessage.body);
-
     const existingChatMessageViewModel: ChatMessageViewModel | undefined =
       this.chatMessageViewModels.value.get(chatMessage.id);
     if (existingChatMessageViewModel != undefined) {
