@@ -1930,7 +1930,6 @@
           chatMessage,
           chatMessage.sender == this.chatViewModel.settingsViewModel.username.value
         );
-        console.log(chatMessage.body);
         const existingChatMessageViewModel = this.chatMessageViewModels.value.get(chatMessage.id);
         if (existingChatMessageViewModel != void 0) {
           existingChatMessageViewModel.body.value = chatMessage.body;
@@ -4455,7 +4454,7 @@
     );
   }
 
-  // node_modules/udn-frontend/index.ts
+  // ../ui-base/index.ts
   var UDNFrontend = class {
     ws;
     // HANDLERS
@@ -4516,6 +4515,7 @@
           } else if (data.deletedMailbox) {
             return this.mailboxDeleteHandler(data.deletedMailbox);
           } else {
+            this.send({ uuid: data.uuid, confirmingMessageReceived: true });
             this.messageHandler(data);
           }
         });
