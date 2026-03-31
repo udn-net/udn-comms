@@ -72,7 +72,7 @@ export default class FileTransferModel {
 
   // sending
   sendFiles = (
-    directoryPaths: BuiltinIterator<string[]>,
+    directoryPaths: IteratorObject<string[]>,
     callback: (path: string) => void
   ): void => {
     for (const directoryPath of directoryPaths) {

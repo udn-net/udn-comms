@@ -65,16 +65,14 @@ export default class CalendarModel {
       year == date.getFullYear() && month == date.getMonth() + 1;
 
     // get data for offset
-    date.setFullYear(year);
-    date.setMonth(month - 1);
     date.setDate(1);
+    date.setMonth(month - 1);
+    date.setFullYear(year);
 
     const firstWeekdayOfMonth = date.getDay();
     const firstDayOfWeekSetting: number = parseInt(
       this.settingsModel.firstDayOfWeek
     );
-
-    console.log(firstWeekdayOfMonth, firstDayOfWeekSetting);
 
     const offset: number =
       firstWeekdayOfMonth < firstDayOfWeekSetting
