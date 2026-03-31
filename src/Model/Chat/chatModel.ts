@@ -231,7 +231,6 @@ export default class ChatModel {
       const messagePath: string[] = this.getMessagePath(messageId);
       const chatMessage: ChatMessage | any =
         this.storageModel.readStringifiable(messagePath, ChatMessageReference);
-
       chatMessages.push(chatMessage);
     }
 

@@ -39,12 +39,14 @@ export default class MessagePageViewModel {
 
   // view
   showChatMessage = (chatMessage: ChatMessage): void => {
-    const chatMessageModel = new ChatMessageViewModel(
+    const chatMessageViewModel = new ChatMessageViewModel(
       this.coreViewModel,
       this,
       chatMessage,
       chatMessage.sender == this.chatViewModel.settingsViewModel.username.value
     );
+
+    console.log(chatMessage.body);
 
     const existingChatMessageViewModel: ChatMessageViewModel | undefined =
       this.chatMessageViewModels.value.get(chatMessage.id);
@@ -52,12 +54,13 @@ export default class MessagePageViewModel {
       existingChatMessageViewModel.body.value = chatMessage.body;
       existingChatMessageViewModel.status.value = chatMessage.status;
     } else {
-      this.chatMessageViewModels.set(chatMessage.id, chatMessageModel);
+      this.chatMessageViewModels.set(chatMessage.id, chatMessageViewModel);
     }
   };
 
   // load
   loadData = (): void => {
+    this.chatMessageViewModels.clear();
     for (const chatMessage of this.chatViewModel.chatModel.messages) {
       this.showChatMessage(chatMessage);
     }

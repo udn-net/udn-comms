@@ -1924,22 +1924,24 @@
       };
       // view
       this.showChatMessage = (chatMessage) => {
-        const chatMessageModel = new ChatMessageViewModel(
+        const chatMessageViewModel = new ChatMessageViewModel(
           this.coreViewModel,
           this,
           chatMessage,
           chatMessage.sender == this.chatViewModel.settingsViewModel.username.value
         );
+        console.log(chatMessage.body);
         const existingChatMessageViewModel = this.chatMessageViewModels.value.get(chatMessage.id);
         if (existingChatMessageViewModel != void 0) {
           existingChatMessageViewModel.body.value = chatMessage.body;
           existingChatMessageViewModel.status.value = chatMessage.status;
         } else {
-          this.chatMessageViewModels.set(chatMessage.id, chatMessageModel);
+          this.chatMessageViewModels.set(chatMessage.id, chatMessageViewModel);
         }
       };
       // load
       this.loadData = () => {
+        this.chatMessageViewModels.clear();
         for (const chatMessage of this.chatViewModel.chatModel.messages) {
           this.showChatMessage(chatMessage);
         }
