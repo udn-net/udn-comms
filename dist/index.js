@@ -4093,7 +4093,7 @@
   function BoardStatusGridPage(boardViewModel) {
     const statuses = new ListState();
     const sortedStatuses = createSortedPropertyValueState(statuses);
-    boardViewModel.taskViewModels.subscribe(() => {
+    boardViewModel.filteredTaskViewModels.subscribe(() => {
       collectPropertyValuesToState(
         "status",
         (taskViewModel) => taskViewModel.task,

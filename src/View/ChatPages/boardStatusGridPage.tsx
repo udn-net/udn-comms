@@ -23,7 +23,7 @@ export function BoardStatusGridPage(boardViewModel: BoardViewModel) {
     const sortedStatuses: React.State<string[]> =
         createSortedPropertyValueState(statuses);
 
-    boardViewModel.taskViewModels.subscribe(() => {
+    boardViewModel.filteredTaskViewModels.subscribe(() => {
         collectPropertyValuesToState(
             "status",
             (taskViewModel: TaskViewModel) => taskViewModel.task,
