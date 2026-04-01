@@ -1230,8 +1230,7 @@
         if (chatMessage == null) return;
         chatMessage.status = "received" /* Received */;
         this.addMessage(chatMessage);
-        this.info.hasUnreadMessages = true;
-        this.storeInfo();
+        this.setReadStatus(true);
       };
       this.handleMessageSent = (chatMessage) => {
         chatMessage.status = "sent" /* Sent */;
@@ -1301,8 +1300,8 @@
       this.subscribe = () => {
         this.connectionModel.addChannel(this.info.primaryChannel);
       };
-      this.markRead = () => {
-        this.info.hasUnreadMessages = false;
+      this.setReadStatus = (hasUnreadMessages) => {
+        this.info.hasUnreadMessages = hasUnreadMessages;
         this.storeInfo();
       };
       // storage
@@ -3038,7 +3037,7 @@
       // view
       this.open = () => {
         this.chatListViewModel.openChat(this);
-        this.markRead();
+        this.setReadStatus(false);
       };
       this.close = () => {
         this.chatListViewModel.closeChat();
@@ -3059,10 +3058,6 @@
         const index = this.chatListViewModel.chatIndexManager.getIndex(this);
         this.index.value = index;
       };
-      this.markRead = () => {
-        this.hasUnreadMessages.value = false;
-        this.chatModel.markRead();
-      };
       // load
       this.loadPageSelection = () => {
         const path = StorageModel.getPath(
@@ -3079,11 +3074,21 @@
         });
       };
       this.loadInfo = () => {
-        this.hasUnreadMessages.value = this.chatModel.info.hasUnreadMessages;
+        this.updateReadStatus();
         this.taskBoardSuggestions.set(CALENDAR_EVENT_BOARD_ID, [
           CALENDAR_EVENT_BOARD_ID,
           translations.chatPage.calendar.eventsBoard
         ]);
+      };
+      this.updateReadStatus = () => {
+        if (this.chatListViewModel.selectedChat.value == this) {
+          this.chatModel.setReadStatus(false);
+        }
+        this.hasUnreadMessages.value = this.chatModel.info.hasUnreadMessages;
+      };
+      this.setReadStatus = (hasUnreadMessages) => {
+        this.chatModel.setReadStatus(hasUnreadMessages);
+        this.hasUnreadMessages.value = hasUnreadMessages;
       };
       this.storageModel = storageModel2;
       this.chatModel = chatModel;
@@ -3114,7 +3119,7 @@
       chatModel.chatMessageHandlerManager.addHandler(
         (chatMessage) => {
           this.messagePageViewModel.showChatMessage(chatMessage);
-          this.markRead();
+          this.updateReadStatus();
         }
       );
       this.loadPageSelection();
@@ -5534,14 +5539,6 @@
     path: [""],
     body: ""
   };
-  var counter = {};
-  for (let i = 0; i < 1e3; i++) {
-    const token = generateRandomToken(10);
-    const length = token.length;
-    if (!counter[length]) counter[length] = 0;
-    counter[length]++;
-  }
-  console.log(counter);
 
   // src/View/Components/chatEntry.tsx
   function ChatEntry(chatViewModel) {

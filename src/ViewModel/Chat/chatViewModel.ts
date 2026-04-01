@@ -46,14 +46,14 @@ export default class ChatViewModel {
     // view
     open = (): void => {
         this.chatListViewModel.openChat(this);
-        this.markRead();
+        this.setReadStatus(false);
     };
 
     close = (): void => {
         this.chatListViewModel.closeChat();
     };
 
-    closeSubPages = (): void => {};
+    closeSubPages = (): void => { };
 
     setColor = (color: Color): void => {
         this.setDisplayedColor(color);
@@ -74,11 +74,6 @@ export default class ChatViewModel {
         this.index.value = index;
     };
 
-    markRead = (): void => {
-        this.hasUnreadMessages.value = false;
-        this.chatModel.markRead();
-    };
-
     // load
     loadPageSelection = (): void => {
         const path: string[] = StorageModel.getPath(
@@ -97,13 +92,24 @@ export default class ChatViewModel {
     };
 
     loadInfo = (): void => {
-        this.hasUnreadMessages.value = this.chatModel.info.hasUnreadMessages;
-
+        this.updateReadStatus();
         this.taskBoardSuggestions.set(CALENDAR_EVENT_BOARD_ID, [
             CALENDAR_EVENT_BOARD_ID,
             translations.chatPage.calendar.eventsBoard,
         ]);
     };
+
+    updateReadStatus = (): void => {
+        if (this.chatListViewModel.selectedChat.value == this) {
+            this.chatModel.setReadStatus(false);
+        }
+        this.hasUnreadMessages.value = this.chatModel.info.hasUnreadMessages;
+    }
+
+    setReadStatus = (hasUnreadMessages: boolean): void => {
+        this.chatModel.setReadStatus(hasUnreadMessages);
+        this.hasUnreadMessages.value = hasUnreadMessages;
+    }
 
     // init
     constructor(
@@ -148,7 +154,7 @@ export default class ChatViewModel {
         chatModel.chatMessageHandlerManager.addHandler(
             (chatMessage: ChatMessage) => {
                 this.messagePageViewModel.showChatMessage(chatMessage);
-                this.markRead();
+                this.updateReadStatus();
             },
         );
 

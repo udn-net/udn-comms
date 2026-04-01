@@ -84,9 +84,8 @@ export default class ChatModel {
 
         chatMessage.status = ChatMessageStatus.Received;
         this.addMessage(chatMessage);
-
-        this.info.hasUnreadMessages = true;
-        this.storeInfo();
+        
+        this.setReadStatus(true);
     };
 
     handleMessageSent = (chatMessage: ChatMessage): void => {
@@ -177,8 +176,8 @@ export default class ChatModel {
         this.connectionModel.addChannel(this.info.primaryChannel);
     };
 
-    markRead = (): void => {
-        this.info.hasUnreadMessages = false;
+    setReadStatus = (hasUnreadMessages: boolean): void => {
+        this.info.hasUnreadMessages = hasUnreadMessages;
         this.storeInfo();
     };
 
