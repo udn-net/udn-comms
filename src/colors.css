@@ -1,202 +1,202 @@
 /* basic */
 [color]:not([color="standard"]) {
-  --primary: hsl(var(--hue), 100%, var(--accent-luma));
-  --primary-hover: hsl(var(--hue), 95%, var(--accent-luma));
-  --primary-active: hsl(var(--hue), 80%, var(--accent-luma));
+    --primary: hsl(var(--hue), 100%, var(--accent-luma));
+    --primary-hover: hsl(var(--hue), 95%, var(--accent-luma));
+    --primary-active: hsl(var(--hue), 80%, var(--accent-luma));
 
-  --text-on-color: hsl(0, 0%, var(--accent-text-luma));
-  --link: hsl(var(--hue), 100%, var(--accent-luma));
+    --text-on-color: hsl(0, 0%, var(--accent-text-luma));
+    --link: hsl(var(--hue), 100%, var(--accent-luma));
 
-  --surface: hsla(var(--hue), 80%, 30%, 5%);
-  --surface-hover: hsla(var(--hue), 100%, 5%, 10%);
-  --surface-active: hsla(var(--hue), 100%, 5%, 15%);
+    --surface: hsla(var(--hue), 80%, 30%, 5%);
+    --surface-hover: hsla(var(--hue), 100%, 5%, 10%);
+    --surface-active: hsla(var(--hue), 100%, 5%, 15%);
 }
 
 @media (prefers-color-scheme: dark) {
-  [color]:not([color="standard"]) {
-    --accent-luma: var(--accent-luma-dark);
-    --accent-text-luma: var(--accent-text-luma-dark);
+    [color]:not([color="standard"]) {
+        --accent-luma: var(--accent-luma-dark);
+        --accent-text-luma: var(--accent-text-luma-dark);
 
-    --surface: hsla(var(--hue), 100%, 95%, 5%);
-    --surface-hover: hsla(var(--hue), 100%, 95%, 10%);
-    --surface-active: hsla(var(--hue), 100%, 95%, 15%);
-  }
+        --surface: hsla(var(--hue), 100%, 95%, 5%);
+        --surface-hover: hsla(var(--hue), 100%, 95%, 10%);
+        --surface-active: hsla(var(--hue), 100%, 95%, 15%);
+    }
 }
 
 /* tile */
 [color]:not([color="standard"]).tile {
-  --gradient-luma-1: 70%;
-  --gradient-luma-2: 90%;
+    --gradient-luma-1: 70%;
+    --gradient-luma-2: 90%;
 
-  --hover-luma: 75%;
-  --active-luma: 80%;
+    --hover-luma: 75%;
+    --active-luma: 80%;
 
-  --text-luma: 20%;
+    --text-luma: 20%;
 
-  --surface: linear-gradient(
-    120deg,
-    hsl(var(--hue), 100%, var(--gradient-luma-1)),
-    hsla(var(--hue), 100%, var(--gradient-luma-2), 90%)
-  );
-  --surface-hover: hsl(var(--hue), 100%, var(--hover-luma));
-  --surface-active: hsl(var(--hue), 100%, var(--active-luma));
+    --surface: linear-gradient(
+        120deg,
+        hsl(var(--hue), 100%, var(--gradient-luma-1)),
+        hsla(var(--hue), 100%, var(--gradient-luma-2), 90%)
+    );
+    --surface-hover: hsl(var(--hue), 100%, var(--hover-luma));
+    --surface-active: hsl(var(--hue), 100%, var(--active-luma));
 
-  --text-normal: hsl(var(--hue), 100%, var(--text-luma));
+    --text-normal: hsl(var(--hue), 100%, var(--text-luma));
 }
 
 @media (prefers-color-scheme: dark) {
-  [color]:not([color="standard"]).tile {
-    --gradient-luma-1: 20%;
-    --gradient-luma-2: 15%;
+    [color]:not([color="standard"]).tile {
+        --gradient-luma-1: 20%;
+        --gradient-luma-2: 15%;
 
-    --hover-luma: 25%;
-    --active-luma: 30%;
+        --hover-luma: 25%;
+        --active-luma: 30%;
 
-    --text-luma: 90%;
-  }
+        --text-luma: 90%;
+    }
 }
 
 /* fill */
 [color]:not([color="standard"]).fill-color {
-  color: white;
-  background-color: var(--primary);
+    color: white;
+    background-color: var(--primary);
 }
 
 [color]:not([color="standard"])[selected].fill-color {
-  color: var(--primary);
+    color: var(--primary);
 }
 
 /* background */
 @media (min-width: 1024px) {
-  [color]:not([color="standard"]).background {
-    --luma: var(--background-luma);
-    --sat: 80%;
-    background: hsl(var(--hue), var(--sat), var(--luma));
-  }
-
-  @media (prefers-color-scheme: dark) {
     [color]:not([color="standard"]).background {
-      --luma: var(--background-luma-dark);
-      --sat: 40%;
+        --luma: var(--background-luma);
+        --sat: 80%;
+        background: hsl(var(--hue), var(--sat), var(--luma));
     }
-  }
 
-  [color="standard"].background {
-    background: var(--surface);
-  }
+    @media (prefers-color-scheme: dark) {
+        [color]:not([color="standard"]).background {
+            --luma: var(--background-luma-dark);
+            --sat: 40%;
+        }
+    }
+
+    [color="standard"].background {
+        background: var(--surface);
+    }
 }
 
 /* subtle */
 [color]:not([color="standard"]).subtle-background {
-  --luma: var(--subtle-luma);
-  background: hsl(var(--hue), 100%, var(--luma), 50%);
+    --luma: var(--subtle-luma);
+    background: hsl(var(--hue), 100%, var(--luma), 50%);
 }
 
 @media (prefers-color-scheme: dark) {
-  [color]:not([color="standard"]).subtle-background {
-    --luma: var(--subtle-luma-dark);
-  }
-
-  @media (display-mode: standalone) {
     [color]:not([color="standard"]).subtle-background {
-      --luma: 0%;
+        --luma: var(--subtle-luma-dark);
     }
-  }
+
+    @media (display-mode: standalone) {
+        [color]:not([color="standard"]).subtle-background {
+            --luma: 0%;
+        }
+    }
 }
 
 /* definitions */
 [color="coral"] {
-  --hue: 20;
+    --hue: 20;
 
-  --accent-luma: 50%;
-  --accent-luma-dark: 70%;
+    --accent-luma: 50%;
+    --accent-luma-dark: 70%;
 
-  --accent-text-luma: 100%;
-  --accent-text-luma-dark: 100%;
+    --accent-text-luma: 100%;
+    --accent-text-luma-dark: 100%;
 
-  --background-luma: 90%;
-  --background-luma-dark: 11%;
+    --background-luma: 90%;
+    --background-luma-dark: 11%;
 
-  --subtle-luma: 95%;
-  --subtle-luma-dark: 5%;
+    --subtle-luma: 95%;
+    --subtle-luma-dark: 5%;
 }
 
 [color="yellow"] {
-  --hue: 50;
+    --hue: 50;
 
-  --accent-luma: 50%;
-  --accent-luma-dark: 60%;
+    --accent-luma: 50%;
+    --accent-luma-dark: 60%;
 
-  --accent-text-luma: 0%;
-  --accent-text-luma-dark: 0%;
+    --accent-text-luma: 0%;
+    --accent-text-luma-dark: 0%;
 
-  --background-luma: 85%;
-  --background-luma-dark: 11%;
+    --background-luma: 85%;
+    --background-luma-dark: 11%;
 
-  --subtle-luma: 95%;
-  --subtle-luma-dark: 5%;
+    --subtle-luma: 95%;
+    --subtle-luma-dark: 5%;
 }
 
 [color="mint"] {
-  --hue: 150;
+    --hue: 150;
 
-  --accent-luma: 40%;
-  --accent-luma-dark: 60%;
+    --accent-luma: 40%;
+    --accent-luma-dark: 60%;
 
-  --accent-text-luma: 100%;
-  --accent-text-luma-dark: 0%;
+    --accent-text-luma: 100%;
+    --accent-text-luma-dark: 0%;
 
-  --background-luma: 85%;
-  --background-luma-dark: 12%;
+    --background-luma: 85%;
+    --background-luma-dark: 12%;
 
-  --subtle-luma: 95%;
-  --subtle-luma-dark: 5%;
+    --subtle-luma: 95%;
+    --subtle-luma-dark: 5%;
 }
 
 [color="lightblue"] {
-  --hue: 180;
+    --hue: 180;
 
-  --accent-luma: 40%;
-  --accent-luma-dark: 60%;
+    --accent-luma: 40%;
+    --accent-luma-dark: 60%;
 
-  --accent-text-luma: 0%;
-  --accent-text-luma-dark: 0%;
+    --accent-text-luma: 0%;
+    --accent-text-luma-dark: 0%;
 
-  --background-luma: 85%;
-  --background-luma-dark: 12%;
+    --background-luma: 85%;
+    --background-luma-dark: 12%;
 
-  --subtle-luma: 95%;
-  --subtle-luma-dark: 5%;
+    --subtle-luma: 95%;
+    --subtle-luma-dark: 5%;
 }
 
 [color="blue"] {
-  --hue: 220;
+    --hue: 220;
 
-  --accent-luma: 50%;
-  --accent-luma-dark: 70%;
+    --accent-luma: 50%;
+    --accent-luma-dark: 70%;
 
-  --accent-text-luma: 100%;
-  --accent-text-luma-dark: 100%;
+    --accent-text-luma: 100%;
+    --accent-text-luma-dark: 100%;
 
-  --background-luma: 90%;
-  --background-luma-dark: 12%;
+    --background-luma: 90%;
+    --background-luma-dark: 12%;
 
-  --subtle-luma: 95%;
-  --subtle-luma-dark: 5%;
+    --subtle-luma: 95%;
+    --subtle-luma-dark: 5%;
 }
 
 [color="purple"] {
-  --hue: 280;
+    --hue: 280;
 
-  --accent-luma: 50%;
-  --accent-luma-dark: 70%;
+    --accent-luma: 50%;
+    --accent-luma-dark: 70%;
 
-  --accent-text-luma: 100%;
-  --accent-text-luma-dark: 100%;
+    --accent-text-luma: 100%;
+    --accent-text-luma-dark: 100%;
 
-  --background-luma: 90%;
-  --background-luma-dark: 11%;
+    --background-luma: 90%;
+    --background-luma-dark: 11%;
 
-  --subtle-luma: 95%;
-  --subtle-luma-dark: 5%;
+    --subtle-luma: 95%;
+    --subtle-luma-dark: 5%;
 }

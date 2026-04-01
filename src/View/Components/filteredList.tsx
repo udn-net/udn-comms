@@ -1,30 +1,30 @@
 import * as React from "bloatless-react";
 
 import {
-  StringEntryObject,
-  checkDoesObjectMatchReference,
+    StringEntryObject,
+    checkDoesObjectMatchReference,
 } from "../../Model/Utility/utility";
 
 export function FilteredList<T>(
-  reference: StringEntryObject,
-  stringEntryObjectConverter: (object: T) => StringEntryObject,
-  objects: React.ListState<T> | React.MapState<T>,
-  viewBuilder: (matchingObjects: React.ListState<T>) => HTMLElement
+    reference: StringEntryObject,
+    stringEntryObjectConverter: (object: T) => StringEntryObject,
+    objects: React.ListState<T> | React.MapState<T>,
+    viewBuilder: (matchingObjects: React.ListState<T>) => HTMLElement,
 ) {
-  const matchingObjects: React.ListState<T> = new React.ListState();
+    const matchingObjects: React.ListState<T> = new React.ListState();
 
-  objects.handleAddition((newObject) => {
-    const doesMatch: boolean = checkDoesObjectMatchReference(
-      reference,
-      stringEntryObjectConverter(newObject)
-    );
-    if (doesMatch == false) return;
+    objects.handleAddition((newObject) => {
+        const doesMatch: boolean = checkDoesObjectMatchReference(
+            reference,
+            stringEntryObjectConverter(newObject),
+        );
+        if (doesMatch == false) return;
 
-    matchingObjects.add(newObject);
-    objects.handleRemoval(newObject, () => {
-      matchingObjects.remove(newObject);
+        matchingObjects.add(newObject);
+        objects.handleRemoval(newObject, () => {
+            matchingObjects.remove(newObject);
+        });
     });
-  });
 
-  return viewBuilder(matchingObjects);
+    return viewBuilder(matchingObjects);
 }

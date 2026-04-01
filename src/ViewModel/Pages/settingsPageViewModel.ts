@@ -5,128 +5,128 @@ import { Color } from "../../colors";
 import CoreViewModel from "../Global/coreViewModel";
 
 export default class SettingsPageViewModel {
-  chatViewModel: ChatViewModel;
+    chatViewModel: ChatViewModel;
 
-  // state
-  primaryChannel: React.State<string> = new React.State("");
-  primaryChannelInput: React.State<string> = new React.State("");
+    // state
+    primaryChannel: React.State<string> = new React.State("");
+    primaryChannelInput: React.State<string> = new React.State("");
 
-  secondaryChannels: React.ListState<string> = new React.ListState();
-  newSecondaryChannelInput: React.State<string> = new React.State("");
+    secondaryChannels: React.ListState<string> = new React.ListState();
+    newSecondaryChannelInput: React.State<string> = new React.State("");
 
-  encryptionKeyInput: React.State<string> = new React.State("");
-  shouldShowEncryptionKey: React.State<boolean> = new React.State(false);
-  encryptionKeyInputType: React.State<"text" | "password"> =
-    React.createProxyState([this.shouldShowEncryptionKey], () =>
-      this.shouldShowEncryptionKey.value == true ? "text" : "password"
+    encryptionKeyInput: React.State<string> = new React.State("");
+    shouldShowEncryptionKey: React.State<boolean> = new React.State(false);
+    encryptionKeyInputType: React.State<"text" | "password"> =
+        React.createProxyState([this.shouldShowEncryptionKey], () =>
+            this.shouldShowEncryptionKey.value == true ? "text" : "password",
+        );
+
+    color: React.State<Color> = new React.State<any>(Color.Standard);
+
+    // guards
+    cannotSetPrimaryChannel: React.State<boolean> = React.createProxyState(
+        [this.primaryChannel, this.primaryChannelInput],
+        () =>
+            this.primaryChannelInput.value == "" ||
+            this.primaryChannelInput.value == this.primaryChannel.value,
     );
-
-  color: React.State<Color> = new React.State<any>(Color.Standard);
-
-  // guards
-  cannotSetPrimaryChannel: React.State<boolean> = React.createProxyState(
-    [this.primaryChannel, this.primaryChannelInput],
-    () =>
-      this.primaryChannelInput.value == "" ||
-      this.primaryChannelInput.value == this.primaryChannel.value
-  );
-  cannotAddSecondaryChannel: React.State<boolean> = React.createProxyState(
-    [this.newSecondaryChannelInput],
-    () => this.newSecondaryChannelInput.value == ""
-  );
-  cannotSetEncryptionKey: React.State<boolean>;
-
-  // methods
-  setPrimaryChannel = (): void => {
-    this.chatViewModel.chatModel.setPrimaryChannel(
-      this.primaryChannelInput.value
+    cannotAddSecondaryChannel: React.State<boolean> = React.createProxyState(
+        [this.newSecondaryChannelInput],
+        () => this.newSecondaryChannelInput.value == "",
     );
-    this.primaryChannel.value =
-      this.chatViewModel.chatModel.info.primaryChannel;
+    cannotSetEncryptionKey: React.State<boolean>;
 
-    this.chatViewModel.chatListViewModel.updateIndices();
-  };
+    // methods
+    setPrimaryChannel = (): void => {
+        this.chatViewModel.chatModel.setPrimaryChannel(
+            this.primaryChannelInput.value,
+        );
+        this.primaryChannel.value =
+            this.chatViewModel.chatModel.info.primaryChannel;
 
-  addSecondaryChannel = (): void => {
-    this.secondaryChannels.add(this.newSecondaryChannelInput.value);
-    this.newSecondaryChannelInput.value = "";
-    this.storeSecondaryChannels();
-    this.loadSecondaryChannels();
-  };
+        this.chatViewModel.chatListViewModel.updateIndices();
+    };
 
-  removeSecondaryChannel = (secondaryChannel: string): void => {
-    this.secondaryChannels.remove(secondaryChannel);
-    this.storeSecondaryChannels();
-  };
+    addSecondaryChannel = (): void => {
+        this.secondaryChannels.add(this.newSecondaryChannelInput.value);
+        this.newSecondaryChannelInput.value = "";
+        this.storeSecondaryChannels();
+        this.loadSecondaryChannels();
+    };
 
-  storeSecondaryChannels = (): void => {
-    this.chatViewModel.chatModel.setSecondaryChannels([
-      ...this.secondaryChannels.value.values(),
-    ]);
-  };
+    removeSecondaryChannel = (secondaryChannel: string): void => {
+        this.secondaryChannels.remove(secondaryChannel);
+        this.storeSecondaryChannels();
+    };
 
-  setEncryptionKey = (): void => {
-    this.chatViewModel.chatModel.setEncryptionKey(
-      this.encryptionKeyInput.value
-    );
+    storeSecondaryChannels = (): void => {
+        this.chatViewModel.chatModel.setSecondaryChannels([
+            ...this.secondaryChannels.value.values(),
+        ]);
+    };
 
-    // disable button
-    this.encryptionKeyInput.callSubscriptions();
-  };
+    setEncryptionKey = (): void => {
+        this.chatViewModel.chatModel.setEncryptionKey(
+            this.encryptionKeyInput.value,
+        );
 
-  applyColor = (newColor: Color): void => {
-    this.chatViewModel.setColor(newColor);
-  };
+        // disable button
+        this.encryptionKeyInput.callSubscriptions();
+    };
 
-  remove = (): void => {
-    this.chatViewModel.close();
-    this.chatViewModel.chatModel.delete();
-    this.chatViewModel.chatListViewModel.untrackChat(this.chatViewModel);
-  };
+    applyColor = (newColor: Color): void => {
+        this.chatViewModel.setColor(newColor);
+    };
 
-  // load
-  loadListRelevantData = (): void => {
-    this.primaryChannel.value =
-      this.chatViewModel.chatModel.info.primaryChannel;
+    remove = (): void => {
+        this.chatViewModel.close();
+        this.chatViewModel.chatModel.delete();
+        this.chatViewModel.chatListViewModel.untrackChat(this.chatViewModel);
+    };
 
-    this.color.value = this.chatViewModel.chatModel.color;
-  };
+    // load
+    loadListRelevantData = (): void => {
+        this.primaryChannel.value =
+            this.chatViewModel.chatModel.info.primaryChannel;
 
-  loadData = (): void => {
-    this.primaryChannelInput.value =
-      this.chatViewModel.chatModel.info.primaryChannel;
+        this.color.value = this.chatViewModel.chatModel.color;
+    };
 
-    this.loadSecondaryChannels();
+    loadData = (): void => {
+        this.primaryChannelInput.value =
+            this.chatViewModel.chatModel.info.primaryChannel;
 
-    this.encryptionKeyInput.value =
-      this.chatViewModel.chatModel.info.encryptionKey;
-  };
+        this.loadSecondaryChannels();
 
-  loadSecondaryChannels = (): void => {
-    this.secondaryChannels.clear();
-    for (const secondaryChannel of this.chatViewModel.chatModel
-      .secondaryChannels) {
-      this.secondaryChannels.add(secondaryChannel);
+        this.encryptionKeyInput.value =
+            this.chatViewModel.chatModel.info.encryptionKey;
+    };
+
+    loadSecondaryChannels = (): void => {
+        this.secondaryChannels.clear();
+        for (const secondaryChannel of this.chatViewModel.chatModel
+            .secondaryChannels) {
+            this.secondaryChannels.add(secondaryChannel);
+        }
+    };
+
+    // init
+    constructor(
+        public coreViewModel: CoreViewModel,
+        chatViewModel: ChatViewModel,
+    ) {
+        this.chatViewModel = chatViewModel;
+        this.loadListRelevantData();
+
+        this.cannotSetEncryptionKey = React.createProxyState(
+            [this.encryptionKeyInput],
+            () =>
+                this.encryptionKeyInput.value ==
+                this.chatViewModel.chatModel.info.encryptionKey,
+        );
+
+        this.color.subscribe((newColor) => {
+            this.applyColor(newColor);
+        });
     }
-  };
-
-  // init
-  constructor(
-    public coreViewModel: CoreViewModel,
-    chatViewModel: ChatViewModel
-  ) {
-    this.chatViewModel = chatViewModel;
-    this.loadListRelevantData();
-
-    this.cannotSetEncryptionKey = React.createProxyState(
-      [this.encryptionKeyInput],
-      () =>
-        this.encryptionKeyInput.value ==
-        this.chatViewModel.chatModel.info.encryptionKey
-    );
-
-    this.color.subscribe((newColor) => {
-      this.applyColor(newColor);
-    });
-  }
 }

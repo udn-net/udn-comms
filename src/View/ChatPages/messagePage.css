@@ -1,168 +1,168 @@
 /* layout */
 #chat-page #main #message-page .content {
-  padding: 0px;
+    padding: 0px;
 
-  overflow: hidden;
+    overflow: hidden;
 
-  display: grid;
-  grid-template-rows: 1fr var(--control-height) var(--safe-area-bottom);
+    display: grid;
+    grid-template-rows: 1fr var(--control-height) var(--safe-area-bottom);
 }
 
 #message-page #message-container {
-  overflow: auto;
+    overflow: auto;
 }
 
 /* composer */
 #message-page #composer {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 #message-page #composer input {
-  margin: 0px;
+    margin: 0px;
 
-  width: 100%;
-  max-width: unset;
-
-  flex: 1;
-
-  border-top: 1px solid var(--border);
-  border-left: 1px solid var(--border);
-}
-
-@media (max-width: 700px) {
-  #message-page #composer div {
     width: 100%;
     max-width: unset;
 
-    display: flex;
-  }
+    flex: 1;
+
+    border-top: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+}
+
+@media (max-width: 700px) {
+    #message-page #composer div {
+        width: 100%;
+        max-width: unset;
+
+        display: flex;
+    }
 }
 
 @media (min-width: 700px) {
-  #message-page #composer .content-width-constraint,
-  #message-page #composer .input-width-constraint {
-    display: flex;
-    justify-content: flex-end;
+    #message-page #composer .content-width-constraint,
+    #message-page #composer .input-width-constraint {
+        display: flex;
+        justify-content: flex-end;
 
-    width: 100%;
-    max-width: var(--max-content-width);
-  }
+        width: 100%;
+        max-width: var(--max-content-width);
+    }
 
-  #message-page #composer .content-width-constraint {
-    max-width: var(--max-content-width);
-  }
+    #message-page #composer .content-width-constraint {
+        max-width: var(--max-content-width);
+    }
 
-  #message-page #composer .input-width-constraint {
-    max-width: var(--max-input-width);
-  }
+    #message-page #composer .input-width-constraint {
+        max-width: var(--max-input-width);
+    }
 }
 
 /* message */
 #message-page #message-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  padding: var(--content-padding);
-  gap: var(--gap-between-tiles);
+    padding: var(--content-padding);
+    gap: var(--gap-between-tiles);
 
-  height: auto;
-  max-height: unset;
+    height: auto;
+    max-height: unset;
 
-  scroll-behavior: smooth;
+    scroll-behavior: smooth;
 }
 
 .message-bubble {
-  display: flex;
-  width: 100%;
-  max-width: var(--max-content-width);
+    display: flex;
+    width: 100%;
+    max-width: var(--max-content-width);
 }
 
 .message-bubble .tile.main {
-  display: flex;
-  flex-direction: row;
-  align-items: start;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
 
-  padding: 0px;
+    padding: 0px;
 
-  width: 100%;
-  max-width: var(--max-input-width);
-  overflow: hidden;
+    width: 100%;
+    max-width: var(--max-input-width);
+    overflow: hidden;
 }
 
 .message-bubble .tile.main .text-container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  overflow: hidden;
+    overflow: hidden;
 
-  width: 100%;
-  flex: 1;
+    width: 100%;
+    flex: 1;
 }
 
 .message-bubble .tile.main .button-container {
-  display: flex;
+    display: flex;
 
-  width: var(--control-height);
-  max-width: var(--control-height);
+    width: var(--control-height);
+    max-width: var(--control-height);
 }
 
 .message-bubble .tile.main button {
-  justify-content: center;
+    justify-content: center;
 
-  padding: 0px;
-  width: 100%;
+    padding: 0px;
+    width: 100%;
 
-  --surface: transparent;
+    --surface: transparent;
 }
 
 .message-bubble .tile.main .text-container {
-  padding: var(--control-padding);
+    padding: var(--control-padding);
 }
 
 .message-bubble .tile.main .timestamp,
 .message-bubble .tile.main .timestamp .icon,
 .message-bubble .tile.main .sender-name {
-  font-size: 0.8rem;
-  opacity: 0.6;
+    font-size: 0.8rem;
+    opacity: 0.6;
 }
 
 .message-bubble .tile.main .timestamp {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-between-tiles);
+    display: flex;
+    align-items: center;
+    gap: var(--gap-between-tiles);
 }
 
 .message-bubble .tile.main .timestamp .icon {
-  display: none;
+    display: none;
 }
 
 .message-bubble .tile.main .sender-name {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .message-bubble .tile.main .body {
-  word-break: break-word;
+    word-break: break-word;
 }
 
 .message-bubble[sentbyuser] {
-  justify-content: flex-end;
+    justify-content: flex-end;
 }
 
 .message-bubble[sentbyuser] {
-  align-items: flex-end;
+    align-items: flex-end;
 }
 
 .message-bubble[sentbyuser] .tile.main,
 .message-bubble[sentbyuser] .tile.main .timestamp {
-  flex-direction: row-reverse;
+    flex-direction: row-reverse;
 }
 
 .message-bubble[sentbyuser] .tile.main .timestamp .icon {
-  display: flex;
+    display: flex;
 }
 
 .message-bubble[sentbyuser] .tile.main span {
-  text-align: right;
+    text-align: right;
 }

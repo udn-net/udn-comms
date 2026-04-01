@@ -1,29 +1,29 @@
 /* show/hide */
 #chat-page-wrapper {
-  display: none;
+    display: none;
 }
 
 body[showing-chat] #home-page {
-  display: none;
+    display: none;
 }
 
 body[showing-chat] #chat-page-wrapper {
-  display: flex;
+    display: flex;
 
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
 
-  background-color: var(--background-glass);
+    background-color: var(--background-glass);
 
-  z-index: 2;
+    z-index: 2;
 }
 
 /* layout */
 #chat-page {
-  --ribbon-size: var(--control-height);
+    --ribbon-size: var(--control-height);
 }
 
 #chat-page > div,
@@ -35,179 +35,179 @@ body[showing-chat] #chat-page-wrapper {
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar,
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar > span,
 #chat-page > div > #main > div > .pane-wrapper > .pane > .content {
-  display: flex;
+    display: flex;
 }
 
 #chat-page > div {
-  padding: 0px;
-  overflow: hidden;
+    padding: 0px;
+    overflow: hidden;
 }
 
 #chat-page > div > #main {
-  width: calc(100% - var(--ribbon-size) - 1px);
+    width: calc(100% - var(--ribbon-size) - 1px);
 }
 
 #chat-page #main > div,
 #chat-page > div > #main > div > .pane-wrapper,
 #chat-page > div > #main > div > .pane-wrapper > .pane,
 #chat-page > div > #main > div > .pane-wrapper > .pane > .content {
-  width: 100%;
-  height: 100%;
-  flex: 1;
+    width: 100%;
+    height: 100%;
+    flex: 1;
 }
 
 #chat-page > div > #main > div > .pane-wrapper,
 #chat-page > div > #main > div > .pane-wrapper > .pane {
-  flex-direction: column;
-  scroll-snap-align: center;
+    flex-direction: column;
+    scroll-snap-align: center;
 
-  min-width: 100%;
-  overflow: hidden;
+    min-width: 100%;
+    overflow: hidden;
 }
 
 #chat-page > div > #main > div > .pane-wrapper > .pane:not(.side),
 #chat-page > div > #main > div > .pane-wrapper > .pane:not(.side) .content {
-  animation: slide-up var(--animation-duration);
+    animation: slide-up var(--animation-duration);
 }
 
 @media (min-width: 1024px) {
-  #chat-page > div > #main > div > .pane-wrapper {
-    min-width: unset;
-  }
+    #chat-page > div > #main > div > .pane-wrapper {
+        min-width: unset;
+    }
 
-  #chat-page > div > #main > div > .pane-wrapper.side {
-    width: 18rem;
-    min-width: 18rem;
-    max-width: 18rem;
-  }
+    #chat-page > div > #main > div > .pane-wrapper.side {
+        width: 18rem;
+        min-width: 18rem;
+        max-width: 18rem;
+    }
 }
 
 #chat-page > div > #main > div > .pane-wrapper > .pane > .content {
-  flex-direction: column;
-  overflow: auto;
-  padding: var(--content-padding);
+    flex-direction: column;
+    overflow: auto;
+    padding: var(--content-padding);
 }
 
 #chat-page #ribbon,
 #chat-page #main,
 #chat-page #main .content {
-  flex-direction: column;
+    flex-direction: column;
 }
 
 /* ribbon, toolbar */
 #chat-page > div > #ribbon,
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar {
-  align-items: center;
+    align-items: center;
 }
 
 #chat-page > div > #ribbon {
-  width: calc(var(--ribbon-size) + 1px);
-  border-right: 1px solid var(--border);
-  padding-bottom: var(--safe-area-bottom);
+    width: calc(var(--ribbon-size) + 1px);
+    border-right: 1px solid var(--border);
+    padding-bottom: var(--safe-area-bottom);
 }
 
 #chat-page > div > #ribbon > span,
 #chat-page
-  > div
-  > #main
-  > div
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  > span.ribbon {
-  gap: var(--gap-between-tiles);
-  padding: var(--gap-between-tiles);
+    > div
+    > #main
+    > div
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    > span.ribbon {
+    gap: var(--gap-between-tiles);
+    padding: var(--gap-between-tiles);
 }
 
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar {
-  justify-content: start;
-  justify-content: space-between;
+    justify-content: start;
+    justify-content: space-between;
 }
 
 #chat-page > div > #ribbon > span {
-  height: 100%;
+    height: 100%;
 
-  flex: 1;
-  overflow-y: auto;
+    flex: 1;
+    overflow-y: auto;
 
-  flex-direction: column;
-  justify-content: end;
+    flex-direction: column;
+    justify-content: end;
 }
 
 #chat-page > div > #ribbon button,
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar button {
-  padding: 0px;
+    padding: 0px;
 
-  width: var(--control-height);
-  max-width: var(--control-height);
-  height: var(--control-height);
-  min-height: var(--control-height);
+    width: var(--control-height);
+    max-width: var(--control-height);
+    height: var(--control-height);
+    min-height: var(--control-height);
 
-  align-items: center;
-  justify-content: center;
+    align-items: center;
+    justify-content: center;
 }
 
 #chat-page > div > #ribbon button.ribbon-button,
 #chat-page
-  > div
-  > #main
-  > div
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  button.ribbon-button {
-  min-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
-  width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
-  max-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
+    > div
+    > #main
+    > div
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    button.ribbon-button {
+    min-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
+    width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
+    max-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
 
-  min-height: unset;
-  height: calc(var(--control-height) - 2 * var(--gap-between-tiles));
+    min-height: unset;
+    height: calc(var(--control-height) - 2 * var(--gap-between-tiles));
 
-  color: var(--primary);
+    color: var(--primary);
 }
 
 #chat-page > div > #ribbon button > .icon,
 #chat-page
-  > div
-  > #main
-  > div
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  button
-  > .icon {
-  font-size: 1.1rem;
+    > div
+    > #main
+    > div
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    button
+    > .icon {
+    font-size: 1.1rem;
 }
 
 #chat-page > div > #ribbon > span {
-  width: 100%;
+    width: 100%;
 }
 
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar {
-  height: var(--ribbon-size);
+    height: var(--ribbon-size);
 
-  overflow-x: auto;
+    overflow-x: auto;
 
-  padding: 0px;
+    padding: 0px;
 }
 
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar > span {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar > span.title {
-  padding-left: var(--content-padding);
+    padding-left: var(--content-padding);
 }
 
 #chat-page
-  > div
-  > #main
-  > div
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  :is(input, select, button) {
-  height: 100%;
-  flex: 1;
+    > div
+    > #main
+    > div
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    :is(input, select, button) {
+    height: 100%;
+    flex: 1;
 }

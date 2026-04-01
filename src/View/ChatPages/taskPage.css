@@ -1,53 +1,53 @@
 #chat-page > div > #main > #task-page > .pane-wrapper > .pane > .main-content {
-  width: 100%;
-  max-width: 100%;
+    width: 100%;
+    max-width: 100%;
 
-  padding: 0px;
+    padding: 0px;
 }
 
 #chat-page
-  > div
-  > #main
-  > #task-page
-  > .pane-wrapper
-  > .pane
-  > .main-content
-  > div {
-  animation: slide-up var(--animation-duration);
+    > div
+    > #main
+    > #task-page
+    > .pane-wrapper
+    > .pane
+    > .main-content
+    > div {
+    animation: slide-up var(--animation-duration);
 }
 
 #chat-page > div > #main > #task-page .task-grid {
-  display: flex;
-  flex-direction: column;
-  gap: var(--gap-between-tiles);
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-between-tiles);
 
-  padding: var(--content-padding);
+    padding: var(--content-padding);
 }
 
 #chat-page > div > #main > #task-page .kanban-board-wrapper,
 #chat-page > div > #main > #task-page .status-page-content {
-  display: flex;
-  gap: var(--large-gap);
+    display: flex;
+    gap: var(--large-gap);
 
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 
-  overflow: auto;
+    overflow: auto;
 
-  padding: var(--content-padding);
+    padding: var(--content-padding);
 }
 
 #chat-page > div > #main > #task-page .kanban-board-wrapper .kanban-column,
 #chat-page > div > #main > #task-page .status-grid-wrapper .status-column {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  gap: var(--gap-between-tiles);
+    gap: var(--gap-between-tiles);
 }
 
 #chat-page > div > #main > #task-page .property-input-wrapper {
-  display: flex;
-  flex-direction: row;
+    display: flex;
+    flex-direction: row;
 }
 
 #chat-page > div > #main > #task-page .kanban-board-wrapper .kanban-column,
@@ -55,72 +55,72 @@
 #chat-page > div > #main > #task-page .status-grid-wrapper .status-column,
 #chat-page > div > #main > #task-page .status-name-row > *,
 #chat-page > div > #main > #task-page .status-name-row::before {
-  width: 18rem;
-  min-width: 18rem;
-  max-width: 18rem;
+    width: 18rem;
+    min-width: 18rem;
+    max-width: 18rem;
 }
 
 #chat-page > div > #main > #task-page .status-name-row,
 #chat-page > div > #main > #task-page .status-grid-wrapper {
-  display: flex;
-  gap: var(--large-gap);
+    display: flex;
+    gap: var(--large-gap);
 }
 
 #chat-page > div > #main > #task-page .status-page-content,
 #chat-page > div > #main > #task-page .status-grid-wrapper {
-  flex-direction: column;
+    flex-direction: column;
 }
 
 #chat-page > div > #main > #task-page .status-name-row::before {
-  content: "";
-  display: flex;
+    content: "";
+    display: flex;
 }
 
 #chat-page > div > #main > #task-page .board-close-button {
-  display: none;
+    display: none;
 }
 
 #chat-page > div > #main > #task-page .board-toggle-button {
-  display: flex;
+    display: flex;
 }
 
 #chat-page
-  > div
-  > #main
-  > #task-page[isshowingboard][showingboardlist="false"]
-  #board-list {
-  display: none;
+    > div
+    > #main
+    > #task-page[isshowingboard][showingboardlist="false"]
+    #board-list {
+    display: none;
 }
 
 @media (min-width: 640px) {
-  #chat-page > div > #main > #task-page .task-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-  }
+    #chat-page > div > #main > #task-page .task-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    }
 }
 
 @media (max-width: 1024px) {
-  #chat-page > div > #main > #task-page #board-list {
-    display: false;
-  }
+    #chat-page > div > #main > #task-page #board-list {
+        display: false;
+    }
 
-  #chat-page > div > #main > #task-page #board-content {
-    display: none;
-  }
+    #chat-page > div > #main > #task-page #board-content {
+        display: none;
+    }
 
-  #chat-page > div > #main > #task-page[isshowingboard] #board-list {
-    display: none;
-  }
+    #chat-page > div > #main > #task-page[isshowingboard] #board-list {
+        display: none;
+    }
 
-  #chat-page > div > #main > #task-page[isshowingboard] #board-content {
-    display: flex;
-  }
+    #chat-page > div > #main > #task-page[isshowingboard] #board-content {
+        display: flex;
+    }
 
-  #chat-page > div > #main > #task-page .board-close-button {
-    display: flex;
-  }
+    #chat-page > div > #main > #task-page .board-close-button {
+        display: flex;
+    }
 
-  #chat-page > div > #main > #task-page .board-toggle-button {
-    display: none;
-  }
+    #chat-page > div > #main > #task-page .board-toggle-button {
+        display: none;
+    }
 }

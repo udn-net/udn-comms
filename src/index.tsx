@@ -27,9 +27,9 @@ const storageModel = new StorageModel();
 const settingsModel = new SettingsModel(storageModel);
 const connectionModel = new ConnectionModel(storageModel);
 const chatListModel = new ChatListModel(
-  storageModel,
-  settingsModel,
-  connectionModel
+    storageModel,
+    settingsModel,
+    connectionModel,
 );
 const fileTransferModel = new FileTransferModel(storageModel, connectionModel);
 
@@ -42,47 +42,47 @@ const coreVieWModel = new CoreViewModel();
 const storageViewModel = new StorageViewModel(coreVieWModel, storageModel);
 const settingsViewModel = new SettingsViewModel(coreVieWModel, settingsModel);
 const connectionViewModel = new ConnectionViewModel(
-  coreVieWModel,
-  connectionModel
+    coreVieWModel,
+    connectionModel,
 );
 const chatListViewModel = new ChatListViewModel(
-  coreVieWModel,
-  storageModel,
-  chatListModel,
-  settingsViewModel
+    coreVieWModel,
+    storageModel,
+    chatListModel,
+    settingsViewModel,
 );
 const fileTransferViewModel = new FileTransferViewModel(
-  fileTransferModel,
-  chatListModel
+    fileTransferModel,
+    chatListModel,
 );
 
 // view
 chatListViewModel.selectedChat.subscribe(() => {
-  document.body.toggleAttribute(
-    "showing-chat",
-    chatListViewModel.selectedChat.value != undefined
-  );
+    document.body.toggleAttribute(
+        "showing-chat",
+        chatListViewModel.selectedChat.value != undefined,
+    );
 });
 
 document.body.append(
-  <div id="background-wrapper">
-    <div id="sky"></div>
-    <div id="grass-1"></div>
-    <div id="grass-2"></div>
-  </div>
+    <div id="background-wrapper">
+        <div id="sky"></div>
+        <div id="grass-1"></div>
+        <div id="grass-2"></div>
+    </div>,
 );
 document
-  .querySelector("main")!
-  .append(
-    HomePage(
-      storageViewModel,
-      settingsViewModel,
-      connectionViewModel,
-      fileTransferViewModel,
-      chatListViewModel
-    ),
-    ChatPageWrapper(chatListViewModel),
-    ConnectionModal(connectionViewModel),
-    DataTransferModalWrapper(connectionViewModel, fileTransferViewModel),
-    StorageModal(storageViewModel)
-  );
+    .querySelector("main")!
+    .append(
+        HomePage(
+            storageViewModel,
+            settingsViewModel,
+            connectionViewModel,
+            fileTransferViewModel,
+            chatListViewModel,
+        ),
+        ChatPageWrapper(chatListViewModel),
+        ConnectionModal(connectionViewModel),
+        DataTransferModalWrapper(connectionViewModel, fileTransferViewModel),
+        StorageModal(storageViewModel),
+    );

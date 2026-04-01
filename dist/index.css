@@ -827,7 +827,7 @@ body[showing-chat] #chat-page-wrapper {
 .file-browser code {
   width: 100%;
   height: 100%;
-  font-size: .9rem;
+  font-size: 0.9rem;
 }
 @media (min-width: 640px) {
   .file-browser > div {

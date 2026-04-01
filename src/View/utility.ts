@@ -1,11 +1,11 @@
 export function allowDrop(event: DragEvent) {
-  event.preventDefault();
+    event.preventDefault();
 }
 
 export function allowDrag(event: DragEvent) {
-  event.dataTransfer?.setData("text", "")
+    event.dataTransfer?.setData("text", "");
 }
 
 export function reload() {
-  window.location.reload();
+    window.location.reload();
 }

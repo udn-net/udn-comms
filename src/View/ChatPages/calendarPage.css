@@ -1,74 +1,73 @@
 #chat-page
-  > div
-  > #main
-  > #calendar-page
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  .input-wrapper {
-  display: flex;
+    > div
+    > #main
+    > #calendar-page
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    .input-wrapper {
+    display: flex;
 
-  padding: var(--gap-between-tiles);
-  gap: var(--gap-between-tiles);
+    padding: var(--gap-between-tiles);
+    gap: var(--gap-between-tiles);
 }
 
 #chat-page
-  > div
-  > #main
-  > #calendar-page
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  .input-wrapper
-  > input {
-  min-height: unset;
-  height: calc(var(--control-height) - 2 * var(--gap-between-tiles));
+    > div
+    > #main
+    > #calendar-page
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    .input-wrapper
+    > input {
+    min-height: unset;
+    height: calc(var(--control-height) - 2 * var(--gap-between-tiles));
 
-  appearance: textfield;
-  -moz-appearance: textfield;
+    appearance: textfield;
+    -moz-appearance: textfield;
 
-  padding-right: 0px;
+    padding-right: 0px;
 }
 
 #calendar-page .input-wrapper > input::-webkit-outer-spin-button,
 #calendar-page .input-wrapper > input::-webkit-innner-spin-button {
-  appearance: none;
-  -webkit-appearance: none;
+    appearance: none;
+    -webkit-appearance: none;
 
-  margin: 0px;
+    margin: 0px;
 }
 
 #chat-page
-  > div
-  > #main
-  > #calendar-page
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  .input-wrapper
-  > .year-input {
-  width: 4.4rem;
+    > div
+    > #main
+    > #calendar-page
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    .input-wrapper
+    > .year-input {
+    width: 4.4rem;
 }
 
 #chat-page
-  > div
-  > #main
-  > #calendar-page
-  > .pane-wrapper
-  > .pane
-  > .toolbar
-  .input-wrapper
-  > .month-input {
-  width: 3.1rem;
+    > div
+    > #main
+    > #calendar-page
+    > .pane-wrapper
+    > .pane
+    > .toolbar
+    .input-wrapper
+    > .month-input {
+    width: 3.1rem;
 }
-
 
 @media (max-width: 1024px) {
-  #chat-page > div > #main > #calendar-page {
-    flex-direction: column;
-  }
+    #chat-page > div > #main > #calendar-page {
+        flex-direction: column;
+    }
 
-  #chat-page > div > #main > #calendar-page .grid-pane-wrapper {
-    border-bottom: 1px solid var(--border);
-  }
+    #chat-page > div > #main > #calendar-page .grid-pane-wrapper {
+        border-bottom: 1px solid var(--border);
+    }
 }
