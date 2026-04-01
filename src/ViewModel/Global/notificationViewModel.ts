@@ -17,11 +17,25 @@ export default class NotificationViewModel {
         const notification = NotificationViewModel.createNotification(message);
         if (this.seenMessageIds.has(message.id)) return;
 
-        const currentChat = this.chatListViewModel.selectedChat.value.chatModel.info.primaryChannel;
+        const currentChat =
+            this.chatListViewModel.selectedChat.value.chatModel.info
+                .primaryChannel;
         if (notification.chat == currentChat) return;
 
         this.messagesInMarquee.push(notification);
         this.startLoop();
+    };
+
+    openNotification = () => {
+        const notification = this.marquee.value;
+        if (notification == undefined) return;
+
+        const chat = [
+            ...this.chatListViewModel.chatViewModels.value.values(),
+        ].find(
+            (chat) => chat.chatModel.info.primaryChannel == notification.chat,
+        );
+        chat.open();
     };
 
     // loop
@@ -49,6 +63,11 @@ export default class NotificationViewModel {
         clearInterval(this.interval);
         this.interval = undefined;
     };
+
+    skipLoop = () => {
+        this.stopLoop();
+        this.startLoop();
+    }
 
     // init
     constructor(chatListViewModel: ChatListViewModel) {

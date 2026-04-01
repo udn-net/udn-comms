@@ -9,7 +9,6 @@ import SettingsViewModel from "../Global/settingsViewModel";
 import StorageModel from "../../Model/Global/storageModel";
 import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
-import NotificationModel from "../../Model/Global/notificationModel";
 
 export default class ChatListViewModel {
     storageModel: StorageModel;
@@ -82,6 +81,7 @@ export default class ChatListViewModel {
     // view
     openChat = (chatViewModel: ChatViewModel): void => {
         this.selectedChat.value = chatViewModel;
+        this.notificationViewModel.skipLoop();
     };
 
     closeChat = (): void => {

@@ -40,7 +40,7 @@ export function ChatPage(chatViewModel: ChatViewModel) {
             const value = chatViewModel.notificationViewModel.marquee.value;
             if (value == undefined) return <span></span>;
             return (
-                <span>
+                <span on:click={chatViewModel.notificationViewModel.openNotification}>
                     <b>{value.sender}</b>
                     <span class="secondary">{value.chat}: </span>
                     <span>{value.body}</span>

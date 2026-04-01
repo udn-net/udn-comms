@@ -3155,6 +3155,16 @@
         this.messagesInMarquee.push(notification);
         this.startLoop();
       };
+      this.openNotification = () => {
+        const notification = this.marquee.value;
+        if (notification == void 0) return;
+        const chat = [
+          ...this.chatListViewModel.chatViewModels.value.values()
+        ].find(
+          (chat2) => chat2.chatModel.info.primaryChannel == notification.chat
+        );
+        chat.open();
+      };
       // loop
       this.loop = () => {
         if (this.messagesInMarquee.length == 0) {
@@ -3175,6 +3185,10 @@
       this.stopLoop = () => {
         clearInterval(this.interval);
         this.interval = void 0;
+      };
+      this.skipLoop = () => {
+        this.stopLoop();
+        this.startLoop();
       };
       this.chatListViewModel = chatListViewModel2;
     }
@@ -3246,6 +3260,7 @@
       // view
       this.openChat = (chatViewModel) => {
         this.selectedChat.value = chatViewModel;
+        this.notificationViewModel.skipLoop();
       };
       this.closeChat = () => {
         this.selectedChat.value = void 0;
@@ -4623,7 +4638,7 @@
       () => {
         const value = chatViewModel.notificationViewModel.marquee.value;
         if (value == void 0) return /* @__PURE__ */ createElement("span", null);
-        return /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement("b", null, value.sender), /* @__PURE__ */ createElement("span", { class: "secondary" }, value.chat, ": "), /* @__PURE__ */ createElement("span", null, value.body));
+        return /* @__PURE__ */ createElement("span", { "on:click": chatViewModel.notificationViewModel.openNotification }, /* @__PURE__ */ createElement("b", null, value.sender), /* @__PURE__ */ createElement("span", { class: "secondary" }, value.chat, ": "), /* @__PURE__ */ createElement("span", null, value.body));
       }
     );
     return /* @__PURE__ */ createElement(
