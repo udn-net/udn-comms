@@ -27,6 +27,7 @@
 #chat-page > div > #main > #task-page .kanban-board-wrapper,
 #chat-page > div > #main > #task-page .status-page-content {
     display: flex;
+    align-items: start;
     gap: var(--large-gap);
 
     width: 100%;
