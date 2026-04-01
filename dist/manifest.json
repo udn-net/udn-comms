@@ -1,10 +1,10 @@
 {
-  "name": "Comms",
-  "display": "fullscreen",
-  "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "any"
-    }
-  ]
+    "name": "Comms",
+    "display": "fullscreen",
+    "icons": [
+        {
+            "src": "icon.png",
+            "sizes": "any"
+        }
+    ]
 }
