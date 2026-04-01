@@ -7,11 +7,13 @@ import CoreViewModel from "../Global/coreViewModel";
 import { IndexManager } from "../../Model/Utility/utility";
 import SettingsViewModel from "../Global/settingsViewModel";
 import StorageModel from "../../Model/Global/storageModel";
+import ConnectionViewModel from "../Global/connectionViewModel";
 
 export default class ChatListViewModel {
     storageModel: StorageModel;
     chatListModel: ChatListModel;
     settingsViewModel: SettingsViewModel;
+    connectionViewModel: ConnectionViewModel;
 
     // data
     chatIndexManager: IndexManager<ChatViewModel> = new IndexManager(
@@ -61,6 +63,7 @@ export default class ChatListViewModel {
             this.storageModel,
             chatModel,
             this.settingsViewModel,
+            this.connectionViewModel,
             this,
         );
     };
@@ -97,10 +100,12 @@ export default class ChatListViewModel {
         storageModel: StorageModel,
         chatListModel: ChatListModel,
         settingsViewModel: SettingsViewModel,
+        connectionViewModel: ConnectionViewModel,
     ) {
         this.storageModel = storageModel;
         this.chatListModel = chatListModel;
         this.settingsViewModel = settingsViewModel;
+        this.connectionViewModel = connectionViewModel;
 
         this.loadChats();
     }

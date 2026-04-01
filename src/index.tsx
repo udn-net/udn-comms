@@ -50,6 +50,7 @@ const chatListViewModel = new ChatListViewModel(
     storageModel,
     chatListModel,
     settingsViewModel,
+    connectionViewModel,
 );
 const fileTransferViewModel = new FileTransferViewModel(
     fileTransferModel,

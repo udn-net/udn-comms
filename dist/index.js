@@ -2495,7 +2495,8 @@
       setButton: "Set",
       reloadAppButton: "Reload App",
       fileVersionLabel: "Version",
-      searchLabel: "Search"
+      searchLabel: "Search",
+      restoreConnection: "Restore connection"
     },
     regional: {
       weekdays: {
@@ -2683,7 +2684,8 @@
         setButton: "OK",
         reloadAppButton: "Neu laden",
         fileVersionLabel: "Version",
-        searchLabel: "Suche"
+        searchLabel: "Suche",
+        restoreConnection: "Verbindung wiederherstellen"
       },
       regional: {
         weekdays: {
@@ -2852,7 +2854,8 @@
         setButton: "OK",
         reloadAppButton: "Recargar app",
         fileVersionLabel: "Versi\xF3n",
-        searchLabel: "Buscar"
+        searchLabel: "Buscar",
+        restoreConnection: "Conectar de nuevo"
       },
       regional: {
         weekdays: {
@@ -3011,7 +3014,7 @@
   // src/ViewModel/Chat/chatViewModel.ts
   var ChatViewModel = class {
     // init
-    constructor(coreViewModel, storageModel2, chatModel, settingsViewModel2, chatListViewModel2) {
+    constructor(coreViewModel, storageModel2, chatModel, settingsViewModel2, connectionViewModel2, chatListViewModel2) {
       this.coreViewModel = coreViewModel;
       // state
       this.displayedColor = new State("standard" /* Standard */);
@@ -3074,6 +3077,7 @@
       this.storageModel = storageModel2;
       this.chatModel = chatModel;
       this.settingsViewModel = settingsViewModel2;
+      this.connectionViewModel = connectionViewModel2;
       this.chatListViewModel = chatListViewModel2;
       this.calendarViewModel = new CalendarPageViewModel(
         coreViewModel,
@@ -3111,7 +3115,7 @@
   // src/ViewModel/Chat/chatListViewModel.ts
   var ChatListViewModel = class {
     // init
-    constructor(coreViewModel, storageModel2, chatListModel2, settingsViewModel2) {
+    constructor(coreViewModel, storageModel2, chatListModel2, settingsViewModel2, connectionViewModel2) {
       this.coreViewModel = coreViewModel;
       // data
       this.chatIndexManager = new IndexManager(
@@ -3151,6 +3155,7 @@
           this.storageModel,
           chatModel,
           this.settingsViewModel,
+          this.connectionViewModel,
           this
         );
       };
@@ -3179,6 +3184,7 @@
       this.storageModel = storageModel2;
       this.chatListModel = chatListModel2;
       this.settingsViewModel = settingsViewModel2;
+      this.connectionViewModel = connectionViewModel2;
       this.loadChats();
     }
   };
@@ -4540,6 +4546,15 @@
           "on:click": chatViewModel.close
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "close")
+      ), /* @__PURE__ */ createElement(
+        "button",
+        {
+          class: "danger",
+          "aria-label": translations.general.restoreConnection,
+          "on:click": chatViewModel.connectionViewModel.showConnectionModal,
+          "toggle:hidden": chatViewModel.connectionViewModel.isConnected
+        },
+        /* @__PURE__ */ createElement("span", { class: "icon" }, "signal_disconnected")
       ), /* @__PURE__ */ createElement("span", null, ChatViewToggleButton(
         translations.chatPage.pages.calendar,
         "calendar_month",
@@ -6102,7 +6117,8 @@
     coreVieWModel,
     storageModel,
     chatListModel,
-    settingsViewModel
+    settingsViewModel,
+    connectionViewModel
   );
   var fileTransferViewModel = new FileTransferViewModel(
     fileTransferModel,

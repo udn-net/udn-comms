@@ -18,11 +18,13 @@ import SettingsPageViewModel from "../Pages/settingsPageViewModel";
 import SettingsViewModel from "../Global/settingsViewModel";
 import TaskPageViewModel from "../Pages/taskPageViewModel";
 import { translations } from "../../View/translations";
+import ConnectionViewModel from "../Global/connectionViewModel";
 
 export default class ChatViewModel {
     chatModel: ChatModel;
     storageModel: StorageModel;
     settingsViewModel: SettingsViewModel;
+    connectionViewModel: ConnectionViewModel;
     chatListViewModel: ChatListViewModel;
 
     calendarViewModel: CalendarPageViewModel;
@@ -109,12 +111,14 @@ export default class ChatViewModel {
         storageModel: StorageModel,
         chatModel: ChatModel,
         settingsViewModel: SettingsViewModel,
+        connectionViewModel: ConnectionViewModel,
         chatListViewModel: ChatListViewModel,
     ) {
         // models
         this.storageModel = storageModel;
         this.chatModel = chatModel;
         this.settingsViewModel = settingsViewModel;
+        this.connectionViewModel = connectionViewModel;
         this.chatListViewModel = chatListViewModel;
 
         // page viewModels

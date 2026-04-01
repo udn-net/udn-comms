@@ -21,6 +21,8 @@ const englishTranslations = {
 
         fileVersionLabel: "Version",
         searchLabel: "Search",
+
+        restoreConnection: "Restore connection",
     },
 
     regional: {
@@ -295,6 +297,8 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
             fileVersionLabel: "Version",
             searchLabel: "Suche",
+
+            restoreConnection: "Verbindung wiederherstellen",
         },
 
         regional: {
@@ -537,6 +541,8 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
             fileVersionLabel: "Versión",
             searchLabel: "Buscar",
+
+            restoreConnection: "Conectar de nuevo",
         },
 
         regional: {

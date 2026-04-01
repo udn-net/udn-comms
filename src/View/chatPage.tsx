@@ -49,6 +49,19 @@ export function ChatPage(chatViewModel: ChatViewModel) {
                     >
                         <span class="icon">close</span>
                     </button>
+                    <button
+                        class="danger"
+                        aria-label={translations.general.restoreConnection}
+                        on:click={
+                            chatViewModel.connectionViewModel
+                                .showConnectionModal
+                        }
+                        toggle:hidden={
+                            chatViewModel.connectionViewModel.isConnected
+                        }
+                    >
+                        <span class="icon">signal_disconnected</span>
+                    </button>
 
                     <span>
                         {ChatViewToggleButton(
