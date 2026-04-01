@@ -357,8 +357,7 @@
     for (const object of objects) {
       const stringEntryObject = converter(object);
       const stringEntryObjectValue = stringEntryObject[key];
-      if (stringEntryObjectValue == void 0)
-        continue;
+      if (stringEntryObjectValue == void 0) continue;
       values.add(stringEntryObjectValue.toString());
     }
     return [...values.values()];
@@ -3336,7 +3335,13 @@
           VersionIdToOption
         ]
       }
-    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement("input", { "bind:value": taskViewModel.name, id: "focused" }))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        "bind:value": taskViewModel.name,
+        id: "focused"
+      }
+    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
       "select",
       {
         "bind:value": taskViewModel.boardId,
@@ -3990,14 +3995,14 @@
     return PropertyValueList(
       "category",
       (taskViewModel) => taskViewModel.task,
-      boardViewModel.taskViewModels,
+      boardViewModel.filteredTaskViewModels,
       (categories, sortedCategories) => {
         const categoryNameConverter = (categoryName) => {
           const index = createPropertyValueIndexState(
             sortedCategories,
             categoryName
           );
-          return KanbanBoard(categoryName, index, boardViewModel);
+          return Column(categoryName, index, boardViewModel);
         };
         return /* @__PURE__ */ createElement(
           "div",
@@ -4009,7 +4014,7 @@
       }
     );
   }
-  function KanbanBoard(categoryName, index, boardViewModel) {
+  function Column(categoryName, index, boardViewModel) {
     return FilteredList(
       { category: categoryName },
       (taskViewModel) => taskViewModel.task,
@@ -4092,7 +4097,7 @@
       collectPropertyValuesToState(
         "status",
         (taskViewModel) => taskViewModel.task,
-        boardViewModel.taskViewModels,
+        boardViewModel.filteredTaskViewModels,
         statuses
       );
     });
@@ -4185,7 +4190,7 @@
             sortedStatuses,
             statusName
           );
-          return CategoryStatusColumn(
+          return StatusColumn(
             categoryName,
             statusName,
             index2,
@@ -4226,7 +4231,7 @@
       }
     );
   }
-  function CategoryStatusColumn(categoryName, statusName, index, boardViewModel, taskViewModelsWithMatchingCategory) {
+  function StatusColumn(categoryName, statusName, index, boardViewModel, taskViewModelsWithMatchingCategory) {
     const taskViewModels = new ListState();
     taskViewModelsWithMatchingCategory.handleAddition((taskViewModel) => {
       const doesMatchStatus = taskViewModel.status.value == statusName;

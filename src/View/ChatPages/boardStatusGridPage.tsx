@@ -27,7 +27,7 @@ export function BoardStatusGridPage(boardViewModel: BoardViewModel) {
         collectPropertyValuesToState(
             "status",
             (taskViewModel: TaskViewModel) => taskViewModel.task,
-            boardViewModel.taskViewModels,
+            boardViewModel.filteredTaskViewModels,
             statuses,
         );
     });
@@ -160,7 +160,7 @@ function CategoryRow(
                     sortedStatuses,
                     statusName,
                 );
-                return CategoryStatusColumn(
+                return StatusColumn(
                     categoryName,
                     statusName,
                     index,
@@ -211,7 +211,7 @@ function CategoryRow(
     );
 }
 
-function CategoryStatusColumn(
+function StatusColumn(
     categoryName: string,
     statusName: string,
     index: React.State<number>,

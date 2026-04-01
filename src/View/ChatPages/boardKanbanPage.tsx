@@ -17,7 +17,7 @@ export function BoardKanbanPage(boardViewModel: BoardViewModel) {
     return PropertyValueList(
         "category",
         (taskViewModel: TaskViewModel) => taskViewModel.task,
-        boardViewModel.taskViewModels,
+        boardViewModel.filteredTaskViewModels,
         (
             categories: React.ListState<string>,
             sortedCategories: React.State<string[]>,
@@ -30,7 +30,7 @@ export function BoardKanbanPage(boardViewModel: BoardViewModel) {
                         sortedCategories,
                         categoryName,
                     );
-                return KanbanBoard(categoryName, index, boardViewModel);
+                return Column(categoryName, index, boardViewModel);
             };
 
             return (
@@ -43,7 +43,7 @@ export function BoardKanbanPage(boardViewModel: BoardViewModel) {
     );
 }
 
-function KanbanBoard(
+function Column(
     categoryName: string,
     index: React.State<number>,
     boardViewModel: BoardViewModel,
