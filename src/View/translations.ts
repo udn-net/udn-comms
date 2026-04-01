@@ -240,7 +240,8 @@ const englishTranslations = {
 
             ///
 
-            renameCategoryInputPlaceholder: "Rename category,",
+            renameCategoryInputPlaceholder: "Rename category",
+            renameStatusInputPlaceholder: "Rename status",
         },
 
         calendar: {
@@ -493,6 +494,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
                 filterTasksHeadline: "Aufgaben filtern",
 
                 renameCategoryInputPlaceholder: "Kategorie umbenennen",
+                renameStatusInputPlaceholder: "Status umbenennen",
             },
 
             calendar: {
@@ -739,6 +741,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
                 filterTasksHeadline: "Filtrar Tareas",
 
                 renameCategoryInputPlaceholder: "Renombrar categoría",
+                renameStatusInputPlaceholder: "Renombrar estado",
             },
 
             calendar: {

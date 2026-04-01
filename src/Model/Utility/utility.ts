@@ -40,6 +40,7 @@ export function filterObjectsByStringEntries<T>(
 export function checkDoesObjectMatchReference(
     reference: StringEntryObject,
     stringEntryObject: StringEntryObject,
+    explicitEmptyValue: boolean = false,
 ): boolean {
     reference_entry_loop: for (const referenceEntry of Object.entries(
         reference,
@@ -68,15 +69,17 @@ export function checkDoesObjectMatchReference(
                 return false;
             }
         } else {
-            // property must exist but be anything
-            if (
-                referenceValue == "" &&
-                (stringEntryObjectValue == undefined ||
-                    stringEntryObjectValue == "")
-            ) {
-                return false;
-            } else if (referenceValue == "") {
-                continue reference_entry_loop;
+            if (explicitEmptyValue == false) {
+                // property must exist but be anything
+                if (
+                    referenceValue == "" &&
+                    (stringEntryObjectValue == undefined ||
+                        stringEntryObjectValue == "")
+                ) {
+                    return false;
+                } else if (referenceValue == "") {
+                    continue reference_entry_loop;
+                }
             }
 
             // property must match
@@ -99,8 +102,7 @@ export function collectObjectValuesForKey<T>(
         const stringEntryObject: StringEntryObject = converter(object);
         const stringEntryObjectValue: Stringifiable | undefined =
             stringEntryObject[key];
-        if (stringEntryObjectValue == undefined || stringEntryObjectValue == "")
-            continue;
+        if (stringEntryObjectValue == undefined) continue;
 
         values.add(stringEntryObjectValue.toString());
     }

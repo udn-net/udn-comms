@@ -17,6 +17,7 @@ export function FilteredList<T>(
         const doesMatch: boolean = checkDoesObjectMatchReference(
             reference,
             stringEntryObjectConverter(newObject),
+            true,
         );
         if (doesMatch == false) return;
 

@@ -47,9 +47,8 @@ export function collectPropertyValuesToState<T>(
     }
 
     for (const displayedValue of propertyValues.value.values()) {
-        if (values.includes(displayedValue) == false) {
-            propertyValues.remove(displayedValue);
-        }
+        if (values.includes(displayedValue)) continue;
+        propertyValues.remove(displayedValue);
     }
 }
 

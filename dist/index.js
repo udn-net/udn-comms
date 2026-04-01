@@ -322,7 +322,7 @@
   function createTimestamp() {
     return (/* @__PURE__ */ new Date()).toISOString();
   }
-  function checkDoesObjectMatchReference(reference, stringEntryObject) {
+  function checkDoesObjectMatchReference(reference, stringEntryObject, explicitEmptyValue = false) {
     reference_entry_loop: for (const referenceEntry of Object.entries(
       reference
     )) {
@@ -338,10 +338,12 @@
           return false;
         }
       } else {
-        if (referenceValue == "" && (stringEntryObjectValue == void 0 || stringEntryObjectValue == "")) {
-          return false;
-        } else if (referenceValue == "") {
-          continue reference_entry_loop;
+        if (explicitEmptyValue == false) {
+          if (referenceValue == "" && (stringEntryObjectValue == void 0 || stringEntryObjectValue == "")) {
+            return false;
+          } else if (referenceValue == "") {
+            continue reference_entry_loop;
+          }
         }
         if (stringEntryObjectValue != referenceValue) {
           return false;
@@ -355,7 +357,7 @@
     for (const object of objects) {
       const stringEntryObject = converter(object);
       const stringEntryObjectValue = stringEntryObject[key];
-      if (stringEntryObjectValue == void 0 || stringEntryObjectValue == "")
+      if (stringEntryObjectValue == void 0)
         continue;
       values.add(stringEntryObjectValue.toString());
     }
@@ -2651,7 +2653,8 @@
         ///
         filterTasksHeadline: "Filter Tasks",
         ///
-        renameCategoryInputPlaceholder: "Rename category,"
+        renameCategoryInputPlaceholder: "Rename category",
+        renameStatusInputPlaceholder: "Rename status"
       },
       calendar: {
         eventsBoard: "Events",
@@ -2825,7 +2828,8 @@
           taskTimeLabel: "Uhrzeit",
           deleteTaskButton: "Aufgabe l\xF6schen",
           filterTasksHeadline: "Aufgaben filtern",
-          renameCategoryInputPlaceholder: "Kategorie umbenennen"
+          renameCategoryInputPlaceholder: "Kategorie umbenennen",
+          renameStatusInputPlaceholder: "Status umbenennen"
         },
         calendar: {
           eventsBoard: "Ereignisse",
@@ -2995,7 +2999,8 @@
           taskTimeLabel: "Hora",
           deleteTaskButton: "Eliminar tarea",
           filterTasksHeadline: "Filtrar Tareas",
-          renameCategoryInputPlaceholder: "Renombrar categor\xEDa"
+          renameCategoryInputPlaceholder: "Renombrar categor\xEDa",
+          renameStatusInputPlaceholder: "Renombrar estado"
         },
         calendar: {
           eventsBoard: "Eventos",
@@ -3898,9 +3903,8 @@
       propertyValues.add(existingValue);
     }
     for (const displayedValue of propertyValues.value.values()) {
-      if (values.includes(displayedValue) == false) {
-        propertyValues.remove(displayedValue);
-      }
+      if (values.includes(displayedValue)) continue;
+      propertyValues.remove(displayedValue);
     }
   }
   function createSortedPropertyValueState(propertyValues) {
@@ -3922,7 +3926,8 @@
     objects.handleAddition((newObject) => {
       const doesMatch = checkDoesObjectMatchReference(
         reference,
-        stringEntryObjectConverter(newObject)
+        stringEntryObjectConverter(newObject),
+        true
       );
       if (doesMatch == false) return;
       matchingObjects.add(newObject);
@@ -4151,7 +4156,7 @@
     const view = /* @__PURE__ */ createElement("div", { class: "flex-row" }, /* @__PURE__ */ createElement("div", { class: "property-input-wrapper" }, /* @__PURE__ */ createElement(
       "input",
       {
-        placeholder: translations.chatPage.task.renameCategoryInputPlaceholder,
+        placeholder: translations.chatPage.task.renameStatusInputPlaceholder,
         "bind:value": viewModel.inputValue,
         "on:enter": viewModel.set
       }

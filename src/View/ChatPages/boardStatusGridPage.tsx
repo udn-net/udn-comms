@@ -118,8 +118,7 @@ function StatusNameCell(
             <div class="property-input-wrapper">
                 <input
                     placeholder={
-                        translations.chatPage.task
-                            .renameCategoryInputPlaceholder
+                        translations.chatPage.task.renameStatusInputPlaceholder
                     }
                     bind:value={viewModel.inputValue}
                     on:enter={viewModel.set}
