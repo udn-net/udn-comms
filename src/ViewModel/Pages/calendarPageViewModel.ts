@@ -184,7 +184,6 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
 
     loadData = (): void => {
         this.loadMonthTasks();
-        this.showToday();
     };
 
     // init
@@ -213,6 +212,9 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
                 this.showTask(taskFileContent);
             },
         );
+        
+        // initiate
+        this.showToday();
     }
 }
 

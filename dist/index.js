@@ -1877,7 +1877,6 @@
       };
       this.loadData = () => {
         this.loadMonthTasks();
-        this.showToday();
       };
       this.storageModel = storageModel2;
       this.calendarModel = calendarModel;
@@ -1891,6 +1890,7 @@
           this.showTask(taskFileContent);
         }
       );
+      this.showToday();
     }
     // data
     get monthString() {
