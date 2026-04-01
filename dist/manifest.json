@@ -1,6 +1,6 @@
 {
     "name": "Comms",
-    "display": "fullscreen",
+    "display": "standalone",
     "icons": [
         {
             "src": "icon.png",

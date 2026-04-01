@@ -114,8 +114,12 @@ COLORS
 
 /* basic */
 html {
-    background: var(--background);
+    background: black;
     color: var(--text-normal);
+}
+
+body {
+    background: var(--background);
 }
 
 .tile {
