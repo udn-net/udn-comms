@@ -9,3 +9,11 @@ export function allowDrag(event: DragEvent) {
 export function reload() {
     window.location.reload();
 }
+
+export function setFocus() {
+    document.getElementById("focused")?.focus();
+}
+
+export function setFocusWithDelay() {
+    setTimeout(setFocus, 100);
+}

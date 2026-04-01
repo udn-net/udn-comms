@@ -53,7 +53,7 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                             <span>
                                 {translations.chatPage.task.taskNameLabel}
                             </span>
-                            <input bind:value={taskViewModel.name}></input>
+                            <input bind:value={taskViewModel.name} id="focused"></input>
                         </div>
                     </label>
 

@@ -12,6 +12,7 @@ import { SearchModal } from "../Modals/searchModal";
 import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import { translations } from "../translations";
+import { setFocusWithDelay } from "../utility";
 
 export function BoardPage(boardViewModel: BoardViewModel) {
     boardViewModel.loadData();
@@ -49,6 +50,8 @@ export function BoardPage(boardViewModel: BoardViewModel) {
             if (boardViewModel.selectedTaskViewModel.value == undefined) {
                 return <div></div>;
             } else {
+                setFocusWithDelay();
+
                 return TaskSettingsModal(
                     boardViewModel.selectedTaskViewModel.value,
                 );

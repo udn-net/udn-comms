@@ -8,6 +8,7 @@ import { MonthGrid } from "../Components/monthGrid";
 import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import { translations } from "../translations";
+import { setFocusWithDelay } from "../utility";
 
 export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
     calendarPageViewModel.loadData();
@@ -95,6 +96,8 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
             ) {
                 return <div></div>;
             } else {
+                setFocusWithDelay();
+
                 return TaskSettingsModal(
                     calendarPageViewModel.selectedTaskViewModel.value,
                 );
