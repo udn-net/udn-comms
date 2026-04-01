@@ -1,0 +1,74 @@
+import * as React from "bloatless-react";
+import ChatModel, { ChatMessage } from "../../Model/Chat/chatModel";
+import ChatListViewModel from "../Chat/chatListViewModel";
+
+export default class NotificationViewModel {
+    chatListViewModel: ChatListViewModel;
+
+    // data
+    seenMessageIds = new Set<string>();
+    messagesInMarquee: Notification[] = [];
+    marquee = new React.State<Notification | undefined>(undefined);
+    currentIndex = 0;
+    interval: number | undefined = undefined;
+
+    // main
+    showNotification = (message: ChatMessage): void => {
+        const notification = NotificationViewModel.createNotification(message);
+        if (this.seenMessageIds.has(message.id)) return;
+
+        const currentChat = this.chatListViewModel.selectedChat.value.chatModel.info.primaryChannel;
+        if (notification.chat == currentChat) return;
+
+        this.messagesInMarquee.push(notification);
+        this.startLoop();
+    };
+
+    // loop
+    loop = () => {
+        if (this.messagesInMarquee.length == 0) {
+            this.marquee.value = undefined;
+            return this.stopLoop();
+        }
+
+        const notification = this.messagesInMarquee.shift();
+        this.seenMessageIds.delete(notification.messageId);
+        this.marquee.value = notification;
+    };
+
+    startLoop = () => {
+        if (this.interval != undefined) return;
+
+        this.loop();
+        this.interval = setInterval(() => {
+            this.loop();
+        }, 5000);
+    };
+
+    stopLoop = () => {
+        clearInterval(this.interval);
+        this.interval = undefined;
+    };
+
+    // init
+    constructor(chatListViewModel: ChatListViewModel) {
+        this.chatListViewModel = chatListViewModel;
+    }
+
+    // util
+    static createNotification(message: ChatMessage): Notification {
+        return {
+            messageId: message.id,
+            chat: ChatModel.splitChannel(message.channel)[0],
+            sender: message.sender,
+            body: message.body,
+        };
+    }
+}
+
+export interface Notification {
+    messageId: string;
+    chat: string;
+    sender: string;
+    body: string;
+}

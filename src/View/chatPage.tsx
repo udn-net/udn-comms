@@ -34,6 +34,21 @@ export function ChatPage(chatViewModel: ChatViewModel) {
         },
     );
 
+    const marqueeContent = React.createProxyState(
+        [chatViewModel.notificationViewModel.marquee],
+        () => {
+            const value = chatViewModel.notificationViewModel.marquee.value;
+            if (value == undefined) return <span></span>;
+            return (
+                <span>
+                    <b>{value.sender}</b>
+                    <span class="secondary">{value.chat}: </span>
+                    <span>{value.body}</span>
+                </span>
+            );
+        },
+    );
+
     return (
         <article
             id="chat-page"
@@ -63,7 +78,9 @@ export function ChatPage(chatViewModel: ChatViewModel) {
                         <span class="icon">signal_disconnected</span>
                     </button>
 
-                    <span>
+                    <span class="marquee" children:set={marqueeContent}></span>
+
+                    <span class="navigation-buttons">
                         {ChatViewToggleButton(
                             translations.chatPage.pages.calendar,
                             "calendar_month",

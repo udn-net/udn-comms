@@ -212,7 +212,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
                 this.showTask(taskFileContent);
             },
         );
-        
+
         // initiate
         this.showToday();
     }

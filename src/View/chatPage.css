@@ -125,13 +125,44 @@ body[showing-chat] #chat-page-wrapper {
 }
 
 #chat-page > div > #ribbon > span {
-    height: 100%;
-
-    flex: 1;
     overflow-y: auto;
-
     flex-direction: column;
     justify-content: end;
+}
+
+#chat-page > div > #ribbon > span.marquee {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+#chat-page > div > #ribbon > span.marquee > span {
+    transform: rotate(270deg);
+    transform-origin: left;
+
+    position: absolute;
+    bottom: -10px;
+    left: calc(var(--control-height) / 2);
+
+    height: var(--control-height);
+    min-width: 100vh;
+
+    overflow: visible;
+    text-overflow: visible;
+    white-space: nowrap;
+
+    display: flex;
+    align-items: center;
+    gap: var(--gap-between-tiles);
+}
+
+#chat-page > div > #ribbon > span.marquee > span > * {
+    animation: slide-up var(--animation-duration);
+}
+
+#chat-page > div > #ribbon > .navigation-buttons {
+    min-height: calc(var(--control-height) * 4);
+    flex: 0;
 }
 
 #chat-page > div > #ribbon button,

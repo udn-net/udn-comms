@@ -84,7 +84,7 @@ export default class ChatModel {
 
         chatMessage.status = ChatMessageStatus.Received;
         this.addMessage(chatMessage);
-        
+
         this.setReadStatus(true);
     };
 
@@ -271,6 +271,10 @@ export default class ChatModel {
     }
 
     // utility
+    static splitChannel(channelString: string): string[] {
+        return channelString.split("/");
+    }
+
     static generateChatInfo = (primaryChannel: string): ChatInfo => {
         return {
             dataVersion: DATA_VERSION,

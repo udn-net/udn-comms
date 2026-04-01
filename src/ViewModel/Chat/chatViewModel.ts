@@ -19,11 +19,13 @@ import SettingsViewModel from "../Global/settingsViewModel";
 import TaskPageViewModel from "../Pages/taskPageViewModel";
 import { translations } from "../../View/translations";
 import ConnectionViewModel from "../Global/connectionViewModel";
+import NotificationViewModel from "../Global/notificationViewModel";
 
 export default class ChatViewModel {
     chatModel: ChatModel;
     storageModel: StorageModel;
     settingsViewModel: SettingsViewModel;
+    notificationViewModel: NotificationViewModel;
     connectionViewModel: ConnectionViewModel;
     chatListViewModel: ChatListViewModel;
 
@@ -53,7 +55,7 @@ export default class ChatViewModel {
         this.chatListViewModel.closeChat();
     };
 
-    closeSubPages = (): void => { };
+    closeSubPages = (): void => {};
 
     setColor = (color: Color): void => {
         this.setDisplayedColor(color);
@@ -104,12 +106,12 @@ export default class ChatViewModel {
             this.chatModel.setReadStatus(false);
         }
         this.hasUnreadMessages.value = this.chatModel.info.hasUnreadMessages;
-    }
+    };
 
     setReadStatus = (hasUnreadMessages: boolean): void => {
         this.chatModel.setReadStatus(hasUnreadMessages);
         this.hasUnreadMessages.value = hasUnreadMessages;
-    }
+    };
 
     // init
     constructor(
@@ -117,6 +119,7 @@ export default class ChatViewModel {
         storageModel: StorageModel,
         chatModel: ChatModel,
         settingsViewModel: SettingsViewModel,
+        notificationViewModel: NotificationViewModel,
         connectionViewModel: ConnectionViewModel,
         chatListViewModel: ChatListViewModel,
     ) {
@@ -125,6 +128,7 @@ export default class ChatViewModel {
         this.chatModel = chatModel;
         this.settingsViewModel = settingsViewModel;
         this.connectionViewModel = connectionViewModel;
+        this.notificationViewModel = notificationViewModel;
         this.chatListViewModel = chatListViewModel;
 
         // page viewModels
@@ -155,6 +159,8 @@ export default class ChatViewModel {
             (chatMessage: ChatMessage) => {
                 this.messagePageViewModel.showChatMessage(chatMessage);
                 this.updateReadStatus();
+
+                this.notificationViewModel.showNotification(chatMessage);
             },
         );
 

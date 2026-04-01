@@ -651,6 +651,9 @@
       ],
       files: (id) => [...filePaths.chat.chatBase(id), "files"]
     },
+    notificationModel: {
+      base: []
+    },
     settingsModel: {
       username: ["user-name"],
       firstDayOfWeek: ["first-day-of-week"]
@@ -1373,8 +1376,11 @@
       );
       return sorted;
     }
+    // utility
+    static splitChannel(channelString) {
+      return channelString.split("/");
+    }
     static {
-      // utility
       this.generateChatInfo = (primaryChannel) => {
         return {
           dataVersion: DATA_VERSION,
@@ -3024,7 +3030,7 @@
   // src/ViewModel/Chat/chatViewModel.ts
   var ChatViewModel = class {
     // init
-    constructor(coreViewModel, storageModel2, chatModel, settingsViewModel2, connectionViewModel2, chatListViewModel2) {
+    constructor(coreViewModel, storageModel2, chatModel, settingsViewModel2, notificationViewModel, connectionViewModel2, chatListViewModel2) {
       this.coreViewModel = coreViewModel;
       // state
       this.displayedColor = new State("standard" /* Standard */);
@@ -3094,6 +3100,7 @@
       this.chatModel = chatModel;
       this.settingsViewModel = settingsViewModel2;
       this.connectionViewModel = connectionViewModel2;
+      this.notificationViewModel = notificationViewModel;
       this.chatListViewModel = chatListViewModel2;
       this.calendarViewModel = new CalendarPageViewModel(
         coreViewModel,
@@ -3120,11 +3127,65 @@
         (chatMessage) => {
           this.messagePageViewModel.showChatMessage(chatMessage);
           this.updateReadStatus();
+          this.notificationViewModel.showNotification(chatMessage);
         }
       );
       this.loadPageSelection();
       this.resetColor();
       this.loadInfo();
+    }
+  };
+
+  // src/ViewModel/Global/notificationViewModel.ts
+  var NotificationViewModel = class _NotificationViewModel {
+    // init
+    constructor(chatListViewModel2) {
+      // data
+      this.seenMessageIds = /* @__PURE__ */ new Set();
+      this.messagesInMarquee = [];
+      this.marquee = new State(void 0);
+      this.currentIndex = 0;
+      this.interval = void 0;
+      // main
+      this.showNotification = (message) => {
+        const notification = _NotificationViewModel.createNotification(message);
+        if (this.seenMessageIds.has(message.id)) return;
+        const currentChat = this.chatListViewModel.selectedChat.value.chatModel.info.primaryChannel;
+        if (notification.chat == currentChat) return;
+        this.messagesInMarquee.push(notification);
+        this.startLoop();
+      };
+      // loop
+      this.loop = () => {
+        if (this.messagesInMarquee.length == 0) {
+          this.marquee.value = void 0;
+          return this.stopLoop();
+        }
+        const notification = this.messagesInMarquee.shift();
+        this.seenMessageIds.delete(notification.messageId);
+        this.marquee.value = notification;
+      };
+      this.startLoop = () => {
+        if (this.interval != void 0) return;
+        this.loop();
+        this.interval = setInterval(() => {
+          this.loop();
+        }, 5e3);
+      };
+      this.stopLoop = () => {
+        clearInterval(this.interval);
+        this.interval = void 0;
+      };
+      this.chatListViewModel = chatListViewModel2;
+    }
+    // util
+    static createNotification(message) {
+      return {
+        messageId: message.id,
+        chat: ChatModel.splitChannel(message.channel)[0],
+        sender: message.sender,
+        body: message.body
+      };
     }
   };
 
@@ -3171,6 +3232,7 @@
           this.storageModel,
           chatModel,
           this.settingsViewModel,
+          this.notificationViewModel,
           this.connectionViewModel,
           this
         );
@@ -3200,6 +3262,7 @@
       this.storageModel = storageModel2;
       this.chatListModel = chatListModel2;
       this.settingsViewModel = settingsViewModel2;
+      this.notificationViewModel = new NotificationViewModel(this);
       this.connectionViewModel = connectionViewModel2;
       this.loadChats();
     }
@@ -3680,7 +3743,7 @@
   }
 
   // src/View/Components/chatMessage.tsx
-  function ChatMessage2(chatMessageViewModel) {
+  function ChatMessage3(chatMessageViewModel) {
     const statusIcon = createProxyState(
       [chatMessageViewModel.status],
       () => {
@@ -3726,7 +3789,7 @@
     );
   }
   var ChatMessageViewModelToView = (chatMessageViewModel) => {
-    return ChatMessage2(chatMessageViewModel);
+    return ChatMessage3(chatMessageViewModel);
   };
 
   // src/View/ChatPages/messagePage.tsx
@@ -4555,6 +4618,14 @@
         }
       }
     );
+    const marqueeContent = createProxyState(
+      [chatViewModel.notificationViewModel.marquee],
+      () => {
+        const value = chatViewModel.notificationViewModel.marquee.value;
+        if (value == void 0) return /* @__PURE__ */ createElement("span", null);
+        return /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement("b", null, value.sender), /* @__PURE__ */ createElement("span", { class: "secondary" }, value.chat, ": "), /* @__PURE__ */ createElement("span", null, value.body));
+      }
+    );
     return /* @__PURE__ */ createElement(
       "article",
       {
@@ -4579,7 +4650,7 @@
           "toggle:hidden": chatViewModel.connectionViewModel.isConnected
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "signal_disconnected")
-      ), /* @__PURE__ */ createElement("span", null, ChatViewToggleButton(
+      ), /* @__PURE__ */ createElement("span", { class: "marquee", "children:set": marqueeContent }), /* @__PURE__ */ createElement("span", { class: "navigation-buttons" }, ChatViewToggleButton(
         translations.chatPage.pages.calendar,
         "calendar_month",
         "calendar" /* Calendar */,

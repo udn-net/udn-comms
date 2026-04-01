@@ -227,6 +227,7 @@ export enum StorageModelSubPath {
     Chat = "chat",
 
     ConnectionModel = "connection",
+    NotificationModel = "notifications",
     SettingsModel = "settings",
 }
 
@@ -251,6 +252,10 @@ export const filePaths = {
             "last-used-page",
         ],
         files: (id: string) => [...filePaths.chat.chatBase(id), "files"],
+    },
+
+    notificationModel: {
+        base: [],
     },
 
     settingsModel: {
