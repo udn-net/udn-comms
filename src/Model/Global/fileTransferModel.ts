@@ -24,8 +24,8 @@ export default class FileTransferModel {
     // general
     generateTransferData = (): TransferData => {
         const transferData: TransferData = {
-            channel: generateRandomToken(2).substring(0, 4),
-            key: generateRandomToken(3).substring(0, 6),
+            channel: generateRandomToken(4),
+            key: generateRandomToken(6),
         };
         this.transferData = transferData;
         return transferData;

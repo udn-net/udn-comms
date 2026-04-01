@@ -317,7 +317,8 @@
   function generateRandomToken(length) {
     const array = new Uint8Array(length);
     crypto.getRandomValues(array);
-    return array.join("");
+    const string = array.join("");
+    return string.substring(0, length);
   }
   function createTimestamp() {
     return (/* @__PURE__ */ new Date()).toISOString();
@@ -5455,8 +5456,8 @@
       // general
       this.generateTransferData = () => {
         const transferData = {
-          channel: generateRandomToken(2).substring(0, 4),
-          key: generateRandomToken(3).substring(0, 6)
+          channel: generateRandomToken(4),
+          key: generateRandomToken(6)
         };
         this.transferData = transferData;
         return transferData;
@@ -5533,6 +5534,14 @@
     path: [""],
     body: ""
   };
+  var counter = {};
+  for (let i = 0; i < 1e3; i++) {
+    const token = generateRandomToken(10);
+    const length = token.length;
+    if (!counter[length]) counter[length] = 0;
+    counter[length]++;
+  }
+  console.log(counter);
 
   // src/View/Components/chatEntry.tsx
   function ChatEntry(chatViewModel) {

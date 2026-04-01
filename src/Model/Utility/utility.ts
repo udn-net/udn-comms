@@ -8,7 +8,8 @@ export interface Stringifiable {
 export function generateRandomToken(length: number): string {
     const array = new Uint8Array(length);
     crypto.getRandomValues(array);
-    return array.join("");
+    const string = array.join("");
+    return string.substring(0, length);
 }
 
 // date
