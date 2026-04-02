@@ -48,7 +48,6 @@ export default class ChatViewModel {
     // view
     open = (): void => {
         this.chatListViewModel.openChat(this);
-        this.setReadStatus(false);
     };
 
     close = (): void => {
@@ -102,7 +101,10 @@ export default class ChatViewModel {
     };
 
     updateReadStatus = (): void => {
-        if (this.chatListViewModel.selectedChat.value == this) {
+        if (
+            this.chatListViewModel.selectedChat.value == this &&
+            this.selectedPage.value == ChatPageType.Messages
+        ) {
             this.chatModel.setReadStatus(false);
         }
         this.hasUnreadMessages.value = this.chatModel.info.hasUnreadMessages;
@@ -112,6 +114,14 @@ export default class ChatViewModel {
         this.chatModel.setReadStatus(hasUnreadMessages);
         this.hasUnreadMessages.value = hasUnreadMessages;
     };
+
+    subscribeReadStatus = (): void => {
+        React.createProxyState([this.selectedPage, this.chatListViewModel.selectedChat], () => {
+            if (this.chatListViewModel.selectedChat.value != this) return;
+            if (this.selectedPage.value != ChatPageType.Messages) return;
+            this.setReadStatus(false);
+        })
+    }
 
     // init
     constructor(
@@ -168,6 +178,7 @@ export default class ChatViewModel {
         this.loadPageSelection();
         this.resetColor();
         this.loadInfo();
+        this.subscribeReadStatus();
     }
 }
 

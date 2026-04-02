@@ -21,5 +21,12 @@ export function ChatViewToggleButton(
         () => chatViewModel.selectedPage.value == page,
     );
 
-    return RibbonButton(label, icon, isSelected, select);
+    const isHighlighted = new React.State(false);
+    if (page == ChatPageType.Messages) {
+        chatViewModel.hasUnreadMessages.subscribe(
+            (hasUnreadMessages) => (isHighlighted.value = hasUnreadMessages),
+        );
+    }
+
+    return RibbonButton(label, icon, isSelected, select, isHighlighted);
 }

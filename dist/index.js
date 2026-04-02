@@ -3043,7 +3043,6 @@
       // view
       this.open = () => {
         this.chatListViewModel.openChat(this);
-        this.setReadStatus(false);
       };
       this.close = () => {
         this.chatListViewModel.closeChat();
@@ -3087,7 +3086,7 @@
         ]);
       };
       this.updateReadStatus = () => {
-        if (this.chatListViewModel.selectedChat.value == this) {
+        if (this.chatListViewModel.selectedChat.value == this && this.selectedPage.value == "messages" /* Messages */) {
           this.chatModel.setReadStatus(false);
         }
         this.hasUnreadMessages.value = this.chatModel.info.hasUnreadMessages;
@@ -3095,6 +3094,13 @@
       this.setReadStatus = (hasUnreadMessages) => {
         this.chatModel.setReadStatus(hasUnreadMessages);
         this.hasUnreadMessages.value = hasUnreadMessages;
+      };
+      this.subscribeReadStatus = () => {
+        createProxyState([this.selectedPage, this.chatListViewModel.selectedChat], () => {
+          if (this.chatListViewModel.selectedChat.value != this) return;
+          if (this.selectedPage.value != "messages" /* Messages */) return;
+          this.setReadStatus(false);
+        });
       };
       this.storageModel = storageModel2;
       this.chatModel = chatModel;
@@ -3133,6 +3139,7 @@
       this.loadPageSelection();
       this.resetColor();
       this.loadInfo();
+      this.subscribeReadStatus();
     }
   };
 
@@ -3151,7 +3158,9 @@
         const notification = _NotificationViewModel.createNotification(message);
         if (this.seenMessageIds.has(message.id)) return;
         const currentChat = this.chatListViewModel.selectedChat.value.chatModel.info.primaryChannel;
-        if (notification.chat == currentChat) return;
+        const currentPage = this.chatListViewModel.selectedChat.value.selectedPage.value;
+        if (notification.chat == currentChat && currentPage == "messages" /* Messages */)
+          return;
         this.messagesInMarquee.push(notification);
         this.startLoop();
       };
@@ -3714,13 +3723,14 @@
   }
 
   // src/View/Components/ribbonButton.tsx
-  function RibbonButton(label, icon, isSelected, select) {
+  function RibbonButton(label, icon, isSelected, select, isHighlighted = new State(false)) {
     return /* @__PURE__ */ createElement(
       "button",
       {
         class: "ribbon-button",
         "aria-label": label,
         "toggle:selected": isSelected,
+        "toggle:highlight": isHighlighted,
         "on:click": select
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, icon)
@@ -3736,7 +3746,13 @@
       [chatViewModel.selectedPage],
       () => chatViewModel.selectedPage.value == page
     );
-    return RibbonButton(label, icon, isSelected, select);
+    const isHighlighted = new State(false);
+    if (page == "messages" /* Messages */) {
+      chatViewModel.hasUnreadMessages.subscribe(
+        (hasUnreadMessages) => isHighlighted.value = hasUnreadMessages
+      );
+    }
+    return RibbonButton(label, icon, isSelected, select, isHighlighted);
   }
 
   // src/View/Modals/chatMessageInfoModal.tsx
@@ -4638,7 +4654,15 @@
       () => {
         const value = chatViewModel.notificationViewModel.marquee.value;
         if (value == void 0) return /* @__PURE__ */ createElement("span", null);
-        return /* @__PURE__ */ createElement("span", { "on:click": chatViewModel.notificationViewModel.openNotification }, /* @__PURE__ */ createElement("b", null, value.sender), /* @__PURE__ */ createElement("span", { class: "secondary" }, value.chat, ": "), /* @__PURE__ */ createElement("span", null, value.body));
+        return /* @__PURE__ */ createElement(
+          "span",
+          {
+            "on:click": chatViewModel.notificationViewModel.openNotification
+          },
+          /* @__PURE__ */ createElement("b", null, value.sender),
+          /* @__PURE__ */ createElement("span", { class: "secondary" }, value.chat, ": "),
+          /* @__PURE__ */ createElement("span", null, value.body)
+        );
       }
     );
     return /* @__PURE__ */ createElement(

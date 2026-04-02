@@ -214,6 +214,12 @@ body[showing-chat] #chat-page-wrapper {
     width: 100%;
 }
 
+#chat-page > div > #ribbon .ribbon-button[highlight] {
+    background: rgb(255, 217, 0) !important;
+    color: black;
+    outline-color: black;
+}
+
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar {
     height: var(--ribbon-size);
 
