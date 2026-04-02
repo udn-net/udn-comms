@@ -51,8 +51,8 @@ export default class TaskContainingPageViewModel {
 
     updateTaskIndices = (): void => {
         this.taskIndexManager.update([...this.taskViewModels.value.values()]);
-        for (const boardViewModel of this.taskViewModels.value.values()) {
-            boardViewModel.updateIndex();
+        for (const taskViewModel of this.taskViewModels.value.values()) {
+            taskViewModel.updateIndex();
         }
     };
 

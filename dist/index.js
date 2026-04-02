@@ -1744,8 +1744,8 @@
       };
       this.updateTaskIndices = () => {
         this.taskIndexManager.update([...this.taskViewModels.value.values()]);
-        for (const boardViewModel of this.taskViewModels.value.values()) {
-          boardViewModel.updateIndex();
+        for (const taskViewModel of this.taskViewModels.value.values()) {
+          taskViewModel.updateIndex();
         }
       };
       this.boardsAndTasksModel = boardsAndTasksModel;
@@ -1830,6 +1830,7 @@
         this.taskViewModels.remove(taskFileContent.fileId);
         this.taskViewModels.set(taskFileContent.fileId, taskViewModel);
         mapState?.set(taskFileContent.fileId, taskViewModel);
+        this.updateTaskIndices();
       };
       this.removeTaskFromView = (taskFileContent) => {
         this.taskViewModels.remove(taskFileContent.fileId);
@@ -1879,7 +1880,6 @@
           if (taskFileContent == null) continue;
           this.showTask(taskFileContent);
         }
-        this.updateTaskIndices();
       };
       this.loadData = () => {
         this.loadMonthTasks();

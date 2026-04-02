@@ -117,6 +117,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
         this.taskViewModels.set(taskFileContent.fileId, taskViewModel);
 
         mapState?.set(taskFileContent.fileId, taskViewModel);
+        this.updateTaskIndices();
     };
 
     removeTaskFromView = (taskFileContent: TaskFileContent): void => {
@@ -178,8 +179,6 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
             if (taskFileContent == null) continue;
             this.showTask(taskFileContent);
         }
-
-        this.updateTaskIndices();
     };
 
     loadData = (): void => {
