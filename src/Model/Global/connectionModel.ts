@@ -263,7 +263,7 @@ export default class ConnectionModel {
             if (this.isConnected == true) return;
             if (this.shouldAttemptReconnect == false) return;
             this.reconnect();
-        }, 5000)
+        }, 5000);
         this.reconnect();
     }
 }
