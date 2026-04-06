@@ -1703,7 +1703,6 @@
       this.getStringsForFilter = (taskViewModel) => {
         return [
           taskViewModel.task.name,
-          taskViewModel.task.description ?? "",
           taskViewModel.task.category ?? "",
           taskViewModel.task.status ?? "",
           taskViewModel.task.priority ?? "",
