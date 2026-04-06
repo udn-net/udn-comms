@@ -3181,6 +3181,7 @@
           (chat2) => chat2.chatModel.info.primaryChannel == notification.chat
         );
         chat.open();
+        chat.selectedPage.value = "messages" /* Messages */;
       };
       // loop
       this.loop = () => {
