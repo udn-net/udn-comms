@@ -2481,6 +2481,7 @@
       this.storageModel = storageModel2;
       this.boardsAndTasksModel = boardModel;
       this.chatViewModel = chatViewModel;
+      this.loadData();
       boardModel.boardHandlerManager.addHandler(
         (boardInfoFileContent) => {
           this.showBoardInList(boardInfoFileContent);
