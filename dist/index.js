@@ -4919,17 +4919,6 @@
       this.handleConnectionChange = () => {
         console.log("connection status:", this.isConnected, this.address);
         this.connectionChangeHandlerManager.trigger();
-        if (this.isConnected == false) {
-          if (this.shouldAttemptReconnect == false) return;
-          this.reconnectInterval = setInterval(() => {
-            if (this.isConnected == true) {
-              clearInterval(this.reconnectInterval);
-              return;
-            }
-            this.reconnect();
-          }, 5e3);
-          return;
-        }
         if (this.address == void 0) return;
         this.storeAddress(this.address);
         this.sendSubscriptionRequest();
@@ -4938,6 +4927,7 @@
       };
       // connection
       this.connect = (address) => {
+        console.log("connecting...", address);
         this.udn.connect(address);
       };
       this.disconnect = () => {
@@ -5099,6 +5089,11 @@
       this.udn.onmailboxconnect = (mailboxId) => {
         console.log(`using mailbox ${mailboxId}`);
       };
+      setInterval(() => {
+        if (this.isConnected == true) return;
+        if (this.shouldAttemptReconnect == false) return;
+        this.reconnect();
+      }, 5e3);
       this.reconnect();
     }
     // data
@@ -5470,14 +5465,7 @@
         "on:click": fileTransferViewModel2.showFileSelectionModal
       },
       translations.general.backButton
-    ), /* @__PURE__ */ createElement(
-      "button",
-      {
-        disabled: true,
-        class: "flex"
-      },
-      translations.general.waitingLabel
-    ))));
+    ), /* @__PURE__ */ createElement("button", { disabled: true, class: "flex" }, translations.general.waitingLabel))));
   }
   function TransferDisplayModal(fileTransferViewModel2) {
     const isPresented = createProxyState(
@@ -5612,7 +5600,7 @@
       };
       // handlers
       this.handleMessage = (data) => {
-        console.log(this.transferData);
+        if (this.transferData == void 0) return;
         if (data.messageChannel != this.transferData.channel) return;
         if (data.messageBody == _FileTransferModel.READY_MESSAGE && this.direction == 0 /* Send */) {
           console.log("TRIGGER");

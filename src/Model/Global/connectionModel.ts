@@ -35,20 +35,6 @@ export default class ConnectionModel {
     handleConnectionChange = (): void => {
         console.log("connection status:", this.isConnected, this.address);
         this.connectionChangeHandlerManager.trigger();
-
-        if (this.isConnected == false) {
-            if (this.shouldAttemptReconnect == false) return;
-
-            this.reconnectInterval = setInterval(() => {
-                if (this.isConnected == true) {
-                    clearInterval(this.reconnectInterval);
-                    return;
-                }
-                this.reconnect();
-            }, 5000);
-
-            return;
-        }
         if (this.address == undefined) return;
 
         this.storeAddress(this.address);
@@ -59,6 +45,7 @@ export default class ConnectionModel {
 
     // connection
     connect = (address: string): void => {
+        console.log("connecting...", address);
         this.udn.connect(address);
     };
 
@@ -272,6 +259,11 @@ export default class ConnectionModel {
             console.log(`using mailbox ${mailboxId}`);
         };
 
+        setInterval(() => {
+            if (this.isConnected == true) return;
+            if (this.shouldAttemptReconnect == false) return;
+            this.reconnect();
+        }, 5000)
         this.reconnect();
     }
 }

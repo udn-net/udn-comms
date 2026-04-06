@@ -53,7 +53,7 @@ export default class FileTransferModel {
 
     // handlers
     handleMessage = (data: Message): void => {
-        console.log(this.transferData);
+        if (this.transferData == undefined) return;
         if (data.messageChannel != this.transferData.channel) return;
         if (
             data.messageBody == FileTransferModel.READY_MESSAGE &&
