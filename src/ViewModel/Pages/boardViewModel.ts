@@ -121,8 +121,12 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
             searchTerm,
         ];
         this.storageModel.write(suggestionPath, "");
-        if (!this.coreViewModel.boardSearchSuggestions.value.has(searchTerm)) {
-            this.coreViewModel.boardSearchSuggestions.add(searchTerm);
+        if (
+            !this.coreViewModel.boardFilterStringSuggestions.value.has(
+                searchTerm,
+            )
+        ) {
+            this.coreViewModel.boardFilterStringSuggestions.add(searchTerm);
         }
 
         const lastSearchPath: string[] = this.getLastSearchPath();
@@ -221,7 +225,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     loadSearchSuggestions = (): void => {
         const dirPath: string[] = this.getPreviousSearchesPath();
         const searches: string[] = this.storageModel.list(dirPath);
-        this.coreViewModel.boardSearchSuggestions.add(...searches);
+        this.coreViewModel.boardFilterStringSuggestions.add(...searches);
     };
 
     restoreSearch = (): void => {
@@ -290,7 +294,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
             this.taskViewModels,
             this.filteredTaskViewModels,
             TaskViewModel.getStringsForFilter,
-            this.coreViewModel.boardSearchSuggestions,
+            this.coreViewModel.boardFilterStringSuggestions,
         );
         this.searchViewModel.appliedQuery.subscribeSilent((newQuery) => {
             this.handleNewSearch(newQuery);

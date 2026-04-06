@@ -17,9 +17,13 @@ export default class FileTransferModel {
     storageModel: StorageModel;
     connectionModel: ConnectionModel;
 
+    static READY_MESSAGE = "ready";
+
     // data
     transferData: TransferData | undefined;
     fileHandlerManager: HandlerManager<string> = new HandlerManager();
+    readyToSendHandlerManager: HandlerManager<boolean> = new HandlerManager();
+    direction: TransferDirections = TransferDirections.Send;
 
     // general
     generateTransferData = (): TransferData => {
@@ -31,16 +35,36 @@ export default class FileTransferModel {
         return transferData;
     };
 
-    prepareToReceive = (transferData: TransferData) => {
+    prepareToSend = (): void => {
+        this.direction = TransferDirections.Send;
+        this.connectionModel.addChannel(this.transferData.channel);
+    };
+
+    prepareToReceive = (transferData: TransferData): void => {
+        this.direction = TransferDirections.Receive;
+
         this.connectionModel.addChannel(transferData.channel);
         this.transferData = transferData;
+        this.connectionModel.sendPlainMessage(
+            transferData.channel,
+            FileTransferModel.READY_MESSAGE,
+        );
     };
 
     // handlers
     handleMessage = (data: Message): void => {
+        console.log(this.transferData);
+        if (data.messageChannel != this.transferData.channel) return;
+        if (
+            data.messageBody == FileTransferModel.READY_MESSAGE &&
+            this.direction == TransferDirections.Send
+        ) {
+            console.log("TRIGGER");
+            this.readyToSendHandlerManager.trigger(true);
+        }
+
         if (this.transferData == undefined) return;
         if (data.messageBody == undefined) return;
-        if (data.messageChannel != this.transferData.channel) return;
 
         this.handleFile(data.messageBody);
     };
@@ -52,7 +76,6 @@ export default class FileTransferModel {
             encryptedFileData,
             this.transferData.key,
         );
-        console.log(decrypted);
 
         const parsed: any = parse(decrypted);
         const isFileData: boolean = checkMatchesObjectStructure(
@@ -131,3 +154,8 @@ export const FileDataReference: FileData = {
     path: [""],
     body: "",
 };
+
+export enum TransferDirections {
+    Send,
+    Receive,
+}

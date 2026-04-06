@@ -281,12 +281,8 @@ function TransferDataDisplayModal(
                     >
                         {translations.general.backButton}
                     </button>
-                    <button
-                        class="primary flex"
-                        on:click={fileTransferViewModel.initiateTransfer}
-                    >
-                        {translations.dataTransferModal.sendButton}
-                        <span class="icon">arrow_forward</span>
+                    <button disabled class="flex">
+                        {translations.general.waitingLabel}
                     </button>
                 </div>
             </div>
@@ -460,13 +456,6 @@ function DataReceptionModal(fileTransferViewModel: FileTransferViewModel) {
                     <h2>
                         {translations.dataTransferModal.transferDataHeadline}
                     </h2>
-
-                    <p class="secondary">
-                        {
-                            translations.dataTransferModal
-                                .readyToReceiveDescription
-                        }
-                    </p>
 
                     <p
                         class="secondary"

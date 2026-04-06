@@ -21,6 +21,7 @@ const englishTranslations = {
 
         fileVersionLabel: "Version",
         searchLabel: "Search",
+        waitingLabel: "Waiting...",
 
         restoreConnection: "Restore connection",
     },
@@ -89,7 +90,6 @@ const englishTranslations = {
         dataEntryDescription: "Enter this data on the other device.",
         dataEntryInputDescription:
             "Enter the data displayed on the other device.",
-        readyToReceiveDescription: "Click 'send' on the other device.",
 
         notConnectedError: "You are not connected to any server.",
 
@@ -298,6 +298,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
             fileVersionLabel: "Version",
             searchLabel: "Suche",
+            waitingLabel: "Warten...",
 
             restoreConnection: "Verbindung wiederherstellen",
         },
@@ -362,8 +363,6 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
                 "Gib diese Informationen auf dem anderen Gerät ein.",
             dataEntryInputDescription:
                 "Gib die auf dem anderen Gerät angezeigten Informationen ein.",
-            readyToReceiveDescription:
-                "Klicke auf dem anderen Gerät auf 'Senden'.",
 
             notConnectedError: "Du bist mit keinem Server verbunden.",
 
@@ -543,6 +542,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
             fileVersionLabel: "Versión",
             searchLabel: "Buscar",
+            waitingLabel: "Esperando...",
 
             restoreConnection: "Conectar de nuevo",
         },
@@ -607,8 +607,6 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
                 "Introduce estos datos en el otro dispositivo.",
             dataEntryInputDescription:
                 "Introduce los datos mostrados en el otro dispositivo.",
-            readyToReceiveDescription:
-                "Haz clic en 'enviar' en el otro dispositivo.",
 
             notConnectedError: "No estás conectado a ningún servidor.",
 

@@ -25,7 +25,7 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
     };
 
     return (
-        <div class="modal" open>
+        <div class="modal" open metakey:s={taskViewModel.closeAndSave}>
             <div>
                 <main>
                     <h2>{translations.chatPage.task.taskSettingsHeadline}</h2>

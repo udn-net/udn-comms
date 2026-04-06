@@ -52,6 +52,7 @@ export default class ConnectionViewModel {
     };
 
     connectToAddress = (address: string): void => {
+        console.log(address);
         this.connectionModel.connect(address);
     };
 

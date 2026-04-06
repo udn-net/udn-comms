@@ -2244,7 +2244,9 @@
           searchTerm
         ];
         this.storageModel.write(suggestionPath, "");
-        if (!this.coreViewModel.boardFilterStringSuggestions.value.has(searchTerm)) {
+        if (!this.coreViewModel.boardFilterStringSuggestions.value.has(
+          searchTerm
+        )) {
           this.coreViewModel.boardFilterStringSuggestions.add(searchTerm);
         }
         const lastSearchPath = this.getLastSearchPath();
@@ -2517,6 +2519,7 @@
       reloadAppButton: "Reload App",
       fileVersionLabel: "Version",
       searchLabel: "Search",
+      waitingLabel: "Waiting...",
       restoreConnection: "Restore connection"
     },
     regional: {
@@ -2566,7 +2569,6 @@
       selectionDescription: "Select the data that you want to transfer.",
       dataEntryDescription: "Enter this data on the other device.",
       dataEntryInputDescription: "Enter the data displayed on the other device.",
-      readyToReceiveDescription: "Click 'send' on the other device.",
       notConnectedError: "You are not connected to any server.",
       ///
       fromThisDeviceButton: "From this device",
@@ -2707,6 +2709,7 @@
         reloadAppButton: "Neu laden",
         fileVersionLabel: "Version",
         searchLabel: "Suche",
+        waitingLabel: "Warten...",
         restoreConnection: "Verbindung wiederherstellen"
       },
       regional: {
@@ -2753,7 +2756,6 @@
         selectionDescription: "W\xE4hle die Daten aus, die du \xFCbertragen m\xF6chtest.",
         dataEntryDescription: "Gib diese Informationen auf dem anderen Ger\xE4t ein.",
         dataEntryInputDescription: "Gib die auf dem anderen Ger\xE4t angezeigten Informationen ein.",
-        readyToReceiveDescription: "Klicke auf dem anderen Ger\xE4t auf 'Senden'.",
         notConnectedError: "Du bist mit keinem Server verbunden.",
         fromThisDeviceButton: "Von diesem Ger\xE4t",
         toThisDeviceButton: "An dieses Ger\xE4t",
@@ -2878,6 +2880,7 @@
         reloadAppButton: "Recargar app",
         fileVersionLabel: "Versi\xF3n",
         searchLabel: "Buscar",
+        waitingLabel: "Esperando...",
         restoreConnection: "Conectar de nuevo"
       },
       regional: {
@@ -2924,7 +2927,6 @@
         selectionDescription: "Selecciona los datos que quieres transferir.",
         dataEntryDescription: "Introduce estos datos en el otro dispositivo.",
         dataEntryInputDescription: "Introduce los datos mostrados en el otro dispositivo.",
-        readyToReceiveDescription: "Haz clic en 'enviar' en el otro dispositivo.",
         notConnectedError: "No est\xE1s conectado a ning\xFAn servidor.",
         fromThisDeviceButton: "Desde este dispositivo",
         toThisDeviceButton: "A este dispositivo",
@@ -3104,11 +3106,14 @@
         this.hasUnreadMessages.value = hasUnreadMessages;
       };
       this.subscribeReadStatus = () => {
-        createProxyState([this.selectedPage, this.chatListViewModel.selectedChat], () => {
-          if (this.chatListViewModel.selectedChat.value != this) return;
-          if (this.selectedPage.value != "messages" /* Messages */) return;
-          this.setReadStatus(false);
-        });
+        createProxyState(
+          [this.selectedPage, this.chatListViewModel.selectedChat],
+          () => {
+            if (this.chatListViewModel.selectedChat.value != this) return;
+            if (this.selectedPage.value != "messages" /* Messages */) return;
+            this.setReadStatus(false);
+          }
+        );
       };
       this.storageModel = storageModel2;
       this.chatModel = chatModel;
@@ -5147,6 +5152,7 @@
         this.connectToAddress(this.serverAddressInput.value);
       };
       this.connectToAddress = (address) => {
+        console.log(address);
         this.connectionModel.connect(address);
       };
       this.disconnect = () => {
@@ -5282,6 +5288,7 @@
       this.showTransferDataModal = () => {
         this.presentedModal.value = 2 /* TransferDataDisplay */;
         this.getTransferData();
+        this.fileTransferModel.prepareToSend();
       };
       this.initiateTransfer = () => {
         this.presentedModal.value = 3 /* TransferDisplay */;
@@ -5315,6 +5322,9 @@
       this.chatListModel = chatListModel2;
       this.fileTransferModel.fileHandlerManager.addHandler(
         this.handleReceivedFile
+      );
+      this.fileTransferModel.readyToSendHandlerManager.addHandler(
+        () => this.initiateTransfer()
       );
     }
   };
@@ -5463,11 +5473,10 @@
     ), /* @__PURE__ */ createElement(
       "button",
       {
-        class: "primary flex",
-        "on:click": fileTransferViewModel2.initiateTransfer
+        disabled: true,
+        class: "flex"
       },
-      translations.dataTransferModal.sendButton,
-      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+      translations.general.waitingLabel
     ))));
   }
   function TransferDisplayModal(fileTransferViewModel2) {
@@ -5554,7 +5563,7 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 5 /* ReceptionDisplay */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("p", { class: "secondary" }, translations.dataTransferModal.readyToReceiveDescription), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
       "p",
       {
         class: "secondary",
@@ -5573,10 +5582,12 @@
   }
 
   // src/Model/Global/fileTransferModel.ts
-  var FileTransferModel = class {
+  var FileTransferModel = class _FileTransferModel {
     // init
     constructor(storageModel2, connectionModel2) {
       this.fileHandlerManager = new HandlerManager();
+      this.readyToSendHandlerManager = new HandlerManager();
+      this.direction = 0 /* Send */;
       // general
       this.generateTransferData = () => {
         const transferData = {
@@ -5586,15 +5597,29 @@
         this.transferData = transferData;
         return transferData;
       };
+      this.prepareToSend = () => {
+        this.direction = 0 /* Send */;
+        this.connectionModel.addChannel(this.transferData.channel);
+      };
       this.prepareToReceive = (transferData) => {
+        this.direction = 1 /* Receive */;
         this.connectionModel.addChannel(transferData.channel);
         this.transferData = transferData;
+        this.connectionModel.sendPlainMessage(
+          transferData.channel,
+          _FileTransferModel.READY_MESSAGE
+        );
       };
       // handlers
       this.handleMessage = (data) => {
+        console.log(this.transferData);
+        if (data.messageChannel != this.transferData.channel) return;
+        if (data.messageBody == _FileTransferModel.READY_MESSAGE && this.direction == 0 /* Send */) {
+          console.log("TRIGGER");
+          this.readyToSendHandlerManager.trigger(true);
+        }
         if (this.transferData == void 0) return;
         if (data.messageBody == void 0) return;
-        if (data.messageChannel != this.transferData.channel) return;
         this.handleFile(data.messageBody);
       };
       this.handleFile = async (encryptedFileData) => {
@@ -5603,7 +5628,6 @@
           encryptedFileData,
           this.transferData.key
         );
-        console.log(decrypted);
         const parsed = parse(decrypted);
         const isFileData = checkMatchesObjectStructure(
           parsed,
@@ -5652,6 +5676,9 @@
       this.connectionModel.messageHandlerManager.addHandler(
         this.handleMessage
       );
+    }
+    static {
+      this.READY_MESSAGE = "ready";
     }
   };
   var FileDataReference = {

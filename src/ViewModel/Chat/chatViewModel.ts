@@ -116,12 +116,15 @@ export default class ChatViewModel {
     };
 
     subscribeReadStatus = (): void => {
-        React.createProxyState([this.selectedPage, this.chatListViewModel.selectedChat], () => {
-            if (this.chatListViewModel.selectedChat.value != this) return;
-            if (this.selectedPage.value != ChatPageType.Messages) return;
-            this.setReadStatus(false);
-        })
-    }
+        React.createProxyState(
+            [this.selectedPage, this.chatListViewModel.selectedChat],
+            () => {
+                if (this.chatListViewModel.selectedChat.value != this) return;
+                if (this.selectedPage.value != ChatPageType.Messages) return;
+                this.setReadStatus(false);
+            },
+        );
+    };
 
     // init
     constructor(

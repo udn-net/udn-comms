@@ -101,7 +101,8 @@ export default class TaskViewModel {
         this.loadTaskData();
     };
 
-    closeAndSave = (): void => {
+    closeAndSave = (e: Event): void => {
+        e.preventDefault();
         this.close();
         this.save();
     };
@@ -234,7 +235,6 @@ export default class TaskViewModel {
     static getStringsForFilter = (taskViewModel: TaskViewModel): string[] => {
         return [
             taskViewModel.task.name,
-            taskViewModel.task.description ?? "",
             taskViewModel.task.category ?? "",
             taskViewModel.task.status ?? "",
             taskViewModel.task.priority ?? "",

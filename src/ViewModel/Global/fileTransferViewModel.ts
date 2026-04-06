@@ -128,6 +128,7 @@ export default class FileTransferViewModel {
     showTransferDataModal = (): void => {
         this.presentedModal.value = FileTransferModal.TransferDataDisplay;
         this.getTransferData();
+        this.fileTransferModel.prepareToSend();
     };
 
     initiateTransfer = (): void => {
@@ -175,6 +176,10 @@ export default class FileTransferViewModel {
 
         this.fileTransferModel.fileHandlerManager.addHandler(
             this.handleReceivedFile,
+        );
+
+        this.fileTransferModel.readyToSendHandlerManager.addHandler(() =>
+            this.initiateTransfer(),
         );
     }
 }

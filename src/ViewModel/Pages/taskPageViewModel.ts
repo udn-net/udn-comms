@@ -164,6 +164,8 @@ export default class TaskPageViewModel {
 
         this.chatViewModel = chatViewModel;
 
+        this.loadData();
+
         // handlers
         boardModel.boardHandlerManager.addHandler(
             (boardInfoFileContent: BoardInfoFileContent) => {
