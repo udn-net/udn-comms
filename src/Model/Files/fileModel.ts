@@ -65,6 +65,7 @@ export default class FileModel {
         if (didStore == false) return;
 
         this.boardsAndTasksModel.handleFileContent(fileContent);
+        this.chatModel.handleReaction(fileContent);
     };
 
     // methods

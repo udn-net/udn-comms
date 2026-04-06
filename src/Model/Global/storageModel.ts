@@ -247,6 +247,10 @@ export const filePaths = {
         info: (id: string) => [...filePaths.chat.chatBase(id), "info"],
         color: (id: string) => [...filePaths.chat.chatBase(id), "color"],
         messages: (id: string) => [...filePaths.chat.chatBase(id), "messages"],
+        reactions: (id: string) => [
+            ...filePaths.chat.chatBase(id),
+            "reactions",
+        ],
         lastUsedPage: (id: string) => [
             ...filePaths.chat.chatBase(id),
             "last-used-page",

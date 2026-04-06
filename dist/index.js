@@ -603,6 +603,10 @@
       info: (id) => [...filePaths.chat.chatBase(id), "info"],
       color: (id) => [...filePaths.chat.chatBase(id), "color"],
       messages: (id) => [...filePaths.chat.chatBase(id), "messages"],
+      reactions: (id) => [
+        ...filePaths.chat.chatBase(id),
+        "reactions"
+      ],
       lastUsedPage: (id) => [
         ...filePaths.chat.chatBase(id),
         "last-used-page"
@@ -1037,6 +1041,7 @@
         const didStore = this.storeFileContent(fileContent);
         if (didStore == false) return;
         this.boardsAndTasksModel.handleFileContent(fileContent);
+        this.chatModel.handleReaction(fileContent);
       };
       // methods
       this.addFileContentAndSend = (fileContent) => {
@@ -1203,6 +1208,7 @@
     // init
     constructor(storageModel2, connectionModel2, settingsModel2, chatListModel2, chatId) {
       this.chatMessageHandlerManager = new HandlerManager();
+      this.reactionHandlerManager = new HandlerManager();
       // paths
       this.getBasePath = () => {
         return StorageModel.getPath(
@@ -1231,6 +1237,15 @@
       this.getMessagePath = (id) => {
         return [...this.getMessageDirPath(), id];
       };
+      this.getReactionDirPath = () => {
+        return StorageModel.getPath(
+          "chat" /* Chat */,
+          filePaths.chat.reactions(this.id)
+        );
+      };
+      this.getReactionPath = (id) => {
+        return [...this.getReactionDirPath(), id];
+      };
       // handlers
       this.handleMessage = (body) => {
         const chatMessage = parseValidObject(
@@ -1241,6 +1256,10 @@
         chatMessage.status = "received" /* Received */;
         this.addMessage(chatMessage);
         this.setReadStatus(true);
+      };
+      this.handleReaction = (reaction) => {
+        if (!checkMatchesObjectStructure(reaction, ChatMessageReactionReference)) return;
+        this.addReaction(reaction);
       };
       this.handleMessageSent = (chatMessage) => {
         chatMessage.status = "sent" /* Sent */;
@@ -1276,7 +1295,12 @@
           chatMessage.stringifiedFile
         );
       };
-      this.sendMessage = async (body, fileContent) => {
+      this.addReaction = async (reaction) => {
+        const reactionPath = this.getReactionPath(reaction.fileId);
+        this.storageModel.writeStringifiable(reactionPath, reaction);
+        this.reactionHandlerManager.trigger(reaction);
+      };
+      this.getNameAndChannel = () => {
         const senderName = this.settingsModel.username;
         if (senderName == "") return false;
         const allChannels = [this.info.primaryChannel];
@@ -1284,6 +1308,12 @@
           allChannels.push(secondaryChannel);
         }
         const combinedChannel = allChannels.join("/");
+        return [senderName, combinedChannel];
+      };
+      this.sendMessage = async (body, fileContent) => {
+        const nameAndChannel = this.getNameAndChannel();
+        if (nameAndChannel == false) return;
+        const [senderName, combinedChannel] = nameAndChannel;
         const chatMessage = await _ChatModel.createChatMessage(
           combinedChannel,
           senderName,
@@ -1306,6 +1336,18 @@
         );
         chatMessage.body = decryptedBody;
         chatMessage.stringifiedFile = decryptedFile;
+      };
+      this.sendReaction = async (messageId, content) => {
+        const nameAndChannel = this.getNameAndChannel();
+        if (nameAndChannel == false) return;
+        const [senderName, combinedChannel] = nameAndChannel;
+        const reaction = _ChatModel.createMessageReaction(
+          messageId,
+          senderName,
+          content
+        );
+        this.sendMessage("", reaction);
+        this.addReaction(reaction);
       };
       this.subscribe = () => {
         this.connectionModel.addChannel(this.info.primaryChannel);
@@ -1376,12 +1418,30 @@
           messagePath,
           ChatMessageReference
         );
+        if (chatMessage == null) continue;
         chatMessages.push(chatMessage);
       }
       const sorted = chatMessages.sort(
         (a, b) => a.dateSent.localeCompare(b.dateSent)
       );
       return sorted;
+    }
+    get reactions() {
+      const reactionIds = this.storageModel.list(
+        this.getReactionDirPath()
+      );
+      if (!Array.isArray(reactionIds)) return [];
+      const reactions = [];
+      for (const reactionId of reactionIds) {
+        const reactionPath = this.getReactionPath(reactionId);
+        const reaction = this.storageModel.readStringifiable(
+          reactionPath,
+          ChatMessageReactionReference
+        );
+        if (reaction == null) continue;
+        reactions.push(reaction);
+      }
+      return reactions;
     }
     // utility
     static splitChannel(channelString) {
@@ -1427,6 +1487,18 @@
         return chatMessage;
       };
     }
+    static {
+      this.createMessageReaction = (messageId, sender, content) => {
+        const fileContent = FileModel2.createFileContent(v4_default(), "reaction");
+        const reaction = {
+          ...fileContent,
+          messageId,
+          sender,
+          content
+        };
+        return reaction;
+      };
+    }
   };
   var ChatInfoReference = {
     dataVersion: DATA_VERSION,
@@ -1444,6 +1516,16 @@
     dateSent: "",
     status: "",
     stringifiedFile: ""
+  };
+  var ChatMessageReactionReference = {
+    dataVersion: DATA_VERSION,
+    fileId: "",
+    fileContentId: "",
+    creationDate: "",
+    type: "reaction",
+    messageId: "",
+    sender: "",
+    content: ""
   };
 
   // src/Model/Chat/chatListModel.ts
@@ -1923,6 +2005,11 @@
       this.status = new State(
         void 0
       );
+      this.reactionsThumbsUp = new MapState();
+      this.reactionsCheck = new MapState();
+      this.reactionsAttention = new MapState();
+      this.reactionsDoubleAttention = new MapState();
+      this.reactionsQuestion = new MapState();
       // state
       this.isPresentingInfoModal = new State(false);
       // methods
@@ -1941,6 +2028,21 @@
       };
       this.hideInfoModal = () => {
         this.isPresentingInfoModal.value = false;
+      };
+      // reactions
+      this.addReaction = (reaction) => {
+        switch (reaction.content) {
+          case "\u{1F44D}":
+            return this.reactionsThumbsUp.set(reaction.fileId, reaction);
+          case "\u2705":
+            return this.reactionsCheck.set(reaction.fileId, reaction);
+          case "\u2757\uFE0F":
+            return this.reactionsAttention.set(reaction.fileId, reaction);
+          case "\u203C\uFE0F":
+            return this.reactionsDoubleAttention.set(reaction.fileId, reaction);
+          case "\u2753":
+            return this.reactionsQuestion.set(reaction.fileId, reaction);
+        }
       };
       // load
       this.loadData = () => {
@@ -1980,6 +2082,9 @@
         this.chatViewModel.chatModel.addMessage(chatMessage);
         messageViewModel.loadData();
       };
+      this.sendReaction = (messageId, content) => {
+        this.chatViewModel.chatModel.sendReaction(messageId, content);
+      };
       // view
       this.showChatMessage = (chatMessage) => {
         const chatMessageViewModel = new ChatMessageViewModel(
@@ -1999,11 +2104,19 @@
           );
         }
       };
+      this.showReaction = (reaction) => {
+        const messageViewModel = this.chatMessageViewModels.value.get(reaction.messageId);
+        if (messageViewModel == void 0) return;
+        messageViewModel.addReaction(reaction);
+      };
       // load
       this.loadData = () => {
         this.chatMessageViewModels.clear();
         for (const chatMessage of this.chatViewModel.chatModel.messages) {
           this.showChatMessage(chatMessage);
+        }
+        for (const reaction of this.chatViewModel.chatModel.reactions) {
+          this.showReaction(reaction);
         }
       };
       this.chatViewModel = chatViewModel;
@@ -3149,6 +3262,9 @@
           this.notificationViewModel.showNotification(chatMessage);
         }
       );
+      chatModel.reactionHandlerManager.addHandler((reaction) => {
+        this.messagePageViewModel.showReaction(reaction);
+      });
       this.loadPageSelection();
       this.resetColor();
       this.loadInfo();

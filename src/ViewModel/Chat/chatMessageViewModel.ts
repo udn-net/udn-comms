@@ -1,6 +1,12 @@
 import * as React from "bloatless-react";
 
-import { ChatMessage, ChatMessageStatus } from "../../Model/Chat/chatModel";
+import {
+    ChatMessage,
+    ChatMessageReaction,
+    ChatMessageReactionReference,
+    ChatMessageStatus,
+    ReactionSymbol,
+} from "../../Model/Chat/chatModel";
 
 import CoreViewModel from "../Global/coreViewModel";
 import MessagePageViewModel from "../Pages/messagePageViewModel";
@@ -18,6 +24,12 @@ export default class ChatMessageViewModel {
         undefined,
     );
     sentByUser: boolean;
+
+    reactionsThumbsUp = new React.MapState<ChatMessageReaction>();
+    reactionsCheck = new React.MapState<ChatMessageReaction>();
+    reactionsAttention = new React.MapState<ChatMessageReaction>();
+    reactionsDoubleAttention = new React.MapState<ChatMessageReaction>();
+    reactionsQuestion = new React.MapState<ChatMessageReaction>();
 
     // state
     isPresentingInfoModal: React.State<boolean> = new React.State(false);
@@ -40,6 +52,25 @@ export default class ChatMessageViewModel {
 
     hideInfoModal = (): void => {
         this.isPresentingInfoModal.value = false;
+    };
+
+    // reactions
+    addReaction = (reaction: ChatMessageReaction): void => {
+        switch (reaction.content) {
+            case "👍":
+                return this.reactionsThumbsUp.set(reaction.fileId, reaction);
+            case "✅":
+                return this.reactionsCheck.set(reaction.fileId, reaction);
+            case "❗️":
+                return this.reactionsAttention.set(reaction.fileId, reaction);
+            case "‼️":
+                return this.reactionsDoubleAttention.set(
+                    reaction.fileId,
+                    reaction,
+                );
+            case "❓":
+                return this.reactionsQuestion.set(reaction.fileId, reaction);
+        }
     };
 
     // load

@@ -1,11 +1,16 @@
 // this file is responsible for managing chats.
 
-import { DATA_VERSION, ValidObject } from "../Utility/typeSafety";
+import {
+    checkMatchesObjectStructure,
+    DATA_VERSION,
+    ValidObject,
+} from "../Utility/typeSafety";
 import FileModel, { FileContent } from "../Files/fileModel";
 import {
     HandlerManager,
     createTimestamp,
     localeCompare,
+    parse,
     parseValidObject,
     stringify,
 } from "../Utility/utility";
@@ -35,6 +40,8 @@ export default class ChatModel {
     color: Color;
 
     chatMessageHandlerManager: HandlerManager<ChatMessage> =
+        new HandlerManager();
+    reactionHandlerManager: HandlerManager<ChatMessageReaction> =
         new HandlerManager();
 
     get secondaryChannels(): string[] {
@@ -74,6 +81,17 @@ export default class ChatModel {
         return [...this.getMessageDirPath(), id];
     };
 
+    getReactionDirPath = (): string[] => {
+        return StorageModel.getPath(
+            StorageModelSubPath.Chat,
+            filePaths.chat.reactions(this.id),
+        );
+    };
+
+    getReactionPath = (id: string): string[] => {
+        return [...this.getReactionDirPath(), id];
+    };
+
     // handlers
     handleMessage = (body: string): void => {
         const chatMessage: ChatMessage | null = parseValidObject(
@@ -83,9 +101,17 @@ export default class ChatModel {
         if (chatMessage == null) return;
 
         chatMessage.status = ChatMessageStatus.Received;
-        this.addMessage(chatMessage);
 
+        this.addMessage(chatMessage);
         this.setReadStatus(true);
+    };
+
+    handleReaction = (reaction: ChatMessageReaction | any): void => {
+        if (
+            !checkMatchesObjectStructure(reaction, ChatMessageReactionReference)
+        )
+            return;
+        this.addReaction(reaction);
     };
 
     handleMessageSent = (chatMessage: ChatMessage): void => {
@@ -132,10 +158,13 @@ export default class ChatModel {
         );
     };
 
-    sendMessage = async (
-        body: string,
-        fileContent?: FileContent<string>,
-    ): Promise<boolean> => {
+    addReaction = async (reaction: ChatMessageReaction): Promise<void> => {
+        const reactionPath: string[] = this.getReactionPath(reaction.fileId);
+        this.storageModel.writeStringifiable(reactionPath, reaction);
+        this.reactionHandlerManager.trigger(reaction);
+    };
+
+    getNameAndChannel = (): [string, string] | false => {
         const senderName = this.settingsModel.username;
         if (senderName == "") return false;
 
@@ -145,6 +174,17 @@ export default class ChatModel {
         }
 
         const combinedChannel: string = allChannels.join("/");
+
+        return [senderName, combinedChannel];
+    };
+
+    sendMessage = async (
+        body: string,
+        fileContent?: FileContent<string>,
+    ): Promise<boolean> => {
+        const nameAndChannel = this.getNameAndChannel();
+        if (nameAndChannel == false) return;
+        const [senderName, combinedChannel] = nameAndChannel;
 
         const chatMessage: ChatMessage = await ChatModel.createChatMessage(
             combinedChannel,
@@ -170,6 +210,23 @@ export default class ChatModel {
         );
         chatMessage.body = decryptedBody;
         chatMessage.stringifiedFile = decryptedFile;
+    };
+
+    sendReaction = async (
+        messageId: string,
+        content: ReactionSymbol,
+    ): Promise<void> => {
+        const nameAndChannel = this.getNameAndChannel();
+        if (nameAndChannel == false) return;
+        const [senderName, combinedChannel] = nameAndChannel;
+
+        const reaction = ChatModel.createMessageReaction(
+            messageId,
+            senderName,
+            content,
+        );
+        this.sendMessage("", reaction);
+        this.addReaction(reaction);
     };
 
     subscribe = (): void => {
@@ -231,11 +288,12 @@ export default class ChatModel {
         const chatMessages: ChatMessage[] = [];
         for (const messageId of messageIds) {
             const messagePath: string[] = this.getMessagePath(messageId);
-            const chatMessage: ChatMessage | any =
+            const chatMessage: ChatMessage | null =
                 this.storageModel.readStringifiable(
                     messagePath,
                     ChatMessageReference,
                 );
+            if (chatMessage == null) continue;
             chatMessages.push(chatMessage);
         }
 
@@ -243,6 +301,27 @@ export default class ChatModel {
             a.dateSent.localeCompare(b.dateSent),
         );
         return sorted;
+    }
+
+    get reactions(): ChatMessageReaction[] {
+        const reactionIds: string[] = this.storageModel.list(
+            this.getReactionDirPath(),
+        );
+        if (!Array.isArray(reactionIds)) return [];
+
+        const reactions: ChatMessageReaction[] = [];
+        for (const reactionId of reactionIds) {
+            const reactionPath: string[] = this.getReactionPath(reactionId);
+            const reaction: ChatMessageReaction | null =
+                this.storageModel.readStringifiable(
+                    reactionPath,
+                    ChatMessageReactionReference,
+                );
+            if (reaction == null) continue;
+            reactions.push(reaction);
+        }
+
+        return reactions;
     }
 
     // init
@@ -324,9 +403,27 @@ export default class ChatModel {
 
         return chatMessage;
     };
+
+    static createMessageReaction = (
+        messageId: string,
+        sender: string,
+        content: ReactionSymbol,
+    ): ChatMessageReaction => {
+        const fileContent = FileModel.createFileContent(v4(), "reaction");
+        const reaction: ChatMessageReaction = {
+            ...fileContent,
+
+            messageId,
+            sender,
+            content,
+        };
+        return reaction;
+    };
 }
 
 // types
+export type ReactionSymbol = "👍" | "✅" | "❗️" | "‼️" | "❓";
+
 export interface ChatInfo extends ValidObject {
     primaryChannel: string;
     secondaryChannels: string[];
@@ -355,6 +452,13 @@ export interface ChatMessage extends ValidObject {
     stringifiedFile: string;
 }
 
+export interface ChatMessageReaction
+    extends ValidObject, FileContent<"reaction"> {
+    messageId: string;
+    sender: string;
+    content: ReactionSymbol | string;
+}
+
 // references
 export const ChatInfoReference: ChatInfo = {
     dataVersion: DATA_VERSION,
@@ -379,4 +483,17 @@ export const ChatMessageReference: ChatMessage = {
     status: "" as ChatMessageStatus,
 
     stringifiedFile: "",
+};
+
+export const ChatMessageReactionReference: ChatMessageReaction = {
+    dataVersion: DATA_VERSION,
+
+    fileId: "",
+    fileContentId: "",
+    creationDate: "",
+    type: "reaction",
+
+    messageId: "",
+    sender: "",
+    content: "",
 };

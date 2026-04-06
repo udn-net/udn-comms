@@ -1,6 +1,10 @@
 import * as React from "bloatless-react";
 
-import { ChatMessage } from "../../Model/Chat/chatModel";
+import {
+    ChatMessage,
+    ChatMessageReaction,
+    ReactionSymbol,
+} from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../Chat/chatMessageViewModel";
 import ChatViewModel from "../Chat/chatViewModel";
 import CoreViewModel from "../Global/coreViewModel";
@@ -37,6 +41,10 @@ export default class MessagePageViewModel {
         messageViewModel.loadData();
     };
 
+    sendReaction = (messageId: string, content: ReactionSymbol): void => {
+        this.chatViewModel.chatModel.sendReaction(messageId, content);
+    };
+
     // view
     showChatMessage = (chatMessage: ChatMessage): void => {
         const chatMessageViewModel = new ChatMessageViewModel(
@@ -60,11 +68,21 @@ export default class MessagePageViewModel {
         }
     };
 
+    showReaction = (reaction: ChatMessageReaction): void => {
+        const messageViewModel: ChatMessageViewModel | undefined =
+            this.chatMessageViewModels.value.get(reaction.messageId);
+        if (messageViewModel == undefined) return;
+        messageViewModel.addReaction(reaction);
+    };
+
     // load
     loadData = (): void => {
         this.chatMessageViewModels.clear();
         for (const chatMessage of this.chatViewModel.chatModel.messages) {
             this.showChatMessage(chatMessage);
+        }
+        for (const reaction of this.chatViewModel.chatModel.reactions) {
+            this.showReaction(reaction);
         }
     };
 

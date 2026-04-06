@@ -3,7 +3,10 @@ import * as React from "bloatless-react";
 import CalendarPageViewModel, {
     CALENDAR_EVENT_BOARD_ID,
 } from "../Pages/calendarPageViewModel";
-import ChatModel, { ChatMessage } from "../../Model/Chat/chatModel";
+import ChatModel, {
+    ChatMessage,
+    ChatMessageReaction,
+} from "../../Model/Chat/chatModel";
 import StorageModel, {
     StorageModelSubPath,
     filePaths,
@@ -174,6 +177,11 @@ export default class ChatViewModel {
                 this.updateReadStatus();
 
                 this.notificationViewModel.showNotification(chatMessage);
+            },
+        );
+        chatModel.reactionHandlerManager.addHandler(
+            (reaction: ChatMessageReaction) => {
+                this.messagePageViewModel.showReaction(reaction);
             },
         );
 
