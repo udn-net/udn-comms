@@ -1,59 +1,9 @@
 (() => {
-  // node_modules/uuid/dist/esm-browser/stringify.js
-  var byteToHex = [];
-  for (i = 0; i < 256; ++i) {
-    byteToHex.push((i + 256).toString(16).slice(1));
-  }
-  var i;
-  function unsafeStringify(arr, offset = 0) {
-    return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
-  }
-
-  // node_modules/uuid/dist/esm-browser/rng.js
-  var getRandomValues;
-  var rnds8 = new Uint8Array(16);
-  function rng() {
-    if (!getRandomValues) {
-      getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
-      if (!getRandomValues) {
-        throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
-      }
-    }
-    return getRandomValues(rnds8);
-  }
-
-  // node_modules/uuid/dist/esm-browser/native.js
-  var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
-  var native_default = {
-    randomUUID
-  };
-
-  // node_modules/uuid/dist/esm-browser/v4.js
-  function v4(options, buf, offset) {
-    if (native_default.randomUUID && !buf && !options) {
-      return native_default.randomUUID();
-    }
-    options = options || {};
-    var rnds = options.random || (options.rng || rng)();
-    rnds[6] = rnds[6] & 15 | 64;
-    rnds[8] = rnds[8] & 63 | 128;
-    if (buf) {
-      offset = offset || 0;
-      for (var i = 0; i < 16; ++i) {
-        buf[offset + i] = rnds[i];
-      }
-      return buf;
-    }
-    return unsafeStringify(rnds);
-  }
-  var v4_default = v4;
-
-  // node_modules/bloatless-react/index.ts
+  // ../../bloatless-react/index.ts
   var State = class {
-    _value;
-    _bindings = /* @__PURE__ */ new Set();
     // init
     constructor(initialValue) {
+      this._bindings = /* @__PURE__ */ new Set();
       this._value = initialValue;
     }
     // value
@@ -82,11 +32,11 @@
     }
   };
   var ListState = class extends State {
-    additionHandlers = /* @__PURE__ */ new Set();
-    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Set(initialItems));
+      this.additionHandlers = /* @__PURE__ */ new Set();
+      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     add(...items) {
@@ -126,11 +76,11 @@
     }
   };
   var MapState = class extends State {
-    additionHandlers = /* @__PURE__ */ new Set();
-    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Map(initialItems));
+      this.additionHandlers = /* @__PURE__ */ new Set();
+      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     set(key, item) {
@@ -190,7 +140,7 @@
               case "enter": {
                 element.addEventListener("keydown", (e) => {
                   if (e.key != "Enter") return;
-                  value();
+                  value(e);
                 });
                 break;
               }
@@ -198,6 +148,14 @@
                 element.addEventListener(directiveValue, value);
               }
             }
+            break;
+          }
+          case "metakey": {
+            element.addEventListener("keydown", (e) => {
+              if (e.metaKey == false) return;
+              if (e.key != directiveValue) return;
+              value(e);
+            });
             break;
           }
           case "subscribe": {
@@ -778,6 +736,55 @@
     Color2["purple"] = "purple";
     return Color2;
   })(Color || {});
+
+  // node_modules/uuid/dist/esm-browser/stringify.js
+  var byteToHex = [];
+  for (i = 0; i < 256; ++i) {
+    byteToHex.push((i + 256).toString(16).slice(1));
+  }
+  var i;
+  function unsafeStringify(arr, offset = 0) {
+    return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+  }
+
+  // node_modules/uuid/dist/esm-browser/rng.js
+  var getRandomValues;
+  var rnds8 = new Uint8Array(16);
+  function rng() {
+    if (!getRandomValues) {
+      getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+      if (!getRandomValues) {
+        throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+      }
+    }
+    return getRandomValues(rnds8);
+  }
+
+  // node_modules/uuid/dist/esm-browser/native.js
+  var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+  var native_default = {
+    randomUUID
+  };
+
+  // node_modules/uuid/dist/esm-browser/v4.js
+  function v4(options, buf, offset) {
+    if (native_default.randomUUID && !buf && !options) {
+      return native_default.randomUUID();
+    }
+    options = options || {};
+    var rnds = options.random || (options.rng || rng)();
+    rnds[6] = rnds[6] & 15 | 64;
+    rnds[8] = rnds[8] & 63 | 128;
+    if (buf) {
+      offset = offset || 0;
+      for (var i = 0; i < 16; ++i) {
+        buf[offset + i] = rnds[i];
+      }
+      return buf;
+    }
+    return unsafeStringify(rnds);
+  }
+  var v4_default = v4;
 
   // src/Model/Files/boardsAndTasksModel.ts
   var BoardsAndTasksModel = class _BoardsAndTasksModel {
@@ -1591,7 +1598,8 @@
         this.close();
         this.loadTaskData();
       };
-      this.closeAndSave = () => {
+      this.closeAndSave = (e) => {
+        e.preventDefault();
         this.close();
         this.save();
       };
@@ -2237,8 +2245,8 @@
           searchTerm
         ];
         this.storageModel.write(suggestionPath, "");
-        if (!this.coreViewModel.boardSearchSuggestions.value.has(searchTerm)) {
-          this.coreViewModel.boardSearchSuggestions.add(searchTerm);
+        if (!this.coreViewModel.boardFilterStringSuggestions.value.has(searchTerm)) {
+          this.coreViewModel.boardFilterStringSuggestions.add(searchTerm);
         }
         const lastSearchPath = this.getLastSearchPath();
         this.storageModel.write(lastSearchPath, searchTerm);
@@ -2317,7 +2325,7 @@
       this.loadSearchSuggestions = () => {
         const dirPath = this.getPreviousSearchesPath();
         const searches = this.storageModel.list(dirPath);
-        this.coreViewModel.boardSearchSuggestions.add(...searches);
+        this.coreViewModel.boardFilterStringSuggestions.add(...searches);
       };
       this.restoreSearch = () => {
         const lastSearchPath = this.getLastSearchPath();
@@ -2358,7 +2366,7 @@
         this.taskViewModels,
         this.filteredTaskViewModels,
         TaskViewModel.getStringsForFilter,
-        this.coreViewModel.boardSearchSuggestions
+        this.coreViewModel.boardFilterStringSuggestions
       );
       this.searchViewModel.appliedQuery.subscribeSilent((newQuery) => {
         this.handleNewSearch(newQuery);
@@ -3420,7 +3428,7 @@
       const isSelected = entry[0] == taskViewModel.task.boardId;
       return Option(entry[1], entry[0], isSelected);
     };
-    return /* @__PURE__ */ createElement("div", { class: "modal", open: true }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", open: true, "metakey:s": taskViewModel.closeAndSave }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
       "select",
       {
         "bind:value": taskViewModel.selectedVersionId,
@@ -4775,7 +4783,7 @@
     );
   }
 
-  // ../ui-base/index.ts
+  // node_modules/udn-frontend/index.ts
   var UDNFrontend = class {
     ws;
     // HANDLERS
@@ -5174,7 +5182,7 @@
       this.draggedObject = new State(void 0);
       // SUGGESTIONS
       // boards & tasks
-      this.boardSearchSuggestions = new ListState();
+      this.boardFilterStringSuggestions = new ListState();
       this.taskCategorySuggestions = new ListState();
       this.taskStatusSuggestions = new ListState();
     }
