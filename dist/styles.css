@@ -288,6 +288,7 @@ SIZES
 
     /* padding */
     --control-padding: 1rem;
+    --control-padding-compact: .4rem .8rem;
     --control-marker-padding: 0.7rem;
     --content-padding: 1rem;
     --modal-padding: 1.25rem;

@@ -3943,74 +3943,64 @@
 
   // src/View/Components/messageReactionButton.tsx
   function MessageReactionButton(chatMessageViewModel, content) {
+    let audioLabel;
+    let count;
+    let reactionState;
+    let isActive = new State(false);
+    let isZero = new State(true);
     function sendReaction() {
       chatMessageViewModel.sendReaction(content, isActive.value);
     }
     function getUsername() {
       return chatMessageViewModel.messagePageViewModel.chatViewModel.settingsViewModel.username.value;
     }
-    function checkIsHighlighted(mapState) {
-      return mapState.value.has(getUsername());
+    function checkIsHighlighted() {
+      return reactionState.value.has(getUsername());
     }
-    let audioLabel;
-    let count;
-    let isActive;
     switch (content) {
       case "\u{1F44D}" /* ThumbsUp */: {
         audioLabel = translations.chatPage.message.thumbsUpReaction;
         count = chatMessageViewModel.reactionsThumbsUpCount;
-        isActive = createProxyState(
-          [chatMessageViewModel.reactionsThumbsUp],
-          () => checkIsHighlighted(chatMessageViewModel.reactionsThumbsUp)
-        );
+        reactionState = chatMessageViewModel.reactionsThumbsUp;
         break;
       }
       case "\u2705" /* Check */: {
         audioLabel = translations.chatPage.message.checkReaction;
         count = chatMessageViewModel.reactionsCheckCount;
-        isActive = createProxyState(
-          [chatMessageViewModel.reactionsCheck],
-          () => checkIsHighlighted(chatMessageViewModel.reactionsCheck)
-        );
+        reactionState = chatMessageViewModel.reactionsCheck;
         break;
       }
       case "\u2757\uFE0F" /* Attention */: {
         audioLabel = translations.chatPage.message.attentionReaction;
         count = chatMessageViewModel.reactionsAttentionCount;
-        isActive = createProxyState(
-          [chatMessageViewModel.reactionsAttention],
-          () => checkIsHighlighted(chatMessageViewModel.reactionsAttention)
-        );
+        reactionState = chatMessageViewModel.reactionsAttention;
         break;
       }
       case "\u203C\uFE0F" /* DoubleAttention */: {
         audioLabel = translations.chatPage.message.doubleAttentionReaction;
         count = chatMessageViewModel.reactionsDoubleAttentionCount;
-        isActive = createProxyState(
-          [chatMessageViewModel.reactionsDoubleAttention],
-          () => checkIsHighlighted(
-            chatMessageViewModel.reactionsDoubleAttention
-          )
-        );
+        reactionState = chatMessageViewModel.reactionsDoubleAttention;
         break;
       }
       case "\u2753" /* Question */: {
         audioLabel = translations.chatPage.message.questionReaction;
         count = chatMessageViewModel.reactionsQuestionCount;
-        isActive = createProxyState(
-          [chatMessageViewModel.reactionsQuestion],
-          () => checkIsHighlighted(chatMessageViewModel.reactionsQuestion)
-        );
+        reactionState = chatMessageViewModel.reactionsQuestion;
         break;
       }
     }
+    reactionState.subscribe(() => {
+      isActive.value = checkIsHighlighted();
+      isZero.value = reactionState.value.size == 0;
+    });
     return /* @__PURE__ */ createElement(
       "button",
       {
         class: "flex",
         "on:click": sendReaction,
         "aria-label": audioLabel,
-        "toggle:selected": isActive
+        "toggle:selected": isActive,
+        "toggle:zero": isZero
       },
       content,
       /* @__PURE__ */ createElement("span", { "subscribe:innerText": count })
@@ -4019,7 +4009,7 @@
 
   // src/View/Components/messageReactionButtonRow.tsx
   function MessageReactionButtonRow(chatMessageViewModel) {
-    return /* @__PURE__ */ createElement("div", { class: "flex-row gap" }, MessageReactionButton(
+    return /* @__PURE__ */ createElement("div", { class: "grid gap width-100 message-reaction-row" }, MessageReactionButton(
       chatMessageViewModel,
       "\u{1F44D}" /* ThumbsUp */
     ), MessageReactionButton(
@@ -4090,7 +4080,7 @@
           class: "icon",
           "subscribe:innerText": statusIcon
         }
-      ), chatMessageViewModel.dateSent), MessageReactionButtonRow(chatMessageViewModel)), /* @__PURE__ */ createElement("div", { class: "button-container" }, /* @__PURE__ */ createElement(
+      ), chatMessageViewModel.dateSent)), /* @__PURE__ */ createElement("div", { class: "button-container" }, /* @__PURE__ */ createElement(
         "button",
         {
           "on:click": chatMessageViewModel.showInfoModal,
@@ -4098,6 +4088,7 @@
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "info")
       ))),
+      MessageReactionButtonRow(chatMessageViewModel),
       ChatMessageInfoModal(chatMessageViewModel)
     );
   }

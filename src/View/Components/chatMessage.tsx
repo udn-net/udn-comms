@@ -44,8 +44,6 @@ export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
                         ></span>
                         {chatMessageViewModel.dateSent}
                     </span>
-
-                    {MessageReactionButtonRow(chatMessageViewModel)}
                 </div>
 
                 <div class="button-container">
@@ -59,8 +57,9 @@ export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
                         <span class="icon">info</span>
                     </button>
                 </div>
-            </div>
 
+            </div>
+            {MessageReactionButtonRow(chatMessageViewModel)}
             {ChatMessageInfoModal(chatMessageViewModel)}
         </div>
     );

@@ -75,6 +75,7 @@
 
 .message-bubble {
     display: flex;
+    flex-direction: column;
     width: 100%;
     max-width: var(--max-content-width);
 }
@@ -165,4 +166,29 @@
 
 .message-bubble[sentbyuser] .tile.main span {
     text-align: right;
+}
+
+.message-bubble > .message-reaction-row {
+  max-width: var(--max-input-width);
+  width: 100%;
+
+  padding: var(--gap-between-tiles);
+  background: var(--surface);
+}
+
+.message-bubble > .message-reaction-row button {
+  min-height: unset;
+  height: 100%;
+  width: 100%;
+  padding: var(--control-padding-compact);
+  gap: 0px;
+  flex: 1 !important;
+}
+
+.message-bubble > .message-reaction-row button[zero] {
+    display: none;
+}
+
+.message-reaction-row {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
 }

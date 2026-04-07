@@ -8,7 +8,7 @@ export function MessageReactionButtonRow(
     chatMessageViewModel: ChatMessageViewModel,
 ) {
     return (
-        <div class="flex-row gap">
+        <div class="grid gap width-100 message-reaction-row">
             {MessageReactionButton(
                 chatMessageViewModel,
                 ReactionSymbols.ThumbsUp,
