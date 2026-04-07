@@ -111,7 +111,11 @@ export default class ChatModel {
             !checkMatchesObjectStructure(reaction, ChatMessageReactionReference)
         )
             return;
-        this.addReaction(reaction);
+        const reactionPath: string[] = this.getReactionPath(reaction.fileId);
+        const action = reaction.isDeleting ? this.storageModel.remove : this.storageModel.writeStringifiable;
+        action(reactionPath, reaction);
+        this.reactionHandlerManager.trigger(reaction);
+
     };
 
     handleMessageSent = (chatMessage: ChatMessage): void => {
@@ -156,12 +160,6 @@ export default class ChatModel {
         this.fileModel.handleStringifiedFileContent(
             chatMessage.stringifiedFile,
         );
-    };
-
-    addReaction = async (reaction: ChatMessageReaction): Promise<void> => {
-        const reactionPath: string[] = this.getReactionPath(reaction.fileId);
-        this.storageModel.writeStringifiable(reactionPath, reaction);
-        this.reactionHandlerManager.trigger(reaction);
     };
 
     getNameAndChannel = (): [string, string] | false => {
@@ -215,6 +213,7 @@ export default class ChatModel {
     sendReaction = async (
         messageId: string,
         content: ReactionSymbols,
+        isDeleting: boolean,
     ): Promise<void> => {
         const nameAndChannel = this.getNameAndChannel();
         if (nameAndChannel == false) return;
@@ -224,9 +223,10 @@ export default class ChatModel {
             messageId,
             senderName,
             content,
+            isDeleting,
         );
         this.sendMessage("", reaction);
-        this.addReaction(reaction);
+        this.handleReaction(reaction);
     };
 
     subscribe = (): void => {
@@ -408,6 +408,7 @@ export default class ChatModel {
         messageId: string,
         sender: string,
         content: ReactionSymbols,
+        isDeleting: boolean,
     ): ChatMessageReaction => {
         const fileContent = FileModel.createFileContent(v4(), "reaction");
         const reaction: ChatMessageReaction = {
@@ -416,6 +417,7 @@ export default class ChatModel {
             messageId,
             sender,
             content,
+            isDeleting,
         };
         return reaction;
     };
@@ -463,6 +465,7 @@ export interface ChatMessageReaction
     messageId: string;
     sender: string;
     content: ReactionSymbols | string;
+    isDeleting: boolean;
 }
 
 // references
@@ -502,4 +505,6 @@ export const ChatMessageReactionReference: ChatMessageReaction = {
     messageId: "",
     sender: "",
     content: "",
+
+    isDeleting: false,
 };

@@ -41,8 +41,8 @@ export default class MessagePageViewModel {
         messageViewModel.loadData();
     };
 
-    sendReaction = (messageId: string, content: ReactionSymbols): void => {
-        this.chatViewModel.chatModel.sendReaction(messageId, content);
+    sendReaction = (messageId: string, content: ReactionSymbols, isDeleting: boolean): void => {
+        this.chatViewModel.chatModel.sendReaction(messageId, content, isDeleting);
     };
 
     // view
@@ -68,11 +68,11 @@ export default class MessagePageViewModel {
         }
     };
 
-    showReaction = (reaction: ChatMessageReaction): void => {
+    handleReaction = (reaction: ChatMessageReaction): void => {
         const messageViewModel: ChatMessageViewModel | undefined =
             this.chatMessageViewModels.value.get(reaction.messageId);
         if (messageViewModel == undefined) return;
-        messageViewModel.addReaction(reaction);
+        messageViewModel.handleReaction(reaction);
     };
 
     // load
@@ -82,7 +82,7 @@ export default class MessagePageViewModel {
             this.showChatMessage(chatMessage);
         }
         for (const reaction of this.chatViewModel.chatModel.reactions) {
-            this.showReaction(reaction);
+            this.handleReaction(reaction);
         }
     };
 

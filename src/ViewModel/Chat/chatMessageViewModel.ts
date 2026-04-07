@@ -76,26 +76,31 @@ export default class ChatMessageViewModel {
     };
 
     // reactions
-    addReaction = (reaction: ChatMessageReaction): void => {
+    handleReaction = (reaction: ChatMessageReaction): void => {
+        function setReaction(mapState: React.MapState<any>) {
+            if (reaction.isDeleting) {
+                mapState.remove(reaction.sender);
+            } else {
+                mapState.set(reaction.sender, reaction);
+            }
+        }
+
         switch (reaction.content) {
             case ReactionSymbols.ThumbsUp:
-                return this.reactionsThumbsUp.set(reaction.sender, reaction);
+                return setReaction(this.reactionsThumbsUp);
             case ReactionSymbols.Check:
-                return this.reactionsCheck.set(reaction.sender, reaction);
+                return setReaction(this.reactionsCheck);
             case ReactionSymbols.Attention:
-                return this.reactionsAttention.set(reaction.sender, reaction);
+                return setReaction(this.reactionsAttention);
             case ReactionSymbols.DoubleAttention:
-                return this.reactionsDoubleAttention.set(
-                    reaction.sender,
-                    reaction,
-                );
+                return setReaction(this.reactionsDoubleAttention);
             case ReactionSymbols.Question:
-                return this.reactionsQuestion.set(reaction.sender, reaction);
+                return setReaction(this.reactionsQuestion);
         }
     };
 
-    sendReaction = (content: ReactionSymbols): void => {
-        this.messagePageViewModel.sendReaction(this.chatMessage.id, content);
+    sendReaction = (content: ReactionSymbols, isDeleting: boolean): void => {
+        this.messagePageViewModel.sendReaction(this.chatMessage.id, content, isDeleting);
     };
 
     // load

@@ -1260,7 +1260,10 @@
       this.handleReaction = (reaction) => {
         if (!checkMatchesObjectStructure(reaction, ChatMessageReactionReference))
           return;
-        this.addReaction(reaction);
+        const reactionPath = this.getReactionPath(reaction.fileId);
+        const action = reaction.isDeleting ? this.storageModel.remove : this.storageModel.writeStringifiable;
+        action(reactionPath, reaction);
+        this.reactionHandlerManager.trigger(reaction);
       };
       this.handleMessageSent = (chatMessage) => {
         chatMessage.status = "sent" /* Sent */;
@@ -1295,11 +1298,6 @@
         this.fileModel.handleStringifiedFileContent(
           chatMessage.stringifiedFile
         );
-      };
-      this.addReaction = async (reaction) => {
-        const reactionPath = this.getReactionPath(reaction.fileId);
-        this.storageModel.writeStringifiable(reactionPath, reaction);
-        this.reactionHandlerManager.trigger(reaction);
       };
       this.getNameAndChannel = () => {
         const senderName = this.settingsModel.username;
@@ -1338,17 +1336,18 @@
         chatMessage.body = decryptedBody;
         chatMessage.stringifiedFile = decryptedFile;
       };
-      this.sendReaction = async (messageId, content) => {
+      this.sendReaction = async (messageId, content, isDeleting) => {
         const nameAndChannel = this.getNameAndChannel();
         if (nameAndChannel == false) return;
         const [senderName, combinedChannel] = nameAndChannel;
         const reaction = _ChatModel.createMessageReaction(
           messageId,
           senderName,
-          content
+          content,
+          isDeleting
         );
         this.sendMessage("", reaction);
-        this.addReaction(reaction);
+        this.handleReaction(reaction);
       };
       this.subscribe = () => {
         this.connectionModel.addChannel(this.info.primaryChannel);
@@ -1489,13 +1488,14 @@
       };
     }
     static {
-      this.createMessageReaction = (messageId, sender, content) => {
+      this.createMessageReaction = (messageId, sender, content, isDeleting) => {
         const fileContent = FileModel2.createFileContent(v4_default(), "reaction");
         const reaction = {
           ...fileContent,
           messageId,
           sender,
-          content
+          content,
+          isDeleting
         };
         return reaction;
       };
@@ -1526,7 +1526,8 @@
     type: "reaction",
     messageId: "",
     sender: "",
-    content: ""
+    content: "",
+    isDeleting: false
   };
 
   // src/Model/Chat/chatListModel.ts
@@ -2051,25 +2052,29 @@
         this.isPresentingInfoModal.value = false;
       };
       // reactions
-      this.addReaction = (reaction) => {
+      this.handleReaction = (reaction) => {
+        function setReaction(mapState) {
+          if (reaction.isDeleting) {
+            mapState.remove(reaction.sender);
+          } else {
+            mapState.set(reaction.sender, reaction);
+          }
+        }
         switch (reaction.content) {
           case "\u{1F44D}" /* ThumbsUp */:
-            return this.reactionsThumbsUp.set(reaction.sender, reaction);
+            return setReaction(this.reactionsThumbsUp);
           case "\u2705" /* Check */:
-            return this.reactionsCheck.set(reaction.sender, reaction);
+            return setReaction(this.reactionsCheck);
           case "\u2757\uFE0F" /* Attention */:
-            return this.reactionsAttention.set(reaction.sender, reaction);
+            return setReaction(this.reactionsAttention);
           case "\u203C\uFE0F" /* DoubleAttention */:
-            return this.reactionsDoubleAttention.set(
-              reaction.sender,
-              reaction
-            );
+            return setReaction(this.reactionsDoubleAttention);
           case "\u2753" /* Question */:
-            return this.reactionsQuestion.set(reaction.sender, reaction);
+            return setReaction(this.reactionsQuestion);
         }
       };
-      this.sendReaction = (content) => {
-        this.messagePageViewModel.sendReaction(this.chatMessage.id, content);
+      this.sendReaction = (content, isDeleting) => {
+        this.messagePageViewModel.sendReaction(this.chatMessage.id, content, isDeleting);
       };
       // load
       this.loadData = () => {
@@ -2109,8 +2114,8 @@
         this.chatViewModel.chatModel.addMessage(chatMessage);
         messageViewModel.loadData();
       };
-      this.sendReaction = (messageId, content) => {
-        this.chatViewModel.chatModel.sendReaction(messageId, content);
+      this.sendReaction = (messageId, content, isDeleting) => {
+        this.chatViewModel.chatModel.sendReaction(messageId, content, isDeleting);
       };
       // view
       this.showChatMessage = (chatMessage) => {
@@ -2131,10 +2136,10 @@
           );
         }
       };
-      this.showReaction = (reaction) => {
+      this.handleReaction = (reaction) => {
         const messageViewModel = this.chatMessageViewModels.value.get(reaction.messageId);
         if (messageViewModel == void 0) return;
-        messageViewModel.addReaction(reaction);
+        messageViewModel.handleReaction(reaction);
       };
       // load
       this.loadData = () => {
@@ -2143,7 +2148,7 @@
           this.showChatMessage(chatMessage);
         }
         for (const reaction of this.chatViewModel.chatModel.reactions) {
-          this.showReaction(reaction);
+          this.handleReaction(reaction);
         }
       };
       this.chatViewModel = chatViewModel;
@@ -3309,7 +3314,7 @@
       );
       chatModel.reactionHandlerManager.addHandler(
         (reaction) => {
-          this.messagePageViewModel.showReaction(reaction);
+          this.messagePageViewModel.handleReaction(reaction);
         }
       );
       this.loadPageSelection();
@@ -3934,8 +3939,11 @@
 
   // src/View/Components/messageReactionButton.tsx
   function MessageReactionButton(chatMessageViewModel, content) {
+    let audioLabel;
+    let count;
+    let isActive;
     function sendReaction() {
-      chatMessageViewModel.sendReaction(content);
+      chatMessageViewModel.sendReaction(content, isActive.value);
     }
     function getUsername() {
       return chatMessageViewModel.messagePageViewModel.chatViewModel.settingsViewModel.username.value;
@@ -3943,9 +3951,6 @@
     function checkIsHighlighted(mapState) {
       return mapState.value.has(getUsername());
     }
-    let audioLabel;
-    let count;
-    let isActive;
     switch (content) {
       case "\u{1F44D}" /* ThumbsUp */: {
         audioLabel = translations.chatPage.message.thumbsUpReaction;
@@ -3979,7 +3984,9 @@
         count = chatMessageViewModel.reactionsDoubleAttentionCount;
         isActive = createProxyState(
           [chatMessageViewModel.reactionsDoubleAttention],
-          () => checkIsHighlighted(chatMessageViewModel.reactionsDoubleAttention)
+          () => checkIsHighlighted(
+            chatMessageViewModel.reactionsDoubleAttention
+          )
         );
         break;
       }

@@ -181,7 +181,7 @@ export default class ChatViewModel {
         );
         chatModel.reactionHandlerManager.addHandler(
             (reaction: ChatMessageReaction) => {
-                this.messagePageViewModel.showReaction(reaction);
+                this.messagePageViewModel.handleReaction(reaction);
             },
         );
 
