@@ -59,7 +59,6 @@ export default class FileTransferModel {
             data.messageBody == FileTransferModel.READY_MESSAGE &&
             this.direction == TransferDirections.Send
         ) {
-            console.log("TRIGGER");
             this.readyToSendHandlerManager.trigger(true);
         }
 

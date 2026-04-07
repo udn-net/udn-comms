@@ -1506,7 +1506,6 @@
     }
     static {
       this.createMessageReactionId = (messageId, content, sender) => {
-        console.log(reactionStringMap, content, reactionStringMap[content]);
         return messageId + sender + reactionStringMap[content];
       };
     }
@@ -5880,7 +5879,6 @@
         if (this.transferData == void 0) return;
         if (data.messageChannel != this.transferData.channel) return;
         if (data.messageBody == _FileTransferModel.READY_MESSAGE && this.direction == 0 /* Send */) {
-          console.log("TRIGGER");
           this.readyToSendHandlerManager.trigger(true);
         }
         if (this.transferData == void 0) return;
