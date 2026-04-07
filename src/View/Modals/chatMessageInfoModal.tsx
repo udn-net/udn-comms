@@ -2,6 +2,8 @@ import * as React from "bloatless-react";
 
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { translations } from "../translations";
+import { ReactionSymbols } from "../../Model/Chat/chatModel";
+import { MessageReactionButton } from "../Components/messageReactionButton";
 
 export function ChatMessageInfoModal(
     chatMessageViewModel: ChatMessageViewModel,
@@ -86,6 +88,31 @@ export function ChatMessageInfoModal(
                             {translations.chatPage.message.decryptMessageButton}
                             <span class="icon">key</span>
                         </button>
+                    </div>
+
+                    <hr></hr>
+
+                    <div class="flex-row gap">
+                        {MessageReactionButton(
+                            chatMessageViewModel,
+                            ReactionSymbols.ThumbsUp,
+                        )}
+                        {MessageReactionButton(
+                            chatMessageViewModel,
+                            ReactionSymbols.Check,
+                        )}
+                        {MessageReactionButton(
+                            chatMessageViewModel,
+                            ReactionSymbols.Attention,
+                        )}
+                        {MessageReactionButton(
+                            chatMessageViewModel,
+                            ReactionSymbols.DoubleAttention,
+                        )}
+                        {MessageReactionButton(
+                            chatMessageViewModel,
+                            ReactionSymbols.Question,
+                        )}
                     </div>
                 </main>
                 <button on:click={chatMessageViewModel.hideInfoModal}>

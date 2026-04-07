@@ -186,6 +186,14 @@ const englishTranslations = {
             resendMessageButton: "Resend message",
             decryptMessageButton: "Decrypt message",
             deleteMessageButton: "Delete message",
+
+            //
+
+            thumbsUpReaction: "Reaction: thumbs up",
+            checkReaction: "Reaction: check",
+            attentionReaction: "Reaction: exclamation mark",
+            doubleAttentionReaction: "Reaction: double exclamation mark",
+            questionReaction: "Reaction: question mark",
         },
 
         task: {
@@ -449,6 +457,14 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
                 resendMessageButton: "Nachricht erneut senden",
                 decryptMessageButton: "Nachricht entschlüsseln",
                 deleteMessageButton: "Nachricht löschen",
+
+                //
+
+                thumbsUpReaction: "Reaktion: Daumen hoch",
+                checkReaction: "Reaktion: Haken",
+                attentionReaction: "Reaktion: Ausrufezeichen",
+                doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
+                questionReaction: "Reaktion: Fragezeichen",
             },
 
             task: {
@@ -694,6 +710,14 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
                 resendMessageButton: "Reenviar mensaje",
                 decryptMessageButton: "Desencriptar mensaje",
                 deleteMessageButton: "Eliminar mensaje",
+
+                //
+
+                thumbsUpReaction: "Reacción: pulgar hacia arriba",
+                checkReaction: "Reacción: marca de verificación",
+                attentionReaction: "Reaccion: signo de atención",
+                doubleAttentionReaction: "Reaccion: signo de atención doble",
+                questionReaction: "Reaccion: signo de interrogación",
             },
 
             task: {

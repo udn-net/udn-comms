@@ -214,7 +214,7 @@ export default class ChatModel {
 
     sendReaction = async (
         messageId: string,
-        content: ReactionSymbol,
+        content: ReactionSymbols,
     ): Promise<void> => {
         const nameAndChannel = this.getNameAndChannel();
         if (nameAndChannel == false) return;
@@ -407,7 +407,7 @@ export default class ChatModel {
     static createMessageReaction = (
         messageId: string,
         sender: string,
-        content: ReactionSymbol,
+        content: ReactionSymbols,
     ): ChatMessageReaction => {
         const fileContent = FileModel.createFileContent(v4(), "reaction");
         const reaction: ChatMessageReaction = {
@@ -422,7 +422,13 @@ export default class ChatModel {
 }
 
 // types
-export type ReactionSymbol = "👍" | "✅" | "❗️" | "‼️" | "❓";
+export enum ReactionSymbols {
+    ThumbsUp = "👍",
+    Check = "✅",
+    Attention = "❗️",
+    DoubleAttention = "‼️",
+    Question = "❓",
+}
 
 export interface ChatInfo extends ValidObject {
     primaryChannel: string;
@@ -456,7 +462,7 @@ export interface ChatMessageReaction
     extends ValidObject, FileContent<"reaction"> {
     messageId: string;
     sender: string;
-    content: ReactionSymbol | string;
+    content: ReactionSymbols | string;
 }
 
 // references

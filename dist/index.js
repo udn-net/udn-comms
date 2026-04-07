@@ -1258,7 +1258,8 @@
         this.setReadStatus(true);
       };
       this.handleReaction = (reaction) => {
-        if (!checkMatchesObjectStructure(reaction, ChatMessageReactionReference)) return;
+        if (!checkMatchesObjectStructure(reaction, ChatMessageReactionReference))
+          return;
         this.addReaction(reaction);
       };
       this.handleMessageSent = (chatMessage) => {
@@ -2010,6 +2011,26 @@
       this.reactionsAttention = new MapState();
       this.reactionsDoubleAttention = new MapState();
       this.reactionsQuestion = new MapState();
+      this.reactionsThumbsUpCount = createProxyState(
+        [this.reactionsThumbsUp],
+        () => this.reactionsThumbsUp.value.size
+      );
+      this.reactionsCheckCount = createProxyState(
+        [this.reactionsCheck],
+        () => this.reactionsCheck.value.size
+      );
+      this.reactionsAttentionCount = createProxyState(
+        [this.reactionsAttention],
+        () => this.reactionsAttention.value.size
+      );
+      this.reactionsDoubleAttentionCount = createProxyState(
+        [this.reactionsDoubleAttention],
+        () => this.reactionsDoubleAttention.value.size
+      );
+      this.reactionsQuestionCount = createProxyState(
+        [this.reactionsQuestion],
+        () => this.reactionsQuestion.value.size
+      );
       // state
       this.isPresentingInfoModal = new State(false);
       // methods
@@ -2032,17 +2053,23 @@
       // reactions
       this.addReaction = (reaction) => {
         switch (reaction.content) {
-          case "\u{1F44D}":
-            return this.reactionsThumbsUp.set(reaction.fileId, reaction);
-          case "\u2705":
-            return this.reactionsCheck.set(reaction.fileId, reaction);
-          case "\u2757\uFE0F":
-            return this.reactionsAttention.set(reaction.fileId, reaction);
-          case "\u203C\uFE0F":
-            return this.reactionsDoubleAttention.set(reaction.fileId, reaction);
-          case "\u2753":
-            return this.reactionsQuestion.set(reaction.fileId, reaction);
+          case "\u{1F44D}" /* ThumbsUp */:
+            return this.reactionsThumbsUp.set(reaction.sender, reaction);
+          case "\u2705" /* Check */:
+            return this.reactionsCheck.set(reaction.sender, reaction);
+          case "\u2757\uFE0F" /* Attention */:
+            return this.reactionsAttention.set(reaction.sender, reaction);
+          case "\u203C\uFE0F" /* DoubleAttention */:
+            return this.reactionsDoubleAttention.set(
+              reaction.sender,
+              reaction
+            );
+          case "\u2753" /* Question */:
+            return this.reactionsQuestion.set(reaction.sender, reaction);
         }
+      };
+      this.sendReaction = (content) => {
+        this.messagePageViewModel.sendReaction(this.chatMessage.id, content);
       };
       // load
       this.loadData = () => {
@@ -2746,7 +2773,13 @@
         copyMessageButton: "Copy message",
         resendMessageButton: "Resend message",
         decryptMessageButton: "Decrypt message",
-        deleteMessageButton: "Delete message"
+        deleteMessageButton: "Delete message",
+        //
+        thumbsUpReaction: "Reaction: thumbs up",
+        checkReaction: "Reaction: check",
+        attentionReaction: "Reaction: exclamation mark",
+        doubleAttentionReaction: "Reaction: double exclamation mark",
+        questionReaction: "Reaction: question mark"
       },
       task: {
         newBoardNamePlaceholder: "Create a board",
@@ -2927,7 +2960,13 @@
           copyMessageButton: "Nachricht kopieren",
           resendMessageButton: "Nachricht erneut senden",
           decryptMessageButton: "Nachricht entschl\xFCsseln",
-          deleteMessageButton: "Nachricht l\xF6schen"
+          deleteMessageButton: "Nachricht l\xF6schen",
+          //
+          thumbsUpReaction: "Reaktion: Daumen hoch",
+          checkReaction: "Reaktion: Haken",
+          attentionReaction: "Reaktion: Ausrufezeichen",
+          doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
+          questionReaction: "Reaktion: Fragezeichen"
         },
         task: {
           newBoardNamePlaceholder: "Board erstellen",
@@ -3098,7 +3137,13 @@
           copyMessageButton: "Copiar mensaje",
           resendMessageButton: "Reenviar mensaje",
           decryptMessageButton: "Desencriptar mensaje",
-          deleteMessageButton: "Eliminar mensaje"
+          deleteMessageButton: "Eliminar mensaje",
+          //
+          thumbsUpReaction: "Reacci\xF3n: pulgar hacia arriba",
+          checkReaction: "Reacci\xF3n: marca de verificaci\xF3n",
+          attentionReaction: "Reaccion: signo de atenci\xF3n",
+          doubleAttentionReaction: "Reaccion: signo de atenci\xF3n doble",
+          questionReaction: "Reaccion: signo de interrogaci\xF3n"
         },
         task: {
           newBoardNamePlaceholder: "Crear un tablero",
@@ -3262,9 +3307,11 @@
           this.notificationViewModel.showNotification(chatMessage);
         }
       );
-      chatModel.reactionHandlerManager.addHandler((reaction) => {
-        this.messagePageViewModel.showReaction(reaction);
-      });
+      chatModel.reactionHandlerManager.addHandler(
+        (reaction) => {
+          this.messagePageViewModel.showReaction(reaction);
+        }
+      );
       this.loadPageSelection();
       this.resetColor();
       this.loadInfo();
@@ -3885,6 +3932,80 @@
     return RibbonButton(label, icon, isSelected, select, isHighlighted);
   }
 
+  // src/View/Components/messageReactionButton.tsx
+  function MessageReactionButton(chatMessageViewModel, content) {
+    function sendReaction() {
+      chatMessageViewModel.sendReaction(content);
+    }
+    function getUsername() {
+      return chatMessageViewModel.messagePageViewModel.chatViewModel.settingsViewModel.username.value;
+    }
+    function checkIsHighlighted(mapState) {
+      return mapState.value.has(getUsername());
+    }
+    let audioLabel;
+    let count;
+    let isActive;
+    switch (content) {
+      case "\u{1F44D}" /* ThumbsUp */: {
+        audioLabel = translations.chatPage.message.thumbsUpReaction;
+        count = chatMessageViewModel.reactionsThumbsUpCount;
+        isActive = createProxyState(
+          [chatMessageViewModel.reactionsThumbsUp],
+          () => checkIsHighlighted(chatMessageViewModel.reactionsThumbsUp)
+        );
+        break;
+      }
+      case "\u2705" /* Check */: {
+        audioLabel = translations.chatPage.message.checkReaction;
+        count = chatMessageViewModel.reactionsCheckCount;
+        isActive = createProxyState(
+          [chatMessageViewModel.reactionsCheck],
+          () => checkIsHighlighted(chatMessageViewModel.reactionsCheck)
+        );
+        break;
+      }
+      case "\u2757\uFE0F" /* Attention */: {
+        audioLabel = translations.chatPage.message.attentionReaction;
+        count = chatMessageViewModel.reactionsAttentionCount;
+        isActive = createProxyState(
+          [chatMessageViewModel.reactionsAttention],
+          () => checkIsHighlighted(chatMessageViewModel.reactionsAttention)
+        );
+        break;
+      }
+      case "\u203C\uFE0F" /* DoubleAttention */: {
+        audioLabel = translations.chatPage.message.doubleAttentionReaction;
+        count = chatMessageViewModel.reactionsDoubleAttentionCount;
+        isActive = createProxyState(
+          [chatMessageViewModel.reactionsDoubleAttention],
+          () => checkIsHighlighted(chatMessageViewModel.reactionsDoubleAttention)
+        );
+        break;
+      }
+      case "\u2753" /* Question */: {
+        audioLabel = translations.chatPage.message.questionReaction;
+        count = chatMessageViewModel.reactionsQuestionCount;
+        isActive = createProxyState(
+          [chatMessageViewModel.reactionsQuestion],
+          () => checkIsHighlighted(chatMessageViewModel.reactionsQuestion)
+        );
+        break;
+      }
+    }
+    return /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "flex",
+        "on:click": sendReaction,
+        "aria-label": audioLabel,
+        "toggle:selected": isActive
+      },
+      content,
+      /* @__PURE__ */ createElement("span", { "subscribe:innerText": count })
+    );
+  }
+
   // src/View/Modals/chatMessageInfoModal.tsx
   function ChatMessageInfoModal(chatMessageViewModel) {
     return /* @__PURE__ */ createElement(
@@ -3899,12 +4020,27 @@
           class: "break-word",
           "subscribe:innerText": chatMessageViewModel.body
         }
-      )))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key")))), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      )))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row gap" }, MessageReactionButton(
+        chatMessageViewModel,
+        "\u{1F44D}" /* ThumbsUp */
+      ), MessageReactionButton(
+        chatMessageViewModel,
+        "\u2705" /* Check */
+      ), MessageReactionButton(
+        chatMessageViewModel,
+        "\u2757\uFE0F" /* Attention */
+      ), MessageReactionButton(
+        chatMessageViewModel,
+        "\u203C\uFE0F" /* DoubleAttention */
+      ), MessageReactionButton(
+        chatMessageViewModel,
+        "\u2753" /* Question */
+      ))), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
 
   // src/View/Components/chatMessage.tsx
-  function ChatMessage3(chatMessageViewModel) {
+  function ChatMessage4(chatMessageViewModel) {
     const statusIcon = createProxyState(
       [chatMessageViewModel.status],
       () => {
@@ -3950,7 +4086,7 @@
     );
   }
   var ChatMessageViewModelToView = (chatMessageViewModel) => {
-    return ChatMessage3(chatMessageViewModel);
+    return ChatMessage4(chatMessageViewModel);
   };
 
   // src/View/ChatPages/messagePage.tsx
@@ -5039,21 +5175,21 @@
         this.storeAddress(this.address);
         this.sendSubscriptionRequest();
         this.sendMessagesInOutbox();
-        this.shouldAttemptReconnect = true;
       };
       // connection
       this.connect = (address) => {
         console.log("connecting...", address);
+        this.shouldAttemptReconnect = true;
         this.udn.connect(address);
       };
       this.disconnect = () => {
+        this.shouldAttemptReconnect = false;
         this.udn.disconnect();
         const reconnectAddressPath = StorageModel.getPath(
           "connection" /* ConnectionModel */,
           filePaths.connectionModel.reconnectAddress
         );
         this.storageModel.remove(reconnectAddressPath);
-        this.shouldAttemptReconnect = false;
       };
       this.reconnect = () => {
         const reconnectAddressPath = this.getReconnectAddressPath();

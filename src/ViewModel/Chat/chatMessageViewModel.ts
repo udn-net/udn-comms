@@ -5,7 +5,7 @@ import {
     ChatMessageReaction,
     ChatMessageReactionReference,
     ChatMessageStatus,
-    ReactionSymbol,
+    ReactionSymbols,
 } from "../../Model/Chat/chatModel";
 
 import CoreViewModel from "../Global/coreViewModel";
@@ -30,6 +30,27 @@ export default class ChatMessageViewModel {
     reactionsAttention = new React.MapState<ChatMessageReaction>();
     reactionsDoubleAttention = new React.MapState<ChatMessageReaction>();
     reactionsQuestion = new React.MapState<ChatMessageReaction>();
+
+    reactionsThumbsUpCount = React.createProxyState(
+        [this.reactionsThumbsUp],
+        () => this.reactionsThumbsUp.value.size,
+    );
+    reactionsCheckCount = React.createProxyState(
+        [this.reactionsCheck],
+        () => this.reactionsCheck.value.size,
+    );
+    reactionsAttentionCount = React.createProxyState(
+        [this.reactionsAttention],
+        () => this.reactionsAttention.value.size,
+    );
+    reactionsDoubleAttentionCount = React.createProxyState(
+        [this.reactionsDoubleAttention],
+        () => this.reactionsDoubleAttention.value.size,
+    );
+    reactionsQuestionCount = React.createProxyState(
+        [this.reactionsQuestion],
+        () => this.reactionsQuestion.value.size,
+    );
 
     // state
     isPresentingInfoModal: React.State<boolean> = new React.State(false);
@@ -57,20 +78,24 @@ export default class ChatMessageViewModel {
     // reactions
     addReaction = (reaction: ChatMessageReaction): void => {
         switch (reaction.content) {
-            case "👍":
-                return this.reactionsThumbsUp.set(reaction.fileId, reaction);
-            case "✅":
-                return this.reactionsCheck.set(reaction.fileId, reaction);
-            case "❗️":
-                return this.reactionsAttention.set(reaction.fileId, reaction);
-            case "‼️":
+            case ReactionSymbols.ThumbsUp:
+                return this.reactionsThumbsUp.set(reaction.sender, reaction);
+            case ReactionSymbols.Check:
+                return this.reactionsCheck.set(reaction.sender, reaction);
+            case ReactionSymbols.Attention:
+                return this.reactionsAttention.set(reaction.sender, reaction);
+            case ReactionSymbols.DoubleAttention:
                 return this.reactionsDoubleAttention.set(
-                    reaction.fileId,
+                    reaction.sender,
                     reaction,
                 );
-            case "❓":
-                return this.reactionsQuestion.set(reaction.fileId, reaction);
+            case ReactionSymbols.Question:
+                return this.reactionsQuestion.set(reaction.sender, reaction);
         }
+    };
+
+    sendReaction = (content: ReactionSymbols): void => {
+        this.messagePageViewModel.sendReaction(this.chatMessage.id, content);
     };
 
     // load

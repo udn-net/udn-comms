@@ -3,7 +3,7 @@ import * as React from "bloatless-react";
 import {
     ChatMessage,
     ChatMessageReaction,
-    ReactionSymbol,
+    ReactionSymbols,
 } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../Chat/chatMessageViewModel";
 import ChatViewModel from "../Chat/chatViewModel";
@@ -41,7 +41,7 @@ export default class MessagePageViewModel {
         messageViewModel.loadData();
     };
 
-    sendReaction = (messageId: string, content: ReactionSymbol): void => {
+    sendReaction = (messageId: string, content: ReactionSymbols): void => {
         this.chatViewModel.chatModel.sendReaction(messageId, content);
     };
 
