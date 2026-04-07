@@ -4,6 +4,7 @@ import { ChatMessageInfoModal } from "../Modals/chatMessageInfoModal";
 import { ChatMessageStatus } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { translations } from "../translations";
+import { MessageReactionButtonRow } from "./messageReactionButtonRow";
 
 export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
     const statusIcon = React.createProxyState(
@@ -43,6 +44,8 @@ export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
                         ></span>
                         {chatMessageViewModel.dateSent}
                     </span>
+
+                    {MessageReactionButtonRow(chatMessageViewModel)}
                 </div>
 
                 <div class="button-container">

@@ -112,8 +112,12 @@ export default class ChatModel {
         )
             return;
         const reactionPath: string[] = this.getReactionPath(reaction.fileId);
-        const action = reaction.isDeleting ? this.storageModel.remove : this.storageModel.writeStringifiable;
-        action(reactionPath, reaction);
+
+        if (reaction.isDeleting == true) {
+            this.storageModel.remove(reactionPath);
+        } else {
+            this.storageModel.writeStringifiable(reactionPath, reaction);
+        }
         this.reactionHandlerManager.trigger(reaction);
 
     };
@@ -213,7 +217,7 @@ export default class ChatModel {
     sendReaction = async (
         messageId: string,
         content: ReactionSymbols,
-        isDeleting: boolean,
+        isDeleting?: boolean,
     ): Promise<void> => {
         const nameAndChannel = this.getNameAndChannel();
         if (nameAndChannel == false) return;
@@ -413,6 +417,7 @@ export default class ChatModel {
         const fileContent = FileModel.createFileContent(v4(), "reaction");
         const reaction: ChatMessageReaction = {
             ...fileContent,
+            fileId: sender,
 
             messageId,
             sender,

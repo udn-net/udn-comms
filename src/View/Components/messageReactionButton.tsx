@@ -7,10 +7,6 @@ export function MessageReactionButton(
     chatMessageViewModel: ChatMessageViewModel,
     content: ReactionSymbols,
 ) {
-    let audioLabel: string;
-    let count: React.State<number>;
-    let isActive: React.State<boolean>;
-
     function sendReaction() {
         chatMessageViewModel.sendReaction(content, isActive.value);
     }
@@ -23,6 +19,10 @@ export function MessageReactionButton(
     function checkIsHighlighted(mapState: React.MapState<any>): boolean {
         return mapState.value.has(getUsername());
     }
+
+    let audioLabel: string;
+    let count: React.State<number>;
+    let isActive: React.State<boolean>;
 
     switch (content) {
         case ReactionSymbols.ThumbsUp: {

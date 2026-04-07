@@ -1261,8 +1261,11 @@
         if (!checkMatchesObjectStructure(reaction, ChatMessageReactionReference))
           return;
         const reactionPath = this.getReactionPath(reaction.fileId);
-        const action = reaction.isDeleting ? this.storageModel.remove : this.storageModel.writeStringifiable;
-        action(reactionPath, reaction);
+        if (reaction.isDeleting == true) {
+          this.storageModel.remove(reactionPath);
+        } else {
+          this.storageModel.writeStringifiable(reactionPath, reaction);
+        }
         this.reactionHandlerManager.trigger(reaction);
       };
       this.handleMessageSent = (chatMessage) => {
@@ -1492,6 +1495,7 @@
         const fileContent = FileModel2.createFileContent(v4_default(), "reaction");
         const reaction = {
           ...fileContent,
+          fileId: sender,
           messageId,
           sender,
           content,
@@ -3939,9 +3943,6 @@
 
   // src/View/Components/messageReactionButton.tsx
   function MessageReactionButton(chatMessageViewModel, content) {
-    let audioLabel;
-    let count;
-    let isActive;
     function sendReaction() {
       chatMessageViewModel.sendReaction(content, isActive.value);
     }
@@ -3951,6 +3952,9 @@
     function checkIsHighlighted(mapState) {
       return mapState.value.has(getUsername());
     }
+    let audioLabel;
+    let count;
+    let isActive;
     switch (content) {
       case "\u{1F44D}" /* ThumbsUp */: {
         audioLabel = translations.chatPage.message.thumbsUpReaction;
@@ -4013,6 +4017,26 @@
     );
   }
 
+  // src/View/Components/messageReactionButtonRow.tsx
+  function MessageReactionButtonRow(chatMessageViewModel) {
+    return /* @__PURE__ */ createElement("div", { class: "flex-row gap" }, MessageReactionButton(
+      chatMessageViewModel,
+      "\u{1F44D}" /* ThumbsUp */
+    ), MessageReactionButton(
+      chatMessageViewModel,
+      "\u2705" /* Check */
+    ), MessageReactionButton(
+      chatMessageViewModel,
+      "\u2757\uFE0F" /* Attention */
+    ), MessageReactionButton(
+      chatMessageViewModel,
+      "\u203C\uFE0F" /* DoubleAttention */
+    ), MessageReactionButton(
+      chatMessageViewModel,
+      "\u2753" /* Question */
+    ));
+  }
+
   // src/View/Modals/chatMessageInfoModal.tsx
   function ChatMessageInfoModal(chatMessageViewModel) {
     return /* @__PURE__ */ createElement(
@@ -4027,22 +4051,7 @@
           class: "break-word",
           "subscribe:innerText": chatMessageViewModel.body
         }
-      )))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row gap" }, MessageReactionButton(
-        chatMessageViewModel,
-        "\u{1F44D}" /* ThumbsUp */
-      ), MessageReactionButton(
-        chatMessageViewModel,
-        "\u2705" /* Check */
-      ), MessageReactionButton(
-        chatMessageViewModel,
-        "\u2757\uFE0F" /* Attention */
-      ), MessageReactionButton(
-        chatMessageViewModel,
-        "\u203C\uFE0F" /* DoubleAttention */
-      ), MessageReactionButton(
-        chatMessageViewModel,
-        "\u2753" /* Question */
-      ))), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      )))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), MessageReactionButtonRow(chatMessageViewModel)), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
 
@@ -4081,7 +4090,7 @@
           class: "icon",
           "subscribe:innerText": statusIcon
         }
-      ), chatMessageViewModel.dateSent)), /* @__PURE__ */ createElement("div", { class: "button-container" }, /* @__PURE__ */ createElement(
+      ), chatMessageViewModel.dateSent), MessageReactionButtonRow(chatMessageViewModel)), /* @__PURE__ */ createElement("div", { class: "button-container" }, /* @__PURE__ */ createElement(
         "button",
         {
           "on:click": chatMessageViewModel.showInfoModal,
