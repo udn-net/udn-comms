@@ -747,7 +747,7 @@ body[showing-chat] #chat-page-wrapper {
   display: none;
 }
 .message-reaction-row {
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
 }
 
 /* src/View/ChatPages/taskPage.css */

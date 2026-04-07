@@ -1495,7 +1495,7 @@
         const fileContent = FileModel2.createFileContent(v4_default(), "reaction");
         const reaction = {
           ...fileContent,
-          fileId: sender,
+          fileId: _ChatModel.createMessageReactionId(messageId, content, sender),
           messageId,
           sender,
           content,
@@ -1504,7 +1504,25 @@
         return reaction;
       };
     }
+    static {
+      this.createMessageReactionId = (messageId, content, sender) => {
+        console.log(reactionStringMap, content, reactionStringMap[content]);
+        return messageId + sender + reactionStringMap[content];
+      };
+    }
   };
+  var ReactionSymbols = /* @__PURE__ */ ((ReactionSymbols2) => {
+    ReactionSymbols2["ThumbsUp"] = "\u{1F44D}";
+    ReactionSymbols2["Check"] = "\u2705";
+    ReactionSymbols2["Attention"] = "\u2757\uFE0F";
+    ReactionSymbols2["DoubleAttention"] = "\u203C\uFE0F";
+    ReactionSymbols2["Question"] = "\u2753";
+    return ReactionSymbols2;
+  })(ReactionSymbols || {});
+  var reactionStringMap = {};
+  Object.entries(ReactionSymbols).forEach((value) => {
+    reactionStringMap[value[1]] = value[0];
+  });
   var ChatInfoReference = {
     dataVersion: DATA_VERSION,
     primaryChannel: "",
