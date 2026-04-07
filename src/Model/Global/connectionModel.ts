@@ -40,16 +40,17 @@ export default class ConnectionModel {
         this.storeAddress(this.address);
         this.sendSubscriptionRequest();
         this.sendMessagesInOutbox();
-        this.shouldAttemptReconnect = true;
     };
 
     // connection
     connect = (address: string): void => {
         console.log("connecting...", address);
+        this.shouldAttemptReconnect = true;
         this.udn.connect(address);
     };
 
     disconnect = (): void => {
+        this.shouldAttemptReconnect = false;
         this.udn.disconnect();
 
         // do not reconnect
@@ -58,7 +59,6 @@ export default class ConnectionModel {
             filePaths.connectionModel.reconnectAddress,
         );
         this.storageModel.remove(reconnectAddressPath);
-        this.shouldAttemptReconnect = false;
     };
 
     reconnect = (): void => {
