@@ -2751,7 +2751,8 @@
     settings: {
       pages: {
         appearance: "Appearance",
-        regional: "Language & Region"
+        regional: "Language+Region",
+        info: "About Comms"
       }
     },
     connectionModal: {
@@ -2950,6 +2951,13 @@
         addChatPlaceholder: "Chat hinzuf\xFCgen",
         addChatButton: "Chat hinzuf\xFCgen"
       },
+      settings: {
+        pages: {
+          appearance: "Erscheinungsbild",
+          regional: "Sprache+Region",
+          info: "\xDCber Comms"
+        }
+      },
       connectionModal: {
         connectionModalHeadline: "Verbindungen verwalten",
         connectButtonAudioLabel: "verbinden"
@@ -3128,6 +3136,13 @@
         addChatAudioLabel: "nombre del nuevo chat",
         addChatPlaceholder: "A\xF1adir chat",
         addChatButton: "A\xF1adir chat"
+      },
+      settings: {
+        pages: {
+          appearance: "Aspecto",
+          regional: "Idioma+Regi\xF3n",
+          info: "Sobre Comms"
+        }
       },
       connectionModal: {
         connectionModalHeadline: "Gestionar Conexiones",
@@ -6235,8 +6250,8 @@
   };
 
   // src/View/Components/splitModal.tsx
-  function SplitModal(leftView, rightView, scrollButtonLabel) {
-    const view = /* @__PURE__ */ createElement("div", { class: "split-modal" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView }), /* @__PURE__ */ createElement("div", { class: "detail-button-wrapper" }, /* @__PURE__ */ createElement("button", { class: "ghost", "on:click": scrollToDetails }, /* @__PURE__ */ createElement(
+  function SplitModal(leftView, rightView, scrollButtonLabel, extendedStyle = false, navigationState) {
+    const view = /* @__PURE__ */ createElement("div", { class: "split-modal", "toggle:extended": extendedStyle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView }), /* @__PURE__ */ createElement("div", { class: "detail-button-wrapper", "toggle:hidden": navigationState != void 0 }, /* @__PURE__ */ createElement("button", { class: "ghost", "on:click": scrollToDetails }, /* @__PURE__ */ createElement(
       "span",
       {
         class: "ellipsis",
@@ -6246,6 +6261,7 @@
     function scrollToDetails() {
       view.scrollLeft = view.scrollWidth;
     }
+    navigationState?.subscribe(scrollToDetails);
     return view;
   }
 
@@ -6281,7 +6297,7 @@
       if (isSelected.value == false) return;
       loadItems();
     });
-    return /* @__PURE__ */ createElement("div", { class: "flex-column" }, /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement(
       "button",
       {
         class: "width-100 flex-1 clip",
@@ -6292,7 +6308,7 @@
     ), /* @__PURE__ */ createElement(
       "div",
       {
-        class: "flex-column",
+        class: "flex-column gap",
         "children:append": [items, StringToDirectoryItemList]
       }
     ));
@@ -6327,10 +6343,11 @@
         ));
       }
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": storageViewModel2.isShowingStorageModal }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": storageViewModel2.isShowingStorageModal }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
       new State(DirectoryItemList(storageViewModel2)),
       detailView,
-      storageViewModel2.selectedFileName
+      storageViewModel2.selectedFileName,
+      true
     )), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.hideStorageModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
@@ -6596,15 +6613,29 @@
         class: "modal",
         "toggle:open": settingsViewModel2.isShowingSettingsModal
       },
-      /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
         new State(SettingsLeftPane(settingsViewModel2)),
         new State(/* @__PURE__ */ createElement("span", null, "settings")),
-        new State("")
+        new State(""),
+        false,
+        settingsViewModel2.selectedModalPage
       )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
   function SettingsLeftPane(settingsViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "flex-column" }, SettingsPaneButton(settingsViewModel2, 0 /* Appearance */, translations.settings.pages.appearance), SettingsPaneButton(settingsViewModel2, 1 /* Regional */, translations.settings.pages.regional));
+    return /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, SettingsPaneButton(
+      settingsViewModel2,
+      0 /* Appearance */,
+      translations.settings.pages.appearance
+    ), SettingsPaneButton(
+      settingsViewModel2,
+      1 /* Regional */,
+      translations.settings.pages.regional
+    ), SettingsPaneButton(
+      settingsViewModel2,
+      2 /* Info */,
+      translations.settings.pages.info
+    ));
   }
   function SettingsPaneButton(settingsViewModel2, page, label) {
     const isSelected = createProxyState(

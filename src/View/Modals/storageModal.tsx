@@ -64,12 +64,13 @@ export function StorageModal(storageViewModel: StorageViewModel) {
     );
     return (
         <div class="modal" toggle:open={storageViewModel.isShowingStorageModal}>
-            <div style="max-width: 64rem">
+            <div>
                 <main class="padding-0">
                     {SplitModal(
                         new React.State(DirectoryItemList(storageViewModel)),
                         detailView,
                         storageViewModel.selectedFileName,
+                        true,
                     )}
                 </main>
                 <button on:click={storageViewModel.hideStorageModal}>

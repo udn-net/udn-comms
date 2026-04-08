@@ -12,12 +12,14 @@ export function SettingsModal(settingsViewModel: SettingsViewModel) {
             class="modal"
             toggle:open={settingsViewModel.isShowingSettingsModal}
         >
-            <div style="max-width: 64rem">
+            <div>
                 <main class="padding-0">
                     {SplitModal(
                         new React.State(SettingsLeftPane(settingsViewModel)),
                         new React.State(<span>settings</span>),
                         new React.State(""),
+                        false,
+                        settingsViewModel.selectedModalPage,
                     )}
                 </main>
                 <button on:click={settingsViewModel.hideSettingsModal}>
@@ -31,7 +33,7 @@ export function SettingsModal(settingsViewModel: SettingsViewModel) {
 
 function SettingsLeftPane(settingsViewModel: SettingsViewModel) {
     return (
-        <div class="flex-column">
+        <div class="flex-column gap">
             {SettingsPaneButton(
                 settingsViewModel,
                 SettingsModalPages.Appearance,
@@ -41,6 +43,11 @@ function SettingsLeftPane(settingsViewModel: SettingsViewModel) {
                 settingsViewModel,
                 SettingsModalPages.Regional,
                 translations.settings.pages.regional,
+            )}
+            {SettingsPaneButton(
+                settingsViewModel,
+                SettingsModalPages.Info,
+                translations.settings.pages.info,
             )}
         </div>
     );

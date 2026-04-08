@@ -65,4 +65,5 @@ export default class SettingsViewModel {
 export enum SettingsModalPages {
     Appearance,
     Regional,
+    Info,
 }

@@ -6,12 +6,14 @@ export function SplitModal(
     leftView: React.State<Element>,
     rightView: React.State<Element>,
     scrollButtonLabel: React.State<string>,
+    extendedStyle: boolean = false,
+    navigationState?: React.State<any>,
 ) {
     const view = (
-        <div class="split-modal">
+        <div class="split-modal" toggle:extended={extendedStyle}>
             <div>
                 <div class="scroll-area" children:set={leftView}></div>
-                <div class="detail-button-wrapper">
+                <div class="detail-button-wrapper" toggle:hidden={navigationState != undefined}>
                     <button class="ghost" on:click={scrollToDetails}>
                         <span
                             class="ellipsis"
@@ -28,6 +30,8 @@ export function SplitModal(
     function scrollToDetails() {
         view.scrollLeft = view.scrollWidth;
     }
+
+    navigationState?.subscribe(scrollToDetails);
 
     return view;
 }

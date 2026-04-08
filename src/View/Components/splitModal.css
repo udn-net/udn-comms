@@ -1,3 +1,7 @@
+.modal>div:has(.split-modal[extended]) {
+    max-width: 64rem;
+}
+
 .split-modal {
     width: 100%;
     height: 100%;

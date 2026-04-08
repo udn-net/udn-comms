@@ -80,6 +80,7 @@ const englishTranslations = {
         pages: {
             appearance: "Appearance",
             regional: "Language+Region",
+            info: "About Comms",
         },
     },
 
@@ -369,6 +370,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             pages: {
                 appearance: "Erscheinungsbild",
                 regional: "Sprache+Region",
+            info: "Über Comms",
             },
         },
 
@@ -629,6 +631,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             pages: {
                 appearance: "Aspecto",
                 regional: "Idioma+Región",
+                info: "Sobre Comms",
             },
         },
         connectionModal: {
