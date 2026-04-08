@@ -70,7 +70,9 @@
 
     height: auto;
     max-height: unset;
+}
 
+#message-page #message-container:not([scroll-hard]) {
     scroll-behavior: smooth;
 }
 

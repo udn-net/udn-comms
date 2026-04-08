@@ -655,6 +655,8 @@ body[showing-chat] #chat-page-wrapper {
   gap: var(--gap-between-tiles);
   height: auto;
   max-height: unset;
+}
+#message-page #message-container:not([scroll-hard]) {
   scroll-behavior: smooth;
 }
 .message-bubble {

@@ -4147,8 +4147,12 @@
         ]
       }
     );
-    function scrollDown() {
+    function scrollDown(hard = false) {
+      if (hard) {
+        messageContainer.setAttribute("scroll-hard", "");
+      }
       messageContainer.scrollTop = messageContainer.scrollHeight;
+      messageContainer.removeAttribute("scroll-hard");
     }
     function scrollDownIfApplicable() {
       const scrollFromBottom = messageContainer.scrollHeight - (messageContainer.scrollTop + messageContainer.offsetHeight);
@@ -4158,7 +4162,7 @@
     messagePageViewModel.chatMessageViewModels.subscribeSilent(
       scrollDownIfApplicable
     );
-    setTimeout(() => scrollDown(), 100);
+    setTimeout(() => scrollDown(true), 100);
     return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, translations.chatPage.message.messagesHeadline)), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
       "input",
       {

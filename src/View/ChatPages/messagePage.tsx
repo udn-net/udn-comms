@@ -19,8 +19,12 @@ export function MessagePage(messagePageViewModel: MessagePageViewModel) {
         ></div>
     );
 
-    function scrollDown() {
+    function scrollDown(hard: boolean = false) {
+        if (hard) {
+            messageContainer.setAttribute("scroll-hard", "");
+        }
         messageContainer.scrollTop = messageContainer.scrollHeight;
+        messageContainer.removeAttribute("scroll-hard");
     }
     function scrollDownIfApplicable() {
         const scrollFromBottom =
@@ -33,7 +37,7 @@ export function MessagePage(messagePageViewModel: MessagePageViewModel) {
     messagePageViewModel.chatMessageViewModels.subscribeSilent(
         scrollDownIfApplicable,
     );
-    setTimeout(() => scrollDown(), 100);
+    setTimeout(() => scrollDown(true), 100);
 
     return (
         <div id="message-page">
