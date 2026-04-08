@@ -2,7 +2,7 @@ import "./homePage.css";
 
 import * as React from "bloatless-react";
 
-import ChatViewModel, { ChatPageType } from "../ViewModel/Chat/chatViewModel";
+import ChatViewModel, { ChatPageTypes } from "../ViewModel/Chat/chatViewModel";
 
 import { CalendarPage } from "./ChatPages/calendarPage";
 import { ChatViewToggleButton } from "./Components/chatViewToggleButton";
@@ -18,13 +18,13 @@ export function ChatPage(chatViewModel: ChatViewModel) {
             chatViewModel.closeSubPages();
 
             switch (chatViewModel.selectedPage.value) {
-                case ChatPageType.Settings: {
+                case ChatPageTypes.Settings: {
                     return SettingsPage(chatViewModel.settingsPageViewModel);
                 }
-                case ChatPageType.Tasks: {
+                case ChatPageTypes.Tasks: {
                     return TaskPage(chatViewModel.taskPageViewModel);
                 }
-                case ChatPageType.Calendar: {
+                case ChatPageTypes.Calendar: {
                     return CalendarPage(chatViewModel.calendarViewModel);
                 }
                 default: {
@@ -88,25 +88,25 @@ export function ChatPage(chatViewModel: ChatViewModel) {
                         {ChatViewToggleButton(
                             translations.chatPage.pages.calendar,
                             "calendar_month",
-                            ChatPageType.Calendar,
+                            ChatPageTypes.Calendar,
                             chatViewModel,
                         )}
                         {ChatViewToggleButton(
                             translations.chatPage.pages.tasks,
                             "task_alt",
-                            ChatPageType.Tasks,
+                            ChatPageTypes.Tasks,
                             chatViewModel,
                         )}
                         {ChatViewToggleButton(
                             translations.chatPage.pages.messages,
                             "forum",
-                            ChatPageType.Messages,
+                            ChatPageTypes.Messages,
                             chatViewModel,
                         )}
                         {ChatViewToggleButton(
                             translations.chatPage.pages.settings,
                             "settings",
-                            ChatPageType.Settings,
+                            ChatPageTypes.Settings,
                             chatViewModel,
                         )}
                     </span>

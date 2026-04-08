@@ -8,12 +8,12 @@ import ChatModel, {
     ChatMessageReaction,
 } from "../../Model/Chat/chatModel";
 import StorageModel, {
-    StorageModelSubPath,
+    StorageModelSubPaths,
     filePaths,
 } from "../../Model/Global/storageModel";
 
 import ChatListViewModel from "./chatListViewModel";
-import { Color } from "../../colors";
+import { Colors } from "../../colors";
 import CoreViewModel from "../Global/coreViewModel";
 import { Entry } from "../../View/Components/option";
 import MessagePageViewModel from "../Pages/messagePageViewModel";
@@ -38,9 +38,9 @@ export default class ChatViewModel {
     settingsPageViewModel: SettingsPageViewModel;
 
     // state
-    displayedColor: React.State<Color> = new React.State<any>(Color.Standard);
-    selectedPage: React.State<ChatPageType> = new React.State<any>(
-        ChatPageType.Messages,
+    displayedColor: React.State<Colors> = new React.State<any>(Colors.Standard);
+    selectedPage: React.State<ChatPageTypes> = new React.State<any>(
+        ChatPageTypes.Messages,
     );
 
     index: React.State<number> = new React.State(0);
@@ -59,12 +59,12 @@ export default class ChatViewModel {
 
     closeSubPages = (): void => {};
 
-    setColor = (color: Color): void => {
+    setColor = (color: Colors): void => {
         this.setDisplayedColor(color);
         this.chatModel.setColor(color);
     };
 
-    setDisplayedColor = (color: Color): void => {
+    setDisplayedColor = (color: Colors): void => {
         this.displayedColor.value = color;
     };
 
@@ -81,7 +81,7 @@ export default class ChatViewModel {
     // load
     loadPageSelection = (): void => {
         const path: string[] = StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.lastUsedPage(this.chatModel.id),
         );
         const lastUsedPage: string | null = this.storageModel.read(path);
@@ -106,7 +106,7 @@ export default class ChatViewModel {
     updateReadStatus = (): void => {
         if (
             this.chatListViewModel.selectedChat.value == this &&
-            this.selectedPage.value == ChatPageType.Messages
+            this.selectedPage.value == ChatPageTypes.Messages
         ) {
             this.chatModel.setReadStatus(false);
         }
@@ -123,7 +123,7 @@ export default class ChatViewModel {
             [this.selectedPage, this.chatListViewModel.selectedChat],
             () => {
                 if (this.chatListViewModel.selectedChat.value != this) return;
-                if (this.selectedPage.value != ChatPageType.Messages) return;
+                if (this.selectedPage.value != ChatPageTypes.Messages) return;
                 this.setReadStatus(false);
             },
         );
@@ -194,7 +194,7 @@ export default class ChatViewModel {
 }
 
 // types
-export enum ChatPageType {
+export enum ChatPageTypes {
     Settings = "settings",
     Messages = "messages",
     Tasks = "tasks",

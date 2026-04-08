@@ -6,7 +6,7 @@ import {
 } from "../Model/Files/boardsAndTasksModel";
 import ChatModel, {
     ChatMessage,
-    ChatMessageStatus,
+    ChatMessageStatuses,
 } from "../Model/Chat/chatModel";
 import {
     getLocalStorageItemAndClear,
@@ -114,7 +114,7 @@ export default class v1Upgrader {
 
         const addMessages = (
             potentialMessages: any[],
-            status: ChatMessageStatus,
+            status: ChatMessageStatuses,
         ) => {
             for (const potentialMessage of potentialMessages) {
                 const isV1ChatMessage: boolean = checkMatchesObjectStructure(
@@ -139,7 +139,7 @@ export default class v1Upgrader {
                     stringifiedFile: "",
                 };
                 chatModel.addMessage(convertedChatMessage);
-                if (status == ChatMessageStatus.Outbox) {
+                if (status == ChatMessageStatuses.Outbox) {
                     this.connectionModel.sendMessageOrStore(
                         convertedChatMessage,
                     );
@@ -147,8 +147,8 @@ export default class v1Upgrader {
             }
         };
 
-        addMessages(potentialMessages, ChatMessageStatus.Received);
-        addMessages(potentialMessagesInOutbox, ChatMessageStatus.Outbox);
+        addMessages(potentialMessages, ChatMessageStatuses.Received);
+        addMessages(potentialMessagesInOutbox, ChatMessageStatuses.Outbox);
 
         // objects
         const objectsString: string =

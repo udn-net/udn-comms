@@ -2,7 +2,7 @@
 
 import { DATA_VERSION, ValidObject } from "../Utility/typeSafety";
 import StorageModel, {
-    StorageModelSubPath,
+    StorageModelSubPaths,
     filePaths,
 } from "../Global/storageModel";
 import {
@@ -27,7 +27,7 @@ export default class FileModel {
     // paths
     getBasePath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.files(this.chatModel.id),
         );
     };

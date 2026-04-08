@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import BoardViewModel, {
-    BoardPageType,
+    BoardPageTypes,
 } from "../../ViewModel/Pages/boardViewModel";
 
 import { RibbonButton } from "./ribbonButton";
@@ -9,7 +9,7 @@ import { RibbonButton } from "./ribbonButton";
 export function BoardViewToggleButton(
     label: string,
     icon: string,
-    page: BoardPageType,
+    page: BoardPageTypes,
     boardViewModel: BoardViewModel,
 ) {
     function select() {

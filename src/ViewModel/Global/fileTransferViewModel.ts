@@ -4,7 +4,7 @@ import FileTransferModel, {
     TransferData,
 } from "../../Model/Global/fileTransferModel";
 import StorageModel, {
-    StorageModelSubPath,
+    StorageModelSubPaths,
     filePaths,
 } from "../../Model/Global/storageModel";
 
@@ -17,7 +17,7 @@ export default class FileTransferViewModel {
     chatListModel: ChatListModel;
 
     // state
-    presentedModal: React.State<FileTransferModal | undefined> =
+    presentedModal: React.State<FileTransferModals | undefined> =
         new React.State<any>(undefined);
 
     generalFileOptions: React.ListState<FileTransferOption> =
@@ -86,14 +86,14 @@ export default class FileTransferViewModel {
             {
                 label: translations.dataTransferModal.connectionData,
                 path: StorageModel.getPath(
-                    StorageModelSubPath.ConnectionModel,
+                    StorageModelSubPaths.ConnectionModel,
                     filePaths.connectionModel.previousAddresses,
                 ),
             },
             {
                 label: translations.dataTransferModal.settingsData,
                 path: StorageModel.getPath(
-                    StorageModelSubPath.SettingsModel,
+                    StorageModelSubPaths.SettingsModel,
                     [],
                 ),
             },
@@ -117,22 +117,22 @@ export default class FileTransferViewModel {
 
     // view
     showDirectionSelectionModal = (): void => {
-        this.presentedModal.value = FileTransferModal.DirectionSelection;
+        this.presentedModal.value = FileTransferModals.DirectionSelection;
         this.getOptions();
     };
 
     showFileSelectionModal = (): void => {
-        this.presentedModal.value = FileTransferModal.FileSelection;
+        this.presentedModal.value = FileTransferModals.FileSelection;
     };
 
     showTransferDataModal = (): void => {
-        this.presentedModal.value = FileTransferModal.TransferDataDisplay;
+        this.presentedModal.value = FileTransferModals.TransferDataDisplay;
         this.getTransferData();
         this.fileTransferModel.prepareToSend();
     };
 
     initiateTransfer = (): void => {
-        this.presentedModal.value = FileTransferModal.TransferDisplay;
+        this.presentedModal.value = FileTransferModals.TransferDisplay;
         this.didNotFinishSending.value = true;
         this.filePathsSent.clear();
 
@@ -148,11 +148,11 @@ export default class FileTransferViewModel {
     };
 
     showTransferDataInputModal = (): void => {
-        this.presentedModal.value = FileTransferModal.TransferDataInput;
+        this.presentedModal.value = FileTransferModals.TransferDataInput;
     };
 
     prepareReceivingData = (): void => {
-        this.presentedModal.value = FileTransferModal.ReceptionDisplay;
+        this.presentedModal.value = FileTransferModals.ReceptionDisplay;
         this.filePathsReceived.clear();
 
         const transferData: TransferData = {
@@ -189,7 +189,7 @@ export interface FileTransferOption {
     path: string[];
 }
 
-export enum FileTransferModal {
+export enum FileTransferModals {
     DirectionSelection,
 
     // sending

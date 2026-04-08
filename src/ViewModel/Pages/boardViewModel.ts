@@ -5,8 +5,8 @@ import BoardsAndTasksModel, {
     TaskFileContent,
 } from "../../Model/Files/boardsAndTasksModel";
 
-import ChatViewModel, { ChatPageType } from "../Chat/chatViewModel";
-import { Color } from "../../colors";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
+import { Colors } from "../../colors";
 import CoreViewModel from "../Global/coreViewModel";
 import SearchViewModel from "../Utility/searchViewModel";
 import StorageModel from "../../Model/Global/storageModel";
@@ -25,12 +25,12 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
     // state
     name: React.State<string> = new React.State("");
-    color: React.State<Color> = new React.State<any>(Color.Standard);
+    color: React.State<Colors> = new React.State<any>(Colors.Standard);
 
     index: React.State<number> = new React.State(0);
 
-    selectedPage: React.State<BoardPageType> = new React.State<any>(
-        BoardPageType.List,
+    selectedPage: React.State<BoardPageTypes> = new React.State<any>(
+        BoardPageTypes.List,
     );
 
     isSelected: React.State<boolean>;
@@ -49,15 +49,15 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     };
 
     getLastUsedBoardPath = (): string[] => {
-        return [...this.getBasePath(), BoardViewModelSubPath.LastUsedView];
+        return [...this.getBasePath(), BoardViewModelSubPaths.LastUsedView];
     };
 
     getPreviousSearchesPath = (): string[] => {
-        return [...this.getBasePath(), BoardViewModelSubPath.PreviousSearches];
+        return [...this.getBasePath(), BoardViewModelSubPaths.PreviousSearches];
     };
 
     getLastSearchPath = (): string[] => {
-        return [...this.getBasePath(), BoardViewModelSubPath.LastSearch];
+        return [...this.getBasePath(), BoardViewModelSubPaths.LastSearch];
     };
 
     // settings
@@ -112,7 +112,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         const lastUsedView: string | null = this.storageModel.read(path);
         if (lastUsedView == null) return;
 
-        this.selectedPage.value = lastUsedView as BoardPageType;
+        this.selectedPage.value = lastUsedView as BoardPageTypes;
     };
 
     handleNewSearch = (searchTerm: string): void => {
@@ -273,7 +273,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
         this.color.subscribe(() => {
             if (this.isSelected.value == false) return;
-            if (this.chatViewModel.selectedPage.value != ChatPageType.Tasks) return;
+            if (this.chatViewModel.selectedPage.value != ChatPageTypes.Tasks) return;
             this.applyColor();
         });
 
@@ -304,14 +304,14 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     }
 }
 
-export enum BoardViewModelSubPath {
+export enum BoardViewModelSubPaths {
     LastUsedView = "last-used-view",
     PreviousSearches = "previous-searches",
     LastSearch = "last-search",
 }
 
 // types
-export enum BoardPageType {
+export enum BoardPageTypes {
     List = "list",
     Kanban = "kanban",
     StatusGrid = "status-grid",

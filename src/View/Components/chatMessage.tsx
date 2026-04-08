@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import { ChatMessageInfoModal } from "../Modals/chatMessageInfoModal";
-import { ChatMessageStatus } from "../../Model/Chat/chatModel";
+import { ChatMessageStatuses } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { translations } from "../translations";
 import { MessageReactionButtonRow } from "./messageReactionButtonRow";
@@ -11,11 +11,11 @@ export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
         [chatMessageViewModel.status],
         () => {
             switch (chatMessageViewModel.status.value) {
-                case ChatMessageStatus.Outbox:
+                case ChatMessageStatuses.Outbox:
                     return "hourglass_top";
-                case ChatMessageStatus.Sent:
+                case ChatMessageStatuses.Sent:
                     return "check";
-                case ChatMessageStatus.Received:
+                case ChatMessageStatuses.Received:
                     return "done_all";
                 default:
                     return "warning";

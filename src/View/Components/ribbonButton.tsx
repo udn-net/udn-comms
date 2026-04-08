@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import BoardViewModel, {
-    BoardPageType,
+    BoardPageTypes,
 } from "../../ViewModel/Pages/boardViewModel";
 
 export function RibbonButton(

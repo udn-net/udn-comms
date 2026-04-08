@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import BoardViewModel, {
-    BoardPageType,
+    BoardPageTypes,
 } from "../../ViewModel/Pages/boardViewModel";
 
 import { BoardKanbanPage } from "./boardKanbanPage";
@@ -22,10 +22,10 @@ export function BoardPage(boardViewModel: BoardViewModel) {
         [boardViewModel.selectedPage],
         () => {
             switch (boardViewModel.selectedPage.value) {
-                case BoardPageType.Kanban: {
+                case BoardPageTypes.Kanban: {
                     return BoardKanbanPage(boardViewModel);
                 }
-                case BoardPageType.StatusGrid: {
+                case BoardPageTypes.StatusGrid: {
                     return BoardStatusGridPage(boardViewModel);
                 }
                 default: {
@@ -102,19 +102,19 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                     {BoardViewToggleButton(
                         translations.chatPage.task.listViewButtonAudioLabel,
                         "view_list",
-                        BoardPageType.List,
+                        BoardPageTypes.List,
                         boardViewModel,
                     )}
                     {BoardViewToggleButton(
                         translations.chatPage.task.kanbanViewButtonAudioLabel,
                         "view_kanban",
-                        BoardPageType.Kanban,
+                        BoardPageTypes.Kanban,
                         boardViewModel,
                     )}
                     {BoardViewToggleButton(
                         translations.chatPage.task.statusViewButtonAudioLabel,
                         "grid_view",
-                        BoardPageType.StatusGrid,
+                        BoardPageTypes.StatusGrid,
                         boardViewModel,
                     )}
                 </span>

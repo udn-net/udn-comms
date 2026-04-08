@@ -1,6 +1,6 @@
 import ChatModel, { ChatMessage } from "./chatModel";
 import StorageModel, {
-    StorageModelSubPath,
+    StorageModelSubPaths,
     filePaths,
 } from "../Global/storageModel";
 
@@ -81,7 +81,7 @@ export default class ChatListModel {
     // load
     loadChats = (): void => {
         const chatDir = StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.base,
         );
         const chatIds = this.storageModel.list(chatDir);

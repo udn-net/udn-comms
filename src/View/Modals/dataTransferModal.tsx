@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import FileTransferViewModel, {
-    FileTransferModal,
+    FileTransferModals,
     FileTransferOption,
 } from "../../ViewModel/Global/fileTransferViewModel";
 
@@ -38,7 +38,7 @@ function DirectionSelectionModal(
         [fileTransferViewModel.presentedModal],
         () =>
             fileTransferViewModel.presentedModal.value ==
-            FileTransferModal.DirectionSelection,
+            FileTransferModals.DirectionSelection,
     );
 
     const isDisconnected = React.createProxyState(
@@ -156,7 +156,7 @@ function FileSelectionModal(fileTransferViewModel: FileTransferViewModel) {
         [fileTransferViewModel.presentedModal],
         () =>
             fileTransferViewModel.presentedModal.value ==
-            FileTransferModal.FileSelection,
+            FileTransferModals.FileSelection,
     );
 
     return (
@@ -222,7 +222,7 @@ function TransferDataDisplayModal(
         [fileTransferViewModel.presentedModal],
         () =>
             fileTransferViewModel.presentedModal.value ==
-            FileTransferModal.TransferDataDisplay,
+            FileTransferModals.TransferDataDisplay,
     );
 
     return (
@@ -295,7 +295,7 @@ function TransferDisplayModal(fileTransferViewModel: FileTransferViewModel) {
         [fileTransferViewModel.presentedModal],
         () =>
             fileTransferViewModel.presentedModal.value ==
-            FileTransferModal.TransferDisplay,
+            FileTransferModals.TransferDisplay,
     );
 
     return (
@@ -361,7 +361,7 @@ function TransferDataInputModal(fileTransferViewModel: FileTransferViewModel) {
         [fileTransferViewModel.presentedModal],
         () =>
             fileTransferViewModel.presentedModal.value ==
-            FileTransferModal.TransferDataInput,
+            FileTransferModals.TransferDataInput,
     );
 
     return (
@@ -446,7 +446,7 @@ function DataReceptionModal(fileTransferViewModel: FileTransferViewModel) {
         [fileTransferViewModel.presentedModal],
         () =>
             fileTransferViewModel.presentedModal.value ==
-            FileTransferModal.ReceptionDisplay,
+            FileTransferModals.ReceptionDisplay,
     );
 
     return (

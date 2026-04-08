@@ -8,7 +8,7 @@ import FileModel, { FileContent, FileModelSubPath } from "./fileModel";
 
 import CalendarModel from "./calendarModel";
 import ChatModel from "../Chat/chatModel";
-import { Color } from "../../colors";
+import { Colors } from "../../colors";
 import { HandlerManager } from "../Utility/utility";
 import SettingsModel from "../Global/settingsModel";
 import StorageModel from "../Global/storageModel";
@@ -96,7 +96,7 @@ export default class BoardsAndTasksModel {
             BoardsAndTasksModel.createBoardInfoFileContent(
                 v4(),
                 name,
-                Color.Standard,
+                Colors.Standard,
             );
         return boardInfoFileContent;
     };
@@ -256,7 +256,7 @@ export default class BoardsAndTasksModel {
     static createBoardInfoFileContent = (
         fileId: string,
         name: string,
-        color: Color,
+        color: Colors,
     ): BoardInfoFileContent => {
         const fileContent: FileContent<"board-info"> =
             FileModel.createFileContent(fileId, "board-info");
@@ -294,7 +294,7 @@ export enum TaskModelSubPaths {
 // types
 export interface BoardInfoFileContent extends FileContent<"board-info"> {
     name: string;
-    color: Color;
+    color: Colors;
 }
 
 export interface TaskFileContent extends FileContent<"task"> {
@@ -322,7 +322,7 @@ export const BoardInfoFileContentReference: BoardInfoFileContent = {
     type: "board-info",
 
     name: "",
-    color: "" as Color,
+    color: "" as Colors,
 };
 
 export const TaskFileContentReference: TaskFileContent = {

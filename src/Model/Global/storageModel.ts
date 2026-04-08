@@ -212,7 +212,7 @@ export default class StorageModel {
     };
 
     static getPath(
-        locationName: StorageModelSubPath,
+        locationName: StorageModelSubPaths,
         filePath: string[],
     ): string[] {
         return [DATA_VERSION, locationName, ...filePath];
@@ -223,7 +223,7 @@ export default class StorageModel {
 export type StorageEntry = { [key: string]: StorageEntry };
 
 // locations
-export enum StorageModelSubPath {
+export enum StorageModelSubPaths {
     Chat = "chat",
 
     ConnectionModel = "connection",

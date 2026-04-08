@@ -15,13 +15,13 @@ import {
     stringify,
 } from "../Utility/utility";
 import StorageModel, {
-    StorageModelSubPath,
+    StorageModelSubPaths,
     filePaths,
 } from "../Global/storageModel";
 import { decryptString, encryptString } from "../Utility/crypto";
 
 import ChatListModel from "./chatListModel";
-import { Color } from "../../colors";
+import { Colors } from "../../colors";
 import ConnectionModel from "../Global/connectionModel";
 import SettingsModel from "../Global/settingsModel";
 import { v4 } from "uuid";
@@ -37,7 +37,7 @@ export default class ChatModel {
     // data
     id: string;
     info: ChatInfo;
-    color: Color;
+    color: Colors;
 
     chatMessageHandlerManager: HandlerManager<ChatMessage> =
         new HandlerManager();
@@ -51,28 +51,28 @@ export default class ChatModel {
     // paths
     getBasePath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.chatBase(this.id),
         );
     };
 
     getInfoPath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.info(this.id),
         );
     };
 
     getColorPath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.color(this.id),
         );
     };
 
     getMessageDirPath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.messages(this.id),
         );
     };
@@ -83,7 +83,7 @@ export default class ChatModel {
 
     getReactionDirPath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.Chat,
+            StorageModelSubPaths.Chat,
             filePaths.chat.reactions(this.id),
         );
     };
@@ -100,7 +100,7 @@ export default class ChatModel {
         );
         if (chatMessage == null) return;
 
-        chatMessage.status = ChatMessageStatus.Received;
+        chatMessage.status = ChatMessageStatuses.Received;
 
         this.addMessage(chatMessage);
         this.setReadStatus(true);
@@ -123,7 +123,7 @@ export default class ChatModel {
     };
 
     handleMessageSent = (chatMessage: ChatMessage): void => {
-        chatMessage.status = ChatMessageStatus.Sent;
+        chatMessage.status = ChatMessageStatuses.Sent;
         this.addMessage(chatMessage);
     };
 
@@ -144,7 +144,7 @@ export default class ChatModel {
         this.storeInfo();
     };
 
-    setColor = (color: Color): void => {
+    setColor = (color: Colors): void => {
         this.color = color;
         this.storeColor();
     };
@@ -277,7 +277,7 @@ export default class ChatModel {
         const path: string[] = this.getColorPath();
         const color: string | null = this.storageModel.read(path);
         if (!color) {
-            this.color = Color.Standard;
+            this.color = Colors.Standard;
         } else {
             this.color = color as any;
         }
@@ -386,7 +386,7 @@ export default class ChatModel {
             body,
             dateSent: createTimestamp(),
 
-            status: ChatMessageStatus.Outbox,
+            status: ChatMessageStatuses.Outbox,
             stringifiedFile: "",
         };
         if (fileContent != undefined) {
@@ -455,7 +455,7 @@ export interface ChatInfo extends ValidObject {
     hasUnreadMessages: boolean;
 }
 
-export enum ChatMessageStatus {
+export enum ChatMessageStatuses {
     Outbox = "outbox",
     Sent = "sent",
     Received = "received",
@@ -470,7 +470,7 @@ export interface ChatMessage extends ValidObject {
     body: string;
     dateSent: string;
 
-    status: ChatMessageStatus;
+    status: ChatMessageStatuses;
 
     stringifiedFile: string;
 }
@@ -504,7 +504,7 @@ export const ChatMessageReference: ChatMessage = {
     body: "",
     dateSent: "",
 
-    status: "" as ChatMessageStatus,
+    status: "" as ChatMessageStatuses,
 
     stringifiedFile: "",
 };

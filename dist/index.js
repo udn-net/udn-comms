@@ -730,16 +730,16 @@
   };
 
   // src/colors.ts
-  var Color = /* @__PURE__ */ ((Color2) => {
-    Color2["Standard"] = "standard";
-    Color2["Coral"] = "coral";
-    Color2["Yellow"] = "yellow";
-    Color2["Green"] = "green";
-    Color2["LightBlue"] = "lightblue";
-    Color2["Blue"] = "blue";
-    Color2["purple"] = "purple";
-    return Color2;
-  })(Color || {});
+  var Colors = /* @__PURE__ */ ((Colors2) => {
+    Colors2["Standard"] = "standard";
+    Colors2["Coral"] = "coral";
+    Colors2["Yellow"] = "yellow";
+    Colors2["Green"] = "green";
+    Colors2["LightBlue"] = "lightblue";
+    Colors2["Blue"] = "blue";
+    Colors2["purple"] = "purple";
+    return Colors2;
+  })(Colors || {});
 
   // node_modules/uuid/dist/esm-browser/stringify.js
   var byteToHex = [];
@@ -4180,7 +4180,7 @@
 
   // src/View/Components/colorPicker.tsx
   function ColorPicker(selectedColor) {
-    return /* @__PURE__ */ createElement("div", { class: "flex-row gap width-input" }, ...Object.values(Color).map((color) => {
+    return /* @__PURE__ */ createElement("div", { class: "flex-row gap width-input" }, ...Object.values(Colors).map((color) => {
       const isSelected = createProxyState(
         [selectedColor],
         () => selectedColor.value == color

@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import ChatViewModel from "../Chat/chatViewModel";
-import { Color } from "../../colors";
+import { Colors } from "../../colors";
 import CoreViewModel from "../Global/coreViewModel";
 
 export default class SettingsPageViewModel {
@@ -21,7 +21,7 @@ export default class SettingsPageViewModel {
             this.shouldShowEncryptionKey.value == true ? "text" : "password",
         );
 
-    color: React.State<Color> = new React.State<any>(Color.Standard);
+    color: React.State<Colors> = new React.State<any>(Colors.Standard);
 
     // guards
     cannotSetPrimaryChannel: React.State<boolean> = React.createProxyState(
@@ -74,7 +74,7 @@ export default class SettingsPageViewModel {
         this.encryptionKeyInput.callSubscriptions();
     };
 
-    applyColor = (newColor: Color): void => {
+    applyColor = (newColor: Colors): void => {
         this.chatViewModel.setColor(newColor);
     };
 

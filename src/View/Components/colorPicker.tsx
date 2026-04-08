@@ -1,11 +1,11 @@
 import * as React from "bloatless-react";
 
-import { Color } from "../../colors";
+import { Colors } from "../../colors";
 
-export function ColorPicker(selectedColor: React.State<Color>) {
+export function ColorPicker(selectedColor: React.State<Colors>) {
     return (
         <div class="flex-row gap width-input">
-            {...Object.values(Color).map((color) => {
+            {...Object.values(Colors).map((color) => {
                 const isSelected = React.createProxyState(
                     [selectedColor],
                     () => selectedColor.value == color,

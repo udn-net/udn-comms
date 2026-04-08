@@ -4,7 +4,7 @@ import {
     ChatMessage,
     ChatMessageReaction,
     ChatMessageReactionReference,
-    ChatMessageStatus,
+    ChatMessageStatuses,
     ReactionSymbols,
 } from "../../Model/Chat/chatModel";
 
@@ -20,7 +20,7 @@ export default class ChatMessageViewModel {
     sender: string;
     dateSent: string;
     body: React.State<string> = new React.State("");
-    status: React.State<ChatMessageStatus | any> = new React.State<any>(
+    status: React.State<ChatMessageStatuses | any> = new React.State<any>(
         undefined,
     );
     sentByUser: boolean;

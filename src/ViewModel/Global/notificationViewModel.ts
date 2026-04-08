@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 import ChatModel, { ChatMessage } from "../../Model/Chat/chatModel";
 import ChatListViewModel from "../Chat/chatListViewModel";
-import { ChatPageType } from "../Chat/chatViewModel";
+import { ChatPageTypes } from "../Chat/chatViewModel";
 
 export default class NotificationViewModel {
     chatListViewModel: ChatListViewModel;
@@ -25,7 +25,7 @@ export default class NotificationViewModel {
             this.chatListViewModel.selectedChat.value.selectedPage.value;
         if (
             notification.chat == currentChat &&
-            currentPage == ChatPageType.Messages
+            currentPage == ChatPageTypes.Messages
         )
             return;
 
@@ -43,7 +43,7 @@ export default class NotificationViewModel {
             (chat) => chat.chatModel.info.primaryChannel == notification.chat,
         );
         chat.open();
-        chat.selectedPage.value = ChatPageType.Messages;
+        chat.selectedPage.value = ChatPageTypes.Messages;
     };
 
     // loop

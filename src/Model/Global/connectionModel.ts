@@ -2,7 +2,7 @@
 
 import { ChatMessage, ChatMessageReference } from "../Chat/chatModel";
 import { HandlerManager, stringify } from "../Utility/utility";
-import StorageModel, { StorageModelSubPath, filePaths } from "./storageModel";
+import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
 import UDNFrontend, { Message } from "udn-frontend";
 
 export default class ConnectionModel {
@@ -55,7 +55,7 @@ export default class ConnectionModel {
 
         // do not reconnect
         const reconnectAddressPath: string[] = StorageModel.getPath(
-            StorageModelSubPath.ConnectionModel,
+            StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.reconnectAddress,
         );
         this.storageModel.remove(reconnectAddressPath);
@@ -74,7 +74,7 @@ export default class ConnectionModel {
     // mailbox
     getMailboxPath = (address: string): string[] => {
         const mailboxDirPath = StorageModel.getPath(
-            StorageModelSubPath.ConnectionModel,
+            StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.mailboxes,
         );
         const mailboxFilePath = [...mailboxDirPath, address];
@@ -122,7 +122,7 @@ export default class ConnectionModel {
     // outbox
     getOutboxPath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.ConnectionModel,
+            StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.outbox,
         );
     };
@@ -192,7 +192,7 @@ export default class ConnectionModel {
     // storage
     getPreviousAddressPath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.ConnectionModel,
+            StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.previousAddresses,
         );
     };
@@ -204,7 +204,7 @@ export default class ConnectionModel {
 
     getReconnectAddressPath = (): string[] => {
         return StorageModel.getPath(
-            StorageModelSubPath.ConnectionModel,
+            StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.reconnectAddress,
         );
     };

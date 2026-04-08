@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import ChatViewModel, {
-    ChatPageType,
+    ChatPageTypes,
 } from "../../ViewModel/Chat/chatViewModel";
 
 import { RibbonButton } from "./ribbonButton";
@@ -9,7 +9,7 @@ import { RibbonButton } from "./ribbonButton";
 export function ChatViewToggleButton(
     label: string,
     icon: string,
-    page: ChatPageType,
+    page: ChatPageTypes,
     chatViewModel: ChatViewModel,
 ) {
     function select() {
@@ -22,7 +22,7 @@ export function ChatViewToggleButton(
     );
 
     const isHighlighted = new React.State(false);
-    if (page == ChatPageType.Messages) {
+    if (page == ChatPageTypes.Messages) {
         chatViewModel.hasUnreadMessages.subscribe(
             (hasUnreadMessages) => (isHighlighted.value = hasUnreadMessages),
         );
