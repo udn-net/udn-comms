@@ -39,6 +39,12 @@ export function MessageReactionButton(
             reactionState = chatMessageViewModel.reactionsCheck;
             break;
         }
+        case ReactionSymbols.Stop: {
+            audioLabel = translations.chatPage.message.stopReaction;
+            count = chatMessageViewModel.reactionsStopCount;
+            reactionState = chatMessageViewModel.reactionsStop;
+            break;
+        }
         case ReactionSymbols.Attention: {
             audioLabel = translations.chatPage.message.attentionReaction;
             count = chatMessageViewModel.reactionsAttentionCount;

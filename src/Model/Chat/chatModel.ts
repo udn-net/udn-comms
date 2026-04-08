@@ -436,6 +436,7 @@ export default class ChatModel {
 export enum ReactionSymbols {
     ThumbsUp = "👍",
     Check = "✅",
+    Stop = "🛑",
     Attention = "❗️",
     DoubleAttention = "‼️",
     Question = "❓",

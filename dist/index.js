@@ -1513,6 +1513,7 @@
   var ReactionSymbols = /* @__PURE__ */ ((ReactionSymbols2) => {
     ReactionSymbols2["ThumbsUp"] = "\u{1F44D}";
     ReactionSymbols2["Check"] = "\u2705";
+    ReactionSymbols2["Stop"] = "\u{1F6D1}";
     ReactionSymbols2["Attention"] = "\u2757\uFE0F";
     ReactionSymbols2["DoubleAttention"] = "\u203C\uFE0F";
     ReactionSymbols2["Question"] = "\u2753";
@@ -2030,6 +2031,7 @@
       );
       this.reactionsThumbsUp = new MapState();
       this.reactionsCheck = new MapState();
+      this.reactionsStop = new MapState();
       this.reactionsAttention = new MapState();
       this.reactionsDoubleAttention = new MapState();
       this.reactionsQuestion = new MapState();
@@ -2040,6 +2042,10 @@
       this.reactionsCheckCount = createProxyState(
         [this.reactionsCheck],
         () => this.reactionsCheck.value.size
+      );
+      this.reactionsStopCount = createProxyState(
+        [this.reactionsStop],
+        () => this.reactionsStop.value.size
       );
       this.reactionsAttentionCount = createProxyState(
         [this.reactionsAttention],
@@ -2086,6 +2092,8 @@
             return setReaction(this.reactionsThumbsUp);
           case "\u2705" /* Check */:
             return setReaction(this.reactionsCheck);
+          case "\u{1F6D1}" /* Stop */:
+            return setReaction(this.reactionsStop);
           case "\u2757\uFE0F" /* Attention */:
             return setReaction(this.reactionsAttention);
           case "\u203C\uFE0F" /* DoubleAttention */:
@@ -2803,6 +2811,7 @@
         //
         thumbsUpReaction: "Reaction: thumbs up",
         checkReaction: "Reaction: check",
+        stopReaction: "Reaction: stop sign",
         attentionReaction: "Reaction: exclamation mark",
         doubleAttentionReaction: "Reaction: double exclamation mark",
         questionReaction: "Reaction: question mark"
@@ -2990,6 +2999,7 @@
           //
           thumbsUpReaction: "Reaktion: Daumen hoch",
           checkReaction: "Reaktion: Haken",
+          stopReaction: "Reaktion: Stopp",
           attentionReaction: "Reaktion: Ausrufezeichen",
           doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
           questionReaction: "Reaktion: Fragezeichen"
@@ -3167,6 +3177,7 @@
           //
           thumbsUpReaction: "Reacci\xF3n: pulgar hacia arriba",
           checkReaction: "Reacci\xF3n: marca de verificaci\xF3n",
+          stopReaction: "Reacci\xF3n: signo de parada",
           attentionReaction: "Reaccion: signo de atenci\xF3n",
           doubleAttentionReaction: "Reaccion: signo de atenci\xF3n doble",
           questionReaction: "Reaccion: signo de interrogaci\xF3n"
@@ -3987,6 +3998,12 @@
         reactionState = chatMessageViewModel.reactionsCheck;
         break;
       }
+      case "\u{1F6D1}" /* Stop */: {
+        audioLabel = translations.chatPage.message.stopReaction;
+        count = chatMessageViewModel.reactionsStopCount;
+        reactionState = chatMessageViewModel.reactionsStop;
+        break;
+      }
       case "\u2757\uFE0F" /* Attention */: {
         audioLabel = translations.chatPage.message.attentionReaction;
         count = chatMessageViewModel.reactionsAttentionCount;
@@ -4032,6 +4049,9 @@
     ), MessageReactionButton(
       chatMessageViewModel,
       "\u2705" /* Check */
+    ), MessageReactionButton(
+      chatMessageViewModel,
+      "\u{1F6D1}" /* Stop */
     ), MessageReactionButton(
       chatMessageViewModel,
       "\u2757\uFE0F" /* Attention */

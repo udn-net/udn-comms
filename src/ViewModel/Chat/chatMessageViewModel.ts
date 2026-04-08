@@ -27,6 +27,7 @@ export default class ChatMessageViewModel {
 
     reactionsThumbsUp = new React.MapState<ChatMessageReaction>();
     reactionsCheck = new React.MapState<ChatMessageReaction>();
+    reactionsStop = new React.MapState<ChatMessageReaction>();
     reactionsAttention = new React.MapState<ChatMessageReaction>();
     reactionsDoubleAttention = new React.MapState<ChatMessageReaction>();
     reactionsQuestion = new React.MapState<ChatMessageReaction>();
@@ -38,6 +39,10 @@ export default class ChatMessageViewModel {
     reactionsCheckCount = React.createProxyState(
         [this.reactionsCheck],
         () => this.reactionsCheck.value.size,
+    );
+    reactionsStopCount = React.createProxyState(
+        [this.reactionsStop],
+        () => this.reactionsStop.value.size,
     );
     reactionsAttentionCount = React.createProxyState(
         [this.reactionsAttention],
@@ -90,6 +95,8 @@ export default class ChatMessageViewModel {
                 return setReaction(this.reactionsThumbsUp);
             case ReactionSymbols.Check:
                 return setReaction(this.reactionsCheck);
+            case ReactionSymbols.Stop:
+                return setReaction(this.reactionsStop);
             case ReactionSymbols.Attention:
                 return setReaction(this.reactionsAttention);
             case ReactionSymbols.DoubleAttention:

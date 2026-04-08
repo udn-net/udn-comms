@@ -40,6 +40,7 @@
 }
 
 @media (min-width: 700px) {
+
     #message-page #composer .content-width-constraint,
     #message-page #composer .input-width-constraint {
         display: flex;
@@ -168,27 +169,33 @@
     text-align: right;
 }
 
-.message-bubble > .message-reaction-row {
-  max-width: var(--max-input-width);
-  width: 100%;
+.message-bubble>.message-reaction-row {
+    max-width: var(--max-input-width);
+    width: 100%;
 
-  padding: var(--gap-between-tiles);
-  background: var(--surface);
+    padding: var(--gap-between-tiles);
+    background: var(--surface);
 }
 
-.message-bubble > .message-reaction-row button {
-  min-height: unset;
-  height: 100%;
-  width: 100%;
-  padding: var(--control-padding-compact);
-  gap: 0px;
-  flex: 1 !important;
+.message-bubble>.message-reaction-row button {
+    min-height: unset;
+    height: 100%;
+    width: 100%;
+    padding: var(--control-padding-compact);
+    gap: 0px;
+    flex: 1 !important;
 }
 
-.message-bubble > .message-reaction-row button[zero] {
+.message-bubble>.message-reaction-row button[zero] {
     display: none;
 }
 
 .message-reaction-row {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(3, minmax(80px, 1fr));
+}
+
+@media (min-width: 100px) {
+    .message-reaction-row {
+        grid-template-columns: repeat(3, minmax(80px, 1fr));
+    }
 }

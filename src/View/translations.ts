@@ -191,6 +191,7 @@ const englishTranslations = {
 
             thumbsUpReaction: "Reaction: thumbs up",
             checkReaction: "Reaction: check",
+            stopReaction: "Reaction: stop sign",
             attentionReaction: "Reaction: exclamation mark",
             doubleAttentionReaction: "Reaction: double exclamation mark",
             questionReaction: "Reaction: question mark",
@@ -462,6 +463,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
                 thumbsUpReaction: "Reaktion: Daumen hoch",
                 checkReaction: "Reaktion: Haken",
+                stopReaction: "Reaktion: Stopp",
                 attentionReaction: "Reaktion: Ausrufezeichen",
                 doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
                 questionReaction: "Reaktion: Fragezeichen",
@@ -715,6 +717,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
                 thumbsUpReaction: "Reacción: pulgar hacia arriba",
                 checkReaction: "Reacción: marca de verificación",
+                stopReaction: "Reacción: signo de parada",
                 attentionReaction: "Reaccion: signo de atención",
                 doubleAttentionReaction: "Reaccion: signo de atención doble",
                 questionReaction: "Reaccion: signo de interrogación",

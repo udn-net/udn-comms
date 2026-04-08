@@ -19,6 +19,10 @@ export function MessageReactionButtonRow(
             )}
             {MessageReactionButton(
                 chatMessageViewModel,
+                ReactionSymbols.Stop,
+            )}
+            {MessageReactionButton(
+                chatMessageViewModel,
                 ReactionSymbols.Attention,
             )}
             {MessageReactionButton(
