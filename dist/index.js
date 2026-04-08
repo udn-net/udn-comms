@@ -5475,7 +5475,7 @@
   // src/ViewModel/Global/coreViewModel.ts
   var CoreViewModel = class {
     constructor() {
-      this.BUILD = "Build 26.04.08.A";
+      this.BUILD = "Build 26.04.08.B";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS
