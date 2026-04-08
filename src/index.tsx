@@ -21,6 +21,7 @@ import { StorageModal } from "./View/Modals/storageModal";
 import StorageModel from "./Model/Global/storageModel";
 import StorageViewModel from "./ViewModel/Global/storageViewModel";
 import v1Upgrader from "./Upgrader/v1";
+import { SettingsModal } from "./View/Modals/settingsModal";
 
 // models
 const storageModel = new StorageModel();
@@ -86,4 +87,5 @@ document
         ConnectionModal(connectionViewModel),
         DataTransferModalWrapper(connectionViewModel, fileTransferViewModel),
         StorageModal(storageViewModel),
+        SettingsModal(settingsViewModel),
     );

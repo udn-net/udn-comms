@@ -2934,6 +2934,7 @@
         yourNamePlaceholder: "Max Mustermann",
         setNameButtonAudioLabel: "Name speichern",
         firstDayOfWeekLabel: "Erster Wochentag",
+        settingsButton: "Einstellungen",
         manageStorageButton: "Daten verwalten",
         transferDataButton: "Daten\xFCbertragung",
         scrollToChatButton: "Chats",
@@ -3112,6 +3113,7 @@
         yourNamePlaceholder: "Juan P\xE9rez",
         setNameButtonAudioLabel: "establecer nombre",
         firstDayOfWeekLabel: "Primer d\xEDa de la semana",
+        settingsButton: "Ajustes",
         manageStorageButton: "Gestionar almacenamiento",
         transferDataButton: "Transferencia de datos",
         scrollToChatButton: "Chats",
@@ -6093,7 +6095,7 @@
         i.toString() == settingsViewModel2.firstDayOfWeekInput.value
       )
     )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), HomePageButton(
-      fileTransferViewModel2.showDirectionSelectionModal,
+      settingsViewModel2.showSettingsModal,
       translations.homePage.settingsButton,
       "settings"
     ), HomePageButton(
@@ -6191,6 +6193,7 @@
       this.username = new State("");
       this.usernameInput = new State("");
       this.firstDayOfWeekInput = new State("0");
+      this.isShowingSettingsModal = new State(false);
       // guards
       this.cannotSetName = createProxyState(
         [this.usernameInput],
@@ -6204,6 +6207,12 @@
       };
       this.setFirstDayofWeek = () => {
         this.settingsModel.setFirstDayOfWeek(this.firstDayOfWeekInput.value);
+      };
+      this.showSettingsModal = () => {
+        this.isShowingSettingsModal.value = true;
+      };
+      this.hideSettingsModal = () => {
+        this.isShowingSettingsModal.value = false;
       };
       this.settingsModel = settingsModel2;
       this.username.value = settingsModel2.username;
@@ -6563,6 +6572,11 @@
     return true;
   }
 
+  // src/View/Modals/settingsModal.tsx
+  function SettingsModal(settingsViewModel2) {
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": settingsViewModel2.isShowingSettingsModal }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", { class: "padding-0" }), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+  }
+
   // src/index.tsx
   var storageModel = new StorageModel();
   var settingsModel = new SettingsModel(storageModel);
@@ -6613,6 +6627,7 @@
     ChatPageWrapper(chatListViewModel),
     ConnectionModal(connectionViewModel),
     DataTransferModalWrapper(connectionViewModel, fileTransferViewModel),
-    StorageModal(storageViewModel)
+    StorageModal(storageViewModel),
+    SettingsModal(settingsViewModel)
   );
 })();

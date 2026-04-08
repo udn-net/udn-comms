@@ -10,6 +10,7 @@ export default class SettingsViewModel {
     username: React.State<string> = new React.State("");
     usernameInput: React.State<string> = new React.State("");
     firstDayOfWeekInput: React.State<string> = new React.State("0");
+    isShowingSettingsModal: React.State<boolean> = new React.State(false);
 
     // guards
     cannotSetName: React.State<boolean> = React.createProxyState(
@@ -29,6 +30,14 @@ export default class SettingsViewModel {
     setFirstDayofWeek = (): void => {
         this.settingsModel.setFirstDayOfWeek(this.firstDayOfWeekInput.value);
     };
+
+    showSettingsModal = (): void => {
+        this.isShowingSettingsModal.value = true;
+    }
+
+    hideSettingsModal = (): void => {
+        this.isShowingSettingsModal.value = false;
+    }
 
     // init
     constructor(

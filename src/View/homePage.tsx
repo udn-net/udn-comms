@@ -131,7 +131,7 @@ export function HomePage(
             <hr></hr>
 
             {HomePageButton(
-                fileTransferViewModel.showDirectionSelectionModal,
+                settingsViewModel.showSettingsModal,
                 translations.homePage.settingsButton,
                 "settings",
             )}
