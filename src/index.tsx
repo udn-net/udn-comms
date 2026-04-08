@@ -75,6 +75,7 @@ document
     .querySelector("main")!
     .append(
         HomePage(
+            coreVieWModel,
             storageViewModel,
             settingsViewModel,
             connectionViewModel,

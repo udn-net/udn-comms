@@ -11,8 +11,10 @@ import FileTransferViewModel from "../ViewModel/Global/fileTransferViewModel";
 import SettingsViewModel from "../ViewModel/Global/settingsViewModel";
 import StorageViewModel from "../ViewModel/Global/storageViewModel";
 import { translations } from "./translations";
+import CoreViewModel from "../ViewModel/Global/coreViewModel";
 
 export function HomePage(
+    coreVieWModel: CoreViewModel,
     storageViewModel: StorageViewModel,
     settingsViewModel: SettingsViewModel,
     connectionViewModel: ConnectionViewModel,
@@ -146,6 +148,10 @@ export function HomePage(
                     <span>{translations.homePage.manageStorageButton}</span>
                 </div>
             </button>
+
+            <hr></hr>
+
+            <b class="secondary">{coreVieWModel.BUILD}</b>
 
             <div class="mobile-only">
                 <hr></hr>
