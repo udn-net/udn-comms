@@ -150,9 +150,9 @@
             }
             break;
           }
-          case "metakey": {
+          case "keystroke": {
             element.addEventListener("keydown", (e) => {
-              if (e.metaKey == false) return;
+              if (e.metaKey == false && e.ctrlKey == false) return;
               if (e.key != directiveValue) return;
               value(e);
             });

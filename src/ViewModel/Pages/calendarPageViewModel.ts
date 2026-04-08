@@ -217,6 +217,6 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
     }
 }
 
-export enum TaskPageViewModelSubPath {
+export enum TaskPageViewModelSubPaths {
     LastUsedBoard = "last-used-board",
 }
