@@ -132,11 +132,18 @@ export function HomePage(
 
             {HomePageButton(
                 fileTransferViewModel.showDirectionSelectionModal,
+                translations.homePage.settingsButton,
+                "settings",
+            )}
+            {HomePageButton(
+                fileTransferViewModel.showDirectionSelectionModal,
                 translations.homePage.transferDataButton,
+                "sync_alt",
             )}
             {HomePageButton(
                 storageViewModel.showStorageModal,
                 translations.homePage.manageStorageButton,
+                "hard_drive",
             )}
 
             <hr></hr>

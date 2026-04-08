@@ -1,9 +1,13 @@
 import * as React from "bloatless-react";
 
-export function HomePageButton(action: () => void, label: string) {
+export function HomePageButton(
+    action: () => void,
+    label: string,
+    icon: string,
+) {
     return (
         <button class="tile flex-no" on:click={action}>
-            <span class="icon">sync_alt</span>
+            <span class="icon">{icon}</span>
             <div>
                 <span>{label}</span>
             </div>

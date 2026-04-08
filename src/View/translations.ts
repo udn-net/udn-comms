@@ -60,8 +60,8 @@ const englishTranslations = {
 
         firstDayOfWeekLabel: "First day of week",
 
+        settingsButton: "Settings",
         manageStorageButton: "Manage storage",
-
         transferDataButton: "Data Transfer",
 
         scrollToChatButton: "Chats",
@@ -344,8 +344,8 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
             firstDayOfWeekLabel: "Erster Wochentag",
 
+            settingsButton: "Einstellungen",
             manageStorageButton: "Daten verwalten",
-
             transferDataButton: "Datenübertragung",
 
             scrollToChatButton: "Chats",
@@ -597,8 +597,8 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
 
             firstDayOfWeekLabel: "Primer día de la semana",
 
+            settingsButton: "Ajustes",
             manageStorageButton: "Gestionar almacenamiento",
-
             transferDataButton: "Transferencia de datos",
 
             scrollToChatButton: "Chats",

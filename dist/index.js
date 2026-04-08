@@ -2737,6 +2737,7 @@
       yourNamePlaceholder: "Jane Doe",
       setNameButtonAudioLabel: "set name",
       firstDayOfWeekLabel: "First day of week",
+      settingsButton: "Settings",
       manageStorageButton: "Manage storage",
       transferDataButton: "Data Transfer",
       scrollToChatButton: "Chats",
@@ -6017,8 +6018,8 @@
   };
 
   // src/View/Components/homePageButton.tsx
-  function HomePageButton(action, label) {
-    return /* @__PURE__ */ createElement("button", { class: "tile flex-no", "on:click": action }, /* @__PURE__ */ createElement("span", { class: "icon" }, "sync_alt"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, label)));
+  function HomePageButton(action, label, icon) {
+    return /* @__PURE__ */ createElement("button", { class: "tile flex-no", "on:click": action }, /* @__PURE__ */ createElement("span", { class: "icon" }, icon), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, label)));
   }
 
   // src/View/homePage.tsx
@@ -6093,10 +6094,16 @@
       )
     )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), HomePageButton(
       fileTransferViewModel2.showDirectionSelectionModal,
-      translations.homePage.transferDataButton
+      translations.homePage.settingsButton,
+      "settings"
+    ), HomePageButton(
+      fileTransferViewModel2.showDirectionSelectionModal,
+      translations.homePage.transferDataButton,
+      "sync_alt"
     ), HomePageButton(
       storageViewModel2.showStorageModal,
-      translations.homePage.manageStorageButton
+      translations.homePage.manageStorageButton,
+      "hard_drive"
     ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("b", { class: "secondary" }, coreVieWModel2.BUILD), /* @__PURE__ */ createElement("div", { class: "mobile-only" }, /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end" }, /* @__PURE__ */ createElement("button", { class: "ghost width-50", "on:click": scrollToChat }, translations.homePage.scrollToChatButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))));
     const chatSection = /* @__PURE__ */ createElement("div", { id: "chat-section" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.chatsHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
