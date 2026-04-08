@@ -1,9 +1,10 @@
 (() => {
-  // ../../bloatless-react/index.ts
+  // node_modules/bloatless-react/index.ts
   var State = class {
+    _value;
+    _bindings = /* @__PURE__ */ new Set();
     // init
     constructor(initialValue) {
-      this._bindings = /* @__PURE__ */ new Set();
       this._value = initialValue;
     }
     // value
@@ -32,11 +33,11 @@
     }
   };
   var ListState = class extends State {
+    additionHandlers = /* @__PURE__ */ new Set();
+    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Set(initialItems));
-      this.additionHandlers = /* @__PURE__ */ new Set();
-      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     add(...items) {
@@ -76,11 +77,11 @@
     }
   };
   var MapState = class extends State {
+    additionHandlers = /* @__PURE__ */ new Set();
+    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Map(initialItems));
-      this.additionHandlers = /* @__PURE__ */ new Set();
-      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     set(key, item) {
@@ -3671,7 +3672,7 @@
       const isSelected = entry[0] == taskViewModel.task.boardId;
       return Option(entry[1], entry[0], isSelected);
     };
-    return /* @__PURE__ */ createElement("div", { class: "modal", open: true, "metakey:s": taskViewModel.closeAndSave }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", open: true, "keystroke:s": taskViewModel.closeAndSave }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
       "select",
       {
         "bind:value": taskViewModel.selectedVersionId,
@@ -6297,7 +6298,7 @@
       if (isSelected.value == false) return;
       loadItems();
     });
-    return /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "flex-column" }, /* @__PURE__ */ createElement(
       "button",
       {
         class: "width-100 flex-1 clip",
@@ -6308,7 +6309,7 @@
     ), /* @__PURE__ */ createElement(
       "div",
       {
-        class: "flex-column gap",
+        class: "flex-column",
         "children:append": [items, StringToDirectoryItemList]
       }
     ));
