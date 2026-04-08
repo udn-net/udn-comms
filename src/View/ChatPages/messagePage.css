@@ -179,6 +179,7 @@
     background: var(--surface);
     
     display: none !important;
+    overflow: hidden;
 }
 
 .message-bubble>.message-reaction-row:has(button:not([zero])) {
@@ -192,6 +193,7 @@
     padding: var(--control-padding-compact);
     gap: 0px;
     flex: 1 !important;
+    animation: slide-up var(--animation-duration);
 }
 
 .message-bubble>.message-reaction-row button[zero] {

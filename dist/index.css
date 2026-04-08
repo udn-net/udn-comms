@@ -737,6 +737,7 @@ body[showing-chat] #chat-page-wrapper {
   padding: var(--gap-between-tiles);
   background: var(--surface);
   display: none !important;
+  overflow: hidden;
 }
 .message-bubble > .message-reaction-row:has(button:not([zero])) {
   display: grid !important;
@@ -748,6 +749,7 @@ body[showing-chat] #chat-page-wrapper {
   padding: var(--control-padding-compact);
   gap: 0px;
   flex: 1 !important;
+  animation: slide-up var(--animation-duration);
 }
 .message-bubble > .message-reaction-row button[zero] {
   display: none;
