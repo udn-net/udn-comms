@@ -36,7 +36,7 @@
     --surface: linear-gradient(
         120deg,
         hsl(var(--hue), 100%, var(--gradient-luma-1)),
-        hsla(var(--hue), 100%, var(--gradient-luma-2), 90%)
+        hsla(var(--hue), 100%, var(--gradient-luma-2), 40%)
     );
     --surface-hover: hsl(var(--hue), 100%, var(--hover-luma));
     --surface-active: hsl(var(--hue), 100%, var(--active-luma));
@@ -70,14 +70,14 @@
 @media (min-width: 1024px) {
     [color]:not([color="standard"]).background {
         --luma: var(--background-luma);
-        --sat: 80%;
-        background: hsl(var(--hue), var(--sat), var(--luma));
+        --sat: 100%;
+        background: hsl(var(--hue), var(--sat), var(--luma), 40%);
     }
 
     @media (prefers-color-scheme: dark) {
         [color]:not([color="standard"]).background {
             --luma: var(--background-luma-dark);
-            --sat: 40%;
+            --sat: 100%;
         }
     }
 

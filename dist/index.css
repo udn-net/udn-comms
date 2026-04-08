@@ -14,7 +14,7 @@
   z-index: 1;
   pointer-events: none;
   overflow: hidden;
-  opacity: 0.3;
+  opacity: 0.4;
 }
 main {
   z-index: 2;
@@ -59,7 +59,7 @@ main {
 }
 @media (prefers-color-scheme: dark) {
   #background-wrapper {
-    opacity: 0.2;
+    opacity: 0.5;
   }
   #background-wrapper #sky {
     --color-1: hsl(188, 100%, 30%);
@@ -106,7 +106,7 @@ main {
       
       120deg,
       hsl(var(--hue), 100%, var(--gradient-luma-1)),
-      hsla(var(--hue), 100%, var(--gradient-luma-2), 90%) );
+      hsla(var(--hue), 100%, var(--gradient-luma-2), 40%) );
   --surface-hover: hsl(var(--hue), 100%, var(--hover-luma));
   --surface-active: hsl(var(--hue), 100%, var(--active-luma));
   --text-normal: hsl(var(--hue), 100%, var(--text-luma));
@@ -130,13 +130,13 @@ main {
 @media (min-width: 1024px) {
   [color]:not([color=standard]).background {
     --luma: var(--background-luma);
-    --sat: 80%;
-    background: hsl(var(--hue), var(--sat), var(--luma));
+    --sat: 100%;
+    background: hsl(var(--hue), var(--sat), var(--luma), 40%);
   }
   @media (prefers-color-scheme: dark) {
     [color]:not([color=standard]).background {
       --luma: var(--background-luma-dark);
-      --sat: 40%;
+      --sat: 100%;
     }
   }
   [color=standard].background {
