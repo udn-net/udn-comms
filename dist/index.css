@@ -179,8 +179,8 @@ main {
   --subtle-luma: 95%;
   --subtle-luma-dark: 5%;
 }
-[color=mint] {
-  --hue: 150;
+[color=green] {
+  --hue: 120;
   --accent-luma: 40%;
   --accent-luma-dark: 60%;
   --accent-text-luma: 100%;

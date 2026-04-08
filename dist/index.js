@@ -734,7 +734,7 @@
     Color2["Standard"] = "standard";
     Color2["Coral"] = "coral";
     Color2["Yellow"] = "yellow";
-    Color2["Mint"] = "mint";
+    Color2["Green"] = "green";
     Color2["LightBlue"] = "lightblue";
     Color2["Blue"] = "blue";
     Color2["purple"] = "purple";
@@ -5476,7 +5476,7 @@
   // src/ViewModel/Global/coreViewModel.ts
   var CoreViewModel = class {
     constructor() {
-      this.BUILD = "Build 26.04.08.B";
+      this.BUILD = "Build 26.04.08.C";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS

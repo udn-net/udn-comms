@@ -2,7 +2,7 @@ export enum Color {
     Standard = "standard",
     Coral = "coral",
     Yellow = "yellow",
-    Mint = "mint",
+    Green = "green",
     LightBlue = "lightblue",
     Blue = "blue",
     purple = "purple",
