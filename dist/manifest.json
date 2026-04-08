@@ -1,6 +1,8 @@
 {
     "name": "Comms",
     "display": "standalone",
+    "theme_color": "black",
+    "background_color": "black",
     "icons": [
         {
             "src": "icon.png",

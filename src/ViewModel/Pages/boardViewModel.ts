@@ -5,7 +5,7 @@ import BoardsAndTasksModel, {
     TaskFileContent,
 } from "../../Model/Files/boardsAndTasksModel";
 
-import ChatViewModel from "../Chat/chatViewModel";
+import ChatViewModel, { ChatPageType } from "../Chat/chatViewModel";
 import { Color } from "../../colors";
 import CoreViewModel from "../Global/coreViewModel";
 import SearchViewModel from "../Utility/searchViewModel";
@@ -273,6 +273,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
         this.color.subscribe(() => {
             if (this.isSelected.value == false) return;
+            if (this.chatViewModel.selectedPage.value != ChatPageType.Tasks) return;
             this.applyColor();
         });
 

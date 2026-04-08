@@ -2525,6 +2525,7 @@
       );
       this.color.subscribe(() => {
         if (this.isSelected.value == false) return;
+        if (this.chatViewModel.selectedPage.value != "tasks" /* Tasks */) return;
         this.applyColor();
       });
       this.selectedPage.subscribeSilent(() => {
@@ -3233,7 +3234,7 @@
   var translations = allTranslations[language] || allTranslations.en;
 
   // src/ViewModel/Chat/chatViewModel.ts
-  var ChatViewModel = class {
+  var ChatViewModel2 = class {
     // init
     constructor(coreViewModel, storageModel2, chatModel, settingsViewModel2, notificationViewModel, connectionViewModel2, chatListViewModel2) {
       this.coreViewModel = coreViewModel;
@@ -3464,7 +3465,7 @@
         this.chatViewModels.remove(chatViewModel);
       };
       this.createChatViewModel = (chatModel) => {
-        return new ChatViewModel(
+        return new ChatViewModel2(
           this.coreViewModel,
           this.storageModel,
           chatModel,
