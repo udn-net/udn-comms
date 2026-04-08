@@ -587,7 +587,7 @@ body[showing-chat] #chat-page-wrapper {
 .month-grid .tile .event-list span {
   animation: slide-up var(--animation-duration);
 }
-@media (max-width: 640px) and (max-height: 900px) {
+@media (max-width: 640px) and (max-height: 1200px) {
   .month-grid .tile {
     padding: 0px;
   }
@@ -736,6 +736,10 @@ body[showing-chat] #chat-page-wrapper {
   width: 100%;
   padding: var(--gap-between-tiles);
   background: var(--surface);
+  display: none !important;
+}
+.message-bubble > .message-reaction-row:has(button:not([zero])) {
+  display: grid !important;
 }
 .message-bubble > .message-reaction-row button {
   min-height: unset;

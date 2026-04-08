@@ -177,6 +177,12 @@
 
     padding: var(--gap-between-tiles);
     background: var(--surface);
+    
+    display: none !important;
+}
+
+.message-bubble>.message-reaction-row:has(button:not([zero])) {
+    display: grid !important;
 }
 
 .message-bubble>.message-reaction-row button {
