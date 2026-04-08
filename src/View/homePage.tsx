@@ -12,6 +12,7 @@ import SettingsViewModel from "../ViewModel/Global/settingsViewModel";
 import StorageViewModel from "../ViewModel/Global/storageViewModel";
 import { translations } from "./translations";
 import CoreViewModel from "../ViewModel/Global/coreViewModel";
+import { HomePageButton } from "./Components/homePageButton";
 
 export function HomePage(
     coreVieWModel: CoreViewModel,
@@ -129,25 +130,14 @@ export function HomePage(
 
             <hr></hr>
 
-            <button
-                class="tile flex-no"
-                on:click={fileTransferViewModel.showDirectionSelectionModal}
-            >
-                <span class="icon">sync_alt</span>
-                <div>
-                    <span>{translations.homePage.transferDataButton}</span>
-                </div>
-            </button>
-
-            <button
-                class="tile flex-no"
-                on:click={storageViewModel.showStorageModal}
-            >
-                <span class="icon">hard_drive_2</span>
-                <div>
-                    <span>{translations.homePage.manageStorageButton}</span>
-                </div>
-            </button>
+            {HomePageButton(
+                fileTransferViewModel.showDirectionSelectionModal,
+                translations.homePage.transferDataButton,
+            )}
+            {HomePageButton(
+                storageViewModel.showStorageModal,
+                translations.homePage.manageStorageButton,
+            )}
 
             <hr></hr>
 

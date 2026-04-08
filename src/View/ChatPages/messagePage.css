@@ -40,7 +40,6 @@
 }
 
 @media (min-width: 700px) {
-
     #message-page #composer .content-width-constraint,
     #message-page #composer .input-width-constraint {
         display: flex;
@@ -171,22 +170,22 @@
     text-align: right;
 }
 
-.message-bubble>.message-reaction-row {
+.message-bubble > .message-reaction-row {
     max-width: var(--max-input-width);
     width: 100%;
 
     padding: var(--gap-between-tiles);
     background: var(--surface);
-    
+
     display: none !important;
     overflow: hidden;
 }
 
-.message-bubble>.message-reaction-row:has(button:not([zero])) {
+.message-bubble > .message-reaction-row:has(button:not([zero])) {
     display: grid !important;
 }
 
-.message-bubble>.message-reaction-row button {
+.message-bubble > .message-reaction-row button {
     min-height: unset;
     height: 100%;
     width: 100%;
@@ -196,7 +195,7 @@
     animation: slide-up var(--animation-duration);
 }
 
-.message-bubble>.message-reaction-row button[zero] {
+.message-bubble > .message-reaction-row button[zero] {
     display: none;
 }
 

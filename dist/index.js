@@ -1495,7 +1495,11 @@
         const fileContent = FileModel2.createFileContent(v4_default(), "reaction");
         const reaction = {
           ...fileContent,
-          fileId: _ChatModel.createMessageReactionId(messageId, content, sender),
+          fileId: _ChatModel.createMessageReactionId(
+            messageId,
+            content,
+            sender
+          ),
           messageId,
           sender,
           content,
@@ -2103,7 +2107,11 @@
         }
       };
       this.sendReaction = (content, isDeleting) => {
-        this.messagePageViewModel.sendReaction(this.chatMessage.id, content, isDeleting);
+        this.messagePageViewModel.sendReaction(
+          this.chatMessage.id,
+          content,
+          isDeleting
+        );
       };
       // load
       this.loadData = () => {
@@ -2144,7 +2152,11 @@
         messageViewModel.loadData();
       };
       this.sendReaction = (messageId, content, isDeleting) => {
-        this.chatViewModel.chatModel.sendReaction(messageId, content, isDeleting);
+        this.chatViewModel.chatModel.sendReaction(
+          messageId,
+          content,
+          isDeleting
+        );
       };
       // view
       this.showChatMessage = (chatMessage) => {
@@ -2525,7 +2537,8 @@
       );
       this.color.subscribe(() => {
         if (this.isSelected.value == false) return;
-        if (this.chatViewModel.selectedPage.value != "tasks" /* Tasks */) return;
+        if (this.chatViewModel.selectedPage.value != "tasks" /* Tasks */)
+          return;
         this.applyColor();
       });
       this.selectedPage.subscribeSilent(() => {
@@ -4047,13 +4060,7 @@
     return /* @__PURE__ */ createElement("div", { class: "grid gap width-100 message-reaction-row" }, MessageReactionButton(
       chatMessageViewModel,
       "\u{1F44D}" /* ThumbsUp */
-    ), MessageReactionButton(
-      chatMessageViewModel,
-      "\u2705" /* Check */
-    ), MessageReactionButton(
-      chatMessageViewModel,
-      "\u{1F6D1}" /* Stop */
-    ), MessageReactionButton(
+    ), MessageReactionButton(chatMessageViewModel, "\u2705" /* Check */), MessageReactionButton(chatMessageViewModel, "\u{1F6D1}" /* Stop */), MessageReactionButton(
       chatMessageViewModel,
       "\u2757\uFE0F" /* Attention */
     ), MessageReactionButton(
@@ -6009,6 +6016,11 @@
     return ChatEntry(chatViewModel);
   };
 
+  // src/View/Components/homePageButton.tsx
+  function HomePageButton(action, label) {
+    return /* @__PURE__ */ createElement("button", { class: "tile flex-no", "on:click": action }, /* @__PURE__ */ createElement("span", { class: "icon" }, "sync_alt"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, label)));
+  }
+
   // src/View/homePage.tsx
   function HomePage(coreVieWModel2, storageViewModel2, settingsViewModel2, connectionViewModel2, fileTransferViewModel2, chatListViewModel2) {
     const overviewSection = /* @__PURE__ */ createElement("div", { id: "overview-section" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.overviewHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "cell_tower"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.serverAddress), /* @__PURE__ */ createElement(
@@ -6079,22 +6091,12 @@
         i.toString(),
         i.toString() == settingsViewModel2.firstDayOfWeekInput.value
       )
-    )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
-      "button",
-      {
-        class: "tile flex-no",
-        "on:click": fileTransferViewModel2.showDirectionSelectionModal
-      },
-      /* @__PURE__ */ createElement("span", { class: "icon" }, "sync_alt"),
-      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.transferDataButton))
-    ), /* @__PURE__ */ createElement(
-      "button",
-      {
-        class: "tile flex-no",
-        "on:click": storageViewModel2.showStorageModal
-      },
-      /* @__PURE__ */ createElement("span", { class: "icon" }, "hard_drive_2"),
-      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.manageStorageButton))
+    )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), HomePageButton(
+      fileTransferViewModel2.showDirectionSelectionModal,
+      translations.homePage.transferDataButton
+    ), HomePageButton(
+      storageViewModel2.showStorageModal,
+      translations.homePage.manageStorageButton
     ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("b", { class: "secondary" }, coreVieWModel2.BUILD), /* @__PURE__ */ createElement("div", { class: "mobile-only" }, /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end" }, /* @__PURE__ */ createElement("button", { class: "ghost width-50", "on:click": scrollToChat }, translations.homePage.scrollToChatButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))));
     const chatSection = /* @__PURE__ */ createElement("div", { id: "chat-section" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.chatsHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",

@@ -273,7 +273,8 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
         this.color.subscribe(() => {
             if (this.isSelected.value == false) return;
-            if (this.chatViewModel.selectedPage.value != ChatPageTypes.Tasks) return;
+            if (this.chatViewModel.selectedPage.value != ChatPageTypes.Tasks)
+                return;
             this.applyColor();
         });
 

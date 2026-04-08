@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 export default class CoreViewModel {
-    readonly BUILD = "Build 26.04.08.C"
+    readonly BUILD = "Build 26.04.08.C";
 
     // DRAG & DROP
     draggedObject: React.State<any> = new React.State<any>(undefined);

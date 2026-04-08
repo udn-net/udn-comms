@@ -107,7 +107,11 @@ export default class ChatMessageViewModel {
     };
 
     sendReaction = (content: ReactionSymbols, isDeleting: boolean): void => {
-        this.messagePageViewModel.sendReaction(this.chatMessage.id, content, isDeleting);
+        this.messagePageViewModel.sendReaction(
+            this.chatMessage.id,
+            content,
+            isDeleting,
+        );
     };
 
     // load

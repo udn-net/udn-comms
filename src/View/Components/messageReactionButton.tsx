@@ -1,5 +1,8 @@
 import * as React from "bloatless-react";
-import { ChatMessageReaction, ReactionSymbols } from "../../Model/Chat/chatModel";
+import {
+    ChatMessageReaction,
+    ReactionSymbols,
+} from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { translations } from "../translations";
 
@@ -68,7 +71,7 @@ export function MessageReactionButton(
     reactionState.subscribe(() => {
         isActive.value = checkIsHighlighted();
         isZero.value = reactionState.value.size == 0;
-    })
+    });
 
     return (
         <button

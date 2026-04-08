@@ -119,7 +119,6 @@ export default class ChatModel {
             this.storageModel.writeStringifiable(reactionPath, reaction);
         }
         this.reactionHandlerManager.trigger(reaction);
-
     };
 
     handleMessageSent = (chatMessage: ChatMessage): void => {
@@ -417,7 +416,11 @@ export default class ChatModel {
         const fileContent = FileModel.createFileContent(v4(), "reaction");
         const reaction: ChatMessageReaction = {
             ...fileContent,
-            fileId: ChatModel.createMessageReactionId(messageId, content, sender),
+            fileId: ChatModel.createMessageReactionId(
+                messageId,
+                content,
+                sender,
+            ),
 
             messageId,
             sender,
@@ -427,9 +430,13 @@ export default class ChatModel {
         return reaction;
     };
 
-    static createMessageReactionId = (messageId: string, content: ReactionSymbols, sender: string): string => {
+    static createMessageReactionId = (
+        messageId: string,
+        content: ReactionSymbols,
+        sender: string,
+    ): string => {
         return messageId + sender + reactionStringMap[content];
-    }
+    };
 }
 
 // types
@@ -442,8 +449,8 @@ export enum ReactionSymbols {
     Question = "❓",
 }
 
-const reactionStringMap: {[key: ReactionSymbols|string]: string} = {}
-Object.entries(ReactionSymbols).forEach(value => {
+const reactionStringMap: { [key: ReactionSymbols | string]: string } = {};
+Object.entries(ReactionSymbols).forEach((value) => {
     reactionStringMap[value[1]] = value[0];
 });
 

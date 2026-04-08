@@ -13,14 +13,8 @@ export function MessageReactionButtonRow(
                 chatMessageViewModel,
                 ReactionSymbols.ThumbsUp,
             )}
-            {MessageReactionButton(
-                chatMessageViewModel,
-                ReactionSymbols.Check,
-            )}
-            {MessageReactionButton(
-                chatMessageViewModel,
-                ReactionSymbols.Stop,
-            )}
+            {MessageReactionButton(chatMessageViewModel, ReactionSymbols.Check)}
+            {MessageReactionButton(chatMessageViewModel, ReactionSymbols.Stop)}
             {MessageReactionButton(
                 chatMessageViewModel,
                 ReactionSymbols.Attention,

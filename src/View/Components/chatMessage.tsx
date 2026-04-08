@@ -57,7 +57,6 @@ export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
                         <span class="icon">info</span>
                     </button>
                 </div>
-
             </div>
             {MessageReactionButtonRow(chatMessageViewModel)}
             {ChatMessageInfoModal(chatMessageViewModel)}
