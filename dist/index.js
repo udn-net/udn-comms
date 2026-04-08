@@ -2748,6 +2748,12 @@
       addChatPlaceholder: "Add chat",
       addChatButton: "Add chat"
     },
+    settings: {
+      pages: {
+        appearance: "Appearance",
+        regional: "Language & Region"
+      }
+    },
     connectionModal: {
       connectionModalHeadline: "Manage Connections",
       ///
@@ -6194,6 +6200,9 @@
       this.usernameInput = new State("");
       this.firstDayOfWeekInput = new State("0");
       this.isShowingSettingsModal = new State(false);
+      this.selectedModalPage = new State(
+        0 /* Appearance */
+      );
       // guards
       this.cannotSetName = createProxyState(
         [this.usernameInput],
@@ -6214,6 +6223,9 @@
       this.hideSettingsModal = () => {
         this.isShowingSettingsModal.value = false;
       };
+      this.showModalPage = (page) => {
+        this.selectedModalPage.value = page;
+      };
       this.settingsModel = settingsModel2;
       this.username.value = settingsModel2.username;
       this.usernameInput.value = settingsModel2.username;
@@ -6221,6 +6233,21 @@
       this.firstDayOfWeekInput.subscribe(this.setFirstDayofWeek);
     }
   };
+
+  // src/View/Components/splitModal.tsx
+  function SplitModal(leftView, rightView, scrollButtonLabel) {
+    const view = /* @__PURE__ */ createElement("div", { class: "split-modal" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView }), /* @__PURE__ */ createElement("div", { class: "detail-button-wrapper" }, /* @__PURE__ */ createElement("button", { class: "ghost", "on:click": scrollToDetails }, /* @__PURE__ */ createElement(
+      "span",
+      {
+        class: "ellipsis",
+        "subscribe:innerText": scrollButtonLabel
+      }
+    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))), /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView }));
+    function scrollToDetails() {
+      view.scrollLeft = view.scrollWidth;
+    }
+    return view;
+  }
 
   // src/View/Components/directoryItemList.tsx
   function DirectoryItemList(storageViewModel2, pathString = PATH_COMPONENT_SEPARATOR) {
@@ -6271,8 +6298,8 @@
     ));
   }
 
-  // src/View/Components/fileBrowser.tsx
-  function FileBrowser(storageViewModel2) {
+  // src/View/Modals/storageModal.tsx
+  function StorageModal(storageViewModel2) {
     const detailView = createProxyState(
       [storageViewModel2.selectedPath],
       () => {
@@ -6300,22 +6327,11 @@
         ));
       }
     );
-    const view = /* @__PURE__ */ createElement("div", { class: "file-browser" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area" }, DirectoryItemList(storageViewModel2)), /* @__PURE__ */ createElement("div", { class: "detail-button-wrapper" }, /* @__PURE__ */ createElement("button", { class: "ghost", "on:click": scrollToDetails }, /* @__PURE__ */ createElement(
-      "span",
-      {
-        class: "ellipsis",
-        "subscribe:innerText": storageViewModel2.selectedFileName
-      }
-    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))), /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": detailView }));
-    function scrollToDetails() {
-      view.scrollLeft = view.scrollWidth;
-    }
-    return view;
-  }
-
-  // src/View/Modals/storageModal.tsx
-  function StorageModal(storageViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": storageViewModel2.isShowingStorageModal }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", { class: "padding-0" }, FileBrowser(storageViewModel2)), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.hideStorageModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": storageViewModel2.isShowingStorageModal }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
+      new State(DirectoryItemList(storageViewModel2)),
+      detailView,
+      storageViewModel2.selectedFileName
+    )), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.hideStorageModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/ViewModel/Global/storageViewModel.ts
@@ -6574,7 +6590,35 @@
 
   // src/View/Modals/settingsModal.tsx
   function SettingsModal(settingsViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": settingsViewModel2.isShowingSettingsModal }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", { class: "padding-0" }), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    return /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "modal",
+        "toggle:open": settingsViewModel2.isShowingSettingsModal
+      },
+      /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
+        new State(SettingsLeftPane(settingsViewModel2)),
+        new State(/* @__PURE__ */ createElement("span", null, "settings")),
+        new State("")
+      )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+    );
+  }
+  function SettingsLeftPane(settingsViewModel2) {
+    return /* @__PURE__ */ createElement("div", { class: "flex-column" }, SettingsPaneButton(settingsViewModel2, 0 /* Appearance */, translations.settings.pages.appearance), SettingsPaneButton(settingsViewModel2, 1 /* Regional */, translations.settings.pages.regional));
+  }
+  function SettingsPaneButton(settingsViewModel2, page, label) {
+    const isSelected = createProxyState(
+      [settingsViewModel2.selectedModalPage],
+      () => settingsViewModel2.selectedModalPage.value == page
+    );
+    return /* @__PURE__ */ createElement(
+      "button",
+      {
+        "toggle:selected": isSelected,
+        "on:click": () => settingsViewModel2.showModalPage(page)
+      },
+      label
+    );
   }
 
   // src/index.tsx

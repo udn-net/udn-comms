@@ -11,6 +11,9 @@ export default class SettingsViewModel {
     usernameInput: React.State<string> = new React.State("");
     firstDayOfWeekInput: React.State<string> = new React.State("0");
     isShowingSettingsModal: React.State<boolean> = new React.State(false);
+    selectedModalPage: React.State<SettingsModalPages> = new React.State(
+        SettingsModalPages.Appearance,
+    );
 
     // guards
     cannotSetName: React.State<boolean> = React.createProxyState(
@@ -33,11 +36,15 @@ export default class SettingsViewModel {
 
     showSettingsModal = (): void => {
         this.isShowingSettingsModal.value = true;
-    }
+    };
 
     hideSettingsModal = (): void => {
         this.isShowingSettingsModal.value = false;
-    }
+    };
+
+    showModalPage = (page: SettingsModalPages): void => {
+        this.selectedModalPage.value = page;
+    };
 
     // init
     constructor(
@@ -53,4 +60,9 @@ export default class SettingsViewModel {
         // subscriptions
         this.firstDayOfWeekInput.subscribe(this.setFirstDayofWeek);
     }
+}
+
+export enum SettingsModalPages {
+    Appearance,
+    Regional,
 }

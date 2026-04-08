@@ -856,8 +856,8 @@ body[showing-chat] #chat-page-wrapper {
   }
 }
 
-/* src/View/Components/fileBrowser.css */
-.file-browser {
+/* src/View/Components/splitModal.css */
+.split-modal {
   width: 100%;
   height: 100%;
   display: flex;
@@ -866,7 +866,7 @@ body[showing-chat] #chat-page-wrapper {
   scroll-behavior: smooth;
   scroll-snap-type: x mandatory;
 }
-.file-browser > div {
+.split-modal > div {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -874,33 +874,33 @@ body[showing-chat] #chat-page-wrapper {
   flex: 0;
   scroll-snap-align: center;
 }
-.file-browser .scroll-area {
+.split-modal .scroll-area {
   flex: 1;
   width: 100%;
   overflow-y: auto;
   padding: var(--content-padding);
 }
-.file-browser .detail-button-wrapper {
+.split-modal .detail-button-wrapper {
   display: flex;
   justify-content: end;
   border-top: 1px solid var(--border);
   padding: var(--content-padding);
 }
-.file-browser .detail-button-wrapper button {
+.split-modal .detail-button-wrapper button {
   max-width: 100%;
 }
-.file-browser code {
+.split-modal code {
   width: 100%;
   height: 100%;
   font-size: 0.9rem;
 }
 @media (min-width: 640px) {
-  .file-browser > div {
+  .split-modal > div {
     width: 50%;
     min-width: 50%;
     flex: 1;
   }
-  .file-browser .detail-button-wrapper {
+  .split-modal .detail-button-wrapper {
     display: none;
   }
 }

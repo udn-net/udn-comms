@@ -76,6 +76,13 @@ const englishTranslations = {
         addChatButton: "Add chat",
     },
 
+    settings: {
+        pages: {
+            appearance: "Appearance",
+            regional: "Language+Region",
+        },
+    },
+
     connectionModal: {
         connectionModalHeadline: "Manage Connections",
 
@@ -358,6 +365,13 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             addChatButton: "Chat hinzufügen",
         },
 
+        settings: {
+            pages: {
+                appearance: "Erscheinungsbild",
+                regional: "Sprache+Region",
+            },
+        },
+
         connectionModal: {
             connectionModalHeadline: "Verbindungen verwalten",
 
@@ -611,6 +625,12 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             addChatButton: "Añadir chat",
         },
 
+        settings: {
+            pages: {
+                appearance: "Aspecto",
+                regional: "Idioma+Región",
+            },
+        },
         connectionModal: {
             connectionModalHeadline: "Gestionar Conexiones",
 
