@@ -37,7 +37,7 @@ ANIMATION
 COLORS
  */
 /* definition */
-:root {
+body {
     --background: hsla(0, 0%, 100%, 100%);
     --background-glass: hsla(0, 0%, 100%, 5%);
     --background-transparent: hsla(0, 0%, 0%, 5%);
@@ -111,10 +111,6 @@ body[theme="dark"] {
 }
 
 /* basic */
-html {
-    background: black;
-}
-
 body {
     background: var(--background);
     color: var(--text-normal);
