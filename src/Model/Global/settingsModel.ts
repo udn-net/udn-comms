@@ -1,6 +1,5 @@
 // this file is responsible for all settings.
 
-import { Languages } from "../../View/translations";
 import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
 
 export default class SettingsModel {
@@ -10,61 +9,64 @@ export default class SettingsModel {
     username: string;
     firstDayOfWeek: string;
     language: string;
+    theme: string;
 
     // storage
-    setName(newValue: string): void {
-        this.username = newValue;
+    private storeSetting(pathName: keyof typeof filePaths.settingsModel, value: string): void {
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
-            filePaths.settingsModel.username,
+            filePaths.settingsModel[pathName],
         );
-        this.storageModel.write(path, newValue);
+        this.storageModel.write(path, value);
+    }
+
+    setName(newValue: string): void {
+        this.username = newValue;
+        this.storeSetting("username", newValue);
     }
 
     setFirstDayOfWeek(newValue: string): void {
         this.firstDayOfWeek = newValue;
-        const path = StorageModel.getPath(
-            StorageModelSubPaths.SettingsModel,
-            filePaths.settingsModel.firstDayOfWeek,
-        );
-        this.storageModel.write(path, newValue);
+        this.storeSetting("firstDayOfWeek", newValue);
     }
 
     setLanguage(newValue: string): void {
         this.language = newValue;
-        const path = StorageModel.getPath(
-            StorageModelSubPaths.SettingsModel,
-            filePaths.settingsModel.language,
-        );
-        this.storageModel.write(path, newValue);
+        this.storeSetting("language", newValue);
+    }
+
+    setTheme(newValue: string): void {
+        this.theme = newValue;
+        this.storeSetting("theme", newValue);
     }
 
     // load
-    loadUsername(): void {
+    private readSetting(pathName: keyof typeof filePaths.settingsModel): string {
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
-            filePaths.settingsModel.username,
+            filePaths.settingsModel[pathName],
         );
-        const content = this.storageModel.read(path);
+        return this.storageModel.read(path);
+    }
+
+    loadUsername(): void {
+        const content = this.readSetting("username");
         this.username = content ?? "";
     }
 
     loadFirstDayofWeek(): void {
-        const path = StorageModel.getPath(
-            StorageModelSubPaths.SettingsModel,
-            filePaths.settingsModel.firstDayOfWeek,
-        );
-        const content = this.storageModel.read(path);
+        const content = this.readSetting("firstDayOfWeek");
         this.firstDayOfWeek = content ?? "0";
     }
 
     loadLanguage(): void {
-        const path = StorageModel.getPath(
-            StorageModelSubPaths.SettingsModel,
-            filePaths.settingsModel.language,
-        );
-        const content = this.storageModel.read(path);
+        const content = this.readSetting("language");
         this.language = content ?? SettingsModel.getSystemLanguage();
+    }
+
+    loadTheme(): void {
+        const content = this.readSetting("theme");
+        this.theme = content ?? ThemeSettings.System;
     }
 
     // init
@@ -86,4 +88,16 @@ export default class SettingsModel {
                 return Languages.English;
         }
     }
+}
+
+export enum Languages {
+    English = "en",
+    German = "de",
+    Spanish = "es",
+}
+
+export enum ThemeSettings {
+    Dark = "dark",
+    Light = "light",
+    System = "system",
 }

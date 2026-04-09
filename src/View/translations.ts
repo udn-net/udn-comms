@@ -835,8 +835,3 @@ export const languageNames = {
 }
 
 export type Translations = typeof englishTranslations;
-export enum Languages {
-    English = "en",
-    German = "de",
-    Spanish = "es",
-}

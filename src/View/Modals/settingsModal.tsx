@@ -1,6 +1,6 @@
 import * as React from "bloatless-react";
 
-import { languageNames, Languages } from "../translations";
+import { languageNames } from "../translations";
 import SettingsViewModel, {
     SettingsModalPages,
 } from "../../ViewModel/Global/settingsViewModel";
@@ -8,6 +8,7 @@ import { SplitModal } from "../Components/splitModal";
 import { InfoTile } from "../Components/infoTile";
 import { Option } from "../Components/option";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { Languages } from "../../Model/Global/settingsModel";
 
 export function SettingsModal(
     coreViewModel: CoreViewModel,

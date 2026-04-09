@@ -266,5 +266,6 @@ export const filePaths = {
         username: ["user-name"],
         firstDayOfWeek: ["first-day-of-week"],
         language: ["language"],
+        theme: ["theme"],
     },
 };
