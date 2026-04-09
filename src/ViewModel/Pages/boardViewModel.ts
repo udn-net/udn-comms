@@ -15,7 +15,6 @@ import TaskPageViewModel from "./taskPageViewModel";
 import TaskViewModel from "./taskViewModel";
 
 export default class BoardViewModel extends TaskContainingPageViewModel {
-    storageModel: StorageModel;
     boardsAndTasksModel: BoardsAndTasksModel;
 
     taskPageViewModel: TaskPageViewModel;
@@ -104,12 +103,13 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     storeLastUsedView = (): void => {
         const path: string[] = this.getLastUsedBoardPath();
         const lastUsedView: string = this.selectedPage.value;
-        this.storageModel.write(path, lastUsedView);
+        this.coreViewModel.storageModel.write(path, lastUsedView);
     };
 
     restoreLastUsedView = (): void => {
         const path: string[] = this.getLastUsedBoardPath();
-        const lastUsedView: string | null = this.storageModel.read(path);
+        const lastUsedView: string | null =
+            this.coreViewModel.storageModel.read(path);
         if (lastUsedView == null) return;
 
         this.selectedPage.value = lastUsedView as BoardPageTypes;
@@ -120,7 +120,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
             ...this.getPreviousSearchesPath(),
             searchTerm,
         ];
-        this.storageModel.write(suggestionPath, "");
+        this.coreViewModel.storageModel.write(suggestionPath, "");
         if (
             !this.coreViewModel.boardFilterStringSuggestions.value.has(
                 searchTerm,
@@ -130,7 +130,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         }
 
         const lastSearchPath: string[] = this.getLastSearchPath();
-        this.storageModel.write(lastSearchPath, searchTerm);
+        this.coreViewModel.storageModel.write(lastSearchPath, searchTerm);
     };
 
     // view
@@ -224,14 +224,15 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
     loadSearchSuggestions = (): void => {
         const dirPath: string[] = this.getPreviousSearchesPath();
-        const searches: string[] = this.storageModel.list(dirPath);
+        const searches: string[] =
+            this.coreViewModel.storageModel.list(dirPath);
         this.coreViewModel.boardFilterStringSuggestions.add(...searches);
     };
 
     restoreSearch = (): void => {
         const lastSearchPath: string[] = this.getLastSearchPath();
         const lastSearch: string | null =
-            this.storageModel.read(lastSearchPath);
+            this.coreViewModel.storageModel.read(lastSearchPath);
         if (lastSearch != null) {
             this.searchViewModel.search(lastSearch);
         }
@@ -247,7 +248,6 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     constructor(
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
-        storageModel: StorageModel,
         boardsAndTasksModel: BoardsAndTasksModel,
         taskPageViewModel: TaskPageViewModel,
         boardInfo: BoardInfoFileContent,
@@ -255,7 +255,6 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         super(coreViewModel, chatViewModel, boardsAndTasksModel);
 
         // set
-        this.storageModel = storageModel;
         this.boardsAndTasksModel = boardsAndTasksModel;
         this.taskPageViewModel = taskPageViewModel;
         this.boardInfo = boardInfo;

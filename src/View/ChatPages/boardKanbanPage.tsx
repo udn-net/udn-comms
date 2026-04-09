@@ -11,9 +11,12 @@ import { TaskCategoryBulkChangeViewModel } from "../../ViewModel/Utility/taskPro
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import { allowDrop } from "../utility";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function BoardKanbanPage(boardViewModel: BoardViewModel) {
+export function BoardKanbanPage(
+    coreViewModel: CoreViewModel,
+    boardViewModel: BoardViewModel,
+) {
     return PropertyValueList(
         "category",
         (taskViewModel: TaskViewModel) => taskViewModel.task,
@@ -30,7 +33,12 @@ export function BoardKanbanPage(boardViewModel: BoardViewModel) {
                         sortedCategories,
                         categoryName,
                     );
-                return Column(categoryName, index, boardViewModel);
+                return Column(
+                    coreViewModel,
+                    categoryName,
+                    index,
+                    boardViewModel,
+                );
             };
 
             return (
@@ -44,6 +52,7 @@ export function BoardKanbanPage(boardViewModel: BoardViewModel) {
 }
 
 function Column(
+    coreViewModel: CoreViewModel,
     categoryName: string,
     index: React.State<number>,
     boardViewModel: BoardViewModel,
@@ -72,7 +81,7 @@ function Column(
                     <div class="flex-row width-input">
                         <input
                             placeholder={
-                                translations.chatPage.task
+                                coreViewModel.translations.chatPage.task
                                     .renameCategoryInputPlaceholder
                             }
                             bind:value={viewModel.inputValue}

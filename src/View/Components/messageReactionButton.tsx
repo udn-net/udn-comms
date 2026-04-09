@@ -4,9 +4,10 @@ import {
     ReactionSymbols,
 } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function MessageReactionButton(
+    coreViewModel: CoreViewModel,
     chatMessageViewModel: ChatMessageViewModel,
     content: ReactionSymbols,
 ) {
@@ -31,37 +32,44 @@ export function MessageReactionButton(
 
     switch (content) {
         case ReactionSymbols.ThumbsUp: {
-            audioLabel = translations.chatPage.message.thumbsUpReaction;
+            audioLabel =
+                coreViewModel.translations.chatPage.message.thumbsUpReaction;
             count = chatMessageViewModel.reactionsThumbsUpCount;
             reactionState = chatMessageViewModel.reactionsThumbsUp;
             break;
         }
         case ReactionSymbols.Check: {
-            audioLabel = translations.chatPage.message.checkReaction;
+            audioLabel =
+                coreViewModel.translations.chatPage.message.checkReaction;
             count = chatMessageViewModel.reactionsCheckCount;
             reactionState = chatMessageViewModel.reactionsCheck;
             break;
         }
         case ReactionSymbols.Stop: {
-            audioLabel = translations.chatPage.message.stopReaction;
+            audioLabel =
+                coreViewModel.translations.chatPage.message.stopReaction;
             count = chatMessageViewModel.reactionsStopCount;
             reactionState = chatMessageViewModel.reactionsStop;
             break;
         }
         case ReactionSymbols.Attention: {
-            audioLabel = translations.chatPage.message.attentionReaction;
+            audioLabel =
+                coreViewModel.translations.chatPage.message.attentionReaction;
             count = chatMessageViewModel.reactionsAttentionCount;
             reactionState = chatMessageViewModel.reactionsAttention;
             break;
         }
         case ReactionSymbols.DoubleAttention: {
-            audioLabel = translations.chatPage.message.doubleAttentionReaction;
+            audioLabel =
+                coreViewModel.translations.chatPage.message
+                    .doubleAttentionReaction;
             count = chatMessageViewModel.reactionsDoubleAttentionCount;
             reactionState = chatMessageViewModel.reactionsDoubleAttention;
             break;
         }
         case ReactionSymbols.Question: {
-            audioLabel = translations.chatPage.message.questionReaction;
+            audioLabel =
+                coreViewModel.translations.chatPage.message.questionReaction;
             count = chatMessageViewModel.reactionsQuestionCount;
             reactionState = chatMessageViewModel.reactionsQuestion;
             break;

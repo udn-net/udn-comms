@@ -2,12 +2,21 @@ import "./messagePage.css";
 
 import * as React from "bloatless-react";
 
-import { ChatMessageViewModelToView } from "../Components/chatMessage";
 import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
+import { ChatMessage } from "../Components/chatMessage";
 
-export function MessagePage(messagePageViewModel: MessagePageViewModel) {
+export function MessagePage(
+    coreViewModel: CoreViewModel,
+    messagePageViewModel: MessagePageViewModel,
+) {
     messagePageViewModel.loadData();
+    const ChatMessageViewModelToView: React.StateItemConverter<
+        ChatMessageViewModel
+    > = (chatMessageViewModel: ChatMessageViewModel) => {
+        return ChatMessage(coreViewModel, chatMessageViewModel);
+    };
 
     const messageContainer = (
         <div
@@ -45,7 +54,10 @@ export function MessagePage(messagePageViewModel: MessagePageViewModel) {
                 <div class="pane">
                     <div class="toolbar">
                         <span class="title">
-                            {translations.chatPage.message.messagesHeadline}
+                            {
+                                coreViewModel.translations.chatPage.message
+                                    .messagesHeadline
+                            }
                         </span>
                     </div>
                     <div class="content">
@@ -61,14 +73,16 @@ export function MessagePage(messagePageViewModel: MessagePageViewModel) {
                                             messagePageViewModel.sendMessage
                                         }
                                         placeholder={
-                                            translations.chatPage.message
+                                            coreViewModel.translations.chatPage
+                                                .message
                                                 .composerInputPlaceholder
                                         }
                                     ></input>
                                     <button
                                         class="primary"
                                         aria-label={
-                                            translations.chatPage.message
+                                            coreViewModel.translations.chatPage
+                                                .message
                                                 .sendMessageButtonAudioLabel
                                         }
                                         on:click={

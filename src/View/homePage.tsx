@@ -10,12 +10,11 @@ import ConnectionViewModel from "../ViewModel/Global/connectionViewModel";
 import FileTransferViewModel from "../ViewModel/Global/fileTransferViewModel";
 import SettingsViewModel from "../ViewModel/Global/settingsViewModel";
 import StorageViewModel from "../ViewModel/Global/storageViewModel";
-import { translations } from "./translations";
 import CoreViewModel from "../ViewModel/Global/coreViewModel";
 import { HomePageButton } from "./Components/homePageButton";
 
 export function HomePage(
-    coreVieWModel: CoreViewModel,
+    coreViewModel: CoreViewModel,
     storageViewModel: StorageViewModel,
     settingsViewModel: SettingsViewModel,
     connectionViewModel: ConnectionViewModel,
@@ -25,16 +24,19 @@ export function HomePage(
     // sections
     const overviewSection = (
         <div id="overview-section">
-            <h2>{translations.homePage.overviewHeadline}</h2>
+            <h2>{coreViewModel.translations.homePage.overviewHeadline}</h2>
 
             <label class="tile flex-no">
                 <span class="icon">cell_tower</span>
                 <div>
-                    <span>{translations.homePage.serverAddress}</span>
+                    <span>
+                        {coreViewModel.translations.homePage.serverAddress}
+                    </span>
                     <input
                         list="previous-connection-list"
                         placeholder={
-                            translations.homePage.serverAddressPlaceholder
+                            coreViewModel.translations.homePage
+                                .serverAddressPlaceholder
                         }
                         bind:value={connectionViewModel.serverAddressInput}
                         on:enter={connectionViewModel.connect}
@@ -53,7 +55,9 @@ export function HomePage(
             <div class="flex-row">
                 <button
                     class="danger flex justify-center"
-                    aria-label={translations.homePage.disconnectAudioLabel}
+                    aria-label={
+                        coreViewModel.translations.homePage.disconnectAudioLabel
+                    }
                     on:click={connectionViewModel.disconnect}
                     toggle:disabled={connectionViewModel.cannotDisonnect}
                 >
@@ -62,7 +66,8 @@ export function HomePage(
                 <button
                     class="flex justify-center"
                     aria-label={
-                        translations.homePage.manageConnectionsAudioLabel
+                        coreViewModel.translations.homePage
+                            .manageConnectionsAudioLabel
                     }
                     on:click={connectionViewModel.showConnectionModal}
                     toggle:disabled={
@@ -73,7 +78,9 @@ export function HomePage(
                 </button>
                 <button
                     class="primary flex justify-center"
-                    aria-label={translations.homePage.connectAudioLabel}
+                    aria-label={
+                        coreViewModel.translations.homePage.connectAudioLabel
+                    }
                     on:click={connectionViewModel.connect}
                     toggle:disabled={connectionViewModel.cannotConnect}
                 >
@@ -86,9 +93,14 @@ export function HomePage(
             <label class="tile flex-no">
                 <span class="icon">account_circle</span>
                 <div>
-                    <span>{translations.homePage.yourNameLabel}</span>
+                    <span>
+                        {coreViewModel.translations.homePage.yourNameLabel}
+                    </span>
                     <input
-                        placeholder={translations.homePage.yourNamePlaceholder}
+                        placeholder={
+                            coreViewModel.translations.homePage
+                                .yourNamePlaceholder
+                        }
                         bind:value={settingsViewModel.usernameInput}
                         on:enter={settingsViewModel.setName}
                     ></input>
@@ -99,9 +111,12 @@ export function HomePage(
                     class="width-50"
                     on:click={settingsViewModel.setName}
                     toggle:disabled={settingsViewModel.cannotSetName}
-                    aria-label={translations.homePage.setNameButtonAudioLabel}
+                    aria-label={
+                        coreViewModel.translations.homePage
+                            .setNameButtonAudioLabel
+                    }
                 >
-                    {translations.general.setButton}
+                    {coreViewModel.translations.general.setButton}
                     <span class="icon">check</span>
                 </button>
             </div>
@@ -110,17 +125,17 @@ export function HomePage(
 
             {HomePageButton(
                 settingsViewModel.showSettingsModal,
-                translations.homePage.settingsButton,
+                coreViewModel.translations.homePage.settingsButton,
                 "settings",
             )}
             {HomePageButton(
                 fileTransferViewModel.showDirectionSelectionModal,
-                translations.homePage.transferDataButton,
+                coreViewModel.translations.homePage.transferDataButton,
                 "sync_alt",
             )}
             {HomePageButton(
                 storageViewModel.showStorageModal,
-                translations.homePage.manageStorageButton,
+                coreViewModel.translations.homePage.manageStorageButton,
                 "hard_drive",
             )}
 
@@ -129,7 +144,7 @@ export function HomePage(
 
                 <div class="flex-row justify-end">
                     <button class="ghost width-50" on:click={scrollToChat}>
-                        {translations.homePage.scrollToChatButton}
+                        {coreViewModel.translations.homePage.scrollToChatButton}
                         <span class="icon">arrow_forward</span>
                     </button>
                 </div>
@@ -139,18 +154,24 @@ export function HomePage(
 
     const chatSection = (
         <div id="chat-section">
-            <h2>{translations.homePage.chatsHeadline}</h2>
+            <h2>{coreViewModel.translations.homePage.chatsHeadline}</h2>
 
             <div class="flex-row width-input">
                 <input
-                    placeholder={translations.homePage.addChatPlaceholder}
-                    aria-label={translations.homePage.addChatAudioLabel}
+                    placeholder={
+                        coreViewModel.translations.homePage.addChatPlaceholder
+                    }
+                    aria-label={
+                        coreViewModel.translations.homePage.addChatAudioLabel
+                    }
                     bind:value={chatListViewModel.newChatPrimaryChannel}
                     on:enter={chatListViewModel.createChat}
                 ></input>
                 <button
                     class="primary"
-                    aria-label={translations.homePage.addChatButton}
+                    aria-label={
+                        coreViewModel.translations.homePage.addChatButton
+                    }
                     on:click={chatListViewModel.createChat}
                     toggle:disabled={chatListViewModel.cannotCreateChat}
                 >

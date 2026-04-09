@@ -14,7 +14,6 @@ import TaskViewModel from "./taskViewModel";
 export const CALENDAR_EVENT_BOARD_ID = "events";
 
 export default class CalendarPageViewModel extends TaskContainingPageViewModel {
-    storageModel: StorageModel;
     calendarModel: CalendarModel;
     boardsAndTasksModel: BoardsAndTasksModel;
 
@@ -189,13 +188,11 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
     constructor(
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
-        storageModel: StorageModel,
         calendarModel: CalendarModel,
         boardsAndTasksModel: BoardsAndTasksModel,
     ) {
         super(coreViewModel, chatViewModel, boardsAndTasksModel);
 
-        this.storageModel = storageModel;
         this.calendarModel = calendarModel;
         this.boardsAndTasksModel = boardsAndTasksModel;
 

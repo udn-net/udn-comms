@@ -14,13 +14,10 @@ import {
     parseOrFallback,
 } from "../Model/Utility/utility";
 
-import ChatListModel from "../Model/Chat/chatListModel";
-import ConnectionModel from "../Model/Global/connectionModel";
 import FileModel from "../Model/Files/fileModel";
-import SettingsModel from "../Model/Global/settingsModel";
 import { checkMatchesObjectStructure } from "../Model/Utility/typeSafety";
-import { translations } from "../View/translations";
 import { v4 } from "uuid";
+import CoreViewModel from "../ViewModel/Global/coreViewModel";
 
 export default class v1Upgrader {
     // general
@@ -28,7 +25,7 @@ export default class v1Upgrader {
         const name: string | null = getLocalStorageItemAndClear("sender-name");
         if (name != null) {
             const parsedName: string = parseOrFallback(name);
-            this.settingsModel.setName(parsedName);
+            this.coreViewModel.settingsModel.setName(parsedName);
         }
 
         const firstDayOfWeek: string | null =
@@ -36,7 +33,9 @@ export default class v1Upgrader {
         if (firstDayOfWeek != null) {
             const parsedFirstDayOfWeek: string =
                 parseOrFallback(firstDayOfWeek);
-            this.settingsModel.setFirstDayOfWeek(parsedFirstDayOfWeek);
+            this.coreViewModel.settingsModel.setFirstDayOfWeek(
+                parsedFirstDayOfWeek,
+            );
         }
     };
 
@@ -48,7 +47,7 @@ export default class v1Upgrader {
         const previousAddresses: any[] = parseArray(previousAddressString);
         for (const address of previousAddresses) {
             if (typeof address != "string") continue;
-            this.connectionModel.storeAddress(address);
+            this.coreViewModel.connectionModel.storeAddress(address);
         }
     };
 
@@ -75,7 +74,7 @@ export default class v1Upgrader {
 
         // create chat
         const chatModel: ChatModel =
-            this.chatListModel.createChat(parsedPriamryChannel);
+            this.coreViewModel.chatListModel.createChat(parsedPriamryChannel);
 
         // secondary channels
         const secondaryChannelString: string | null =
@@ -140,7 +139,7 @@ export default class v1Upgrader {
                 };
                 chatModel.addMessage(convertedChatMessage);
                 if (status == ChatMessageStatuses.Outbox) {
-                    this.connectionModel.sendMessageOrStore(
+                    this.coreViewModel.connectionModel.sendMessageOrStore(
                         convertedChatMessage,
                     );
                 }
@@ -161,7 +160,7 @@ export default class v1Upgrader {
         const addObjects = (potentialObjects: any[]): void => {
             const board: BoardInfoFileContent =
                 chatModel.fileModel.boardsAndTasksModel.createBoard(
-                    translations.updater.migrated,
+                    this.coreViewModel.translations.updater.migrated,
                 );
             chatModel.fileModel.boardsAndTasksModel.updateBoard(board);
 
@@ -216,11 +215,7 @@ export default class v1Upgrader {
     };
 
     // init
-    constructor(
-        public settingsModel: SettingsModel,
-        public connectionModel: ConnectionModel,
-        public chatListModel: ChatListModel,
-    ) {
+    constructor(public coreViewModel: CoreViewModel) {
         this.migrateSettings();
         this.migrateConnections();
         this.migrateChats();

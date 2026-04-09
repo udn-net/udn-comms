@@ -11,8 +11,6 @@ import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
 
 export default class ChatListViewModel {
-    storageModel: StorageModel;
-    chatListModel: ChatListModel;
     settingsViewModel: SettingsViewModel;
     notificationViewModel: NotificationViewModel;
     connectionViewModel: ConnectionViewModel;
@@ -39,9 +37,10 @@ export default class ChatListViewModel {
 
     // methods
     createChat = (): void => {
-        const chatModel: ChatModel = this.chatListModel.createChat(
-            this.newChatPrimaryChannel.value,
-        );
+        const chatModel: ChatModel =
+            this.coreViewModel.chatListModel.createChat(
+                this.newChatPrimaryChannel.value,
+            );
         this.newChatPrimaryChannel.value = "";
 
         const chatViewModel: ChatViewModel =
@@ -55,14 +54,13 @@ export default class ChatListViewModel {
     };
 
     untrackChat = (chatViewModel: ChatViewModel): void => {
-        this.chatListModel.untrackChat(chatViewModel.chatModel);
+        this.coreViewModel.chatListModel.untrackChat(chatViewModel.chatModel);
         this.chatViewModels.remove(chatViewModel);
     };
 
     createChatViewModel = (chatModel: ChatModel): ChatViewModel => {
         return new ChatViewModel(
             this.coreViewModel,
-            this.storageModel,
             chatModel,
             this.settingsViewModel,
             this.notificationViewModel,
@@ -91,7 +89,7 @@ export default class ChatListViewModel {
     // load
     loadChats = (): void => {
         this.chatViewModels.clear();
-        for (const chatModel of this.chatListModel.chatModels.values()) {
+        for (const chatModel of this.coreViewModel.chatListModel.chatModels.values()) {
             const chatViewModel = this.createChatViewModel(chatModel);
             this.trackChat(chatViewModel);
         }
@@ -101,13 +99,9 @@ export default class ChatListViewModel {
     // init
     constructor(
         public coreViewModel: CoreViewModel,
-        storageModel: StorageModel,
-        chatListModel: ChatListModel,
         settingsViewModel: SettingsViewModel,
         connectionViewModel: ConnectionViewModel,
     ) {
-        this.storageModel = storageModel;
-        this.chatListModel = chatListModel;
         this.settingsViewModel = settingsViewModel;
         this.notificationViewModel = new NotificationViewModel(this);
         this.connectionViewModel = connectionViewModel;

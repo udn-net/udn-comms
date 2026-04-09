@@ -1,5 +1,6 @@
 // this file is responsible for all settings.
 
+import { Languages } from "../../View/translations";
 import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
 
 export default class SettingsModel {
@@ -8,6 +9,7 @@ export default class SettingsModel {
     // data
     username: string;
     firstDayOfWeek: string;
+    language: string;
 
     // storage
     setName(newValue: string): void {
@@ -24,6 +26,15 @@ export default class SettingsModel {
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
             filePaths.settingsModel.firstDayOfWeek,
+        );
+        this.storageModel.write(path, newValue);
+    }
+
+    setLanguage(newValue: Languages): void {
+        this.language = newValue;
+        const path = StorageModel.getPath(
+            StorageModelSubPaths.SettingsModel,
+            filePaths.settingsModel.language,
         );
         this.storageModel.write(path, newValue);
     }
@@ -47,11 +58,31 @@ export default class SettingsModel {
         this.firstDayOfWeek = content ?? "0";
     }
 
+    loadLanguage(): void {
+        const path = StorageModel.getPath(
+            StorageModelSubPaths.SettingsModel,
+            filePaths.settingsModel.language,
+        );
+        const content = this.storageModel.read(path);
+        this.language = content ?? SettingsModel.getSystemLanguage();
+    }
+
     // init
     constructor(storageModel: StorageModel) {
         this.storageModel = storageModel;
 
         this.loadUsernam();
         this.loadFirstDayofWeek();
+    }
+
+    static getSystemLanguage(): Languages {
+        switch (navigator.language.substring(0, 2)) {
+            case "de":
+                return Languages.German;
+            case "es":
+                return Languages.Spanish;
+            default:
+                return Languages.English;
+        }
     }
 }

@@ -2,10 +2,11 @@ import * as React from "bloatless-react";
 
 import SearchViewModel from "../../ViewModel/Utility/searchViewModel";
 import { StringToOption } from "../Components/option";
-import { translations } from "../translations";
 import { v4 } from "uuid";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function SearchModal<T>(
+    coreViewModel: CoreViewModel,
     searchViewModel: SearchViewModel<T>,
     headline: string,
     converter: React.StateItemConverter<T>,
@@ -24,7 +25,9 @@ export function SearchModal<T>(
                     <h2>{headline}</h2>
                     <div class="flex-row width-input">
                         <input
-                            placeholder={translations.general.searchLabel}
+                            placeholder={
+                                coreViewModel.translations.general.searchLabel
+                            }
                             bind:value={searchViewModel.searchInput}
                             on:enter={searchViewModel.applySearch}
                             list={suggestionId}
@@ -40,7 +43,8 @@ export function SearchModal<T>(
                         <button
                             class="primary"
                             aria-label={
-                                translations.general.searchButtonAudioLabel
+                                coreViewModel.translations.general
+                                    .searchButtonAudioLabel
                             }
                             on:click={searchViewModel.applySearch}
                             toggle:disabled={searchViewModel.cannotApplySearch}
@@ -61,7 +65,7 @@ export function SearchModal<T>(
                     ></div>
                 </main>
                 <button on:click={close}>
-                    {translations.general.closeButton}
+                    {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>
             </div>

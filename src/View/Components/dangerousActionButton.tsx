@@ -1,8 +1,8 @@
 import * as React from "bloatless-react";
-
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function DangerousActionButton(
+    coreViewModel: CoreViewModel,
     label: string,
     icon: string,
     action: () => void,
@@ -23,7 +23,7 @@ export function DangerousActionButton(
     return (
         <div class="flex-row">
             <button class="flex" on:click={abort} toggle:hidden={cannotConfirm}>
-                {translations.general.abortButton}
+                {coreViewModel.translations.general.abortButton}
                 <span class="icon">undo</span>
             </button>
             <button
@@ -39,7 +39,7 @@ export function DangerousActionButton(
                 on:click={action}
                 toggle:hidden={cannotConfirm}
             >
-                {translations.general.confirmButton}
+                {coreViewModel.translations.general.confirmButton}
                 <span class="icon">warning</span>
             </button>
         </div>

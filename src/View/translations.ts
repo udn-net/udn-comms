@@ -58,8 +58,6 @@ const englishTranslations = {
         yourNamePlaceholder: "Jane Doe",
         setNameButtonAudioLabel: "set name",
 
-        firstDayOfWeekLabel: "First day of week",
-
         settingsButton: "Settings",
         manageStorageButton: "Manage storage",
         transferDataButton: "Data Transfer",
@@ -84,6 +82,9 @@ const englishTranslations = {
         },
 
         version: "Version",
+        language: "Language",
+
+        firstDayOfWeekLabel: "First day of week",
     },
 
     connectionModal: {
@@ -291,7 +292,9 @@ const englishTranslations = {
     },
 };
 
-const allTranslations: { [language: string]: typeof englishTranslations } = {
+export const allTranslations: {
+    [language: string]: typeof englishTranslations;
+} = {
     en: englishTranslations,
 
     de: {
@@ -352,8 +355,6 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             yourNamePlaceholder: "Max Mustermann",
             setNameButtonAudioLabel: "Name speichern",
 
-            firstDayOfWeekLabel: "Erster Wochentag",
-
             settingsButton: "Einstellungen",
             manageStorageButton: "Daten verwalten",
             transferDataButton: "Datenübertragung",
@@ -376,6 +377,9 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             },
 
             version: "Version",
+            language: "Sprache",
+
+            firstDayOfWeekLabel: "Erster Wochentag",
         },
 
         connectionModal: {
@@ -615,8 +619,6 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             yourNamePlaceholder: "Juan Pérez",
             setNameButtonAudioLabel: "establecer nombre",
 
-            firstDayOfWeekLabel: "Primer día de la semana",
-
             settingsButton: "Ajustes",
             manageStorageButton: "Gestionar almacenamiento",
             transferDataButton: "Transferencia de datos",
@@ -639,6 +641,9 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             },
 
             version: "Versión",
+            language: "Idioma",
+
+            firstDayOfWeekLabel: "Primer día de la semana",
         },
         connectionModal: {
             connectionModalHeadline: "Gestionar Conexiones",
@@ -823,5 +828,9 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
     },
 };
 
-const language = navigator.language.substring(0, 2);
-export const translations = allTranslations[language] || allTranslations.en;
+export type Translations = typeof englishTranslations;
+export enum Languages {
+    English = "en",
+    German = "de",
+    Spanish = "es",
+}

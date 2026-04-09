@@ -16,9 +16,12 @@ import { FilteredList } from "../Components/filteredList";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import { allowDrop } from "../utility";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function BoardStatusGridPage(boardViewModel: BoardViewModel) {
+export function BoardStatusGridPage(
+    coreViewModel: CoreViewModel,
+    boardViewModel: BoardViewModel,
+) {
     const statuses: React.ListState<string> = new React.ListState();
     const sortedStatuses: React.State<string[]> =
         createSortedPropertyValueState(statuses);
@@ -36,7 +39,7 @@ export function BoardStatusGridPage(boardViewModel: BoardViewModel) {
         statusName: string,
     ) => {
         const index = createPropertyValueIndexState(sortedStatuses, statusName);
-        return StatusNameCell(statusName, index, boardViewModel);
+        return StatusNameCell(coreViewModel, statusName, index, boardViewModel);
     };
 
     return (
@@ -63,6 +66,7 @@ export function BoardStatusGridPage(boardViewModel: BoardViewModel) {
                             );
 
                         return CategoryRow(
+                            coreViewModel,
                             categoryName,
                             index,
                             statuses,
@@ -84,6 +88,7 @@ export function BoardStatusGridPage(boardViewModel: BoardViewModel) {
 }
 
 function StatusNameCell(
+    coreViewModel: CoreViewModel,
     statusName: string,
     index: React.State<number>,
     boardViewModel: BoardViewModel,
@@ -118,7 +123,8 @@ function StatusNameCell(
             <div class="property-input-wrapper">
                 <input
                     placeholder={
-                        translations.chatPage.task.renameStatusInputPlaceholder
+                        coreViewModel.translations.chatPage.task
+                            .renameStatusInputPlaceholder
                     }
                     bind:value={viewModel.inputValue}
                     on:enter={viewModel.set}
@@ -142,6 +148,7 @@ function StatusNameCell(
 }
 
 function CategoryRow(
+    coreViewModel: CoreViewModel,
     categoryName: string,
     index: React.State<number>,
     allStatuses: React.ListState<string>,
@@ -180,7 +187,7 @@ function CategoryRow(
                     <div class="property-input-wrapper">
                         <input
                             placeholder={
-                                translations.chatPage.task
+                                coreViewModel.translations.chatPage.task
                                     .renameCategoryInputPlaceholder
                             }
                             bind:value={viewModel.inputValue}

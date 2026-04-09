@@ -10,12 +10,9 @@ import StorageModel, {
 
 import ChatListModel from "../../Model/Chat/chatListModel";
 import ChatModel from "../../Model/Chat/chatModel";
-import { translations } from "../../View/translations";
+import CoreViewModel from "./coreViewModel";
 
 export default class FileTransferViewModel {
-    fileTransferModel: FileTransferModel;
-    chatListModel: ChatListModel;
-
     // state
     presentedModal: React.State<FileTransferModals | undefined> =
         new React.State<any>(undefined);
@@ -40,7 +37,7 @@ export default class FileTransferViewModel {
     filesSentText: React.State<string> = React.createProxyState(
         [this.filesSentCount],
         () =>
-            translations.dataTransferModal.filesSentCount(
+            this.coreViewModel.translations.dataTransferModal.filesSentCount(
                 this.filesSentCount.value,
             ),
     );
@@ -53,7 +50,7 @@ export default class FileTransferViewModel {
     filesReceivedText: React.State<string> = React.createProxyState(
         [this.filesReceivedCount],
         () =>
-            translations.dataTransferModal.filesReceivedCount(
+            this.coreViewModel.translations.dataTransferModal.filesReceivedCount(
                 this.filesReceivedCount.value,
             ),
     );
@@ -84,14 +81,16 @@ export default class FileTransferViewModel {
 
         this.generalFileOptions.add(
             {
-                label: translations.dataTransferModal.connectionData,
+                label: this.coreViewModel.translations.dataTransferModal
+                    .connectionData,
                 path: StorageModel.getPath(
                     StorageModelSubPaths.ConnectionModel,
                     filePaths.connectionModel.previousAddresses,
                 ),
             },
             {
-                label: translations.dataTransferModal.settingsData,
+                label: this.coreViewModel.translations.dataTransferModal
+                    .settingsData,
                 path: StorageModel.getPath(
                     StorageModelSubPaths.SettingsModel,
                     [],
@@ -99,7 +98,8 @@ export default class FileTransferViewModel {
             },
         );
 
-        const chatModels: Set<ChatModel> = this.chatListModel.chatModels;
+        const chatModels: Set<ChatModel> =
+            this.coreViewModel.chatListModel.chatModels;
         for (const chatModel of chatModels) {
             this.chatFileOptions.add({
                 label: chatModel.info.primaryChannel,
@@ -110,7 +110,7 @@ export default class FileTransferViewModel {
 
     getTransferData = (): void => {
         const transferData: TransferData =
-            this.fileTransferModel.generateTransferData();
+            this.coreViewModel.fileTransferModel.generateTransferData();
         this.transferChannel.value = transferData.channel;
         this.transferKey.value = transferData.key;
     };
@@ -128,7 +128,7 @@ export default class FileTransferViewModel {
     showTransferDataModal = (): void => {
         this.presentedModal.value = FileTransferModals.TransferDataDisplay;
         this.getTransferData();
-        this.fileTransferModel.prepareToSend();
+        this.coreViewModel.fileTransferModel.prepareToSend();
     };
 
     initiateTransfer = (): void => {
@@ -136,7 +136,7 @@ export default class FileTransferViewModel {
         this.didNotFinishSending.value = true;
         this.filePathsSent.clear();
 
-        this.fileTransferModel.sendFiles(
+        this.coreViewModel.fileTransferModel.sendFiles(
             this.selectedPaths.value.values(),
             (path: string) => {
                 console.log(path);
@@ -159,7 +159,7 @@ export default class FileTransferViewModel {
             channel: this.receivingTransferChannel.value,
             key: this.receivingTransferKey.value,
         };
-        this.fileTransferModel.prepareToReceive(transferData);
+        this.coreViewModel.fileTransferModel.prepareToReceive(transferData);
     };
 
     hideModal = (): void => {
@@ -167,19 +167,13 @@ export default class FileTransferViewModel {
     };
 
     // init
-    constructor(
-        fileTransferModel: FileTransferModel,
-        chatListModel: ChatListModel,
-    ) {
-        this.fileTransferModel = fileTransferModel;
-        this.chatListModel = chatListModel;
-
-        this.fileTransferModel.fileHandlerManager.addHandler(
+    constructor(public coreViewModel: CoreViewModel) {
+        this.coreViewModel.fileTransferModel.fileHandlerManager.addHandler(
             this.handleReceivedFile,
         );
 
-        this.fileTransferModel.readyToSendHandlerManager.addHandler(() =>
-            this.initiateTransfer(),
+        this.coreViewModel.fileTransferModel.readyToSendHandlerManager.addHandler(
+            () => this.initiateTransfer(),
         );
     }
 }

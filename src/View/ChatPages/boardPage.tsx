@@ -11,10 +11,13 @@ import { BoardViewToggleButton } from "../Components/boardViewToggleButton";
 import { SearchModal } from "../Modals/searchModal";
 import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
-import { translations } from "../translations";
 import { setFocusWithDelay } from "../utility";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function BoardPage(boardViewModel: BoardViewModel) {
+export function BoardPage(
+    coreViewModel: CoreViewModel,
+    boardViewModel: BoardViewModel,
+) {
     boardViewModel.loadData();
 
     // main content
@@ -23,10 +26,10 @@ export function BoardPage(boardViewModel: BoardViewModel) {
         () => {
             switch (boardViewModel.selectedPage.value) {
                 case BoardPageTypes.Kanban: {
-                    return BoardKanbanPage(boardViewModel);
+                    return BoardKanbanPage(coreViewModel, boardViewModel);
                 }
                 case BoardPageTypes.StatusGrid: {
-                    return BoardStatusGridPage(boardViewModel);
+                    return BoardStatusGridPage(coreViewModel, boardViewModel);
                 }
                 default: {
                     return (
@@ -53,6 +56,7 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                 setFocusWithDelay();
 
                 return TaskSettingsModal(
+                    coreViewModel,
                     boardViewModel.selectedTaskViewModel.value,
                 );
             }
@@ -66,7 +70,7 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                     <button
                         class="ghost board-close-button"
                         aria-label={
-                            translations.chatPage.task
+                            coreViewModel.translations.chatPage.task
                                 .closeBoardButtonAudioLabel
                         }
                         on:click={boardViewModel.close}
@@ -76,7 +80,7 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                     <button
                         class="ghost board-toggle-button inset-outline"
                         aria-label={
-                            translations.chatPage.task
+                            coreViewModel.translations.chatPage.task
                                 .toggleBoardButtonAudioLabel
                         }
                         on:click={
@@ -91,7 +95,8 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                     <button
                         class="ghost"
                         aria-label={
-                            translations.chatPage.task.boardSettingsHeadline
+                            coreViewModel.translations.chatPage.task
+                                .boardSettingsHeadline
                         }
                         on:click={boardViewModel.showSettings}
                     >
@@ -100,19 +105,22 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                 </span>
                 <span class="scroll-h ribbon">
                     {BoardViewToggleButton(
-                        translations.chatPage.task.listViewButtonAudioLabel,
+                        coreViewModel.translations.chatPage.task
+                            .listViewButtonAudioLabel,
                         "view_list",
                         BoardPageTypes.List,
                         boardViewModel,
                     )}
                     {BoardViewToggleButton(
-                        translations.chatPage.task.kanbanViewButtonAudioLabel,
+                        coreViewModel.translations.chatPage.task
+                            .kanbanViewButtonAudioLabel,
                         "view_kanban",
                         BoardPageTypes.Kanban,
                         boardViewModel,
                     )}
                     {BoardViewToggleButton(
-                        translations.chatPage.task.statusViewButtonAudioLabel,
+                        coreViewModel.translations.chatPage.task
+                            .statusViewButtonAudioLabel,
                         "grid_view",
                         BoardPageTypes.StatusGrid,
                         boardViewModel,
@@ -122,7 +130,7 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                     <button
                         class="ghost"
                         aria-label={
-                            translations.chatPage.task
+                            coreViewModel.translations.chatPage.task
                                 .filterTasksButtonAudioLabel
                         }
                         on:click={boardViewModel.showFilterModal}
@@ -132,7 +140,7 @@ export function BoardPage(boardViewModel: BoardViewModel) {
                     <button
                         class="ghost"
                         aria-label={
-                            translations.chatPage.task
+                            coreViewModel.translations.chatPage.task
                                 .createTaskButtonAudioLabel
                         }
                         on:click={boardViewModel.createTask}
@@ -143,10 +151,11 @@ export function BoardPage(boardViewModel: BoardViewModel) {
             </div>
             <div class="content main-content" children:set={mainContent}></div>
 
-            {BoardSettingsModal(boardViewModel)}
+            {BoardSettingsModal(coreViewModel, boardViewModel)}
             {SearchModal(
+                coreViewModel,
                 boardViewModel.searchViewModel,
-                translations.chatPage.task.filterTasksHeadline,
+                coreViewModel.translations.chatPage.task.filterTasksHeadline,
                 TaskViewModelToEntry,
                 boardViewModel.isPresentingFilterModal,
             )}

@@ -9,9 +9,12 @@ import { ChatViewToggleButton } from "./Components/chatViewToggleButton";
 import { MessagePage } from "./ChatPages/messagePage";
 import { SettingsPage } from "./ChatPages/settingsPage";
 import { TaskPage } from "./ChatPages/taskPage";
-import { translations } from "./translations";
+import CoreViewModel from "../ViewModel/Global/coreViewModel";
 
-export function ChatPage(chatViewModel: ChatViewModel) {
+export function ChatPage(
+    coreViewModel: CoreViewModel,
+    chatViewModel: ChatViewModel,
+) {
     const mainContent = React.createProxyState(
         [chatViewModel.selectedPage],
         () => {
@@ -19,16 +22,28 @@ export function ChatPage(chatViewModel: ChatViewModel) {
 
             switch (chatViewModel.selectedPage.value) {
                 case ChatPageTypes.Settings: {
-                    return SettingsPage(chatViewModel.settingsPageViewModel);
+                    return SettingsPage(
+                        coreViewModel,
+                        chatViewModel.settingsPageViewModel,
+                    );
                 }
                 case ChatPageTypes.Tasks: {
-                    return TaskPage(chatViewModel.taskPageViewModel);
+                    return TaskPage(
+                        coreViewModel,
+                        chatViewModel.taskPageViewModel,
+                    );
                 }
                 case ChatPageTypes.Calendar: {
-                    return CalendarPage(chatViewModel.calendarViewModel);
+                    return CalendarPage(
+                        coreViewModel,
+                        chatViewModel.calendarViewModel,
+                    );
                 }
                 default: {
-                    return MessagePage(chatViewModel.messagePageViewModel);
+                    return MessagePage(
+                        coreViewModel,
+                        chatViewModel.messagePageViewModel,
+                    );
                 }
             }
         },
@@ -63,14 +78,19 @@ export function ChatPage(chatViewModel: ChatViewModel) {
                 <div id="ribbon">
                     <button
                         class="ghost"
-                        aria-label={translations.chatPage.closeChatAudioLabe}
+                        aria-label={
+                            coreViewModel.translations.chatPage
+                                .closeChatAudioLabe
+                        }
                         on:click={chatViewModel.close}
                     >
                         <span class="icon">close</span>
                     </button>
                     <button
                         class="danger"
-                        aria-label={translations.general.restoreConnection}
+                        aria-label={
+                            coreViewModel.translations.general.restoreConnection
+                        }
                         on:click={
                             chatViewModel.connectionViewModel
                                 .showConnectionModal
@@ -86,25 +106,25 @@ export function ChatPage(chatViewModel: ChatViewModel) {
 
                     <span class="navigation-buttons">
                         {ChatViewToggleButton(
-                            translations.chatPage.pages.calendar,
+                            coreViewModel.translations.chatPage.pages.calendar,
                             "calendar_month",
                             ChatPageTypes.Calendar,
                             chatViewModel,
                         )}
                         {ChatViewToggleButton(
-                            translations.chatPage.pages.tasks,
+                            coreViewModel.translations.chatPage.pages.tasks,
                             "task_alt",
                             ChatPageTypes.Tasks,
                             chatViewModel,
                         )}
                         {ChatViewToggleButton(
-                            translations.chatPage.pages.messages,
+                            coreViewModel.translations.chatPage.pages.messages,
                             "forum",
                             ChatPageTypes.Messages,
                             chatViewModel,
                         )}
                         {ChatViewToggleButton(
-                            translations.chatPage.pages.settings,
+                            coreViewModel.translations.chatPage.pages.settings,
                             "settings",
                             ChatPageTypes.Settings,
                             chatViewModel,

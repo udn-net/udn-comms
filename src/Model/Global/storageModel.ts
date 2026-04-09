@@ -265,5 +265,6 @@ export const filePaths = {
     settingsModel: {
         username: ["user-name"],
         firstDayOfWeek: ["first-day-of-week"],
+        language: ["language"],
     },
 };

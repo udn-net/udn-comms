@@ -2,13 +2,16 @@ import * as React from "bloatless-react";
 
 import { PATH_COMPONENT_SEPARATOR } from "../../Model/Global/storageModel";
 import StorageViewModel from "../../ViewModel/Global/storageViewModel";
-import { translations } from "../translations";
 
 import { SplitModal } from "../Components/splitModal";
 import { DangerousActionButton } from "../Components/dangerousActionButton";
 import { DirectoryItemList } from "../Components/directoryItemList";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function StorageModal(storageViewModel: StorageViewModel) {
+export function StorageModal(
+    coreViewModel: CoreViewModel,
+    storageViewModel: StorageViewModel,
+) {
     const detailView = React.createProxyState(
         [storageViewModel.selectedPath],
         () => {
@@ -16,13 +19,14 @@ export function StorageModal(storageViewModel: StorageViewModel) {
                 return (
                     <div>
                         <span class="secondary">
-                            {translations.storage.noItemSelected}
+                            {coreViewModel.translations.storage.noItemSelected}
                         </span>
 
                         <hr></hr>
 
                         {DangerousActionButton(
-                            translations.storage.removeJunkButton,
+                            coreViewModel,
+                            coreViewModel.translations.storage.removeJunkButton,
                             "delete_forever",
                             storageViewModel.removeJunk,
                         )}
@@ -33,7 +37,7 @@ export function StorageModal(storageViewModel: StorageViewModel) {
                 <div class="flex-column gap">
                     <div class="tile flex-no">
                         <div>
-                            <b>{translations.storage.path}</b>
+                            <b>{coreViewModel.translations.storage.path}</b>
                             <span
                                 class="break-all"
                                 subscribe:innerText={
@@ -44,7 +48,7 @@ export function StorageModal(storageViewModel: StorageViewModel) {
                     </div>
                     <div class="tile flex-no">
                         <div>
-                            <b>{translations.storage.content}</b>
+                            <b>{coreViewModel.translations.storage.content}</b>
                             <code
                                 subscribe:innerText={
                                     storageViewModel.selectedFileContent
@@ -54,7 +58,8 @@ export function StorageModal(storageViewModel: StorageViewModel) {
                     </div>
 
                     {DangerousActionButton(
-                        translations.storage.deleteItem,
+                        coreViewModel,
+                        coreViewModel.translations.storage.deleteItem,
                         "delete_forever",
                         storageViewModel.deleteSelectedItem,
                     )}
@@ -74,7 +79,7 @@ export function StorageModal(storageViewModel: StorageViewModel) {
                     )}
                 </main>
                 <button on:click={storageViewModel.hideStorageModal}>
-                    {translations.general.closeButton}
+                    {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>
             </div>

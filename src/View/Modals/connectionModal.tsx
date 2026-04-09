@@ -2,9 +2,12 @@ import * as React from "bloatless-react";
 
 import ConnectionViewModel from "../../ViewModel/Global/connectionViewModel";
 import { DeletableListItem } from "../Components/deletableListItem";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function ConnectionModal(connectionViewModel: ConnectionViewModel) {
+export function ConnectionModal(
+    coreViewModel: CoreViewModel,
+    connectionViewModel: ConnectionViewModel,
+) {
     const previousAddressConverter: React.StateItemConverter<string> = (
         address: string,
     ) => {
@@ -16,17 +19,20 @@ export function ConnectionModal(connectionViewModel: ConnectionViewModel) {
             [connectionViewModel.isConnected],
             () =>
                 connectionViewModel.isConnected.value == true &&
-                connectionViewModel.connectionModel.address == address,
+                connectionViewModel.coreViewModel.connectionModel.address ==
+                    address,
         );
 
         return DeletableListItem(
+            coreViewModel,
             address,
             <button
                 class="primary"
                 on:click={connnect}
                 toggle:disabled={cannotConnect}
                 aria-label={
-                    translations.connectionModal.connectButtonAudioLabel
+                    coreViewModel.translations.connectionModal
+                        .connectButtonAudioLabel
                 }
             >
                 <span class="icon">link</span>
@@ -45,7 +51,10 @@ export function ConnectionModal(connectionViewModel: ConnectionViewModel) {
             <div>
                 <main>
                     <h2>
-                        {translations.connectionModal.connectionModalHeadline}
+                        {
+                            coreViewModel.translations.connectionModal
+                                .connectionModalHeadline
+                        }
                     </h2>
 
                     <div
@@ -57,7 +66,7 @@ export function ConnectionModal(connectionViewModel: ConnectionViewModel) {
                     ></div>
                 </main>
                 <button on:click={connectionViewModel.hideConnectionModal}>
-                    {translations.general.closeButton}
+                    {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>
             </div>

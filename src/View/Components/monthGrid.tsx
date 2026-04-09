@@ -3,11 +3,12 @@ import "./monthGrid.css";
 import * as React from "bloatless-react";
 import { MonthGrid } from "../../Model/Files/calendarModel";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
-import { translations } from "../translations";
 import { allowDrop } from "../utility";
 import { localeCompare } from "../../Model/Utility/utility";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function MonthGrid<T>(
+    coreViewModel: CoreViewModel,
     monthGrid: MonthGrid<React.MapState<T>>,
     selectedDate: React.State<number>,
     handleDrop: (date: string) => void,
@@ -17,7 +18,11 @@ export function MonthGrid<T>(
     while (dayLabels.length < 7) {
         dayLabels.push(
             <span class="secondary">
-                {translations.regional.weekdays.abbreviated[currentWeekday]}
+                {
+                    coreViewModel.translations.regional.weekdays.abbreviated[
+                        currentWeekday
+                    ]
+                }
             </span>,
         );
         currentWeekday++;

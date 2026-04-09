@@ -26,7 +26,8 @@ export function DirectoryItemList(
     function loadItems() {
         items.clear();
 
-        const directoryItems = storageViewModel.storageModel.list(path);
+        const directoryItems =
+            storageViewModel.coreViewModel.storageModel.list(path);
 
         for (const directoryItem of directoryItems) {
             const itemPath = [...path, directoryItem];

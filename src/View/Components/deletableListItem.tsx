@@ -1,8 +1,8 @@
 import * as React from "bloatless-react";
-
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function DeletableListItem(
+    coreViewModel: CoreViewModel,
     text: string,
     primaryButton: HTMLElement,
     ondelete: () => void,
@@ -16,7 +16,10 @@ export function DeletableListItem(
 
                 <button
                     class="danger"
-                    aria-label={translations.general.deleteItemButtonAudioLabel}
+                    aria-label={
+                        coreViewModel.translations.general
+                            .deleteItemButtonAudioLabel
+                    }
                     on:click={ondelete}
                 >
                     <span class="icon">delete</span>

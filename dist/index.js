@@ -619,7 +619,8 @@
     },
     settingsModel: {
       username: ["user-name"],
-      firstDayOfWeek: ["first-day-of-week"]
+      firstDayOfWeek: ["first-day-of-week"],
+      language: ["language"]
     }
   };
 
@@ -1661,8 +1662,8 @@
   // src/ViewModel/Pages/taskViewModel.ts
   var TaskViewModel = class {
     // init
-    constructor(coreViewModel, chatViewModel, boardsAndTasksModel, containingModel, taskFileContent) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, containingModel, taskFileContent) {
+      this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       // paths
       this.getFilePath = () => {
@@ -1827,8 +1828,8 @@
   // src/ViewModel/Pages/taskContainingPageViewModel.ts
   var TaskContainingPageViewModel = class {
     // init
-    constructor(coreViewModel, chatViewModel, boardsAndTasksModel) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel) {
+      this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       // state
       this.taskIndexManager = new IndexManager(
@@ -1874,9 +1875,9 @@
   var CALENDAR_EVENT_BOARD_ID = "events";
   var CalendarPageViewModel = class extends TaskContainingPageViewModel {
     // init
-    constructor(coreViewModel, chatViewModel, storageModel2, calendarModel, boardsAndTasksModel) {
-      super(coreViewModel, chatViewModel, boardsAndTasksModel);
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatViewModel, calendarModel, boardsAndTasksModel) {
+      super(coreViewModel2, chatViewModel, boardsAndTasksModel);
+      this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       // paths
       this.getBasePath = () => {
@@ -2002,7 +2003,6 @@
       this.loadData = () => {
         this.loadMonthTasks();
       };
-      this.storageModel = storageModel2;
       this.calendarModel = calendarModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
       this.chatViewModel = chatViewModel;
@@ -2028,8 +2028,8 @@
   // src/ViewModel/Chat/chatMessageViewModel.ts
   var ChatMessageViewModel = class {
     // init
-    constructor(coreViewModel, messagePageViewModel, chatMessage, sentByUser) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, messagePageViewModel, chatMessage, sentByUser) {
+      this.coreViewModel = coreViewModel2;
       this.body = new State("");
       this.status = new State(
         void 0
@@ -2132,8 +2132,8 @@
   // src/ViewModel/Pages/messagePageViewModel.ts
   var MessagePageViewModel = class {
     // init
-    constructor(coreViewModel, chatViewModel) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatViewModel) {
+      this.coreViewModel = coreViewModel2;
       // state
       this.chatMessageViewModels = new MapState();
       this.composingMessage = new State("");
@@ -2207,8 +2207,8 @@
   // src/ViewModel/Pages/settingsPageViewModel.ts
   var SettingsPageViewModel = class {
     // init
-    constructor(coreViewModel, chatViewModel) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatViewModel) {
+      this.coreViewModel = coreViewModel2;
       // state
       this.primaryChannel = new State("");
       this.primaryChannelInput = new State("");
@@ -2351,9 +2351,9 @@
   // src/ViewModel/Pages/boardViewModel.ts
   var BoardViewModel = class extends TaskContainingPageViewModel {
     // init
-    constructor(coreViewModel, chatViewModel, storageModel2, boardsAndTasksModel, taskPageViewModel, boardInfo) {
-      super(coreViewModel, chatViewModel, boardsAndTasksModel);
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, taskPageViewModel, boardInfo) {
+      super(coreViewModel2, chatViewModel, boardsAndTasksModel);
+      this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       // state
       this.name = new State("");
@@ -2417,11 +2417,11 @@
       this.storeLastUsedView = () => {
         const path = this.getLastUsedBoardPath();
         const lastUsedView = this.selectedPage.value;
-        this.storageModel.write(path, lastUsedView);
+        this.coreViewModel.storageModel.write(path, lastUsedView);
       };
       this.restoreLastUsedView = () => {
         const path = this.getLastUsedBoardPath();
-        const lastUsedView = this.storageModel.read(path);
+        const lastUsedView = this.coreViewModel.storageModel.read(path);
         if (lastUsedView == null) return;
         this.selectedPage.value = lastUsedView;
       };
@@ -2430,14 +2430,14 @@
           ...this.getPreviousSearchesPath(),
           searchTerm
         ];
-        this.storageModel.write(suggestionPath, "");
+        this.coreViewModel.storageModel.write(suggestionPath, "");
         if (!this.coreViewModel.boardFilterStringSuggestions.value.has(
           searchTerm
         )) {
           this.coreViewModel.boardFilterStringSuggestions.add(searchTerm);
         }
         const lastSearchPath = this.getLastSearchPath();
-        this.storageModel.write(lastSearchPath, searchTerm);
+        this.coreViewModel.storageModel.write(lastSearchPath, searchTerm);
       };
       // view
       this.showTask = (taskFileContent) => {
@@ -2512,12 +2512,12 @@
       };
       this.loadSearchSuggestions = () => {
         const dirPath = this.getPreviousSearchesPath();
-        const searches = this.storageModel.list(dirPath);
+        const searches = this.coreViewModel.storageModel.list(dirPath);
         this.coreViewModel.boardFilterStringSuggestions.add(...searches);
       };
       this.restoreSearch = () => {
         const lastSearchPath = this.getLastSearchPath();
-        const lastSearch = this.storageModel.read(lastSearchPath);
+        const lastSearch = this.coreViewModel.storageModel.read(lastSearchPath);
         if (lastSearch != null) {
           this.searchViewModel.search(lastSearch);
         }
@@ -2527,7 +2527,6 @@
         this.loadTasks();
         this.loadSearchSuggestions();
       };
-      this.storageModel = storageModel2;
       this.boardsAndTasksModel = boardsAndTasksModel;
       this.taskPageViewModel = taskPageViewModel;
       this.boardInfo = boardInfo;
@@ -2568,8 +2567,8 @@
   // src/ViewModel/Pages/taskPageViewModel.ts
   var TaskPageViewModel = class {
     // init
-    constructor(coreViewModel, chatViewModel, storageModel2, boardModel) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatViewModel, boardModel) {
+      this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       // data
       this.boardIndexManager = new IndexManager(
@@ -2623,7 +2622,6 @@
         const boardViewModel = new BoardViewModel(
           this.coreViewModel,
           this.chatViewModel,
-          this.storageModel,
           this.boardsAndTasksModel,
           this,
           boardInfo
@@ -2654,11 +2652,11 @@
       this.storeLastUsedBoard = () => {
         const path = this.getLastUsedBoardPath();
         const lastUsedBoardId = this.selectedBoardId.value ?? "";
-        this.storageModel.write(path, lastUsedBoardId);
+        this.coreViewModel.storageModel.write(path, lastUsedBoardId);
       };
       this.openLastUsedBoard = () => {
         const path = this.getLastUsedBoardPath();
-        const lastUsedBoardId = this.storageModel.read(path);
+        const lastUsedBoardId = this.coreViewModel.storageModel.read(path);
         if (lastUsedBoardId == null) return;
         const boardViewModel = this.boardViewModels.value.get(lastUsedBoardId);
         if (boardViewModel == void 0) return;
@@ -2676,7 +2674,6 @@
         this.updateBoardIndices();
         this.openLastUsedBoard();
       };
-      this.storageModel = storageModel2;
       this.boardsAndTasksModel = boardModel;
       this.chatViewModel = chatViewModel;
       this.loadData();
@@ -2689,596 +2686,11 @@
     }
   };
 
-  // src/View/translations.ts
-  var englishTranslations = {
-    updater: {
-      migrated: "Migrated"
-    },
-    general: {
-      deleteItemButtonAudioLabel: "delete item",
-      searchButtonAudioLabel: "search",
-      abortButton: "Abort",
-      cancelButton: "Cancel",
-      closeButton: "Close",
-      backButton: "Back",
-      continueButton: "Continue",
-      confirmButton: "Confirm",
-      saveButton: "Save",
-      setButton: "Set",
-      reloadAppButton: "Reload App",
-      fileVersionLabel: "Version",
-      searchLabel: "Search",
-      waitingLabel: "Waiting...",
-      restoreConnection: "Restore connection"
-    },
-    regional: {
-      weekdays: {
-        full: [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday"
-        ],
-        abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-      }
-    },
-    homePage: {
-      appName: "Comms",
-      ///
-      overviewHeadline: "Overview",
-      serverAddress: "Server address",
-      serverAddressPlaceholder: "wss://192.168.0.69:3000",
-      connectAudioLabel: "connect to server",
-      disconnectAudioLabel: "disconnect from server",
-      manageConnectionsAudioLabel: "manage connections",
-      yourNameLabel: "Your name",
-      yourNamePlaceholder: "Jane Doe",
-      setNameButtonAudioLabel: "set name",
-      firstDayOfWeekLabel: "First day of week",
-      settingsButton: "Settings",
-      manageStorageButton: "Manage storage",
-      transferDataButton: "Data Transfer",
-      scrollToChatButton: "Chats",
-      ///
-      backToOverviewAudioLabel: "go back to overview",
-      chatsHeadline: "Chats",
-      addChatAudioLabel: "name of new chat",
-      addChatPlaceholder: "Add chat",
-      addChatButton: "Add chat"
-    },
-    settings: {
-      pages: {
-        appearance: "Appearance",
-        regional: "Language & Region",
-        info: "About Comms"
-      },
-      version: "Version"
-    },
-    connectionModal: {
-      connectionModalHeadline: "Manage Connections",
-      ///
-      connectButtonAudioLabel: "connect"
-    },
-    dataTransferModal: {
-      transferDataHeadline: "Data Transfer",
-      selectionDescription: "Select the data that you want to transfer.",
-      dataEntryDescription: "Enter this data on the other device.",
-      dataEntryInputDescription: "Enter the data displayed on the other device.",
-      notConnectedError: "You are not connected to any server.",
-      ///
-      fromThisDeviceButton: "From this device",
-      toThisDeviceButton: "To this device",
-      ///
-      generalHeadline: "General",
-      connectionData: "Connection Data",
-      settingsData: "Settings Data",
-      chatsHeadline: "Chats",
-      ///
-      transferChannelHeadline: "Transfer Chanel",
-      transferKeyHeadline: "Transfer Encryption Key",
-      sendButton: "Send",
-      sendAgainButton: "Send again",
-      ///
-      filesSentCount: (count) => `Files sent: ${count}.`,
-      allFilesSent: "Done.",
-      filesReceivedCount: (count) => `Files received: ${count}.`
-    },
-    storage: {
-      noItemSelected: "No item selected",
-      notAFile: "(not a file)",
-      contentEmpty: "(empty)",
-      path: "Path",
-      content: "Content",
-      deleteItem: "Delete item",
-      removeJunkButton: "Delete junk files"
-    },
-    chatPage: {
-      closeChatAudioLabe: "close chat",
-      chatSettingsAudioLabel: "chat settings",
-      pages: {
-        settings: "Settings",
-        messages: "Messages",
-        tasks: "Tasks",
-        calendar: "Calendar"
-      },
-      settings: {
-        settingsHeadline: "Settings",
-        primaryChannelLabel: "Primary channel",
-        setPrimaryChannelButtonAudioLabel: "set primary channel",
-        newSecondaryChannelPlaceholder: "Add secondary channel",
-        newSecondaryChannelAudioLabel: "name of new secondary channel",
-        addSecondaryChannelButtonAudioLabel: "add secondary channel",
-        encryptionKeyLabel: "Encryption key",
-        setEncryptionKeyButtonAudioLabel: "set encryption key",
-        showEncryptionKey: "Show encryption key",
-        deleteChatButton: "Delete entire chat"
-      },
-      message: {
-        messagesHeadline: "Messages",
-        ///
-        composerInputPlaceholder: "Type a message...",
-        sendMessageButtonAudioLabel: "send message",
-        ///
-        showMessageInfoButtonAudioLabel: "show message info",
-        messageInfoHeadline: "Message Info",
-        sentBy: "Sent by",
-        timeSent: "Time sent",
-        channel: "Channel",
-        messageContent: "Message content",
-        copyMessageButton: "Copy message",
-        resendMessageButton: "Resend message",
-        decryptMessageButton: "Decrypt message",
-        deleteMessageButton: "Delete message",
-        //
-        thumbsUpReaction: "Reaction: thumbs up",
-        checkReaction: "Reaction: check",
-        stopReaction: "Reaction: stop sign",
-        attentionReaction: "Reaction: exclamation mark",
-        doubleAttentionReaction: "Reaction: double exclamation mark",
-        questionReaction: "Reaction: question mark"
-      },
-      task: {
-        newBoardNamePlaceholder: "Create a board",
-        createBoardButtonAudioLabel: "create board",
-        ///
-        noBoardSelected: "No board selected",
-        boardNotFound: "Board not found",
-        ///
-        closeBoardButtonAudioLabel: "close board",
-        toggleBoardButtonAudioLabel: "toggle board list",
-        showBoardSettingsButtonAudioLabel: "show board settigns",
-        listViewButtonAudioLabel: "list view",
-        kanbanViewButtonAudioLabel: "kanban view",
-        statusViewButtonAudioLabel: "status grid view",
-        filterTasksButtonAudioLabel: "filter tasks",
-        createTaskButtonAudioLabel: "create new task",
-        ///
-        boardSettingsHeadline: "Board Settings",
-        boardNameInputLabel: "Board name",
-        deleteBoardButton: "Delete board and all tasks",
-        ///
-        taskSettingsHeadline: "Edit Task",
-        taskNameLabel: "Title",
-        taskBoardLabel: "Board",
-        taskCategoryLabel: "Category",
-        taskStatusLabel: "Status",
-        taskPriorityLabel: "Priority",
-        taskDescriptionLabel: "Description",
-        taskDateLabel: "Date",
-        taskTimeLabel: "Time",
-        deleteTaskButton: "Delete task",
-        ///
-        filterTasksHeadline: "Filter Tasks",
-        ///
-        renameCategoryInputPlaceholder: "Rename category",
-        renameStatusInputPlaceholder: "Rename status"
-      },
-      calendar: {
-        eventsBoard: "Events",
-        ///
-        todayButtonAudioLabel: "go to today",
-        previousMonthButtonAudioLabel: "previous month",
-        nextMonthButtonAudioLabel: "next month",
-        yearInputAudioLabel: "year",
-        monthInputAudioLabel: "month",
-        yearInputPlaceholder: "2000",
-        monthInputPlaceholder: "01",
-        ///
-        searchEventsHeadline: "Search Events",
-        ///
-        events: "Events",
-        noEvents: "No events"
-      }
-    }
-  };
-  var allTranslations = {
-    en: englishTranslations,
-    de: {
-      updater: {
-        migrated: "Migriert"
-      },
-      general: {
-        deleteItemButtonAudioLabel: "element l\xF6schen",
-        searchButtonAudioLabel: "suchen",
-        abortButton: "Abbrechen",
-        cancelButton: "Abbrechen",
-        closeButton: "Schlie\xDFen",
-        backButton: "Zur\xFCck",
-        continueButton: "Weiter",
-        confirmButton: "Best\xE4tigen",
-        saveButton: "Speichern",
-        setButton: "OK",
-        reloadAppButton: "Neu laden",
-        fileVersionLabel: "Version",
-        searchLabel: "Suche",
-        waitingLabel: "Warten...",
-        restoreConnection: "Verbindung wiederherstellen"
-      },
-      regional: {
-        weekdays: {
-          full: [
-            "Sonntag",
-            "Montag",
-            "Dienstag",
-            "Mittwoch",
-            "Donnerstag",
-            "Freitag",
-            "Samstag"
-          ],
-          abbreviated: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
-        }
-      },
-      homePage: {
-        appName: "Comms",
-        overviewHeadline: "\xDCbersicht",
-        serverAddress: "Serveradresse",
-        serverAddressPlaceholder: "wss://192.168.0.69:3000",
-        connectAudioLabel: "mit Server verbinden",
-        disconnectAudioLabel: "vom Server trennen",
-        manageConnectionsAudioLabel: "Verbindungen verwalten",
-        yourNameLabel: "Dein Name",
-        yourNamePlaceholder: "Max Mustermann",
-        setNameButtonAudioLabel: "Name speichern",
-        firstDayOfWeekLabel: "Erster Wochentag",
-        settingsButton: "Einstellungen",
-        manageStorageButton: "Daten verwalten",
-        transferDataButton: "Daten\xFCbertragung",
-        scrollToChatButton: "Chats",
-        backToOverviewAudioLabel: "zur\xFCck zur \xFCbersicht",
-        chatsHeadline: "Chats",
-        addChatAudioLabel: "Name des neuen Chats",
-        addChatPlaceholder: "Chat hinzuf\xFCgen",
-        addChatButton: "Chat hinzuf\xFCgen"
-      },
-      settings: {
-        pages: {
-          appearance: "Erscheinungsbild",
-          regional: "Sprache & Region",
-          info: "\xDCber Comms"
-        },
-        version: "Version"
-      },
-      connectionModal: {
-        connectionModalHeadline: "Verbindungen verwalten",
-        connectButtonAudioLabel: "verbinden"
-      },
-      dataTransferModal: {
-        transferDataHeadline: "Daten\xFCbertragung",
-        selectionDescription: "W\xE4hle die Daten aus, die du \xFCbertragen m\xF6chtest.",
-        dataEntryDescription: "Gib diese Informationen auf dem anderen Ger\xE4t ein.",
-        dataEntryInputDescription: "Gib die auf dem anderen Ger\xE4t angezeigten Informationen ein.",
-        notConnectedError: "Du bist mit keinem Server verbunden.",
-        fromThisDeviceButton: "Von diesem Ger\xE4t",
-        toThisDeviceButton: "An dieses Ger\xE4t",
-        generalHeadline: "Allgemein",
-        connectionData: "Verbindungsdaten",
-        settingsData: "Einstellungen",
-        chatsHeadline: "Chats",
-        transferChannelHeadline: "\xDCbertragungskanal",
-        transferKeyHeadline: "Schl\xFCssel",
-        sendButton: "Senden",
-        sendAgainButton: "Erneut senden",
-        filesSentCount: (count) => `Dateien gesendet: ${count}.`,
-        allFilesSent: "Fertig.",
-        filesReceivedCount: (count) => `Dateien empfangen: ${count}.`
-      },
-      storage: {
-        noItemSelected: "Kein Element ausgew\xE4hlt",
-        notAFile: "(keine Datei)",
-        contentEmpty: "(leer)",
-        path: "Pfad",
-        content: "Inhalt",
-        deleteItem: "Element l\xF6schen",
-        removeJunkButton: "Datenm\xFCll l\xF6schen"
-      },
-      chatPage: {
-        closeChatAudioLabe: "Chat schlie\xDFen",
-        chatSettingsAudioLabel: "Chateinstellungen",
-        pages: {
-          settings: "Einstellungen",
-          messages: "Nachrichten",
-          tasks: "Aufgaben",
-          calendar: "Kalender"
-        },
-        settings: {
-          settingsHeadline: "Einstellungen",
-          primaryChannelLabel: "Hauptkanal",
-          setPrimaryChannelButtonAudioLabel: "Hauptkanal festlegen",
-          newSecondaryChannelPlaceholder: "Sekund\xE4ren Kanal hinzuf\xFCgen",
-          newSecondaryChannelAudioLabel: "Name des neuen sekund\xE4ren Kanals",
-          addSecondaryChannelButtonAudioLabel: "Sekund\xE4ren Kanal hinzuf\xFCgen",
-          encryptionKeyLabel: "Schl\xFCssel",
-          setEncryptionKeyButtonAudioLabel: "Schl\xFCssel festlegen",
-          showEncryptionKey: "Schl\xFCssel anzeigen",
-          deleteChatButton: "Gesamten Chat l\xF6schen"
-        },
-        message: {
-          messagesHeadline: "Nachrichten",
-          composerInputPlaceholder: "Schreib eine Nachricht...",
-          sendMessageButtonAudioLabel: "nachricht senden",
-          showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
-          messageInfoHeadline: "Nachrichteninfo",
-          sentBy: "Gesendet von",
-          timeSent: "Sendezeit",
-          channel: "Kanal",
-          messageContent: "Nachrichteninhalt",
-          copyMessageButton: "Nachricht kopieren",
-          resendMessageButton: "Nachricht erneut senden",
-          decryptMessageButton: "Nachricht entschl\xFCsseln",
-          deleteMessageButton: "Nachricht l\xF6schen",
-          //
-          thumbsUpReaction: "Reaktion: Daumen hoch",
-          checkReaction: "Reaktion: Haken",
-          stopReaction: "Reaktion: Stopp",
-          attentionReaction: "Reaktion: Ausrufezeichen",
-          doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
-          questionReaction: "Reaktion: Fragezeichen"
-        },
-        task: {
-          newBoardNamePlaceholder: "Board erstellen",
-          createBoardButtonAudioLabel: "board erstellen",
-          noBoardSelected: "Kein Board ausgew\xE4hlt",
-          boardNotFound: "Board nicht gefunden",
-          closeBoardButtonAudioLabel: "board schlie\xDFen",
-          toggleBoardButtonAudioLabel: "board-liste ein/ausblenden",
-          showBoardSettingsButtonAudioLabel: "Board-Einstellungen anzeigen",
-          listViewButtonAudioLabel: "Listenansicht",
-          kanbanViewButtonAudioLabel: "Kanban-Ansicht",
-          statusViewButtonAudioLabel: "Statusrasteransicht",
-          filterTasksButtonAudioLabel: "Aufgaben filtern",
-          createTaskButtonAudioLabel: "Neue Aufgabe erstellen",
-          boardSettingsHeadline: "Board-Einstellungen",
-          boardNameInputLabel: "Boardname",
-          deleteBoardButton: "Board und alle Aufgaben l\xF6schen",
-          taskSettingsHeadline: "Aufgabe bearbeiten",
-          taskNameLabel: "Titel",
-          taskBoardLabel: "Board",
-          taskCategoryLabel: "Kategorie",
-          taskStatusLabel: "Status",
-          taskPriorityLabel: "Priorit\xE4t",
-          taskDescriptionLabel: "Beschreibung",
-          taskDateLabel: "Datum",
-          taskTimeLabel: "Uhrzeit",
-          deleteTaskButton: "Aufgabe l\xF6schen",
-          filterTasksHeadline: "Aufgaben filtern",
-          renameCategoryInputPlaceholder: "Kategorie umbenennen",
-          renameStatusInputPlaceholder: "Status umbenennen"
-        },
-        calendar: {
-          eventsBoard: "Ereignisse",
-          ///
-          todayButtonAudioLabel: "gehe zu heute",
-          previousMonthButtonAudioLabel: "vorheriger monat",
-          nextMonthButtonAudioLabel: "n\xE4chster monat",
-          yearInputAudioLabel: "Jahr",
-          monthInputAudioLabel: "Monat",
-          yearInputPlaceholder: "2000",
-          monthInputPlaceholder: "01",
-          searchEventsHeadline: "Ereignisse suchen",
-          events: "Ereignisse",
-          noEvents: "Keine Ereignisse"
-        }
-      }
-    },
-    es: {
-      updater: {
-        migrated: "Migrado"
-      },
-      general: {
-        deleteItemButtonAudioLabel: "eliminar elemento",
-        searchButtonAudioLabel: "buscar",
-        abortButton: "Abortar",
-        cancelButton: "Cancelar",
-        closeButton: "Cerrar",
-        backButton: "Atr\xE1s",
-        continueButton: "Continuar",
-        confirmButton: "Confirmar",
-        saveButton: "Guardar",
-        setButton: "OK",
-        reloadAppButton: "Recargar app",
-        fileVersionLabel: "Versi\xF3n",
-        searchLabel: "Buscar",
-        waitingLabel: "Esperando...",
-        restoreConnection: "Conectar de nuevo"
-      },
-      regional: {
-        weekdays: {
-          full: [
-            "Domingo",
-            "Lunes",
-            "Martes",
-            "Mi\xE9rcoles",
-            "Jueves",
-            "Viernes",
-            "S\xE1bado"
-          ],
-          abbreviated: ["Dom", "Lun", "Mar", "Mi\xE9", "Jue", "Vie", "S\xE1b"]
-        }
-      },
-      homePage: {
-        appName: "Comms",
-        overviewHeadline: "Resumen",
-        serverAddress: "Direcci\xF3n del servidor",
-        serverAddressPlaceholder: "wss://192.168.0.69:3000",
-        connectAudioLabel: "conectar al servidor",
-        disconnectAudioLabel: "desconectar del servidor",
-        manageConnectionsAudioLabel: "gestionar conexiones",
-        yourNameLabel: "Tu nombre",
-        yourNamePlaceholder: "Juan P\xE9rez",
-        setNameButtonAudioLabel: "establecer nombre",
-        firstDayOfWeekLabel: "Primer d\xEDa de la semana",
-        settingsButton: "Ajustes",
-        manageStorageButton: "Gestionar almacenamiento",
-        transferDataButton: "Transferencia de datos",
-        scrollToChatButton: "Chats",
-        backToOverviewAudioLabel: "volver al resumen",
-        chatsHeadline: "Chats",
-        addChatAudioLabel: "nombre del nuevo chat",
-        addChatPlaceholder: "A\xF1adir chat",
-        addChatButton: "A\xF1adir chat"
-      },
-      settings: {
-        pages: {
-          appearance: "Aspecto",
-          regional: "Idioma y Regi\xF3n",
-          info: "Sobre Comms"
-        },
-        version: "Versi\xF3n"
-      },
-      connectionModal: {
-        connectionModalHeadline: "Gestionar Conexiones",
-        connectButtonAudioLabel: "conectar"
-      },
-      dataTransferModal: {
-        transferDataHeadline: "Transferencia de Datos",
-        selectionDescription: "Selecciona los datos que quieres transferir.",
-        dataEntryDescription: "Introduce estos datos en el otro dispositivo.",
-        dataEntryInputDescription: "Introduce los datos mostrados en el otro dispositivo.",
-        notConnectedError: "No est\xE1s conectado a ning\xFAn servidor.",
-        fromThisDeviceButton: "Desde este dispositivo",
-        toThisDeviceButton: "A este dispositivo",
-        generalHeadline: "General",
-        connectionData: "Datos de Conexi\xF3n",
-        settingsData: "Datos de Configuraci\xF3n",
-        chatsHeadline: "Chats",
-        transferChannelHeadline: "Canal de Transferencia",
-        transferKeyHeadline: "Clave de Encriptaci\xF3n de Transferencia",
-        sendButton: "Enviar",
-        sendAgainButton: "Enviar otra vez",
-        filesSentCount: (count) => `Archivos enviados: ${count}.`,
-        allFilesSent: "Hecho.",
-        filesReceivedCount: (count) => `Archivos recibidos: ${count}.`
-      },
-      storage: {
-        noItemSelected: "Ning\xFAn elemento seleccionado",
-        notAFile: "(no es un archivo)",
-        contentEmpty: "(vac\xEDo)",
-        path: "Ruta",
-        content: "Contenido",
-        deleteItem: "Eliminar elemento",
-        removeJunkButton: "Eliminar archivos basura"
-      },
-      chatPage: {
-        closeChatAudioLabe: "cerrar chat",
-        chatSettingsAudioLabel: "configuraci\xF3n del chat",
-        pages: {
-          settings: "Configuraci\xF3n",
-          messages: "Mensajes",
-          tasks: "Tareas",
-          calendar: "Calendario"
-        },
-        settings: {
-          settingsHeadline: "Configuraci\xF3n",
-          primaryChannelLabel: "Canal principal",
-          setPrimaryChannelButtonAudioLabel: "establecer canal principal",
-          newSecondaryChannelPlaceholder: "A\xF1adir canal secundario",
-          newSecondaryChannelAudioLabel: "nombre del nuevo canal secundario",
-          addSecondaryChannelButtonAudioLabel: "a\xF1adir canal secundario",
-          encryptionKeyLabel: "Clave de encriptaci\xF3n",
-          setEncryptionKeyButtonAudioLabel: "establecer clave de encriptaci\xF3n",
-          showEncryptionKey: "Mostrar clave de encriptaci\xF3n",
-          deleteChatButton: "Eliminar todo el chat"
-        },
-        message: {
-          messagesHeadline: "Mensajes",
-          composerInputPlaceholder: "Escribe un mensaje...",
-          sendMessageButtonAudioLabel: "enviar mensaje",
-          showMessageInfoButtonAudioLabel: "mostrar informaci\xF3n del mensaje",
-          messageInfoHeadline: "Informaci\xF3n del Mensaje",
-          sentBy: "Enviado por",
-          timeSent: "Hora de env\xEDo",
-          channel: "Canal",
-          messageContent: "Contenido del mensaje",
-          copyMessageButton: "Copiar mensaje",
-          resendMessageButton: "Reenviar mensaje",
-          decryptMessageButton: "Desencriptar mensaje",
-          deleteMessageButton: "Eliminar mensaje",
-          //
-          thumbsUpReaction: "Reacci\xF3n: pulgar hacia arriba",
-          checkReaction: "Reacci\xF3n: marca de verificaci\xF3n",
-          stopReaction: "Reacci\xF3n: signo de parada",
-          attentionReaction: "Reaccion: signo de atenci\xF3n",
-          doubleAttentionReaction: "Reaccion: signo de atenci\xF3n doble",
-          questionReaction: "Reaccion: signo de interrogaci\xF3n"
-        },
-        task: {
-          newBoardNamePlaceholder: "Crear un tablero",
-          createBoardButtonAudioLabel: "crear tablero",
-          noBoardSelected: "Ning\xFAn tablero seleccionado",
-          boardNotFound: "Tablero no encontrado",
-          closeBoardButtonAudioLabel: "cerrar tablero",
-          toggleBoardButtonAudioLabel: "mostrar o ocultar lista de tableros",
-          showBoardSettingsButtonAudioLabel: "mostrar configuraci\xF3n del tablero",
-          listViewButtonAudioLabel: "vista de lista",
-          kanbanViewButtonAudioLabel: "vista kanban",
-          statusViewButtonAudioLabel: "vista de cuadr\xEDcula de estado",
-          filterTasksButtonAudioLabel: "filtrar tareas",
-          createTaskButtonAudioLabel: "crear nueva tarea",
-          boardSettingsHeadline: "Configuraci\xF3n del Tablero",
-          boardNameInputLabel: "Nombre del tablero",
-          deleteBoardButton: "Eliminar tablero y todas las tareas",
-          taskSettingsHeadline: "Editar Tarea",
-          taskNameLabel: "T\xEDtulo",
-          taskBoardLabel: "Tablero",
-          taskCategoryLabel: "Categor\xEDa",
-          taskStatusLabel: "Estado",
-          taskPriorityLabel: "Prioridad",
-          taskDescriptionLabel: "Descripci\xF3n",
-          taskDateLabel: "Fecha",
-          taskTimeLabel: "Hora",
-          deleteTaskButton: "Eliminar tarea",
-          filterTasksHeadline: "Filtrar Tareas",
-          renameCategoryInputPlaceholder: "Renombrar categor\xEDa",
-          renameStatusInputPlaceholder: "Renombrar estado"
-        },
-        calendar: {
-          eventsBoard: "Eventos",
-          ///
-          todayButtonAudioLabel: "ir a hoy",
-          previousMonthButtonAudioLabel: "mes anterior",
-          nextMonthButtonAudioLabel: "mes siguiente",
-          yearInputAudioLabel: "a\xF1o",
-          monthInputAudioLabel: "mes",
-          yearInputPlaceholder: "2000",
-          monthInputPlaceholder: "01",
-          searchEventsHeadline: "Buscar Eventos",
-          events: "Eventos",
-          noEvents: "No hay eventos"
-        }
-      }
-    }
-  };
-  var language = navigator.language.substring(0, 2);
-  var translations = allTranslations[language] || allTranslations.en;
-
   // src/ViewModel/Chat/chatViewModel.ts
   var ChatViewModel2 = class {
     // init
-    constructor(coreViewModel, storageModel2, chatModel, settingsViewModel2, notificationViewModel, connectionViewModel2, chatListViewModel2) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, chatModel, settingsViewModel2, notificationViewModel, connectionViewModel2, chatListViewModel2) {
+      this.coreViewModel = coreViewModel2;
       // state
       this.displayedColor = new State("standard" /* Standard */);
       this.selectedPage = new State(
@@ -3316,12 +2728,12 @@
           "chat" /* Chat */,
           filePaths.chat.lastUsedPage(this.chatModel.id)
         );
-        const lastUsedPage = this.storageModel.read(path);
+        const lastUsedPage = this.coreViewModel.storageModel.read(path);
         if (lastUsedPage != null) {
           this.selectedPage.value = lastUsedPage;
         }
         this.selectedPage.subscribeSilent((newPage) => {
-          this.storageModel.write(path, newPage);
+          this.coreViewModel.storageModel.write(path, newPage);
           this.resetColor();
         });
       };
@@ -3329,7 +2741,7 @@
         this.updateReadStatus();
         this.taskBoardSuggestions.set(CALENDAR_EVENT_BOARD_ID, [
           CALENDAR_EVENT_BOARD_ID,
-          translations.chatPage.calendar.eventsBoard
+          this.coreViewModel.translations.chatPage.calendar.eventsBoard
         ]);
       };
       this.updateReadStatus = () => {
@@ -3352,23 +2764,20 @@
           }
         );
       };
-      this.storageModel = storageModel2;
       this.chatModel = chatModel;
       this.settingsViewModel = settingsViewModel2;
       this.connectionViewModel = connectionViewModel2;
       this.notificationViewModel = notificationViewModel;
       this.chatListViewModel = chatListViewModel2;
       this.calendarViewModel = new CalendarPageViewModel(
-        coreViewModel,
+        coreViewModel2,
         this,
-        this.storageModel,
         this.chatModel.fileModel.boardsAndTasksModel.calendarModel,
         this.chatModel.fileModel.boardsAndTasksModel
       );
       this.taskPageViewModel = new TaskPageViewModel(
         this.coreViewModel,
         this,
-        this.storageModel,
         this.chatModel.fileModel.boardsAndTasksModel
       );
       this.messagePageViewModel = new MessagePageViewModel(
@@ -3471,8 +2880,8 @@
   // src/ViewModel/Chat/chatListViewModel.ts
   var ChatListViewModel = class {
     // init
-    constructor(coreViewModel, storageModel2, chatListModel2, settingsViewModel2, connectionViewModel2) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2, settingsViewModel2, connectionViewModel2) {
+      this.coreViewModel = coreViewModel2;
       // data
       this.chatIndexManager = new IndexManager(
         (chatViewModel) => chatViewModel.settingsPageViewModel.primaryChannel.value
@@ -3490,7 +2899,7 @@
       );
       // methods
       this.createChat = () => {
-        const chatModel = this.chatListModel.createChat(
+        const chatModel = this.coreViewModel.chatListModel.createChat(
           this.newChatPrimaryChannel.value
         );
         this.newChatPrimaryChannel.value = "";
@@ -3502,13 +2911,12 @@
         this.chatViewModels.add(chatViewModel);
       };
       this.untrackChat = (chatViewModel) => {
-        this.chatListModel.untrackChat(chatViewModel.chatModel);
+        this.coreViewModel.chatListModel.untrackChat(chatViewModel.chatModel);
         this.chatViewModels.remove(chatViewModel);
       };
       this.createChatViewModel = (chatModel) => {
         return new ChatViewModel2(
           this.coreViewModel,
-          this.storageModel,
           chatModel,
           this.settingsViewModel,
           this.notificationViewModel,
@@ -3533,14 +2941,12 @@
       // load
       this.loadChats = () => {
         this.chatViewModels.clear();
-        for (const chatModel of this.chatListModel.chatModels.values()) {
+        for (const chatModel of this.coreViewModel.chatListModel.chatModels.values()) {
           const chatViewModel = this.createChatViewModel(chatModel);
           this.trackChat(chatViewModel);
         }
         this.updateIndices();
       };
-      this.storageModel = storageModel2;
-      this.chatListModel = chatListModel2;
       this.settingsViewModel = settingsViewModel2;
       this.notificationViewModel = new NotificationViewModel(this);
       this.connectionViewModel = connectionViewModel2;
@@ -3549,12 +2955,12 @@
   };
 
   // src/View/Components/monthGrid.tsx
-  function MonthGrid2(monthGrid, selectedDate, handleDrop) {
+  function MonthGrid2(coreViewModel2, monthGrid, selectedDate, handleDrop) {
     const dayLabels = [];
     let currentWeekday = monthGrid.firstDayOfWeek;
     while (dayLabels.length < 7) {
       dayLabels.push(
-        /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.regional.weekdays.abbreviated[currentWeekday])
+        /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.regional.weekdays.abbreviated[currentWeekday])
       );
       currentWeekday++;
       if (currentWeekday == 7) currentWeekday = 0;
@@ -3634,7 +3040,7 @@
   };
 
   // src/View/Components/dangerousActionButton.tsx
-  function DangerousActionButton(label, icon, action) {
+  function DangerousActionButton(coreViewModel2, label, icon, action) {
     const isActionRequested = new State(false);
     const cannotConfirm = createProxyState(
       [isActionRequested],
@@ -3646,7 +3052,7 @@
     function abort() {
       isActionRequested.value = false;
     }
-    return /* @__PURE__ */ createElement("div", { class: "flex-row" }, /* @__PURE__ */ createElement("button", { class: "flex", "on:click": abort, "toggle:hidden": cannotConfirm }, translations.general.abortButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "undo")), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "flex-row" }, /* @__PURE__ */ createElement("button", { class: "flex", "on:click": abort, "toggle:hidden": cannotConfirm }, coreViewModel2.translations.general.abortButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "undo")), /* @__PURE__ */ createElement(
       "button",
       {
         class: "danger flex",
@@ -3662,20 +3068,20 @@
         "on:click": action,
         "toggle:hidden": cannotConfirm
       },
-      translations.general.confirmButton,
+      coreViewModel2.translations.general.confirmButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "warning")
     ));
   }
 
   // src/View/Modals/taskSettingsModal.tsx
-  function TaskSettingsModal(taskViewModel) {
+  function TaskSettingsModal(coreViewModel2, taskViewModel) {
     const categorySuggestionId = v4_default();
     const statusSuggestionId = v4_default();
     const BoardOptionConverter = (entry) => {
       const isSelected = entry[0] == taskViewModel.task.boardId;
       return Option(entry[1], entry[0], isSelected);
     };
-    return /* @__PURE__ */ createElement("div", { class: "modal", open: true, "keystroke:s": taskViewModel.closeAndSave }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", open: true, "keystroke:s": taskViewModel.closeAndSave }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
       "select",
       {
         "bind:value": taskViewModel.selectedVersionId,
@@ -3684,13 +3090,13 @@
           VersionIdToOption
         ]
       }
-    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": taskViewModel.name,
         id: "focused"
       }
-    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
+    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
       "select",
       {
         "bind:value": taskViewModel.boardId,
@@ -3699,13 +3105,13 @@
           BoardOptionConverter
         ]
       }
-    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "description"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskDescriptionLabel), /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "description"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDescriptionLabel), /* @__PURE__ */ createElement(
       "textarea",
       {
         rows: "10",
         "bind:value": taskViewModel.description
       }
-    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskCategoryLabel), /* @__PURE__ */ createElement(
+    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskCategoryLabel), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": taskViewModel.category,
@@ -3721,7 +3127,7 @@
           StringToOption
         ]
       }
-    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "clock_loader_40"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskStatusLabel), /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "clock_loader_40"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskStatusLabel), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": taskViewModel.status,
@@ -3737,26 +3143,27 @@
           StringToOption
         ]
       }
-    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "priority_high"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskPriorityLabel), /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "priority_high"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskPriorityLabel), /* @__PURE__ */ createElement(
       "input",
       {
         type: "number",
         "bind:value": taskViewModel.priority
       }
-    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskDateLabel), /* @__PURE__ */ createElement(
+    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDateLabel), /* @__PURE__ */ createElement(
       "input",
       {
         type: "date",
         "bind:value": taskViewModel.date
       }
-    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "schedule"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.taskTimeLabel), /* @__PURE__ */ createElement(
+    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "schedule"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskTimeLabel), /* @__PURE__ */ createElement(
       "input",
       {
         type: "time",
         "bind:value": taskViewModel.time
       }
     ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
-      translations.chatPage.task.deleteTaskButton,
+      coreViewModel2,
+      coreViewModel2.translations.chatPage.task.deleteTaskButton,
       "delete_forever",
       taskViewModel.deleteTask
     ))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
@@ -3765,14 +3172,14 @@
         class: "flex",
         "on:click": taskViewModel.closeAndDiscard
       },
-      translations.general.closeButton
+      coreViewModel2.translations.general.closeButton
     ), /* @__PURE__ */ createElement(
       "button",
       {
         class: "flex primary",
         "on:click": taskViewModel.closeAndSave
       },
-      translations.general.saveButton,
+      coreViewModel2.translations.general.saveButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "save")
     ))));
   }
@@ -3829,7 +3236,7 @@
   };
 
   // src/View/ChatPages/calendarPage.tsx
-  function CalendarPage(calendarPageViewModel) {
+  function CalendarPage(coreViewModel2, calendarPageViewModel) {
     calendarPageViewModel.loadData();
     const mainContent = createProxyState(
       [calendarPageViewModel.monthGrid],
@@ -3846,6 +3253,7 @@
             );
           };
           return MonthGrid2(
+            coreViewModel2,
             monthGrid,
             calendarPageViewModel.selectedDate,
             drop
@@ -3868,7 +3276,7 @@
             [listState],
             () => {
               if (listState.value.size == 0) {
-                return /* @__PURE__ */ createElement("div", { class: "width-100 height-100 flex-column justify-center align-center" }, /* @__PURE__ */ createElement("span", { class: "secondary slide-up" }, translations.chatPage.calendar.noEvents));
+                return /* @__PURE__ */ createElement("div", { class: "width-100 height-100 flex-column justify-center align-center" }, /* @__PURE__ */ createElement("span", { class: "secondary slide-up" }, coreViewModel2.translations.chatPage.calendar.noEvents));
               } else {
                 return /* @__PURE__ */ createElement(
                   "div",
@@ -3901,6 +3309,7 @@
         } else {
           setFocusWithDelay();
           return TaskSettingsModal(
+            coreViewModel2,
             calendarPageViewModel.selectedTaskViewModel.value
           );
         }
@@ -3910,7 +3319,7 @@
       "button",
       {
         class: "ghost",
-        "aria-label": translations.chatPage.calendar.todayButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.calendar.todayButtonAudioLabel,
         "on:click": calendarPageViewModel.showToday
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "today")
@@ -3918,7 +3327,7 @@
       "button",
       {
         class: "ghost",
-        "aria-label": translations.chatPage.calendar.previousMonthButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.calendar.previousMonthButtonAudioLabel,
         "on:click": calendarPageViewModel.showPreviousMonth
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_back")
@@ -3927,8 +3336,8 @@
       {
         class: "year-input",
         type: "number",
-        "aria-label": translations.chatPage.calendar.yearInputAudioLabel,
-        placeholder: translations.chatPage.calendar.yearInputPlaceholder,
+        "aria-label": coreViewModel2.translations.chatPage.calendar.yearInputAudioLabel,
+        placeholder: coreViewModel2.translations.chatPage.calendar.yearInputPlaceholder,
         "bind:value": calendarPageViewModel.selectedYear
       }
     ), /* @__PURE__ */ createElement(
@@ -3936,15 +3345,15 @@
       {
         class: "month-input",
         type: "number",
-        "aria-label": translations.chatPage.calendar.monthInputAudioLabel,
-        placeholder: translations.chatPage.calendar.monthInputPlaceholder,
+        "aria-label": coreViewModel2.translations.chatPage.calendar.monthInputAudioLabel,
+        placeholder: coreViewModel2.translations.chatPage.calendar.monthInputPlaceholder,
         "bind:value": calendarPageViewModel.selectedMonth
       }
     )), /* @__PURE__ */ createElement(
       "button",
       {
         class: "ghost",
-        "aria-label": translations.chatPage.calendar.nextMonthButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.calendar.nextMonthButtonAudioLabel,
         "on:click": calendarPageViewModel.showNextMonth
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
@@ -3952,7 +3361,7 @@
       "button",
       {
         class: "ghost",
-        "aria-label": translations.chatPage.task.createTaskButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.task.createTaskButtonAudioLabel,
         "on:click": calendarPageViewModel.createEvent
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "add")
@@ -4012,7 +3421,7 @@
   }
 
   // src/View/Components/messageReactionButton.tsx
-  function MessageReactionButton(chatMessageViewModel, content) {
+  function MessageReactionButton(coreViewModel2, chatMessageViewModel, content) {
     let audioLabel;
     let count;
     let reactionState;
@@ -4029,37 +3438,37 @@
     }
     switch (content) {
       case "\u{1F44D}" /* ThumbsUp */: {
-        audioLabel = translations.chatPage.message.thumbsUpReaction;
+        audioLabel = coreViewModel2.translations.chatPage.message.thumbsUpReaction;
         count = chatMessageViewModel.reactionsThumbsUpCount;
         reactionState = chatMessageViewModel.reactionsThumbsUp;
         break;
       }
       case "\u2705" /* Check */: {
-        audioLabel = translations.chatPage.message.checkReaction;
+        audioLabel = coreViewModel2.translations.chatPage.message.checkReaction;
         count = chatMessageViewModel.reactionsCheckCount;
         reactionState = chatMessageViewModel.reactionsCheck;
         break;
       }
       case "\u{1F6D1}" /* Stop */: {
-        audioLabel = translations.chatPage.message.stopReaction;
+        audioLabel = coreViewModel2.translations.chatPage.message.stopReaction;
         count = chatMessageViewModel.reactionsStopCount;
         reactionState = chatMessageViewModel.reactionsStop;
         break;
       }
       case "\u2757\uFE0F" /* Attention */: {
-        audioLabel = translations.chatPage.message.attentionReaction;
+        audioLabel = coreViewModel2.translations.chatPage.message.attentionReaction;
         count = chatMessageViewModel.reactionsAttentionCount;
         reactionState = chatMessageViewModel.reactionsAttention;
         break;
       }
       case "\u203C\uFE0F" /* DoubleAttention */: {
-        audioLabel = translations.chatPage.message.doubleAttentionReaction;
+        audioLabel = coreViewModel2.translations.chatPage.message.doubleAttentionReaction;
         count = chatMessageViewModel.reactionsDoubleAttentionCount;
         reactionState = chatMessageViewModel.reactionsDoubleAttention;
         break;
       }
       case "\u2753" /* Question */: {
-        audioLabel = translations.chatPage.message.questionReaction;
+        audioLabel = coreViewModel2.translations.chatPage.message.questionReaction;
         count = chatMessageViewModel.reactionsQuestionCount;
         reactionState = chatMessageViewModel.reactionsQuestion;
         break;
@@ -4084,17 +3493,29 @@
   }
 
   // src/View/Components/messageReactionButtonRow.tsx
-  function MessageReactionButtonRow(chatMessageViewModel) {
+  function MessageReactionButtonRow(coreViewModel2, chatMessageViewModel) {
     return /* @__PURE__ */ createElement("div", { class: "grid gap width-100 message-reaction-row" }, MessageReactionButton(
+      coreViewModel2,
       chatMessageViewModel,
       "\u{1F44D}" /* ThumbsUp */
-    ), MessageReactionButton(chatMessageViewModel, "\u2705" /* Check */), MessageReactionButton(chatMessageViewModel, "\u{1F6D1}" /* Stop */), MessageReactionButton(
+    ), MessageReactionButton(
+      coreViewModel2,
+      chatMessageViewModel,
+      "\u2705" /* Check */
+    ), MessageReactionButton(
+      coreViewModel2,
+      chatMessageViewModel,
+      "\u{1F6D1}" /* Stop */
+    ), MessageReactionButton(
+      coreViewModel2,
       chatMessageViewModel,
       "\u2757\uFE0F" /* Attention */
     ), MessageReactionButton(
+      coreViewModel2,
       chatMessageViewModel,
       "\u203C\uFE0F" /* DoubleAttention */
     ), MessageReactionButton(
+      coreViewModel2,
       chatMessageViewModel,
       "\u2753" /* Question */
     ));
@@ -4112,35 +3533,38 @@
   }
 
   // src/View/Modals/chatMessageInfoModal.tsx
-  function ChatMessageInfoModal(chatMessageViewModel) {
+  function ChatMessageInfoModal(coreViewModel2, chatMessageViewModel) {
     return /* @__PURE__ */ createElement(
       "div",
       {
         class: "modal",
         "toggle:open": chatMessageViewModel.isPresentingInfoModal
       },
-      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.message.messageInfoHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile(
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.message.messageInfoHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile(
         "account_circle",
-        translations.chatPage.message.sentBy,
+        coreViewModel2.translations.chatPage.message.sentBy,
         chatMessageViewModel.sender
       ), InfoTile(
         "schedule",
-        translations.chatPage.message.timeSent,
+        coreViewModel2.translations.chatPage.message.timeSent,
         chatMessageViewModel.dateSent
       ), InfoTile(
         "forum",
-        translations.chatPage.message.channel,
+        coreViewModel2.translations.chatPage.message.channel,
         chatMessageViewModel.channel
       ), InfoTile(
         "description",
-        translations.chatPage.message.messageContent,
+        coreViewModel2.translations.chatPage.message.messageContent,
         chatMessageViewModel.body
-      )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), MessageReactionButtonRow(chatMessageViewModel)), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, coreViewModel2.translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, coreViewModel2.translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, coreViewModel2.translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), MessageReactionButtonRow(
+        coreViewModel2,
+        chatMessageViewModel
+      )), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
 
   // src/View/Components/chatMessage.tsx
-  function ChatMessage4(chatMessageViewModel) {
+  function ChatMessage4(coreViewModel2, chatMessageViewModel) {
     const statusIcon = createProxyState(
       [chatMessageViewModel.status],
       () => {
@@ -4178,21 +3602,21 @@
         "button",
         {
           "on:click": chatMessageViewModel.showInfoModal,
-          "aria-label": translations.chatPage.message.showMessageInfoButtonAudioLabel
+          "aria-label": coreViewModel2.translations.chatPage.message.showMessageInfoButtonAudioLabel
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "info")
       ))),
-      MessageReactionButtonRow(chatMessageViewModel),
-      ChatMessageInfoModal(chatMessageViewModel)
+      MessageReactionButtonRow(coreViewModel2, chatMessageViewModel),
+      ChatMessageInfoModal(coreViewModel2, chatMessageViewModel)
     );
   }
-  var ChatMessageViewModelToView = (chatMessageViewModel) => {
-    return ChatMessage4(chatMessageViewModel);
-  };
 
   // src/View/ChatPages/messagePage.tsx
-  function MessagePage(messagePageViewModel) {
+  function MessagePage(coreViewModel2, messagePageViewModel) {
     messagePageViewModel.loadData();
+    const ChatMessageViewModelToView = (chatMessageViewModel) => {
+      return ChatMessage4(coreViewModel2, chatMessageViewModel);
+    };
     const messageContainer = /* @__PURE__ */ createElement(
       "div",
       {
@@ -4219,18 +3643,18 @@
       scrollDownIfApplicable
     );
     setTimeout(() => scrollDown(true), 100);
-    return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, translations.chatPage.message.messagesHeadline)), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.message.messagesHeadline)), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": messagePageViewModel.composingMessage,
         "on:enter": messagePageViewModel.sendMessage,
-        placeholder: translations.chatPage.message.composerInputPlaceholder
+        placeholder: coreViewModel2.translations.chatPage.message.composerInputPlaceholder
       }
     ), /* @__PURE__ */ createElement(
       "button",
       {
         class: "primary",
-        "aria-label": translations.chatPage.message.sendMessageButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.message.sendMessageButtonAudioLabel,
         "on:click": messagePageViewModel.sendMessage,
         "toggle:disabled": messagePageViewModel.cannotSendMessage
       },
@@ -4262,12 +3686,12 @@
   }
 
   // src/View/Components/deletableListItem.tsx
-  function DeletableListItem(text, primaryButton, ondelete) {
+  function DeletableListItem(coreViewModel2, text, primaryButton, ondelete) {
     return /* @__PURE__ */ createElement("div", { class: "tile flex-row justify-apart align-center padding-0" }, /* @__PURE__ */ createElement("span", { class: "padding-h ellipsis" }, text), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end" }, primaryButton, /* @__PURE__ */ createElement(
       "button",
       {
         class: "danger",
-        "aria-label": translations.general.deleteItemButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.general.deleteItemButtonAudioLabel,
         "on:click": ondelete
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "delete")
@@ -4275,14 +3699,19 @@
   }
 
   // src/View/ChatPages/settingsPage.tsx
-  function SettingsPage(settingsPageViewModel) {
+  function SettingsPage(coreViewModel2, settingsPageViewModel) {
     settingsPageViewModel.loadData();
     const secondaryChannelConverter = (secondaryChannel) => {
-      return DeletableListItem(secondaryChannel, /* @__PURE__ */ createElement("span", null), () => {
-        settingsPageViewModel.removeSecondaryChannel(secondaryChannel);
-      });
+      return DeletableListItem(
+        coreViewModel2,
+        secondaryChannel,
+        /* @__PURE__ */ createElement("span", null),
+        () => {
+          settingsPageViewModel.removeSecondaryChannel(secondaryChannel);
+        }
+      );
     };
-    return /* @__PURE__ */ createElement("div", { id: "settings-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, translations.chatPage.settings.settingsHeadline)), /* @__PURE__ */ createElement("div", { class: "content" }, /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.settings.primaryChannelLabel), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { id: "settings-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.settings.settingsHeadline)), /* @__PURE__ */ createElement("div", { class: "content" }, /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.settings.primaryChannelLabel), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": settingsPageViewModel.primaryChannelInput,
@@ -4292,17 +3721,17 @@
       "button",
       {
         class: "width-50",
-        "aria-label": translations.chatPage.settings.setPrimaryChannelButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.settings.setPrimaryChannelButtonAudioLabel,
         "on:click": settingsPageViewModel.setPrimaryChannel,
         "toggle:disabled": settingsPageViewModel.cannotSetPrimaryChannel
       },
-      translations.general.setButton,
+      coreViewModel2.translations.general.setButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "check")
     )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row width-input margin-bottom" }, /* @__PURE__ */ createElement(
       "input",
       {
-        "aria-label": translations.chatPage.settings.newSecondaryChannelAudioLabel,
-        placeholder: translations.chatPage.settings.newSecondaryChannelPlaceholder,
+        "aria-label": coreViewModel2.translations.chatPage.settings.newSecondaryChannelAudioLabel,
+        placeholder: coreViewModel2.translations.chatPage.settings.newSecondaryChannelPlaceholder,
         "bind:value": settingsPageViewModel.newSecondaryChannelInput,
         "on:enter": settingsPageViewModel.addSecondaryChannel
       }
@@ -4310,7 +3739,7 @@
       "button",
       {
         class: "primary",
-        "aria-label": translations.chatPage.settings.addSecondaryChannelButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.settings.addSecondaryChannelButtonAudioLabel,
         "on:click": settingsPageViewModel.addSecondaryChannel,
         "toggle:disabled": settingsPageViewModel.cannotAddSecondaryChannel
       },
@@ -4324,7 +3753,7 @@
           secondaryChannelConverter
         ]
       }
-    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.settings.encryptionKeyLabel), /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.settings.encryptionKeyLabel), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": settingsPageViewModel.encryptionKeyInput,
@@ -4335,11 +3764,11 @@
       "button",
       {
         class: "width-50",
-        "aria-label": translations.chatPage.settings.setEncryptionKeyButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.settings.setEncryptionKeyButtonAudioLabel,
         "on:click": settingsPageViewModel.setEncryptionKey,
         "toggle:disabled": settingsPageViewModel.cannotSetEncryptionKey
       },
-      translations.general.setButton,
+      coreViewModel2.translations.general.setButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "check")
     )), /* @__PURE__ */ createElement("label", { class: "inline" }, /* @__PURE__ */ createElement(
       "input",
@@ -4347,8 +3776,9 @@
         type: "checkbox",
         "bind:checked": settingsPageViewModel.shouldShowEncryptionKey
       }
-    ), translations.chatPage.settings.showEncryptionKey), /* @__PURE__ */ createElement("hr", null), ColorPicker(settingsPageViewModel.color), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
-      translations.chatPage.settings.deleteChatButton,
+    ), coreViewModel2.translations.chatPage.settings.showEncryptionKey), /* @__PURE__ */ createElement("hr", null), ColorPicker(settingsPageViewModel.color), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
+      coreViewModel2,
+      coreViewModel2.translations.chatPage.settings.deleteChatButton,
       "chat_error",
       settingsPageViewModel.remove
     ))))));
@@ -4462,7 +3892,7 @@
   };
 
   // src/View/ChatPages/boardKanbanPage.tsx
-  function BoardKanbanPage(boardViewModel) {
+  function BoardKanbanPage(coreViewModel2, boardViewModel) {
     return PropertyValueList(
       "category",
       (taskViewModel) => taskViewModel.task,
@@ -4473,7 +3903,12 @@
             sortedCategories,
             categoryName
           );
-          return Column(categoryName, index, boardViewModel);
+          return Column(
+            coreViewModel2,
+            categoryName,
+            index,
+            boardViewModel
+          );
         };
         return /* @__PURE__ */ createElement(
           "div",
@@ -4485,7 +3920,7 @@
       }
     );
   }
-  function Column(categoryName, index, boardViewModel) {
+  function Column(coreViewModel2, categoryName, index, boardViewModel) {
     return FilteredList(
       { category: categoryName },
       (taskViewModel) => taskViewModel.task,
@@ -4508,7 +3943,7 @@
           /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
             "input",
             {
-              placeholder: translations.chatPage.task.renameCategoryInputPlaceholder,
+              placeholder: coreViewModel2.translations.chatPage.task.renameCategoryInputPlaceholder,
               "bind:value": viewModel.inputValue,
               "on:enter": viewModel.set
             }
@@ -4539,29 +3974,30 @@
   }
 
   // src/View/Modals/boardSettingsModal.tsx
-  function BoardSettingsModal(boardViewModel) {
+  function BoardSettingsModal(coreViewModel2, boardViewModel) {
     return /* @__PURE__ */ createElement(
       "div",
       {
         class: "modal",
         "toggle:open": boardViewModel.isPresentingSettingsModal
       },
-      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.task.boardSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.chatPage.task.boardNameInputLabel), /* @__PURE__ */ createElement(
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.task.boardSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.boardNameInputLabel), /* @__PURE__ */ createElement(
         "input",
         {
           "on:enter": boardViewModel.saveSettings,
           "bind:value": boardViewModel.name
         }
       ))), /* @__PURE__ */ createElement("hr", null), ColorPicker(boardViewModel.color), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
-        translations.chatPage.task.deleteBoardButton,
+        coreViewModel2,
+        coreViewModel2.translations.chatPage.task.deleteBoardButton,
         "delete_forever",
         boardViewModel.deleteBoard
-      ))), /* @__PURE__ */ createElement("button", { "on:click": boardViewModel.hideSettings }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      ))), /* @__PURE__ */ createElement("button", { "on:click": boardViewModel.hideSettings }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
 
   // src/View/ChatPages/boardStatusGridPage.tsx
-  function BoardStatusGridPage(boardViewModel) {
+  function BoardStatusGridPage(coreViewModel2, boardViewModel) {
     const statuses = new ListState();
     const sortedStatuses = createSortedPropertyValueState(statuses);
     boardViewModel.filteredTaskViewModels.subscribe(() => {
@@ -4574,7 +4010,7 @@
     });
     const statusNameCellConverter = (statusName) => {
       const index = createPropertyValueIndexState(sortedStatuses, statusName);
-      return StatusNameCell(statusName, index, boardViewModel);
+      return StatusNameCell(coreViewModel2, statusName, index, boardViewModel);
     };
     return /* @__PURE__ */ createElement("div", { class: "status-page-content" }, /* @__PURE__ */ createElement(
       "div",
@@ -4593,6 +4029,7 @@
             categoryName
           );
           return CategoryRow(
+            coreViewModel2,
             categoryName,
             index,
             statuses,
@@ -4610,7 +4047,7 @@
       }
     ));
   }
-  function StatusNameCell(statusName, index, boardViewModel) {
+  function StatusNameCell(coreViewModel2, statusName, index, boardViewModel) {
     const taskViewModelsWithMatchingStatus = new ListState();
     boardViewModel.filteredTaskViewModels.handleAddition(
       (taskViewModel) => {
@@ -4632,7 +4069,7 @@
     const view = /* @__PURE__ */ createElement("div", { class: "flex-row" }, /* @__PURE__ */ createElement("div", { class: "property-input-wrapper" }, /* @__PURE__ */ createElement(
       "input",
       {
-        placeholder: translations.chatPage.task.renameStatusInputPlaceholder,
+        placeholder: coreViewModel2.translations.chatPage.task.renameStatusInputPlaceholder,
         "bind:value": viewModel.inputValue,
         "on:enter": viewModel.set
       }
@@ -4650,7 +4087,7 @@
     });
     return view;
   }
-  function CategoryRow(categoryName, index, allStatuses, sortedStatuses, boardViewModel) {
+  function CategoryRow(coreViewModel2, categoryName, index, allStatuses, sortedStatuses, boardViewModel) {
     return FilteredList(
       { category: categoryName },
       (taskViewModel) => taskViewModel.task,
@@ -4676,7 +4113,7 @@
         const view = /* @__PURE__ */ createElement("div", { class: "flex-row flex-no large-gap" }, /* @__PURE__ */ createElement("div", { class: "property-input-wrapper" }, /* @__PURE__ */ createElement(
           "input",
           {
-            placeholder: translations.chatPage.task.renameCategoryInputPlaceholder,
+            placeholder: coreViewModel2.translations.chatPage.task.renameCategoryInputPlaceholder,
             "bind:value": viewModel.inputValue,
             "on:enter": viewModel.set
           }
@@ -4743,7 +4180,7 @@
   }
 
   // src/View/Modals/searchModal.tsx
-  function SearchModal(searchViewModel, headline, converter, isOpen) {
+  function SearchModal(coreViewModel2, searchViewModel, headline, converter, isOpen) {
     function close() {
       isOpen.value = false;
     }
@@ -4751,7 +4188,7 @@
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isOpen }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, headline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
-        placeholder: translations.general.searchLabel,
+        placeholder: coreViewModel2.translations.general.searchLabel,
         "bind:value": searchViewModel.searchInput,
         "on:enter": searchViewModel.applySearch,
         list: suggestionId
@@ -4770,7 +4207,7 @@
       "button",
       {
         class: "primary",
-        "aria-label": translations.general.searchButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.general.searchButtonAudioLabel,
         "on:click": searchViewModel.applySearch,
         "toggle:disabled": searchViewModel.cannotApplySearch
       },
@@ -4785,21 +4222,21 @@
           converter
         ]
       }
-    )), /* @__PURE__ */ createElement("button", { "on:click": close }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )), /* @__PURE__ */ createElement("button", { "on:click": close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/View/ChatPages/boardPage.tsx
-  function BoardPage(boardViewModel) {
+  function BoardPage(coreViewModel2, boardViewModel) {
     boardViewModel.loadData();
     const mainContent = createProxyState(
       [boardViewModel.selectedPage],
       () => {
         switch (boardViewModel.selectedPage.value) {
           case "kanban" /* Kanban */: {
-            return BoardKanbanPage(boardViewModel);
+            return BoardKanbanPage(coreViewModel2, boardViewModel);
           }
           case "status-grid" /* StatusGrid */: {
-            return BoardStatusGridPage(boardViewModel);
+            return BoardStatusGridPage(coreViewModel2, boardViewModel);
           }
           default: {
             return /* @__PURE__ */ createElement(
@@ -4824,6 +4261,7 @@
         } else {
           setFocusWithDelay();
           return TaskSettingsModal(
+            coreViewModel2,
             boardViewModel.selectedTaskViewModel.value
           );
         }
@@ -4833,7 +4271,7 @@
       "button",
       {
         class: "ghost board-close-button",
-        "aria-label": translations.chatPage.task.closeBoardButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.task.closeBoardButtonAudioLabel,
         "on:click": boardViewModel.close
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_back")
@@ -4841,7 +4279,7 @@
       "button",
       {
         class: "ghost board-toggle-button inset-outline",
-        "aria-label": translations.chatPage.task.toggleBoardButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.task.toggleBoardButtonAudioLabel,
         "on:click": boardViewModel.taskPageViewModel.toggleBoardList,
         "toggle:selected": boardViewModel.taskPageViewModel.isShowingBoadList
       },
@@ -4850,22 +4288,22 @@
       "button",
       {
         class: "ghost",
-        "aria-label": translations.chatPage.task.boardSettingsHeadline,
+        "aria-label": coreViewModel2.translations.chatPage.task.boardSettingsHeadline,
         "on:click": boardViewModel.showSettings
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "settings")
     )), /* @__PURE__ */ createElement("span", { class: "scroll-h ribbon" }, BoardViewToggleButton(
-      translations.chatPage.task.listViewButtonAudioLabel,
+      coreViewModel2.translations.chatPage.task.listViewButtonAudioLabel,
       "view_list",
       "list" /* List */,
       boardViewModel
     ), BoardViewToggleButton(
-      translations.chatPage.task.kanbanViewButtonAudioLabel,
+      coreViewModel2.translations.chatPage.task.kanbanViewButtonAudioLabel,
       "view_kanban",
       "kanban" /* Kanban */,
       boardViewModel
     ), BoardViewToggleButton(
-      translations.chatPage.task.statusViewButtonAudioLabel,
+      coreViewModel2.translations.chatPage.task.statusViewButtonAudioLabel,
       "grid_view",
       "status-grid" /* StatusGrid */,
       boardViewModel
@@ -4873,7 +4311,7 @@
       "button",
       {
         class: "ghost",
-        "aria-label": translations.chatPage.task.filterTasksButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.task.filterTasksButtonAudioLabel,
         "on:click": boardViewModel.showFilterModal
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "filter_alt")
@@ -4881,13 +4319,14 @@
       "button",
       {
         class: "ghost",
-        "aria-label": translations.chatPage.task.createTaskButtonAudioLabel,
+        "aria-label": coreViewModel2.translations.chatPage.task.createTaskButtonAudioLabel,
         "on:click": boardViewModel.createTask
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "add")
-    ))), /* @__PURE__ */ createElement("div", { class: "content main-content", "children:set": mainContent }), BoardSettingsModal(boardViewModel), SearchModal(
+    ))), /* @__PURE__ */ createElement("div", { class: "content main-content", "children:set": mainContent }), BoardSettingsModal(coreViewModel2, boardViewModel), SearchModal(
+      coreViewModel2,
       boardViewModel.searchViewModel,
-      translations.chatPage.task.filterTasksHeadline,
+      coreViewModel2.translations.chatPage.task.filterTasksHeadline,
       TaskViewModelToEntry,
       boardViewModel.isPresentingFilterModal
     ), /* @__PURE__ */ createElement("div", { "children:set": taskSettingsModal }));
@@ -4924,7 +4363,7 @@
   };
 
   // src/View/ChatPages/taskPage.tsx
-  function TaskPage(taskPageViewModel) {
+  function TaskPage(coreViewModel2, taskPageViewModel) {
     taskPageViewModel.loadData();
     const isShowingBoard = createProxyState(
       [taskPageViewModel.selectedBoardId],
@@ -4935,13 +4374,13 @@
       () => {
         const selectedBoardId = taskPageViewModel.selectedBoardId.value;
         if (selectedBoardId == void 0) {
-          return /* @__PURE__ */ createElement("div", { class: "pane align-center justify-center" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.chatPage.task.noBoardSelected));
+          return /* @__PURE__ */ createElement("div", { class: "pane align-center justify-center" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.chatPage.task.noBoardSelected));
         }
         const selectedBoard = taskPageViewModel.boardViewModels.value.get(selectedBoardId);
         if (selectedBoard == void 0) {
-          return /* @__PURE__ */ createElement("div", { class: "pane align-center justify-center" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.chatPage.task.boardNotFound));
+          return /* @__PURE__ */ createElement("div", { class: "pane align-center justify-center" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.chatPage.task.boardNotFound));
         }
-        return BoardPage(selectedBoard);
+        return BoardPage(coreViewModel2, selectedBoard);
       }
     );
     return /* @__PURE__ */ createElement(
@@ -4964,13 +4403,13 @@
             class: "no-outline",
             "bind:value": taskPageViewModel.newBoardNameInput,
             "on:enter": taskPageViewModel.createBoard,
-            placeholder: translations.chatPage.task.newBoardNamePlaceholder
+            placeholder: coreViewModel2.translations.chatPage.task.newBoardNamePlaceholder
           }
         ), /* @__PURE__ */ createElement(
           "button",
           {
             class: "primary",
-            "aria-label": translations.chatPage.task.createBoardButtonAudioLabel,
+            "aria-label": coreViewModel2.translations.chatPage.task.createBoardButtonAudioLabel,
             "on:click": taskPageViewModel.createBoard,
             "toggle:disabled": taskPageViewModel.cannotCreateBoard
           },
@@ -4999,23 +4438,35 @@
   }
 
   // src/View/chatPage.tsx
-  function ChatPage(chatViewModel) {
+  function ChatPage(coreViewModel2, chatViewModel) {
     const mainContent = createProxyState(
       [chatViewModel.selectedPage],
       () => {
         chatViewModel.closeSubPages();
         switch (chatViewModel.selectedPage.value) {
           case "settings" /* Settings */: {
-            return SettingsPage(chatViewModel.settingsPageViewModel);
+            return SettingsPage(
+              coreViewModel2,
+              chatViewModel.settingsPageViewModel
+            );
           }
           case "tasks" /* Tasks */: {
-            return TaskPage(chatViewModel.taskPageViewModel);
+            return TaskPage(
+              coreViewModel2,
+              chatViewModel.taskPageViewModel
+            );
           }
           case "calendar" /* Calendar */: {
-            return CalendarPage(chatViewModel.calendarViewModel);
+            return CalendarPage(
+              coreViewModel2,
+              chatViewModel.calendarViewModel
+            );
           }
           default: {
-            return MessagePage(chatViewModel.messagePageViewModel);
+            return MessagePage(
+              coreViewModel2,
+              chatViewModel.messagePageViewModel
+            );
           }
         }
       }
@@ -5047,7 +4498,7 @@
         "button",
         {
           class: "ghost",
-          "aria-label": translations.chatPage.closeChatAudioLabe,
+          "aria-label": coreViewModel2.translations.chatPage.closeChatAudioLabe,
           "on:click": chatViewModel.close
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "close")
@@ -5055,28 +4506,28 @@
         "button",
         {
           class: "danger",
-          "aria-label": translations.general.restoreConnection,
+          "aria-label": coreViewModel2.translations.general.restoreConnection,
           "on:click": chatViewModel.connectionViewModel.showConnectionModal,
           "toggle:hidden": chatViewModel.connectionViewModel.isConnected
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "signal_disconnected")
       ), /* @__PURE__ */ createElement("span", { class: "marquee", "children:set": marqueeContent }), /* @__PURE__ */ createElement("span", { class: "navigation-buttons" }, ChatViewToggleButton(
-        translations.chatPage.pages.calendar,
+        coreViewModel2.translations.chatPage.pages.calendar,
         "calendar_month",
         "calendar" /* Calendar */,
         chatViewModel
       ), ChatViewToggleButton(
-        translations.chatPage.pages.tasks,
+        coreViewModel2.translations.chatPage.pages.tasks,
         "task_alt",
         "tasks" /* Tasks */,
         chatViewModel
       ), ChatViewToggleButton(
-        translations.chatPage.pages.messages,
+        coreViewModel2.translations.chatPage.pages.messages,
         "forum",
         "messages" /* Messages */,
         chatViewModel
       ), ChatViewToggleButton(
-        translations.chatPage.pages.settings,
+        coreViewModel2.translations.chatPage.pages.settings,
         "settings",
         "settings" /* Settings */,
         chatViewModel
@@ -5085,14 +4536,17 @@
   }
 
   // src/View/chatPageWrapper.tsx
-  function ChatPageWrapper(chatListViewModel2) {
+  function ChatPageWrapper(coreViewModel2, chatListViewModel2) {
     const chatPageContent = createProxyState(
       [chatListViewModel2.selectedChat],
       () => {
         if (chatListViewModel2.selectedChat.value == void 0) {
           return /* @__PURE__ */ createElement("div", null);
         } else {
-          return ChatPage(chatListViewModel2.selectedChat.value);
+          return ChatPage(
+            coreViewModel2,
+            chatListViewModel2.selectedChat.value
+          );
         }
       }
     );
@@ -5100,16 +4554,17 @@
   }
 
   // src/View/Modals/connectionModal.tsx
-  function ConnectionModal(connectionViewModel2) {
+  function ConnectionModal(coreViewModel2, connectionViewModel2) {
     const previousAddressConverter = (address) => {
       function connnect() {
         connectionViewModel2.connectToAddress(address);
       }
       const cannotConnect = createProxyState(
         [connectionViewModel2.isConnected],
-        () => connectionViewModel2.isConnected.value == true && connectionViewModel2.connectionModel.address == address
+        () => connectionViewModel2.isConnected.value == true && connectionViewModel2.coreViewModel.connectionModel.address == address
       );
       return DeletableListItem(
+        coreViewModel2,
         address,
         /* @__PURE__ */ createElement(
           "button",
@@ -5117,7 +4572,7 @@
             class: "primary",
             "on:click": connnect,
             "toggle:disabled": cannotConnect,
-            "aria-label": translations.connectionModal.connectButtonAudioLabel
+            "aria-label": coreViewModel2.translations.connectionModal.connectButtonAudioLabel
           },
           /* @__PURE__ */ createElement("span", { class: "icon" }, "link")
         ),
@@ -5132,7 +4587,7 @@
         class: "modal",
         "toggle:open": connectionViewModel2.isShowingConnectionModal
       },
-      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.connectionModal.connectionModalHeadline), /* @__PURE__ */ createElement(
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.connectionModal.connectionModalHeadline), /* @__PURE__ */ createElement(
         "div",
         {
           class: "flex-column gap",
@@ -5141,7 +4596,7 @@
             previousAddressConverter
           ]
         }
-      )), /* @__PURE__ */ createElement("button", { "on:click": connectionViewModel2.hideConnectionModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      )), /* @__PURE__ */ createElement("button", { "on:click": connectionViewModel2.hideConnectionModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
 
@@ -5469,8 +4924,8 @@
   // src/ViewModel/Global/connectionViewModel.ts
   var ConnectionViewModel = class {
     // init
-    constructor(coreViewModel, connectionModel2) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2) {
+      this.coreViewModel = coreViewModel2;
       // state
       this.serverAddressInput = new State("");
       this.isConnected = new State(false);
@@ -5479,7 +4934,7 @@
       // guards
       this.cannotConnect = createProxyState(
         [this.serverAddressInput, this.isConnected],
-        () => this.isConnected.value == true && this.serverAddressInput.value == this.connectionModel.address || this.serverAddressInput.value == ""
+        () => this.isConnected.value == true && this.serverAddressInput.value == this.coreViewModel.connectionModel.address || this.serverAddressInput.value == ""
       );
       this.cannotDisonnect = createProxyState(
         [this.isConnected],
@@ -5491,12 +4946,16 @@
       );
       // handlers
       this.connectionChangeHandler = () => {
-        this.isConnected.value = this.connectionModel.isConnected;
-        if (this.connectionModel.isConnected == false) return;
-        if (this.connectionModel.address == void 0) return;
-        this.serverAddressInput.value = this.connectionModel.address;
-        if (!this.previousAddresses.value.has(this.connectionModel.address)) {
-          this.previousAddresses.add(this.connectionModel.address);
+        this.isConnected.value = this.coreViewModel.connectionModel.isConnected;
+        if (this.coreViewModel.connectionModel.isConnected == false) return;
+        if (this.coreViewModel.connectionModel.address == void 0) return;
+        this.serverAddressInput.value = this.coreViewModel.connectionModel.address;
+        if (!this.previousAddresses.value.has(
+          this.coreViewModel.connectionModel.address
+        )) {
+          this.previousAddresses.add(
+            this.coreViewModel.connectionModel.address
+          );
         }
       };
       // methods
@@ -5505,13 +4964,13 @@
       };
       this.connectToAddress = (address) => {
         console.log(address);
-        this.connectionModel.connect(address);
+        this.coreViewModel.connectionModel.connect(address);
       };
       this.disconnect = () => {
-        this.connectionModel.disconnect();
+        this.coreViewModel.connectionModel.disconnect();
       };
       this.removePreviousAddress = (address) => {
-        this.connectionModel.removeAddress(address);
+        this.coreViewModel.connectionModel.removeAddress(address);
         this.updatePreviousAddresses();
       };
       // view
@@ -5523,20 +4982,619 @@
       };
       this.updatePreviousAddresses = () => {
         this.previousAddresses.clear();
-        this.previousAddresses.add(...this.connectionModel.addresses);
+        this.previousAddresses.add(
+          ...this.coreViewModel.connectionModel.addresses
+        );
       };
-      this.connectionModel = connectionModel2;
       this.updatePreviousAddresses();
-      connectionModel2.connectionChangeHandlerManager.addHandler(
+      coreViewModel2.connectionModel.connectionChangeHandlerManager.addHandler(
         this.connectionChangeHandler
       );
     }
   };
 
+  // src/View/translations.ts
+  var englishTranslations = {
+    updater: {
+      migrated: "Migrated"
+    },
+    general: {
+      deleteItemButtonAudioLabel: "delete item",
+      searchButtonAudioLabel: "search",
+      abortButton: "Abort",
+      cancelButton: "Cancel",
+      closeButton: "Close",
+      backButton: "Back",
+      continueButton: "Continue",
+      confirmButton: "Confirm",
+      saveButton: "Save",
+      setButton: "Set",
+      reloadAppButton: "Reload App",
+      fileVersionLabel: "Version",
+      searchLabel: "Search",
+      waitingLabel: "Waiting...",
+      restoreConnection: "Restore connection"
+    },
+    regional: {
+      weekdays: {
+        full: [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ],
+        abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+      }
+    },
+    homePage: {
+      appName: "Comms",
+      ///
+      overviewHeadline: "Overview",
+      serverAddress: "Server address",
+      serverAddressPlaceholder: "wss://192.168.0.69:3000",
+      connectAudioLabel: "connect to server",
+      disconnectAudioLabel: "disconnect from server",
+      manageConnectionsAudioLabel: "manage connections",
+      yourNameLabel: "Your name",
+      yourNamePlaceholder: "Jane Doe",
+      setNameButtonAudioLabel: "set name",
+      settingsButton: "Settings",
+      manageStorageButton: "Manage storage",
+      transferDataButton: "Data Transfer",
+      scrollToChatButton: "Chats",
+      ///
+      backToOverviewAudioLabel: "go back to overview",
+      chatsHeadline: "Chats",
+      addChatAudioLabel: "name of new chat",
+      addChatPlaceholder: "Add chat",
+      addChatButton: "Add chat"
+    },
+    settings: {
+      pages: {
+        appearance: "Appearance",
+        regional: "Language & Region",
+        info: "About Comms"
+      },
+      version: "Version",
+      language: "Language",
+      firstDayOfWeekLabel: "First day of week"
+    },
+    connectionModal: {
+      connectionModalHeadline: "Manage Connections",
+      ///
+      connectButtonAudioLabel: "connect"
+    },
+    dataTransferModal: {
+      transferDataHeadline: "Data Transfer",
+      selectionDescription: "Select the data that you want to transfer.",
+      dataEntryDescription: "Enter this data on the other device.",
+      dataEntryInputDescription: "Enter the data displayed on the other device.",
+      notConnectedError: "You are not connected to any server.",
+      ///
+      fromThisDeviceButton: "From this device",
+      toThisDeviceButton: "To this device",
+      ///
+      generalHeadline: "General",
+      connectionData: "Connection Data",
+      settingsData: "Settings Data",
+      chatsHeadline: "Chats",
+      ///
+      transferChannelHeadline: "Transfer Chanel",
+      transferKeyHeadline: "Transfer Encryption Key",
+      sendButton: "Send",
+      sendAgainButton: "Send again",
+      ///
+      filesSentCount: (count) => `Files sent: ${count}.`,
+      allFilesSent: "Done.",
+      filesReceivedCount: (count) => `Files received: ${count}.`
+    },
+    storage: {
+      noItemSelected: "No item selected",
+      notAFile: "(not a file)",
+      contentEmpty: "(empty)",
+      path: "Path",
+      content: "Content",
+      deleteItem: "Delete item",
+      removeJunkButton: "Delete junk files"
+    },
+    chatPage: {
+      closeChatAudioLabe: "close chat",
+      chatSettingsAudioLabel: "chat settings",
+      pages: {
+        settings: "Settings",
+        messages: "Messages",
+        tasks: "Tasks",
+        calendar: "Calendar"
+      },
+      settings: {
+        settingsHeadline: "Settings",
+        primaryChannelLabel: "Primary channel",
+        setPrimaryChannelButtonAudioLabel: "set primary channel",
+        newSecondaryChannelPlaceholder: "Add secondary channel",
+        newSecondaryChannelAudioLabel: "name of new secondary channel",
+        addSecondaryChannelButtonAudioLabel: "add secondary channel",
+        encryptionKeyLabel: "Encryption key",
+        setEncryptionKeyButtonAudioLabel: "set encryption key",
+        showEncryptionKey: "Show encryption key",
+        deleteChatButton: "Delete entire chat"
+      },
+      message: {
+        messagesHeadline: "Messages",
+        ///
+        composerInputPlaceholder: "Type a message...",
+        sendMessageButtonAudioLabel: "send message",
+        ///
+        showMessageInfoButtonAudioLabel: "show message info",
+        messageInfoHeadline: "Message Info",
+        sentBy: "Sent by",
+        timeSent: "Time sent",
+        channel: "Channel",
+        messageContent: "Message content",
+        copyMessageButton: "Copy message",
+        resendMessageButton: "Resend message",
+        decryptMessageButton: "Decrypt message",
+        deleteMessageButton: "Delete message",
+        //
+        thumbsUpReaction: "Reaction: thumbs up",
+        checkReaction: "Reaction: check",
+        stopReaction: "Reaction: stop sign",
+        attentionReaction: "Reaction: exclamation mark",
+        doubleAttentionReaction: "Reaction: double exclamation mark",
+        questionReaction: "Reaction: question mark"
+      },
+      task: {
+        newBoardNamePlaceholder: "Create a board",
+        createBoardButtonAudioLabel: "create board",
+        ///
+        noBoardSelected: "No board selected",
+        boardNotFound: "Board not found",
+        ///
+        closeBoardButtonAudioLabel: "close board",
+        toggleBoardButtonAudioLabel: "toggle board list",
+        showBoardSettingsButtonAudioLabel: "show board settigns",
+        listViewButtonAudioLabel: "list view",
+        kanbanViewButtonAudioLabel: "kanban view",
+        statusViewButtonAudioLabel: "status grid view",
+        filterTasksButtonAudioLabel: "filter tasks",
+        createTaskButtonAudioLabel: "create new task",
+        ///
+        boardSettingsHeadline: "Board Settings",
+        boardNameInputLabel: "Board name",
+        deleteBoardButton: "Delete board and all tasks",
+        ///
+        taskSettingsHeadline: "Edit Task",
+        taskNameLabel: "Title",
+        taskBoardLabel: "Board",
+        taskCategoryLabel: "Category",
+        taskStatusLabel: "Status",
+        taskPriorityLabel: "Priority",
+        taskDescriptionLabel: "Description",
+        taskDateLabel: "Date",
+        taskTimeLabel: "Time",
+        deleteTaskButton: "Delete task",
+        ///
+        filterTasksHeadline: "Filter Tasks",
+        ///
+        renameCategoryInputPlaceholder: "Rename category",
+        renameStatusInputPlaceholder: "Rename status"
+      },
+      calendar: {
+        eventsBoard: "Events",
+        ///
+        todayButtonAudioLabel: "go to today",
+        previousMonthButtonAudioLabel: "previous month",
+        nextMonthButtonAudioLabel: "next month",
+        yearInputAudioLabel: "year",
+        monthInputAudioLabel: "month",
+        yearInputPlaceholder: "2000",
+        monthInputPlaceholder: "01",
+        ///
+        searchEventsHeadline: "Search Events",
+        ///
+        events: "Events",
+        noEvents: "No events"
+      }
+    }
+  };
+  var allTranslations = {
+    en: englishTranslations,
+    de: {
+      updater: {
+        migrated: "Migriert"
+      },
+      general: {
+        deleteItemButtonAudioLabel: "element l\xF6schen",
+        searchButtonAudioLabel: "suchen",
+        abortButton: "Abbrechen",
+        cancelButton: "Abbrechen",
+        closeButton: "Schlie\xDFen",
+        backButton: "Zur\xFCck",
+        continueButton: "Weiter",
+        confirmButton: "Best\xE4tigen",
+        saveButton: "Speichern",
+        setButton: "OK",
+        reloadAppButton: "Neu laden",
+        fileVersionLabel: "Version",
+        searchLabel: "Suche",
+        waitingLabel: "Warten...",
+        restoreConnection: "Verbindung wiederherstellen"
+      },
+      regional: {
+        weekdays: {
+          full: [
+            "Sonntag",
+            "Montag",
+            "Dienstag",
+            "Mittwoch",
+            "Donnerstag",
+            "Freitag",
+            "Samstag"
+          ],
+          abbreviated: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
+        }
+      },
+      homePage: {
+        appName: "Comms",
+        overviewHeadline: "\xDCbersicht",
+        serverAddress: "Serveradresse",
+        serverAddressPlaceholder: "wss://192.168.0.69:3000",
+        connectAudioLabel: "mit Server verbinden",
+        disconnectAudioLabel: "vom Server trennen",
+        manageConnectionsAudioLabel: "Verbindungen verwalten",
+        yourNameLabel: "Dein Name",
+        yourNamePlaceholder: "Max Mustermann",
+        setNameButtonAudioLabel: "Name speichern",
+        settingsButton: "Einstellungen",
+        manageStorageButton: "Daten verwalten",
+        transferDataButton: "Daten\xFCbertragung",
+        scrollToChatButton: "Chats",
+        backToOverviewAudioLabel: "zur\xFCck zur \xFCbersicht",
+        chatsHeadline: "Chats",
+        addChatAudioLabel: "Name des neuen Chats",
+        addChatPlaceholder: "Chat hinzuf\xFCgen",
+        addChatButton: "Chat hinzuf\xFCgen"
+      },
+      settings: {
+        pages: {
+          appearance: "Erscheinungsbild",
+          regional: "Sprache & Region",
+          info: "\xDCber Comms"
+        },
+        version: "Version",
+        language: "Sprache",
+        firstDayOfWeekLabel: "Erster Wochentag"
+      },
+      connectionModal: {
+        connectionModalHeadline: "Verbindungen verwalten",
+        connectButtonAudioLabel: "verbinden"
+      },
+      dataTransferModal: {
+        transferDataHeadline: "Daten\xFCbertragung",
+        selectionDescription: "W\xE4hle die Daten aus, die du \xFCbertragen m\xF6chtest.",
+        dataEntryDescription: "Gib diese Informationen auf dem anderen Ger\xE4t ein.",
+        dataEntryInputDescription: "Gib die auf dem anderen Ger\xE4t angezeigten Informationen ein.",
+        notConnectedError: "Du bist mit keinem Server verbunden.",
+        fromThisDeviceButton: "Von diesem Ger\xE4t",
+        toThisDeviceButton: "An dieses Ger\xE4t",
+        generalHeadline: "Allgemein",
+        connectionData: "Verbindungsdaten",
+        settingsData: "Einstellungen",
+        chatsHeadline: "Chats",
+        transferChannelHeadline: "\xDCbertragungskanal",
+        transferKeyHeadline: "Schl\xFCssel",
+        sendButton: "Senden",
+        sendAgainButton: "Erneut senden",
+        filesSentCount: (count) => `Dateien gesendet: ${count}.`,
+        allFilesSent: "Fertig.",
+        filesReceivedCount: (count) => `Dateien empfangen: ${count}.`
+      },
+      storage: {
+        noItemSelected: "Kein Element ausgew\xE4hlt",
+        notAFile: "(keine Datei)",
+        contentEmpty: "(leer)",
+        path: "Pfad",
+        content: "Inhalt",
+        deleteItem: "Element l\xF6schen",
+        removeJunkButton: "Datenm\xFCll l\xF6schen"
+      },
+      chatPage: {
+        closeChatAudioLabe: "Chat schlie\xDFen",
+        chatSettingsAudioLabel: "Chateinstellungen",
+        pages: {
+          settings: "Einstellungen",
+          messages: "Nachrichten",
+          tasks: "Aufgaben",
+          calendar: "Kalender"
+        },
+        settings: {
+          settingsHeadline: "Einstellungen",
+          primaryChannelLabel: "Hauptkanal",
+          setPrimaryChannelButtonAudioLabel: "Hauptkanal festlegen",
+          newSecondaryChannelPlaceholder: "Sekund\xE4ren Kanal hinzuf\xFCgen",
+          newSecondaryChannelAudioLabel: "Name des neuen sekund\xE4ren Kanals",
+          addSecondaryChannelButtonAudioLabel: "Sekund\xE4ren Kanal hinzuf\xFCgen",
+          encryptionKeyLabel: "Schl\xFCssel",
+          setEncryptionKeyButtonAudioLabel: "Schl\xFCssel festlegen",
+          showEncryptionKey: "Schl\xFCssel anzeigen",
+          deleteChatButton: "Gesamten Chat l\xF6schen"
+        },
+        message: {
+          messagesHeadline: "Nachrichten",
+          composerInputPlaceholder: "Schreib eine Nachricht...",
+          sendMessageButtonAudioLabel: "nachricht senden",
+          showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
+          messageInfoHeadline: "Nachrichteninfo",
+          sentBy: "Gesendet von",
+          timeSent: "Sendezeit",
+          channel: "Kanal",
+          messageContent: "Nachrichteninhalt",
+          copyMessageButton: "Nachricht kopieren",
+          resendMessageButton: "Nachricht erneut senden",
+          decryptMessageButton: "Nachricht entschl\xFCsseln",
+          deleteMessageButton: "Nachricht l\xF6schen",
+          //
+          thumbsUpReaction: "Reaktion: Daumen hoch",
+          checkReaction: "Reaktion: Haken",
+          stopReaction: "Reaktion: Stopp",
+          attentionReaction: "Reaktion: Ausrufezeichen",
+          doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
+          questionReaction: "Reaktion: Fragezeichen"
+        },
+        task: {
+          newBoardNamePlaceholder: "Board erstellen",
+          createBoardButtonAudioLabel: "board erstellen",
+          noBoardSelected: "Kein Board ausgew\xE4hlt",
+          boardNotFound: "Board nicht gefunden",
+          closeBoardButtonAudioLabel: "board schlie\xDFen",
+          toggleBoardButtonAudioLabel: "board-liste ein/ausblenden",
+          showBoardSettingsButtonAudioLabel: "Board-Einstellungen anzeigen",
+          listViewButtonAudioLabel: "Listenansicht",
+          kanbanViewButtonAudioLabel: "Kanban-Ansicht",
+          statusViewButtonAudioLabel: "Statusrasteransicht",
+          filterTasksButtonAudioLabel: "Aufgaben filtern",
+          createTaskButtonAudioLabel: "Neue Aufgabe erstellen",
+          boardSettingsHeadline: "Board-Einstellungen",
+          boardNameInputLabel: "Boardname",
+          deleteBoardButton: "Board und alle Aufgaben l\xF6schen",
+          taskSettingsHeadline: "Aufgabe bearbeiten",
+          taskNameLabel: "Titel",
+          taskBoardLabel: "Board",
+          taskCategoryLabel: "Kategorie",
+          taskStatusLabel: "Status",
+          taskPriorityLabel: "Priorit\xE4t",
+          taskDescriptionLabel: "Beschreibung",
+          taskDateLabel: "Datum",
+          taskTimeLabel: "Uhrzeit",
+          deleteTaskButton: "Aufgabe l\xF6schen",
+          filterTasksHeadline: "Aufgaben filtern",
+          renameCategoryInputPlaceholder: "Kategorie umbenennen",
+          renameStatusInputPlaceholder: "Status umbenennen"
+        },
+        calendar: {
+          eventsBoard: "Ereignisse",
+          ///
+          todayButtonAudioLabel: "gehe zu heute",
+          previousMonthButtonAudioLabel: "vorheriger monat",
+          nextMonthButtonAudioLabel: "n\xE4chster monat",
+          yearInputAudioLabel: "Jahr",
+          monthInputAudioLabel: "Monat",
+          yearInputPlaceholder: "2000",
+          monthInputPlaceholder: "01",
+          searchEventsHeadline: "Ereignisse suchen",
+          events: "Ereignisse",
+          noEvents: "Keine Ereignisse"
+        }
+      }
+    },
+    es: {
+      updater: {
+        migrated: "Migrado"
+      },
+      general: {
+        deleteItemButtonAudioLabel: "eliminar elemento",
+        searchButtonAudioLabel: "buscar",
+        abortButton: "Abortar",
+        cancelButton: "Cancelar",
+        closeButton: "Cerrar",
+        backButton: "Atr\xE1s",
+        continueButton: "Continuar",
+        confirmButton: "Confirmar",
+        saveButton: "Guardar",
+        setButton: "OK",
+        reloadAppButton: "Recargar app",
+        fileVersionLabel: "Versi\xF3n",
+        searchLabel: "Buscar",
+        waitingLabel: "Esperando...",
+        restoreConnection: "Conectar de nuevo"
+      },
+      regional: {
+        weekdays: {
+          full: [
+            "Domingo",
+            "Lunes",
+            "Martes",
+            "Mi\xE9rcoles",
+            "Jueves",
+            "Viernes",
+            "S\xE1bado"
+          ],
+          abbreviated: ["Dom", "Lun", "Mar", "Mi\xE9", "Jue", "Vie", "S\xE1b"]
+        }
+      },
+      homePage: {
+        appName: "Comms",
+        overviewHeadline: "Resumen",
+        serverAddress: "Direcci\xF3n del servidor",
+        serverAddressPlaceholder: "wss://192.168.0.69:3000",
+        connectAudioLabel: "conectar al servidor",
+        disconnectAudioLabel: "desconectar del servidor",
+        manageConnectionsAudioLabel: "gestionar conexiones",
+        yourNameLabel: "Tu nombre",
+        yourNamePlaceholder: "Juan P\xE9rez",
+        setNameButtonAudioLabel: "establecer nombre",
+        settingsButton: "Ajustes",
+        manageStorageButton: "Gestionar almacenamiento",
+        transferDataButton: "Transferencia de datos",
+        scrollToChatButton: "Chats",
+        backToOverviewAudioLabel: "volver al resumen",
+        chatsHeadline: "Chats",
+        addChatAudioLabel: "nombre del nuevo chat",
+        addChatPlaceholder: "A\xF1adir chat",
+        addChatButton: "A\xF1adir chat"
+      },
+      settings: {
+        pages: {
+          appearance: "Aspecto",
+          regional: "Idioma y Regi\xF3n",
+          info: "Sobre Comms"
+        },
+        version: "Versi\xF3n",
+        language: "Idioma",
+        firstDayOfWeekLabel: "Primer d\xEDa de la semana"
+      },
+      connectionModal: {
+        connectionModalHeadline: "Gestionar Conexiones",
+        connectButtonAudioLabel: "conectar"
+      },
+      dataTransferModal: {
+        transferDataHeadline: "Transferencia de Datos",
+        selectionDescription: "Selecciona los datos que quieres transferir.",
+        dataEntryDescription: "Introduce estos datos en el otro dispositivo.",
+        dataEntryInputDescription: "Introduce los datos mostrados en el otro dispositivo.",
+        notConnectedError: "No est\xE1s conectado a ning\xFAn servidor.",
+        fromThisDeviceButton: "Desde este dispositivo",
+        toThisDeviceButton: "A este dispositivo",
+        generalHeadline: "General",
+        connectionData: "Datos de Conexi\xF3n",
+        settingsData: "Datos de Configuraci\xF3n",
+        chatsHeadline: "Chats",
+        transferChannelHeadline: "Canal de Transferencia",
+        transferKeyHeadline: "Clave de Encriptaci\xF3n de Transferencia",
+        sendButton: "Enviar",
+        sendAgainButton: "Enviar otra vez",
+        filesSentCount: (count) => `Archivos enviados: ${count}.`,
+        allFilesSent: "Hecho.",
+        filesReceivedCount: (count) => `Archivos recibidos: ${count}.`
+      },
+      storage: {
+        noItemSelected: "Ning\xFAn elemento seleccionado",
+        notAFile: "(no es un archivo)",
+        contentEmpty: "(vac\xEDo)",
+        path: "Ruta",
+        content: "Contenido",
+        deleteItem: "Eliminar elemento",
+        removeJunkButton: "Eliminar archivos basura"
+      },
+      chatPage: {
+        closeChatAudioLabe: "cerrar chat",
+        chatSettingsAudioLabel: "configuraci\xF3n del chat",
+        pages: {
+          settings: "Configuraci\xF3n",
+          messages: "Mensajes",
+          tasks: "Tareas",
+          calendar: "Calendario"
+        },
+        settings: {
+          settingsHeadline: "Configuraci\xF3n",
+          primaryChannelLabel: "Canal principal",
+          setPrimaryChannelButtonAudioLabel: "establecer canal principal",
+          newSecondaryChannelPlaceholder: "A\xF1adir canal secundario",
+          newSecondaryChannelAudioLabel: "nombre del nuevo canal secundario",
+          addSecondaryChannelButtonAudioLabel: "a\xF1adir canal secundario",
+          encryptionKeyLabel: "Clave de encriptaci\xF3n",
+          setEncryptionKeyButtonAudioLabel: "establecer clave de encriptaci\xF3n",
+          showEncryptionKey: "Mostrar clave de encriptaci\xF3n",
+          deleteChatButton: "Eliminar todo el chat"
+        },
+        message: {
+          messagesHeadline: "Mensajes",
+          composerInputPlaceholder: "Escribe un mensaje...",
+          sendMessageButtonAudioLabel: "enviar mensaje",
+          showMessageInfoButtonAudioLabel: "mostrar informaci\xF3n del mensaje",
+          messageInfoHeadline: "Informaci\xF3n del Mensaje",
+          sentBy: "Enviado por",
+          timeSent: "Hora de env\xEDo",
+          channel: "Canal",
+          messageContent: "Contenido del mensaje",
+          copyMessageButton: "Copiar mensaje",
+          resendMessageButton: "Reenviar mensaje",
+          decryptMessageButton: "Desencriptar mensaje",
+          deleteMessageButton: "Eliminar mensaje",
+          //
+          thumbsUpReaction: "Reacci\xF3n: pulgar hacia arriba",
+          checkReaction: "Reacci\xF3n: marca de verificaci\xF3n",
+          stopReaction: "Reacci\xF3n: signo de parada",
+          attentionReaction: "Reaccion: signo de atenci\xF3n",
+          doubleAttentionReaction: "Reaccion: signo de atenci\xF3n doble",
+          questionReaction: "Reaccion: signo de interrogaci\xF3n"
+        },
+        task: {
+          newBoardNamePlaceholder: "Crear un tablero",
+          createBoardButtonAudioLabel: "crear tablero",
+          noBoardSelected: "Ning\xFAn tablero seleccionado",
+          boardNotFound: "Tablero no encontrado",
+          closeBoardButtonAudioLabel: "cerrar tablero",
+          toggleBoardButtonAudioLabel: "mostrar o ocultar lista de tableros",
+          showBoardSettingsButtonAudioLabel: "mostrar configuraci\xF3n del tablero",
+          listViewButtonAudioLabel: "vista de lista",
+          kanbanViewButtonAudioLabel: "vista kanban",
+          statusViewButtonAudioLabel: "vista de cuadr\xEDcula de estado",
+          filterTasksButtonAudioLabel: "filtrar tareas",
+          createTaskButtonAudioLabel: "crear nueva tarea",
+          boardSettingsHeadline: "Configuraci\xF3n del Tablero",
+          boardNameInputLabel: "Nombre del tablero",
+          deleteBoardButton: "Eliminar tablero y todas las tareas",
+          taskSettingsHeadline: "Editar Tarea",
+          taskNameLabel: "T\xEDtulo",
+          taskBoardLabel: "Tablero",
+          taskCategoryLabel: "Categor\xEDa",
+          taskStatusLabel: "Estado",
+          taskPriorityLabel: "Prioridad",
+          taskDescriptionLabel: "Descripci\xF3n",
+          taskDateLabel: "Fecha",
+          taskTimeLabel: "Hora",
+          deleteTaskButton: "Eliminar tarea",
+          filterTasksHeadline: "Filtrar Tareas",
+          renameCategoryInputPlaceholder: "Renombrar categor\xEDa",
+          renameStatusInputPlaceholder: "Renombrar estado"
+        },
+        calendar: {
+          eventsBoard: "Eventos",
+          ///
+          todayButtonAudioLabel: "ir a hoy",
+          previousMonthButtonAudioLabel: "mes anterior",
+          nextMonthButtonAudioLabel: "mes siguiente",
+          yearInputAudioLabel: "a\xF1o",
+          monthInputAudioLabel: "mes",
+          yearInputPlaceholder: "2000",
+          monthInputPlaceholder: "01",
+          searchEventsHeadline: "Buscar Eventos",
+          events: "Eventos",
+          noEvents: "No hay eventos"
+        }
+      }
+    }
+  };
+  var Languages = /* @__PURE__ */ ((Languages2) => {
+    Languages2["English"] = "en";
+    Languages2["German"] = "de";
+    Languages2["Spanish"] = "es";
+    return Languages2;
+  })(Languages || {});
+
   // src/ViewModel/Global/coreViewModel.ts
   var CoreViewModel = class {
-    constructor() {
-      this.BUILD = "Build 26.04.08.C";
+    // init
+    constructor(storageModel2, settingsModel2, connectionModel2, chatListModel2, fileTransferModel2) {
+      this.storageModel = storageModel2;
+      this.settingsModel = settingsModel2;
+      this.connectionModel = connectionModel2;
+      this.chatListModel = chatListModel2;
+      this.fileTransferModel = fileTransferModel2;
+      this.BUILD = "Build 26.04.09.A";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS
@@ -5544,13 +5602,15 @@
       this.boardFilterStringSuggestions = new ListState();
       this.taskCategorySuggestions = new ListState();
       this.taskStatusSuggestions = new ListState();
+      this.translations = allTranslations[settingsModel2.language] || allTranslations.en;
     }
   };
 
   // src/ViewModel/Global/fileTransferViewModel.ts
   var FileTransferViewModel = class {
     // init
-    constructor(fileTransferModel2, chatListModel2) {
+    constructor(coreViewModel2) {
+      this.coreViewModel = coreViewModel2;
       // state
       this.presentedModal = new State(void 0);
       this.generalFileOptions = new ListState();
@@ -5567,7 +5627,7 @@
       );
       this.filesSentText = createProxyState(
         [this.filesSentCount],
-        () => translations.dataTransferModal.filesSentCount(
+        () => this.coreViewModel.translations.dataTransferModal.filesSentCount(
           this.filesSentCount.value
         )
       );
@@ -5578,7 +5638,7 @@
       );
       this.filesReceivedText = createProxyState(
         [this.filesReceivedCount],
-        () => translations.dataTransferModal.filesReceivedCount(
+        () => this.coreViewModel.translations.dataTransferModal.filesReceivedCount(
           this.filesReceivedCount.value
         )
       );
@@ -5603,21 +5663,21 @@
         this.selectedPaths.clear();
         this.generalFileOptions.add(
           {
-            label: translations.dataTransferModal.connectionData,
+            label: this.coreViewModel.translations.dataTransferModal.connectionData,
             path: StorageModel.getPath(
               "connection" /* ConnectionModel */,
               filePaths.connectionModel.previousAddresses
             )
           },
           {
-            label: translations.dataTransferModal.settingsData,
+            label: this.coreViewModel.translations.dataTransferModal.settingsData,
             path: StorageModel.getPath(
               "settings" /* SettingsModel */,
               []
             )
           }
         );
-        const chatModels = this.chatListModel.chatModels;
+        const chatModels = this.coreViewModel.chatListModel.chatModels;
         for (const chatModel of chatModels) {
           this.chatFileOptions.add({
             label: chatModel.info.primaryChannel,
@@ -5626,7 +5686,7 @@
         }
       };
       this.getTransferData = () => {
-        const transferData = this.fileTransferModel.generateTransferData();
+        const transferData = this.coreViewModel.fileTransferModel.generateTransferData();
         this.transferChannel.value = transferData.channel;
         this.transferKey.value = transferData.key;
       };
@@ -5641,13 +5701,13 @@
       this.showTransferDataModal = () => {
         this.presentedModal.value = 2 /* TransferDataDisplay */;
         this.getTransferData();
-        this.fileTransferModel.prepareToSend();
+        this.coreViewModel.fileTransferModel.prepareToSend();
       };
       this.initiateTransfer = () => {
         this.presentedModal.value = 3 /* TransferDisplay */;
         this.didNotFinishSending.value = true;
         this.filePathsSent.clear();
-        this.fileTransferModel.sendFiles(
+        this.coreViewModel.fileTransferModel.sendFiles(
           this.selectedPaths.value.values(),
           (path) => {
             console.log(path);
@@ -5666,17 +5726,15 @@
           channel: this.receivingTransferChannel.value,
           key: this.receivingTransferKey.value
         };
-        this.fileTransferModel.prepareToReceive(transferData);
+        this.coreViewModel.fileTransferModel.prepareToReceive(transferData);
       };
       this.hideModal = () => {
         this.presentedModal.value = void 0;
       };
-      this.fileTransferModel = fileTransferModel2;
-      this.chatListModel = chatListModel2;
-      this.fileTransferModel.fileHandlerManager.addHandler(
+      this.coreViewModel.fileTransferModel.fileHandlerManager.addHandler(
         this.handleReceivedFile
       );
-      this.fileTransferModel.readyToSendHandlerManager.addHandler(
+      this.coreViewModel.fileTransferModel.readyToSendHandlerManager.addHandler(
         () => this.initiateTransfer()
       );
     }
@@ -5688,13 +5746,14 @@
   };
 
   // src/View/Modals/dataTransferModal.tsx
-  function DataTransferModalWrapper(connectionViewModel2, fileTransferViewModel2) {
+  function DataTransferModalWrapper(coreViewModel2, connectionViewModel2, fileTransferViewModel2) {
     return /* @__PURE__ */ createElement("div", null, DirectionSelectionModal(
+      coreViewModel2,
       connectionViewModel2,
       fileTransferViewModel2
-    ), FileSelectionModal(fileTransferViewModel2), TransferDataDisplayModal(fileTransferViewModel2), TransferDisplayModal(fileTransferViewModel2), TransferDataInputModal(fileTransferViewModel2), DataReceptionModal(fileTransferViewModel2));
+    ), FileSelectionModal(coreViewModel2, fileTransferViewModel2), TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDataInputModal(coreViewModel2, fileTransferViewModel2), DataReceptionModal(coreViewModel2, fileTransferViewModel2));
   }
-  function DirectionSelectionModal(connectionViewModel2, fileTransferViewModel2) {
+  function DirectionSelectionModal(coreViewModel2, connectionViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 0 /* DirectionSelection */
@@ -5703,13 +5762,13 @@
       [connectionViewModel2.isConnected],
       () => connectionViewModel2.isConnected.value == false
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
       "p",
       {
         class: "error",
         "toggle:hidden": connectionViewModel2.isConnected
       },
-      translations.dataTransferModal.notConnectedError
+      coreViewModel2.translations.dataTransferModal.notConnectedError
     ), /* @__PURE__ */ createElement(
       "div",
       {
@@ -5723,7 +5782,7 @@
           "on:click": fileTransferViewModel2.showFileSelectionModal
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "upload"),
-        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, translations.dataTransferModal.fromThisDeviceButton)),
+        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.fromThisDeviceButton)),
         /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
       ),
       /* @__PURE__ */ createElement(
@@ -5733,12 +5792,12 @@
           "on:click": fileTransferViewModel2.showTransferDataInputModal
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "download"),
-        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, translations.dataTransferModal.toThisDeviceButton)),
+        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.toThisDeviceButton)),
         /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
       )
-    )), /* @__PURE__ */ createElement("button", { "on:click": fileTransferViewModel2.hideModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )), /* @__PURE__ */ createElement("button", { "on:click": fileTransferViewModel2.hideModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
-  function FileSelectionModal(fileTransferViewModel2) {
+  function FileSelectionModal(coreViewModel2, fileTransferViewModel2) {
     const OptionConverter = (fileOption) => {
       return OptionEntry(fileOption, fileTransferViewModel2);
     };
@@ -5765,7 +5824,7 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 1 /* FileSelection */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.dataTransferModal.selectionDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, translations.dataTransferModal.generalHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.selectionDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.dataTransferModal.generalHeadline), /* @__PURE__ */ createElement(
       "div",
       {
         class: "flex-column gap content-margin-bottom",
@@ -5774,7 +5833,7 @@
           OptionConverter
         ]
       }
-    ), /* @__PURE__ */ createElement("h3", null, translations.dataTransferModal.chatsHeadline), /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.dataTransferModal.chatsHeadline), /* @__PURE__ */ createElement(
       "div",
       {
         class: "flex-column gap",
@@ -5789,7 +5848,7 @@
         class: "flex",
         "on:click": fileTransferViewModel2.showDirectionSelectionModal
       },
-      translations.general.backButton
+      coreViewModel2.translations.general.backButton
     ), /* @__PURE__ */ createElement(
       "button",
       {
@@ -5797,21 +5856,21 @@
         "on:click": fileTransferViewModel2.showTransferDataModal,
         "toggle:disabled": fileTransferViewModel2.hasNoPathsSelected
       },
-      translations.general.continueButton,
+      coreViewModel2.translations.general.continueButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
     ))));
   }
-  function TransferDataDisplayModal(fileTransferViewModel2) {
+  function TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 2 /* TransferDataDisplay */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.dataTransferModal.dataEntryDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("div", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("div", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
       "b",
       {
         "subscribe:innerText": fileTransferViewModel2.transferChannel
       }
-    ))), /* @__PURE__ */ createElement("div", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.dataTransferModal.transferKeyHeadline), /* @__PURE__ */ createElement(
+    ))), /* @__PURE__ */ createElement("div", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferKeyHeadline), /* @__PURE__ */ createElement(
       "b",
       {
         "subscribe:innerText": fileTransferViewModel2.transferKey
@@ -5822,15 +5881,15 @@
         class: "flex",
         "on:click": fileTransferViewModel2.showFileSelectionModal
       },
-      translations.general.backButton
-    ), /* @__PURE__ */ createElement("button", { disabled: true, class: "flex" }, translations.general.waitingLabel))));
+      coreViewModel2.translations.general.backButton
+    ), /* @__PURE__ */ createElement("button", { disabled: true, class: "flex" }, coreViewModel2.translations.general.waitingLabel))));
   }
-  function TransferDisplayModal(fileTransferViewModel2) {
+  function TransferDisplayModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 3 /* TransferDisplay */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
       "p",
       {
         class: "secondary",
@@ -5842,7 +5901,7 @@
         class: "secondary",
         "toggle:hidden": fileTransferViewModel2.didNotFinishSending
       },
-      translations.dataTransferModal.allFilesSent
+      coreViewModel2.translations.dataTransferModal.allFilesSent
     ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
       "div",
       {
@@ -5858,7 +5917,7 @@
         class: "flex",
         "on:click": fileTransferViewModel2.initiateTransfer
       },
-      translations.dataTransferModal.sendAgainButton,
+      coreViewModel2.translations.dataTransferModal.sendAgainButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "restart_alt")
     ), /* @__PURE__ */ createElement(
       "button",
@@ -5867,21 +5926,21 @@
         "on:click": fileTransferViewModel2.hideModal,
         "toggle:disabled": fileTransferViewModel2.didNotFinishSending
       },
-      translations.general.closeButton,
+      coreViewModel2.translations.general.closeButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "close")
     ))));
   }
-  function TransferDataInputModal(fileTransferViewModel2) {
+  function TransferDataInputModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 4 /* TransferDataInput */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.dataTransferModal.dataEntryInputDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryInputDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": fileTransferViewModel2.receivingTransferChannel
       }
-    ))), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.dataTransferModal.transferKeyHeadline), /* @__PURE__ */ createElement(
+    ))), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferKeyHeadline), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": fileTransferViewModel2.receivingTransferKey
@@ -5892,7 +5951,7 @@
         class: "flex",
         "on:click": fileTransferViewModel2.showDirectionSelectionModal
       },
-      translations.general.backButton
+      coreViewModel2.translations.general.backButton
     ), /* @__PURE__ */ createElement(
       "button",
       {
@@ -5900,16 +5959,16 @@
         "on:click": fileTransferViewModel2.prepareReceivingData,
         "toggle:disabled": fileTransferViewModel2.cannotPrepareToReceive
       },
-      translations.general.continueButton,
+      coreViewModel2.translations.general.continueButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
     ))));
   }
-  function DataReceptionModal(fileTransferViewModel2) {
+  function DataReceptionModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 5 /* ReceptionDisplay */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
       "p",
       {
         class: "secondary",
@@ -5924,7 +5983,7 @@
           StringToTextSpan
         ]
       }
-    )), /* @__PURE__ */ createElement("button", { "on:click": reload }, translations.general.reloadAppButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "refresh"))));
+    )), /* @__PURE__ */ createElement("button", { "on:click": reload }, coreViewModel2.translations.general.reloadAppButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "refresh"))));
   }
 
   // src/Model/Global/fileTransferModel.ts
@@ -6071,12 +6130,12 @@
   }
 
   // src/View/homePage.tsx
-  function HomePage(coreVieWModel2, storageViewModel2, settingsViewModel2, connectionViewModel2, fileTransferViewModel2, chatListViewModel2) {
-    const overviewSection = /* @__PURE__ */ createElement("div", { id: "overview-section" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.overviewHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "cell_tower"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.serverAddress), /* @__PURE__ */ createElement(
+  function HomePage(coreViewModel2, storageViewModel2, settingsViewModel2, connectionViewModel2, fileTransferViewModel2, chatListViewModel2) {
+    const overviewSection = /* @__PURE__ */ createElement("div", { id: "overview-section" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.homePage.overviewHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "cell_tower"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.homePage.serverAddress), /* @__PURE__ */ createElement(
       "input",
       {
         list: "previous-connection-list",
-        placeholder: translations.homePage.serverAddressPlaceholder,
+        placeholder: coreViewModel2.translations.homePage.serverAddressPlaceholder,
         "bind:value": connectionViewModel2.serverAddressInput,
         "on:enter": connectionViewModel2.connect
       }
@@ -6094,7 +6153,7 @@
       "button",
       {
         class: "danger flex justify-center",
-        "aria-label": translations.homePage.disconnectAudioLabel,
+        "aria-label": coreViewModel2.translations.homePage.disconnectAudioLabel,
         "on:click": connectionViewModel2.disconnect,
         "toggle:disabled": connectionViewModel2.cannotDisonnect
       },
@@ -6103,7 +6162,7 @@
       "button",
       {
         class: "flex justify-center",
-        "aria-label": translations.homePage.manageConnectionsAudioLabel,
+        "aria-label": coreViewModel2.translations.homePage.manageConnectionsAudioLabel,
         "on:click": connectionViewModel2.showConnectionModal,
         "toggle:disabled": connectionViewModel2.hasNoPreviousConnections
       },
@@ -6112,15 +6171,15 @@
       "button",
       {
         class: "primary flex justify-center",
-        "aria-label": translations.homePage.connectAudioLabel,
+        "aria-label": coreViewModel2.translations.homePage.connectAudioLabel,
         "on:click": connectionViewModel2.connect,
         "toggle:disabled": connectionViewModel2.cannotConnect
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "link")
-    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "account_circle"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.yourNameLabel), /* @__PURE__ */ createElement(
+    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "account_circle"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.homePage.yourNameLabel), /* @__PURE__ */ createElement(
       "input",
       {
-        placeholder: translations.homePage.yourNamePlaceholder,
+        placeholder: coreViewModel2.translations.homePage.yourNamePlaceholder,
         "bind:value": settingsViewModel2.usernameInput,
         "on:enter": settingsViewModel2.setName
       }
@@ -6130,28 +6189,28 @@
         class: "width-50",
         "on:click": settingsViewModel2.setName,
         "toggle:disabled": settingsViewModel2.cannotSetName,
-        "aria-label": translations.homePage.setNameButtonAudioLabel
+        "aria-label": coreViewModel2.translations.homePage.setNameButtonAudioLabel
       },
-      translations.general.setButton,
+      coreViewModel2.translations.general.setButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "check")
     )), /* @__PURE__ */ createElement("hr", null), HomePageButton(
       settingsViewModel2.showSettingsModal,
-      translations.homePage.settingsButton,
+      coreViewModel2.translations.homePage.settingsButton,
       "settings"
     ), HomePageButton(
       fileTransferViewModel2.showDirectionSelectionModal,
-      translations.homePage.transferDataButton,
+      coreViewModel2.translations.homePage.transferDataButton,
       "sync_alt"
     ), HomePageButton(
       storageViewModel2.showStorageModal,
-      translations.homePage.manageStorageButton,
+      coreViewModel2.translations.homePage.manageStorageButton,
       "hard_drive"
-    ), /* @__PURE__ */ createElement("div", { class: "mobile-only" }, /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end" }, /* @__PURE__ */ createElement("button", { class: "ghost width-50", "on:click": scrollToChat }, translations.homePage.scrollToChatButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))));
-    const chatSection = /* @__PURE__ */ createElement("div", { id: "chat-section" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.chatsHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
+    ), /* @__PURE__ */ createElement("div", { class: "mobile-only" }, /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end" }, /* @__PURE__ */ createElement("button", { class: "ghost width-50", "on:click": scrollToChat }, coreViewModel2.translations.homePage.scrollToChatButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))));
+    const chatSection = /* @__PURE__ */ createElement("div", { id: "chat-section" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.homePage.chatsHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
-        placeholder: translations.homePage.addChatPlaceholder,
-        "aria-label": translations.homePage.addChatAudioLabel,
+        placeholder: coreViewModel2.translations.homePage.addChatPlaceholder,
+        "aria-label": coreViewModel2.translations.homePage.addChatAudioLabel,
         "bind:value": chatListViewModel2.newChatPrimaryChannel,
         "on:enter": chatListViewModel2.createChat
       }
@@ -6159,7 +6218,7 @@
       "button",
       {
         class: "primary",
-        "aria-label": translations.homePage.addChatButton,
+        "aria-label": coreViewModel2.translations.homePage.addChatButton,
         "on:click": chatListViewModel2.createChat,
         "toggle:disabled": chatListViewModel2.cannotCreateChat
       },
@@ -6181,7 +6240,7 @@
   }
 
   // src/Model/Global/settingsModel.ts
-  var SettingsModel = class {
+  var SettingsModel = class _SettingsModel {
     // storage
     setName(newValue) {
       this.username = newValue;
@@ -6196,6 +6255,14 @@
       const path = StorageModel.getPath(
         "settings" /* SettingsModel */,
         filePaths.settingsModel.firstDayOfWeek
+      );
+      this.storageModel.write(path, newValue);
+    }
+    setLanguage(newValue) {
+      this.language = newValue;
+      const path = StorageModel.getPath(
+        "settings" /* SettingsModel */,
+        filePaths.settingsModel.language
       );
       this.storageModel.write(path, newValue);
     }
@@ -6216,40 +6283,61 @@
       const content = this.storageModel.read(path);
       this.firstDayOfWeek = content ?? "0";
     }
+    loadLanguage() {
+      const path = StorageModel.getPath(
+        "settings" /* SettingsModel */,
+        filePaths.settingsModel.language
+      );
+      const content = this.storageModel.read(path);
+      this.language = content ?? _SettingsModel.getSystemLanguage();
+    }
     // init
     constructor(storageModel2) {
       this.storageModel = storageModel2;
       this.loadUsernam();
       this.loadFirstDayofWeek();
     }
+    static getSystemLanguage() {
+      switch (navigator.language.substring(0, 2)) {
+        case "de":
+          return "de" /* German */;
+        case "es":
+          return "es" /* Spanish */;
+        default:
+          return "en" /* English */;
+      }
+    }
   };
 
   // src/ViewModel/Global/settingsViewModel.ts
   var SettingsViewModel = class {
     // init
-    constructor(coreViewModel, settingsModel2) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2) {
+      this.coreViewModel = coreViewModel2;
       // state
       this.username = new State("");
       this.usernameInput = new State("");
-      this.firstDayOfWeekInput = new State("0");
       this.isShowingSettingsModal = new State(false);
       this.selectedModalPage = new State(
         0 /* Appearance */
       );
+      this.firstDayOfWeek = new State("0");
+      this.language = new State("en" /* English */);
       // guards
       this.cannotSetName = createProxyState(
         [this.usernameInput],
-        () => this.usernameInput.value == "" || this.usernameInput.value == this.settingsModel.username
+        () => this.usernameInput.value == "" || this.usernameInput.value == this.coreViewModel.settingsModel.username
       );
       // methods
       this.setName = () => {
-        this.settingsModel.setName(this.usernameInput.value);
-        this.username.value = this.settingsModel.username;
+        this.coreViewModel.settingsModel.setName(this.usernameInput.value);
+        this.username.value = this.coreViewModel.settingsModel.username;
         this.usernameInput.callSubscriptions();
       };
       this.setFirstDayofWeek = () => {
-        this.settingsModel.setFirstDayOfWeek(this.firstDayOfWeekInput.value);
+        this.coreViewModel.settingsModel.setFirstDayOfWeek(
+          this.firstDayOfWeek.value
+        );
       };
       this.showSettingsModal = () => {
         this.isShowingSettingsModal.value = true;
@@ -6260,11 +6348,10 @@
       this.showModalPage = (page) => {
         this.selectedModalPage.value = page;
       };
-      this.settingsModel = settingsModel2;
-      this.username.value = settingsModel2.username;
-      this.usernameInput.value = settingsModel2.username;
-      this.firstDayOfWeekInput.value = settingsModel2.firstDayOfWeek;
-      this.firstDayOfWeekInput.subscribe(this.setFirstDayofWeek);
+      this.username.value = coreViewModel2.settingsModel.username;
+      this.usernameInput.value = coreViewModel2.settingsModel.username;
+      this.firstDayOfWeek.value = coreViewModel2.settingsModel.firstDayOfWeek;
+      this.firstDayOfWeek.subscribe(this.setFirstDayofWeek);
     }
   };
 
@@ -6300,7 +6387,7 @@
     const style = `text-indent: ${path.length}rem`;
     function loadItems() {
       items.clear();
-      const directoryItems = storageViewModel2.storageModel.list(path);
+      const directoryItems = storageViewModel2.coreViewModel.storageModel.list(path);
       for (const directoryItem of directoryItems) {
         const itemPath = [...path, directoryItem];
         const pathString2 = StorageModel.pathComponentsToString(...itemPath);
@@ -6341,29 +6428,31 @@
   }
 
   // src/View/Modals/storageModal.tsx
-  function StorageModal(storageViewModel2) {
+  function StorageModal(coreViewModel2, storageViewModel2) {
     const detailView = createProxyState(
       [storageViewModel2.selectedPath],
       () => {
         if (storageViewModel2.selectedPath.value == PATH_COMPONENT_SEPARATOR)
-          return /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, translations.storage.noItemSelected), /* @__PURE__ */ createElement("hr", null), DangerousActionButton(
-            translations.storage.removeJunkButton,
+          return /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.storage.noItemSelected), /* @__PURE__ */ createElement("hr", null), DangerousActionButton(
+            coreViewModel2,
+            coreViewModel2.translations.storage.removeJunkButton,
             "delete_forever",
             storageViewModel2.removeJunk
           ));
-        return /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("div", { class: "tile flex-no" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, translations.storage.path), /* @__PURE__ */ createElement(
+        return /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("div", { class: "tile flex-no" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.storage.path), /* @__PURE__ */ createElement(
           "span",
           {
             class: "break-all",
             "subscribe:innerText": storageViewModel2.selectedPath
           }
-        ))), /* @__PURE__ */ createElement("div", { class: "tile flex-no" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, translations.storage.content), /* @__PURE__ */ createElement(
+        ))), /* @__PURE__ */ createElement("div", { class: "tile flex-no" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.storage.content), /* @__PURE__ */ createElement(
           "code",
           {
             "subscribe:innerText": storageViewModel2.selectedFileContent
           }
         ))), DangerousActionButton(
-          translations.storage.deleteItem,
+          coreViewModel2,
+          coreViewModel2.translations.storage.deleteItem,
           "delete_forever",
           storageViewModel2.deleteSelectedItem
         ));
@@ -6374,14 +6463,14 @@
       detailView,
       storageViewModel2.selectedFileName,
       true
-    )), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.hideStorageModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.hideStorageModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/ViewModel/Global/storageViewModel.ts
   var StorageViewModel = class {
     // init
-    constructor(coreViewModel, storageModel2) {
-      this.coreViewModel = coreViewModel;
+    constructor(coreViewModel2) {
+      this.coreViewModel = coreViewModel2;
       // state
       this.isShowingStorageModal = new State(false);
       this.selectedPath = new State(
@@ -6394,19 +6483,19 @@
         const path = StorageModel.stringToPathComponents(
           this.selectedPath.value
         );
-        const content = this.storageModel.read(path);
-        return (content ?? translations.storage.notAFile) || translations.storage.contentEmpty;
+        const content = this.coreViewModel.storageModel.read(path);
+        return (content ?? this.coreViewModel.translations.storage.notAFile) || this.coreViewModel.translations.storage.contentEmpty;
       };
       this.deleteSelectedItem = () => {
         const path = StorageModel.stringToPathComponents(
           this.selectedPath.value
         );
         this.lastDeletedItemPath.value = this.selectedPath.value;
-        this.storageModel.removeRecursively(path);
+        this.coreViewModel.storageModel.removeRecursively(path);
         this.didMakeChanges.value = true;
       };
       this.removeJunk = () => {
-        this.storageModel.removeJunk();
+        this.coreViewModel.storageModel.removeJunk();
         this.selectedPath.value = PATH_COMPONENT_SEPARATOR;
       };
       // view
@@ -6420,7 +6509,6 @@
         }
         this.isShowingStorageModal.value = false;
       };
-      this.storageModel = storageModel2;
       this.selectedFileName = createProxyState(
         [this.selectedPath],
         () => StorageModel.getFileNameFromString(this.selectedPath.value)
@@ -6435,21 +6523,21 @@
   // src/Upgrader/v1.ts
   var v1Upgrader = class {
     // init
-    constructor(settingsModel2, connectionModel2, chatListModel2) {
-      this.settingsModel = settingsModel2;
-      this.connectionModel = connectionModel2;
-      this.chatListModel = chatListModel2;
+    constructor(coreViewModel2) {
+      this.coreViewModel = coreViewModel2;
       // general
       this.migrateSettings = () => {
         const name = getLocalStorageItemAndClear("sender-name");
         if (name != null) {
           const parsedName = parseOrFallback(name);
-          this.settingsModel.setName(parsedName);
+          this.coreViewModel.settingsModel.setName(parsedName);
         }
         const firstDayOfWeek = getLocalStorageItemAndClear("first-day-of-week");
         if (firstDayOfWeek != null) {
           const parsedFirstDayOfWeek = parseOrFallback(firstDayOfWeek);
-          this.settingsModel.setFirstDayOfWeek(parsedFirstDayOfWeek);
+          this.coreViewModel.settingsModel.setFirstDayOfWeek(
+            parsedFirstDayOfWeek
+          );
         }
       };
       this.migrateConnections = () => {
@@ -6458,7 +6546,7 @@
         const previousAddresses = parseArray(previousAddressString);
         for (const address of previousAddresses) {
           if (typeof address != "string") continue;
-          this.connectionModel.storeAddress(address);
+          this.coreViewModel.connectionModel.storeAddress(address);
         }
       };
       // chats
@@ -6477,7 +6565,7 @@
         );
         if (primaryChannel == null) return;
         const parsedPriamryChannel = parseOrFallback(primaryChannel);
-        const chatModel = this.chatListModel.createChat(parsedPriamryChannel);
+        const chatModel = this.coreViewModel.chatListModel.createChat(parsedPriamryChannel);
         const secondaryChannelString = getLocalStorageItemAndClear(storageKeys.secondaryChannels(id));
         if (secondaryChannelString != null) {
           const potentialSecondaryChannels = parseArray(
@@ -6521,7 +6609,7 @@
             };
             chatModel.addMessage(convertedChatMessage);
             if (status == "outbox" /* Outbox */) {
-              this.connectionModel.sendMessageOrStore(
+              this.coreViewModel.connectionModel.sendMessageOrStore(
                 convertedChatMessage
               );
             }
@@ -6535,7 +6623,7 @@
         const potentialObjectsInOutbox = parseArray(objectOutboxString);
         const addObjects = (potentialObjects2) => {
           const board = chatModel.fileModel.boardsAndTasksModel.createBoard(
-            translations.updater.migrated
+            this.coreViewModel.translations.updater.migrated
           );
           chatModel.fileModel.boardsAndTasksModel.updateBoard(board);
           for (const potentialObjectEntry of potentialObjects2) {
@@ -6632,7 +6720,7 @@
   }
 
   // src/View/Modals/settingsModal.tsx
-  function SettingsModal(settingsViewModel2) {
+  function SettingsModal(coreViewModel2, settingsViewModel2) {
     const detailView = createProxyState(
       [settingsViewModel2.selectedModalPage],
       () => {
@@ -6640,9 +6728,12 @@
           case 0 /* Appearance */:
             return /* @__PURE__ */ createElement("div", null, "Appearance");
           case 1 /* Regional */:
-            return SettingsRegionalPane(settingsViewModel2);
+            return SettingsRegionalPane(
+              coreViewModel2,
+              settingsViewModel2
+            );
           case 2 /* Info */:
-            return SettingsInfoPane(settingsViewModel2);
+            return SettingsInfoPane(coreViewModel2, settingsViewModel2);
         }
       }
     );
@@ -6653,27 +6744,29 @@
         "toggle:open": settingsViewModel2.isShowingSettingsModal
       },
       /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
-        new State(SettingsLeftPane(settingsViewModel2)),
+        new State(
+          SettingsLeftPane(coreViewModel2, settingsViewModel2)
+        ),
         detailView,
         new State(""),
         false,
         settingsViewModel2.selectedModalPage
-      )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
-  function SettingsLeftPane(settingsViewModel2) {
+  function SettingsLeftPane(coreViewModel2, settingsViewModel2) {
     return /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, SettingsPaneButton(
       settingsViewModel2,
       0 /* Appearance */,
-      translations.settings.pages.appearance
+      coreViewModel2.translations.settings.pages.appearance
     ), SettingsPaneButton(
       settingsViewModel2,
       1 /* Regional */,
-      translations.settings.pages.regional
+      coreViewModel2.translations.settings.pages.regional
     ), SettingsPaneButton(
       settingsViewModel2,
       2 /* Info */,
-      translations.settings.pages.info
+      coreViewModel2.translations.settings.pages.info
     ));
   }
   function SettingsPaneButton(settingsViewModel2, page, label) {
@@ -6690,19 +6783,25 @@
       label
     );
   }
-  function SettingsInfoPane(settingsViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.appName), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile(
+  function SettingsInfoPane(coreViewModel2, settingsViewModel2) {
+    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.homePage.appName), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile(
       "build",
-      translations.settings.version,
+      coreViewModel2.translations.settings.version,
       settingsViewModel2.coreViewModel.BUILD
     )));
   }
-  function SettingsRegionalPane(settingsViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, translations.settings.pages.regional), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.firstDayOfWeekLabel), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.firstDayOfWeekInput }, ...translations.regional.weekdays.full.map(
+  function SettingsRegionalPane(coreViewModel2, settingsViewModel2) {
+    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.settings.pages.regional), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.settings.firstDayOfWeekLabel), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.firstDayOfWeek }, ...coreViewModel2.translations.regional.weekdays.full.map(
       (weekdayName, i) => Option(
         weekdayName,
         i.toString(),
-        i.toString() == settingsViewModel2.firstDayOfWeekInput.value
+        i.toString() == settingsViewModel2.firstDayOfWeek.value
+      )
+    )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "language"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.settings.language), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.language }, ...[...Object.values(Languages)].map(
+      (language, i) => Option(
+        language,
+        i.toString(),
+        i.toString() == settingsViewModel2.language.value
       )
     )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))));
   }
@@ -6717,25 +6816,23 @@
     connectionModel
   );
   var fileTransferModel = new FileTransferModel(storageModel, connectionModel);
-  new v1Upgrader(settingsModel, connectionModel, chatListModel);
-  var coreVieWModel = new CoreViewModel();
-  var storageViewModel = new StorageViewModel(coreVieWModel, storageModel);
-  var settingsViewModel = new SettingsViewModel(coreVieWModel, settingsModel);
-  var connectionViewModel = new ConnectionViewModel(
-    coreVieWModel,
-    connectionModel
-  );
-  var chatListViewModel = new ChatListViewModel(
-    coreVieWModel,
+  var coreViewModel = new CoreViewModel(
     storageModel,
+    settingsModel,
+    connectionModel,
     chatListModel,
+    fileTransferModel
+  );
+  new v1Upgrader(coreViewModel);
+  var storageViewModel = new StorageViewModel(coreViewModel);
+  var settingsViewModel = new SettingsViewModel(coreViewModel);
+  var connectionViewModel = new ConnectionViewModel(coreViewModel);
+  var chatListViewModel = new ChatListViewModel(
+    coreViewModel,
     settingsViewModel,
     connectionViewModel
   );
-  var fileTransferViewModel = new FileTransferViewModel(
-    fileTransferModel,
-    chatListModel
-  );
+  var fileTransferViewModel = new FileTransferViewModel(coreViewModel);
   chatListViewModel.selectedChat.subscribe(() => {
     document.body.toggleAttribute(
       "showing-chat",
@@ -6747,17 +6844,21 @@
   );
   document.querySelector("main").append(
     HomePage(
-      coreVieWModel,
+      coreViewModel,
       storageViewModel,
       settingsViewModel,
       connectionViewModel,
       fileTransferViewModel,
       chatListViewModel
     ),
-    ChatPageWrapper(chatListViewModel),
-    ConnectionModal(connectionViewModel),
-    DataTransferModalWrapper(connectionViewModel, fileTransferViewModel),
-    StorageModal(storageViewModel),
-    SettingsModal(settingsViewModel)
+    ChatPageWrapper(coreViewModel, chatListViewModel),
+    ConnectionModal(coreViewModel, connectionViewModel),
+    DataTransferModalWrapper(
+      coreViewModel,
+      connectionViewModel,
+      fileTransferViewModel
+    ),
+    StorageModal(coreViewModel, storageViewModel),
+    SettingsModal(coreViewModel, settingsViewModel)
   );
 })();

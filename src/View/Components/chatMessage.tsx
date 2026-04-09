@@ -3,10 +3,13 @@ import * as React from "bloatless-react";
 import { ChatMessageInfoModal } from "../Modals/chatMessageInfoModal";
 import { ChatMessageStatuses } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
-import { translations } from "../translations";
 import { MessageReactionButtonRow } from "./messageReactionButtonRow";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
+export function ChatMessage(
+    coreViewModel: CoreViewModel,
+    chatMessageViewModel: ChatMessageViewModel,
+) {
     const statusIcon = React.createProxyState(
         [chatMessageViewModel.status],
         () => {
@@ -50,7 +53,7 @@ export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
                     <button
                         on:click={chatMessageViewModel.showInfoModal}
                         aria-label={
-                            translations.chatPage.message
+                            coreViewModel.translations.chatPage.message
                                 .showMessageInfoButtonAudioLabel
                         }
                     >
@@ -58,14 +61,8 @@ export function ChatMessage(chatMessageViewModel: ChatMessageViewModel) {
                     </button>
                 </div>
             </div>
-            {MessageReactionButtonRow(chatMessageViewModel)}
-            {ChatMessageInfoModal(chatMessageViewModel)}
+            {MessageReactionButtonRow(coreViewModel, chatMessageViewModel)}
+            {ChatMessageInfoModal(coreViewModel, chatMessageViewModel)}
         </div>
     );
 }
-
-export const ChatMessageViewModelToView: React.StateItemConverter<
-    ChatMessageViewModel
-> = (chatMessageViewModel: ChatMessageViewModel) => {
-    return ChatMessage(chatMessageViewModel);
-};

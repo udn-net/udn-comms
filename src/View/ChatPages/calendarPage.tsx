@@ -7,10 +7,13 @@ import CalendarPageViewModel from "../../ViewModel/Pages/calendarPageViewModel";
 import { MonthGrid } from "../Components/monthGrid";
 import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
-import { translations } from "../translations";
 import { setFocusWithDelay } from "../utility";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
+export function CalendarPage(
+    coreViewModel: CoreViewModel,
+    calendarPageViewModel: CalendarPageViewModel,
+) {
     calendarPageViewModel.loadData();
 
     const mainContent = React.createProxyState(
@@ -30,6 +33,7 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                 }
 
                 return MonthGrid(
+                    coreViewModel,
                     monthGrid,
                     calendarPageViewModel.selectedDate,
                     drop,
@@ -58,8 +62,8 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                                 <div class="width-100 height-100 flex-column justify-center align-center">
                                     <span class="secondary slide-up">
                                         {
-                                            translations.chatPage.calendar
-                                                .noEvents
+                                            coreViewModel.translations.chatPage
+                                                .calendar.noEvents
                                         }
                                     </span>
                                 </div>
@@ -99,6 +103,7 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                 setFocusWithDelay();
 
                 return TaskSettingsModal(
+                    coreViewModel,
                     calendarPageViewModel.selectedTaskViewModel.value,
                 );
             }
@@ -114,7 +119,7 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                             <button
                                 class="ghost"
                                 aria-label={
-                                    translations.chatPage.calendar
+                                    coreViewModel.translations.chatPage.calendar
                                         .todayButtonAudioLabel
                                 }
                                 on:click={calendarPageViewModel.showToday}
@@ -126,7 +131,7 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                             <button
                                 class="ghost"
                                 aria-label={
-                                    translations.chatPage.calendar
+                                    coreViewModel.translations.chatPage.calendar
                                         .previousMonthButtonAudioLabel
                                 }
                                 on:click={
@@ -140,12 +145,12 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                                     class="year-input"
                                     type="number"
                                     aria-label={
-                                        translations.chatPage.calendar
-                                            .yearInputAudioLabel
+                                        coreViewModel.translations.chatPage
+                                            .calendar.yearInputAudioLabel
                                     }
                                     placeholder={
-                                        translations.chatPage.calendar
-                                            .yearInputPlaceholder
+                                        coreViewModel.translations.chatPage
+                                            .calendar.yearInputPlaceholder
                                     }
                                     bind:value={
                                         calendarPageViewModel.selectedYear
@@ -155,12 +160,12 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                                     class="month-input"
                                     type="number"
                                     aria-label={
-                                        translations.chatPage.calendar
-                                            .monthInputAudioLabel
+                                        coreViewModel.translations.chatPage
+                                            .calendar.monthInputAudioLabel
                                     }
                                     placeholder={
-                                        translations.chatPage.calendar
-                                            .monthInputPlaceholder
+                                        coreViewModel.translations.chatPage
+                                            .calendar.monthInputPlaceholder
                                     }
                                     bind:value={
                                         calendarPageViewModel.selectedMonth
@@ -170,7 +175,7 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                             <button
                                 class="ghost"
                                 aria-label={
-                                    translations.chatPage.calendar
+                                    coreViewModel.translations.chatPage.calendar
                                         .nextMonthButtonAudioLabel
                                 }
                                 on:click={calendarPageViewModel.showNextMonth}
@@ -182,7 +187,7 @@ export function CalendarPage(calendarPageViewModel: CalendarPageViewModel) {
                             <button
                                 class="ghost"
                                 aria-label={
-                                    translations.chatPage.task
+                                    coreViewModel.translations.chatPage.task
                                         .createTaskButtonAudioLabel
                                 }
                                 on:click={calendarPageViewModel.createEvent}

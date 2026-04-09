@@ -1,14 +1,18 @@
 import * as React from "bloatless-react";
 
-import { translations } from "../translations";
+import { Languages } from "../translations";
 import SettingsViewModel, {
     SettingsModalPages,
 } from "../../ViewModel/Global/settingsViewModel";
 import { SplitModal } from "../Components/splitModal";
 import { InfoTile } from "../Components/infoTile";
 import { Option } from "../Components/option";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function SettingsModal(settingsViewModel: SettingsViewModel) {
+export function SettingsModal(
+    coreViewModel: CoreViewModel,
+    settingsViewModel: SettingsViewModel,
+) {
     const detailView = React.createProxyState(
         [settingsViewModel.selectedModalPage],
         () => {
@@ -16,9 +20,12 @@ export function SettingsModal(settingsViewModel: SettingsViewModel) {
                 case SettingsModalPages.Appearance:
                     return <div>Appearance</div>;
                 case SettingsModalPages.Regional:
-                    return SettingsRegionalPane(settingsViewModel);
+                    return SettingsRegionalPane(
+                        coreViewModel,
+                        settingsViewModel,
+                    );
                 case SettingsModalPages.Info:
-                    return SettingsInfoPane(settingsViewModel);
+                    return SettingsInfoPane(coreViewModel, settingsViewModel);
             }
         },
     );
@@ -31,7 +38,9 @@ export function SettingsModal(settingsViewModel: SettingsViewModel) {
             <div>
                 <main class="padding-0">
                     {SplitModal(
-                        new React.State(SettingsLeftPane(settingsViewModel)),
+                        new React.State(
+                            SettingsLeftPane(coreViewModel, settingsViewModel),
+                        ),
                         detailView,
                         new React.State(""),
                         false,
@@ -39,7 +48,7 @@ export function SettingsModal(settingsViewModel: SettingsViewModel) {
                     )}
                 </main>
                 <button on:click={settingsViewModel.hideSettingsModal}>
-                    {translations.general.closeButton}
+                    {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>
             </div>
@@ -47,23 +56,26 @@ export function SettingsModal(settingsViewModel: SettingsViewModel) {
     );
 }
 
-function SettingsLeftPane(settingsViewModel: SettingsViewModel) {
+function SettingsLeftPane(
+    coreViewModel: CoreViewModel,
+    settingsViewModel: SettingsViewModel,
+) {
     return (
         <div class="flex-column gap">
             {SettingsPaneButton(
                 settingsViewModel,
                 SettingsModalPages.Appearance,
-                translations.settings.pages.appearance,
+                coreViewModel.translations.settings.pages.appearance,
             )}
             {SettingsPaneButton(
                 settingsViewModel,
                 SettingsModalPages.Regional,
-                translations.settings.pages.regional,
+                coreViewModel.translations.settings.pages.regional,
             )}
             {SettingsPaneButton(
                 settingsViewModel,
                 SettingsModalPages.Info,
-                translations.settings.pages.info,
+                coreViewModel.translations.settings.pages.info,
             )}
         </div>
     );
@@ -89,15 +101,18 @@ function SettingsPaneButton(
     );
 }
 
-function SettingsInfoPane(settingsViewModel: SettingsViewModel) {
+function SettingsInfoPane(
+    coreViewModel: CoreViewModel,
+    settingsViewModel: SettingsViewModel,
+) {
     return (
         <div class="slide-up">
-            <h2>{translations.homePage.appName}</h2>
+            <h2>{coreViewModel.translations.homePage.appName}</h2>
             <hr></hr>
             <div class="flex-column gap">
                 {InfoTile(
                     "build",
-                    translations.settings.version,
+                    coreViewModel.translations.settings.version,
                     settingsViewModel.coreViewModel.BUILD,
                 )}
             </div>
@@ -105,25 +120,49 @@ function SettingsInfoPane(settingsViewModel: SettingsViewModel) {
     );
 }
 
-function SettingsRegionalPane(settingsViewModel: SettingsViewModel) {
+function SettingsRegionalPane(
+    coreViewModel: CoreViewModel,
+    settingsViewModel: SettingsViewModel,
+) {
     return (
         <div class="slide-up">
-            <h2>{translations.settings.pages.regional}</h2>
+            <h2>{coreViewModel.translations.settings.pages.regional}</h2>
             <hr></hr>
             <label class="tile flex-no">
                 <span class="icon">calendar_month</span>
                 <div>
-                    <span>{translations.homePage.firstDayOfWeekLabel}</span>
-                    <select bind:value={settingsViewModel.firstDayOfWeekInput}>
-                        {...translations.regional.weekdays.full.map(
+                    <span>
+                        {
+                            coreViewModel.translations.settings
+                                .firstDayOfWeekLabel
+                        }
+                    </span>
+                    <select bind:value={settingsViewModel.firstDayOfWeek}>
+                        {...coreViewModel.translations.regional.weekdays.full.map(
                             (weekdayName, i) =>
                                 Option(
                                     weekdayName,
                                     i.toString(),
                                     i.toString() ==
-                                        settingsViewModel.firstDayOfWeekInput
-                                            .value,
+                                        settingsViewModel.firstDayOfWeek.value,
                                 ),
+                        )}
+                    </select>
+                    <span class="icon">arrow_drop_down</span>
+                </div>
+            </label>
+            <label class="tile flex-no">
+                <span class="icon">language</span>
+                <div>
+                    <span>{coreViewModel.translations.settings.language}</span>
+                    <select bind:value={settingsViewModel.language}>
+                        {...[...Object.values(Languages)].map((language, i) =>
+                            Option(
+                                language,
+                                i.toString(),
+                                i.toString() ==
+                                    settingsViewModel.language.value,
+                            ),
                         )}
                     </select>
                     <span class="icon">arrow_drop_down</span>

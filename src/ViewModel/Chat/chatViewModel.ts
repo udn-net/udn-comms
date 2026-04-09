@@ -20,13 +20,12 @@ import MessagePageViewModel from "../Pages/messagePageViewModel";
 import SettingsPageViewModel from "../Pages/settingsPageViewModel";
 import SettingsViewModel from "../Global/settingsViewModel";
 import TaskPageViewModel from "../Pages/taskPageViewModel";
-import { translations } from "../../View/translations";
 import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
 
 export default class ChatViewModel {
     chatModel: ChatModel;
-    storageModel: StorageModel;
+
     settingsViewModel: SettingsViewModel;
     notificationViewModel: NotificationViewModel;
     connectionViewModel: ConnectionViewModel;
@@ -84,13 +83,14 @@ export default class ChatViewModel {
             StorageModelSubPaths.Chat,
             filePaths.chat.lastUsedPage(this.chatModel.id),
         );
-        const lastUsedPage: string | null = this.storageModel.read(path);
+        const lastUsedPage: string | null =
+            this.coreViewModel.storageModel.read(path);
         if (lastUsedPage != null) {
             this.selectedPage.value = lastUsedPage as any;
         }
 
         this.selectedPage.subscribeSilent((newPage) => {
-            this.storageModel.write(path, newPage);
+            this.coreViewModel.storageModel.write(path, newPage);
             this.resetColor();
         });
     };
@@ -99,7 +99,7 @@ export default class ChatViewModel {
         this.updateReadStatus();
         this.taskBoardSuggestions.set(CALENDAR_EVENT_BOARD_ID, [
             CALENDAR_EVENT_BOARD_ID,
-            translations.chatPage.calendar.eventsBoard,
+            this.coreViewModel.translations.chatPage.calendar.eventsBoard,
         ]);
     };
 
@@ -132,7 +132,6 @@ export default class ChatViewModel {
     // init
     constructor(
         public coreViewModel: CoreViewModel,
-        storageModel: StorageModel,
         chatModel: ChatModel,
         settingsViewModel: SettingsViewModel,
         notificationViewModel: NotificationViewModel,
@@ -140,7 +139,6 @@ export default class ChatViewModel {
         chatListViewModel: ChatListViewModel,
     ) {
         // models
-        this.storageModel = storageModel;
         this.chatModel = chatModel;
         this.settingsViewModel = settingsViewModel;
         this.connectionViewModel = connectionViewModel;
@@ -151,14 +149,12 @@ export default class ChatViewModel {
         this.calendarViewModel = new CalendarPageViewModel(
             coreViewModel,
             this,
-            this.storageModel,
             this.chatModel.fileModel.boardsAndTasksModel.calendarModel,
             this.chatModel.fileModel.boardsAndTasksModel,
         );
         this.taskPageViewModel = new TaskPageViewModel(
             this.coreViewModel,
             this,
-            this.storageModel,
             this.chatModel.fileModel.boardsAndTasksModel,
         );
         this.messagePageViewModel = new MessagePageViewModel(

@@ -5,11 +5,8 @@ import StorageModel, {
 } from "../../Model/Global/storageModel";
 
 import CoreViewModel from "./coreViewModel";
-import { translations } from "../../View/translations";
 
 export default class StorageViewModel {
-    storageModel: StorageModel;
-
     // state
     isShowingStorageModal: React.State<boolean> = new React.State(false);
     selectedPath: React.State<string> = new React.State(
@@ -27,10 +24,10 @@ export default class StorageViewModel {
         const path = StorageModel.stringToPathComponents(
             this.selectedPath.value,
         );
-        const content = this.storageModel.read(path);
+        const content = this.coreViewModel.storageModel.read(path);
         return (
-            (content ?? translations.storage.notAFile) ||
-            translations.storage.contentEmpty
+            (content ?? this.coreViewModel.translations.storage.notAFile) ||
+            this.coreViewModel.translations.storage.contentEmpty
         );
     };
 
@@ -40,12 +37,12 @@ export default class StorageViewModel {
         );
         this.lastDeletedItemPath.value = this.selectedPath.value;
 
-        this.storageModel.removeRecursively(path);
+        this.coreViewModel.storageModel.removeRecursively(path);
         this.didMakeChanges.value = true;
     };
 
     removeJunk = (): void => {
-        this.storageModel.removeJunk();
+        this.coreViewModel.storageModel.removeJunk();
         this.selectedPath.value = PATH_COMPONENT_SEPARATOR;
     };
 
@@ -63,12 +60,7 @@ export default class StorageViewModel {
     };
 
     // init
-    constructor(
-        public coreViewModel: CoreViewModel,
-        storageModel: StorageModel,
-    ) {
-        this.storageModel = storageModel;
-
+    constructor(public coreViewModel: CoreViewModel) {
         this.selectedFileName = React.createProxyState(
             [this.selectedPath],
             () => StorageModel.getFileNameFromString(this.selectedPath.value),

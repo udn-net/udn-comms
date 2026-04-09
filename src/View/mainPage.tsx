@@ -1,12 +1,11 @@
 import * as React from "bloatless-react";
+import CoreViewModel from "../ViewModel/Global/coreViewModel";
 
-import { translations } from "./translations";
-
-export function MainPage() {
+export function MainPage(coreViewModel: CoreViewModel) {
     return (
         <article id="home-page">
             <header>
-                <span>{translations.homePage.appName}</span>
+                <span>{coreViewModel.translations.homePage.appName}</span>
             </header>
             <div></div>
         </article>

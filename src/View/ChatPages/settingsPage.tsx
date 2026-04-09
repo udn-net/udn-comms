@@ -5,17 +5,25 @@ import { ColorPicker } from "../Components/colorPicker";
 import { DangerousActionButton } from "../Components/dangerousActionButton";
 import { DeletableListItem } from "../Components/deletableListItem";
 import SettingsPageViewModel from "../../ViewModel/Pages/settingsPageViewModel";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
+export function SettingsPage(
+    coreViewModel: CoreViewModel,
+    settingsPageViewModel: SettingsPageViewModel,
+) {
     settingsPageViewModel.loadData();
 
     const secondaryChannelConverter: React.StateItemConverter<string> = (
         secondaryChannel: string,
     ) => {
-        return DeletableListItem(secondaryChannel, <span></span>, () => {
-            settingsPageViewModel.removeSecondaryChannel(secondaryChannel);
-        });
+        return DeletableListItem(
+            coreViewModel,
+            secondaryChannel,
+            <span></span>,
+            () => {
+                settingsPageViewModel.removeSecondaryChannel(secondaryChannel);
+            },
+        );
     };
 
     return (
@@ -24,7 +32,10 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                 <div class="pane">
                     <div class="toolbar">
                         <span class="title">
-                            {translations.chatPage.settings.settingsHeadline}
+                            {
+                                coreViewModel.translations.chatPage.settings
+                                    .settingsHeadline
+                            }
                         </span>
                     </div>
                     <div class="content">
@@ -33,8 +44,8 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                             <div>
                                 <span>
                                     {
-                                        translations.chatPage.settings
-                                            .primaryChannelLabel
+                                        coreViewModel.translations.chatPage
+                                            .settings.primaryChannelLabel
                                     }
                                 </span>
                                 <input
@@ -51,7 +62,7 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                             <button
                                 class="width-50"
                                 aria-label={
-                                    translations.chatPage.settings
+                                    coreViewModel.translations.chatPage.settings
                                         .setPrimaryChannelButtonAudioLabel
                                 }
                                 on:click={
@@ -61,7 +72,7 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                                     settingsPageViewModel.cannotSetPrimaryChannel
                                 }
                             >
-                                {translations.general.setButton}
+                                {coreViewModel.translations.general.setButton}
                                 <span class="icon">check</span>
                             </button>
                         </div>
@@ -71,11 +82,11 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                         <div class="flex-row width-input margin-bottom">
                             <input
                                 aria-label={
-                                    translations.chatPage.settings
+                                    coreViewModel.translations.chatPage.settings
                                         .newSecondaryChannelAudioLabel
                                 }
                                 placeholder={
-                                    translations.chatPage.settings
+                                    coreViewModel.translations.chatPage.settings
                                         .newSecondaryChannelPlaceholder
                                 }
                                 bind:value={
@@ -88,7 +99,7 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                             <button
                                 class="primary"
                                 aria-label={
-                                    translations.chatPage.settings
+                                    coreViewModel.translations.chatPage.settings
                                         .addSecondaryChannelButtonAudioLabel
                                 }
                                 on:click={
@@ -117,8 +128,8 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                             <div>
                                 <span>
                                     {
-                                        translations.chatPage.settings
-                                            .encryptionKeyLabel
+                                        coreViewModel.translations.chatPage
+                                            .settings.encryptionKeyLabel
                                     }
                                 </span>
                                 <input
@@ -138,7 +149,7 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                             <button
                                 class="width-50"
                                 aria-label={
-                                    translations.chatPage.settings
+                                    coreViewModel.translations.chatPage.settings
                                         .setEncryptionKeyButtonAudioLabel
                                 }
                                 on:click={
@@ -148,7 +159,7 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                                     settingsPageViewModel.cannotSetEncryptionKey
                                 }
                             >
-                                {translations.general.setButton}
+                                {coreViewModel.translations.general.setButton}
                                 <span class="icon">check</span>
                             </button>
                         </div>
@@ -160,7 +171,10 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
                                     settingsPageViewModel.shouldShowEncryptionKey
                                 }
                             ></input>
-                            {translations.chatPage.settings.showEncryptionKey}
+                            {
+                                coreViewModel.translations.chatPage.settings
+                                    .showEncryptionKey
+                            }
                         </label>
 
                         <hr></hr>
@@ -171,7 +185,9 @@ export function SettingsPage(settingsPageViewModel: SettingsPageViewModel) {
 
                         <div class="width-input">
                             {DangerousActionButton(
-                                translations.chatPage.settings.deleteChatButton,
+                                coreViewModel,
+                                coreViewModel.translations.chatPage.settings
+                                    .deleteChatButton,
                                 "chat_error",
                                 settingsPageViewModel.remove,
                             )}

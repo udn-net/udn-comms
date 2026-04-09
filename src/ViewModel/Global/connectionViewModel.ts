@@ -4,8 +4,6 @@ import ConnectionModel from "../../Model/Global/connectionModel";
 import CoreViewModel from "./coreViewModel";
 
 export default class ConnectionViewModel {
-    connectionModel: ConnectionModel;
-
     // state
     serverAddressInput: React.State<string> = new React.State("");
     isConnected: React.State<boolean> = new React.State(false);
@@ -20,7 +18,7 @@ export default class ConnectionViewModel {
         () =>
             (this.isConnected.value == true &&
                 this.serverAddressInput.value ==
-                    this.connectionModel.address) ||
+                    this.coreViewModel.connectionModel.address) ||
             this.serverAddressInput.value == "",
     );
     cannotDisonnect: React.State<boolean> = React.createProxyState(
@@ -34,15 +32,22 @@ export default class ConnectionViewModel {
 
     // handlers
     connectionChangeHandler = (): void => {
-        this.isConnected.value = this.connectionModel.isConnected;
+        this.isConnected.value = this.coreViewModel.connectionModel.isConnected;
 
-        if (this.connectionModel.isConnected == false) return;
-        if (this.connectionModel.address == undefined) return;
+        if (this.coreViewModel.connectionModel.isConnected == false) return;
+        if (this.coreViewModel.connectionModel.address == undefined) return;
 
-        this.serverAddressInput.value = this.connectionModel.address;
+        this.serverAddressInput.value =
+            this.coreViewModel.connectionModel.address;
 
-        if (!this.previousAddresses.value.has(this.connectionModel.address)) {
-            this.previousAddresses.add(this.connectionModel.address);
+        if (
+            !this.previousAddresses.value.has(
+                this.coreViewModel.connectionModel.address,
+            )
+        ) {
+            this.previousAddresses.add(
+                this.coreViewModel.connectionModel.address,
+            );
         }
     };
 
@@ -53,15 +58,15 @@ export default class ConnectionViewModel {
 
     connectToAddress = (address: string): void => {
         console.log(address);
-        this.connectionModel.connect(address);
+        this.coreViewModel.connectionModel.connect(address);
     };
 
     disconnect = (): void => {
-        this.connectionModel.disconnect();
+        this.coreViewModel.connectionModel.disconnect();
     };
 
     removePreviousAddress = (address: string): void => {
-        this.connectionModel.removeAddress(address);
+        this.coreViewModel.connectionModel.removeAddress(address);
         this.updatePreviousAddresses();
     };
 
@@ -76,18 +81,16 @@ export default class ConnectionViewModel {
 
     updatePreviousAddresses = (): void => {
         this.previousAddresses.clear();
-        this.previousAddresses.add(...this.connectionModel.addresses);
+        this.previousAddresses.add(
+            ...this.coreViewModel.connectionModel.addresses,
+        );
     };
 
     // init
-    constructor(
-        public coreViewModel: CoreViewModel,
-        connectionModel: ConnectionModel,
-    ) {
-        this.connectionModel = connectionModel;
+    constructor(public coreViewModel: CoreViewModel) {
         this.updatePreviousAddresses();
 
-        connectionModel.connectionChangeHandlerManager.addHandler(
+        coreViewModel.connectionModel.connectionChangeHandlerManager.addHandler(
             this.connectionChangeHandler,
         );
     }

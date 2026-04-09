@@ -1,29 +1,42 @@
 import * as React from "bloatless-react";
 import { ReactionSymbols } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
-import { translations } from "../translations";
 import { MessageReactionButton } from "./messageReactionButton";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function MessageReactionButtonRow(
+    coreViewModel: CoreViewModel,
     chatMessageViewModel: ChatMessageViewModel,
 ) {
     return (
         <div class="grid gap width-100 message-reaction-row">
             {MessageReactionButton(
+                coreViewModel,
                 chatMessageViewModel,
                 ReactionSymbols.ThumbsUp,
             )}
-            {MessageReactionButton(chatMessageViewModel, ReactionSymbols.Check)}
-            {MessageReactionButton(chatMessageViewModel, ReactionSymbols.Stop)}
             {MessageReactionButton(
+                coreViewModel,
+                chatMessageViewModel,
+                ReactionSymbols.Check,
+            )}
+            {MessageReactionButton(
+                coreViewModel,
+                chatMessageViewModel,
+                ReactionSymbols.Stop,
+            )}
+            {MessageReactionButton(
+                coreViewModel,
                 chatMessageViewModel,
                 ReactionSymbols.Attention,
             )}
             {MessageReactionButton(
+                coreViewModel,
                 chatMessageViewModel,
                 ReactionSymbols.DoubleAttention,
             )}
             {MessageReactionButton(
+                coreViewModel,
                 chatMessageViewModel,
                 ReactionSymbols.Question,
             )}

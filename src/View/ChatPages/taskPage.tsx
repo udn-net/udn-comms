@@ -5,9 +5,12 @@ import * as React from "bloatless-react";
 import { BoardPage } from "./boardPage";
 import { BoardViewModelToEntry } from "../Components/boardEntry";
 import TaskPageViewModel from "../../ViewModel/Pages/taskPageViewModel";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function TaskPage(taskPageViewModel: TaskPageViewModel) {
+export function TaskPage(
+    coreViewModel: CoreViewModel,
+    taskPageViewModel: TaskPageViewModel,
+) {
     taskPageViewModel.loadData();
 
     const isShowingBoard = React.createProxyState(
@@ -23,7 +26,10 @@ export function TaskPage(taskPageViewModel: TaskPageViewModel) {
                 return (
                     <div class="pane align-center justify-center">
                         <span class="secondary">
-                            {translations.chatPage.task.noBoardSelected}
+                            {
+                                coreViewModel.translations.chatPage.task
+                                    .noBoardSelected
+                            }
                         </span>
                     </div>
                 );
@@ -34,13 +40,16 @@ export function TaskPage(taskPageViewModel: TaskPageViewModel) {
                 return (
                     <div class="pane align-center justify-center">
                         <span class="secondary">
-                            {translations.chatPage.task.boardNotFound}
+                            {
+                                coreViewModel.translations.chatPage.task
+                                    .boardNotFound
+                            }
                         </span>
                     </div>
                 );
             }
 
-            return BoardPage(selectedBoard);
+            return BoardPage(coreViewModel, selectedBoard);
         },
     );
 
@@ -63,14 +72,14 @@ export function TaskPage(taskPageViewModel: TaskPageViewModel) {
                                 bind:value={taskPageViewModel.newBoardNameInput}
                                 on:enter={taskPageViewModel.createBoard}
                                 placeholder={
-                                    translations.chatPage.task
+                                    coreViewModel.translations.chatPage.task
                                         .newBoardNamePlaceholder
                                 }
                             ></input>
                             <button
                                 class="primary"
                                 aria-label={
-                                    translations.chatPage.task
+                                    coreViewModel.translations.chatPage.task
                                         .createBoardButtonAudioLabel
                                 }
                                 on:click={taskPageViewModel.createBoard}

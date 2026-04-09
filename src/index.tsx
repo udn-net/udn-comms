@@ -33,29 +33,28 @@ const chatListModel = new ChatListModel(
     connectionModel,
 );
 const fileTransferModel = new FileTransferModel(storageModel, connectionModel);
-// upgrade
-new v1Upgrader(settingsModel, connectionModel, chatListModel);
 
 // viewModels
-const coreVieWModel = new CoreViewModel();
-
-const storageViewModel = new StorageViewModel(coreVieWModel, storageModel);
-const settingsViewModel = new SettingsViewModel(coreVieWModel, settingsModel);
-const connectionViewModel = new ConnectionViewModel(
-    coreVieWModel,
-    connectionModel,
-);
-const chatListViewModel = new ChatListViewModel(
-    coreVieWModel,
+const coreViewModel = new CoreViewModel(
     storageModel,
+    settingsModel,
+    connectionModel,
     chatListModel,
+    fileTransferModel,
+);
+
+// upgrade
+new v1Upgrader(coreViewModel);
+
+const storageViewModel = new StorageViewModel(coreViewModel);
+const settingsViewModel = new SettingsViewModel(coreViewModel);
+const connectionViewModel = new ConnectionViewModel(coreViewModel);
+const chatListViewModel = new ChatListViewModel(
+    coreViewModel,
     settingsViewModel,
     connectionViewModel,
 );
-const fileTransferViewModel = new FileTransferViewModel(
-    fileTransferModel,
-    chatListModel,
-);
+const fileTransferViewModel = new FileTransferViewModel(coreViewModel);
 
 // view
 chatListViewModel.selectedChat.subscribe(() => {
@@ -76,16 +75,20 @@ document
     .querySelector("main")!
     .append(
         HomePage(
-            coreVieWModel,
+            coreViewModel,
             storageViewModel,
             settingsViewModel,
             connectionViewModel,
             fileTransferViewModel,
             chatListViewModel,
         ),
-        ChatPageWrapper(chatListViewModel),
-        ConnectionModal(connectionViewModel),
-        DataTransferModalWrapper(connectionViewModel, fileTransferViewModel),
-        StorageModal(storageViewModel),
-        SettingsModal(settingsViewModel),
+        ChatPageWrapper(coreViewModel, chatListViewModel),
+        ConnectionModal(coreViewModel, connectionViewModel),
+        DataTransferModalWrapper(
+            coreViewModel,
+            connectionViewModel,
+            fileTransferViewModel,
+        ),
+        StorageModal(coreViewModel, storageViewModel),
+        SettingsModal(coreViewModel, settingsViewModel),
     );

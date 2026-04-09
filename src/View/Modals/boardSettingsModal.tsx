@@ -3,9 +3,12 @@ import * as React from "bloatless-react";
 import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import { ColorPicker } from "../Components/colorPicker";
 import { DangerousActionButton } from "../Components/dangerousActionButton";
-import { translations } from "../translations";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function BoardSettingsModal(boardViewModel: BoardViewModel) {
+export function BoardSettingsModal(
+    coreViewModel: CoreViewModel,
+    boardViewModel: BoardViewModel,
+) {
     return (
         <div
             class="modal"
@@ -13,13 +16,21 @@ export function BoardSettingsModal(boardViewModel: BoardViewModel) {
         >
             <div>
                 <main>
-                    <h2>{translations.chatPage.task.boardSettingsHeadline}</h2>
+                    <h2>
+                        {
+                            coreViewModel.translations.chatPage.task
+                                .boardSettingsHeadline
+                        }
+                    </h2>
 
                     <label class="tile flex-no">
                         <span class="icon">label</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.boardNameInputLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .boardNameInputLabel
+                                }
                             </span>
                             <input
                                 on:enter={boardViewModel.saveSettings}
@@ -36,14 +47,16 @@ export function BoardSettingsModal(boardViewModel: BoardViewModel) {
 
                     <div class="width-input">
                         {DangerousActionButton(
-                            translations.chatPage.task.deleteBoardButton,
+                            coreViewModel,
+                            coreViewModel.translations.chatPage.task
+                                .deleteBoardButton,
                             "delete_forever",
                             boardViewModel.deleteBoard,
                         )}
                     </div>
                 </main>
                 <button on:click={boardViewModel.hideSettings}>
-                    {translations.general.closeButton}
+                    {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>
             </div>

@@ -2,7 +2,6 @@ import * as React from "bloatless-react";
 
 import {
     Entry,
-    EntryToOption,
     Option,
     StringToOption,
     VersionIdToOption,
@@ -10,10 +9,13 @@ import {
 
 import { DangerousActionButton } from "../Components/dangerousActionButton";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
-import { translations } from "../translations";
 import { v4 } from "uuid";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
-export function TaskSettingsModal(taskViewModel: TaskViewModel) {
+export function TaskSettingsModal(
+    coreViewModel: CoreViewModel,
+    taskViewModel: TaskViewModel,
+) {
     const categorySuggestionId = v4();
     const statusSuggestionId = v4();
 
@@ -28,12 +30,22 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
         <div class="modal" open keystroke:s={taskViewModel.closeAndSave}>
             <div>
                 <main>
-                    <h2>{translations.chatPage.task.taskSettingsHeadline}</h2>
+                    <h2>
+                        {
+                            coreViewModel.translations.chatPage.task
+                                .taskSettingsHeadline
+                        }
+                    </h2>
 
                     <label class="tile flex-no">
                         <span class="icon">history</span>
                         <div>
-                            <span>{translations.general.fileVersionLabel}</span>
+                            <span>
+                                {
+                                    coreViewModel.translations.general
+                                        .fileVersionLabel
+                                }
+                            </span>
                             <select
                                 bind:value={taskViewModel.selectedVersionId}
                                 children:append={[
@@ -51,7 +63,10 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <span class="icon">label</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.taskNameLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .taskNameLabel
+                                }
                             </span>
                             <input
                                 bind:value={taskViewModel.name}
@@ -64,7 +79,10 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <span class="icon">category</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.taskBoardLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .taskBoardLabel
+                                }
                             </span>
                             <select
                                 bind:value={taskViewModel.boardId}
@@ -83,7 +101,7 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <div>
                             <span>
                                 {
-                                    translations.chatPage.task
+                                    coreViewModel.translations.chatPage.task
                                         .taskDescriptionLabel
                                 }
                             </span>
@@ -100,7 +118,10 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <span class="icon">category</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.taskCategoryLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .taskCategoryLabel
+                                }
                             </span>
                             <input
                                 bind:value={taskViewModel.category}
@@ -121,7 +142,10 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <span class="icon">clock_loader_40</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.taskStatusLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .taskStatusLabel
+                                }
                             </span>
                             <input
                                 bind:value={taskViewModel.status}
@@ -142,7 +166,10 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <span class="icon">priority_high</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.taskPriorityLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .taskPriorityLabel
+                                }
                             </span>
                             <input
                                 type="number"
@@ -157,7 +184,10 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <span class="icon">calendar_month</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.taskDateLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .taskDateLabel
+                                }
                             </span>
                             <input
                                 type="date"
@@ -170,7 +200,10 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         <span class="icon">schedule</span>
                         <div>
                             <span>
-                                {translations.chatPage.task.taskTimeLabel}
+                                {
+                                    coreViewModel.translations.chatPage.task
+                                        .taskTimeLabel
+                                }
                             </span>
                             <input
                                 type="time"
@@ -183,7 +216,9 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
 
                     <div class="width-input">
                         {DangerousActionButton(
-                            translations.chatPage.task.deleteTaskButton,
+                            coreViewModel,
+                            coreViewModel.translations.chatPage.task
+                                .deleteTaskButton,
                             "delete_forever",
                             taskViewModel.deleteTask,
                         )}
@@ -194,13 +229,13 @@ export function TaskSettingsModal(taskViewModel: TaskViewModel) {
                         class="flex"
                         on:click={taskViewModel.closeAndDiscard}
                     >
-                        {translations.general.closeButton}
+                        {coreViewModel.translations.general.closeButton}
                     </button>
                     <button
                         class="flex primary"
                         on:click={taskViewModel.closeAndSave}
                     >
-                        {translations.general.saveButton}
+                        {coreViewModel.translations.general.saveButton}
                         <span class="icon">save</span>
                     </button>
                 </div>

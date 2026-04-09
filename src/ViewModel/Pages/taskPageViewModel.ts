@@ -11,7 +11,6 @@ import { IndexManager } from "../../Model/Utility/utility";
 import StorageModel from "../../Model/Global/storageModel";
 
 export default class TaskPageViewModel {
-    storageModel: StorageModel;
     boardsAndTasksModel: BoardsAndTasksModel;
 
     // data
@@ -82,7 +81,6 @@ export default class TaskPageViewModel {
         const boardViewModel: BoardViewModel = new BoardViewModel(
             this.coreViewModel,
             this.chatViewModel,
-            this.storageModel,
             this.boardsAndTasksModel,
             this,
             boardInfo,
@@ -120,12 +118,13 @@ export default class TaskPageViewModel {
     storeLastUsedBoard = (): void => {
         const path: string[] = this.getLastUsedBoardPath();
         const lastUsedBoardId: string = this.selectedBoardId.value ?? "";
-        this.storageModel.write(path, lastUsedBoardId);
+        this.coreViewModel.storageModel.write(path, lastUsedBoardId);
     };
 
     openLastUsedBoard = (): void => {
         const path: string[] = this.getLastUsedBoardPath();
-        const lastUsedBoardId: string | null = this.storageModel.read(path);
+        const lastUsedBoardId: string | null =
+            this.coreViewModel.storageModel.read(path);
         if (lastUsedBoardId == null) return;
 
         const boardViewModel: BoardViewModel | undefined =
@@ -156,10 +155,8 @@ export default class TaskPageViewModel {
     constructor(
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
-        storageModel: StorageModel,
         boardModel: BoardsAndTasksModel,
     ) {
-        this.storageModel = storageModel;
         this.boardsAndTasksModel = boardModel;
 
         this.chatViewModel = chatViewModel;
