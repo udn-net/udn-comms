@@ -10,8 +10,6 @@ import { IndexManager } from "../../Model/Utility/utility";
 import TaskViewModel from "./taskViewModel";
 
 export default class TaskContainingPageViewModel {
-    boardsAndTasksModel: BoardsAndTasksModel;
-
     // state
     taskIndexManager: IndexManager<TaskViewModel> = new IndexManager(
         (taskViewModel: TaskViewModel) => taskViewModel.sortingString,
@@ -60,8 +58,6 @@ export default class TaskContainingPageViewModel {
     constructor(
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
-        boardsAndTasksModel: BoardsAndTasksModel,
-    ) {
-        this.boardsAndTasksModel = boardsAndTasksModel;
-    }
+        public boardsAndTasksModel: BoardsAndTasksModel,
+    ) {}
 }

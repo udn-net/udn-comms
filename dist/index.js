@@ -1662,9 +1662,12 @@
   // src/ViewModel/Pages/taskViewModel.ts
   var TaskViewModel = class {
     // init
-    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, containingModel, taskFileContent) {
+    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, containingModel, task) {
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
+      this.boardsAndTasksModel = boardsAndTasksModel;
+      this.containingModel = containingModel;
+      this.task = task;
       // paths
       this.getFilePath = () => {
         return this.boardsAndTasksModel.getTaskFilePath(this.task.fileId);
@@ -1790,9 +1793,6 @@
         this.selectedVersionId.value = this.task.fileContentId;
         this.updateSuggestions();
       };
-      this.boardsAndTasksModel = boardsAndTasksModel;
-      this.containingModel = containingModel;
-      this.task = taskFileContent;
       this.loadAllData();
       this.selectedVersionId.subscribeSilent((selectedVersionId) => {
         this.switchVersion(selectedVersionId);
@@ -1831,6 +1831,7 @@
     constructor(coreViewModel2, chatViewModel, boardsAndTasksModel) {
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
+      this.boardsAndTasksModel = boardsAndTasksModel;
       // state
       this.taskIndexManager = new IndexManager(
         (taskViewModel) => taskViewModel.sortingString
@@ -1867,7 +1868,6 @@
           taskViewModel.updateIndex();
         }
       };
-      this.boardsAndTasksModel = boardsAndTasksModel;
     }
   };
 
@@ -1879,6 +1879,8 @@
       super(coreViewModel2, chatViewModel, boardsAndTasksModel);
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
+      this.calendarModel = calendarModel;
+      this.boardsAndTasksModel = boardsAndTasksModel;
       // paths
       this.getBasePath = () => {
         return [...this.calendarModel.getViewPath()];
@@ -2030,6 +2032,7 @@
     // init
     constructor(coreViewModel2, messagePageViewModel, chatMessage, sentByUser) {
       this.coreViewModel = coreViewModel2;
+      this.messagePageViewModel = messagePageViewModel;
       this.body = new State("");
       this.status = new State(
         void 0
@@ -2122,7 +2125,6 @@
         this.body.value = this.chatMessage.body;
         this.status.value = this.chatMessage.status;
       };
-      this.messagePageViewModel = messagePageViewModel;
       this.chatMessage = chatMessage;
       this.sentByUser = sentByUser;
       this.loadData();
@@ -2134,6 +2136,7 @@
     // init
     constructor(coreViewModel2, chatViewModel) {
       this.coreViewModel = coreViewModel2;
+      this.chatViewModel = chatViewModel;
       // state
       this.chatMessageViewModels = new MapState();
       this.composingMessage = new State("");
@@ -2193,7 +2196,6 @@
           this.handleReaction(reaction);
         }
       };
-      this.chatViewModel = chatViewModel;
       this.cannotSendMessage = createProxyState(
         [
           this.chatViewModel.settingsViewModel.username,
@@ -2209,6 +2211,7 @@
     // init
     constructor(coreViewModel2, chatViewModel) {
       this.coreViewModel = coreViewModel2;
+      this.chatViewModel = chatViewModel;
       // state
       this.primaryChannel = new State("");
       this.primaryChannelInput = new State("");
@@ -2283,7 +2286,6 @@
           this.secondaryChannels.add(secondaryChannel);
         }
       };
-      this.chatViewModel = chatViewModel;
       this.loadListRelevantData();
       this.cannotSetEncryptionKey = createProxyState(
         [this.encryptionKeyInput],
@@ -2355,6 +2357,9 @@
       super(coreViewModel2, chatViewModel, boardsAndTasksModel);
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
+      this.boardsAndTasksModel = boardsAndTasksModel;
+      this.taskPageViewModel = taskPageViewModel;
+      this.boardInfo = boardInfo;
       // state
       this.name = new State("");
       this.color = new State("standard" /* Standard */);
@@ -2527,9 +2532,6 @@
         this.loadTasks();
         this.loadSearchSuggestions();
       };
-      this.boardsAndTasksModel = boardsAndTasksModel;
-      this.taskPageViewModel = taskPageViewModel;
-      this.boardInfo = boardInfo;
       this.loadListRelevantData();
       this.isSelected = createProxyState(
         [this.taskPageViewModel.selectedBoardId],
@@ -2567,9 +2569,10 @@
   // src/ViewModel/Pages/taskPageViewModel.ts
   var TaskPageViewModel = class {
     // init
-    constructor(coreViewModel2, chatViewModel, boardModel) {
+    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel) {
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
+      this.boardsAndTasksModel = boardsAndTasksModel;
       // data
       this.boardIndexManager = new IndexManager(
         (boardViewModel) => boardViewModel.name.value
@@ -2674,10 +2677,9 @@
         this.updateBoardIndices();
         this.openLastUsedBoard();
       };
-      this.boardsAndTasksModel = boardModel;
       this.chatViewModel = chatViewModel;
       this.loadData();
-      boardModel.boardHandlerManager.addHandler(
+      boardsAndTasksModel.boardHandlerManager.addHandler(
         (boardInfoFileContent) => {
           this.showBoardInList(boardInfoFileContent);
           this.updateBoardIndices();
@@ -2691,6 +2693,11 @@
     // init
     constructor(coreViewModel2, chatModel, settingsViewModel2, notificationViewModel, connectionViewModel2, chatListViewModel2) {
       this.coreViewModel = coreViewModel2;
+      this.chatModel = chatModel;
+      this.settingsViewModel = settingsViewModel2;
+      this.notificationViewModel = notificationViewModel;
+      this.connectionViewModel = connectionViewModel2;
+      this.chatListViewModel = chatListViewModel2;
       // state
       this.displayedColor = new State("standard" /* Standard */);
       this.selectedPage = new State(
@@ -2764,11 +2771,6 @@
           }
         );
       };
-      this.chatModel = chatModel;
-      this.settingsViewModel = settingsViewModel2;
-      this.connectionViewModel = connectionViewModel2;
-      this.notificationViewModel = notificationViewModel;
-      this.chatListViewModel = chatListViewModel2;
       this.calendarViewModel = new CalendarPageViewModel(
         coreViewModel2,
         this,
@@ -2811,6 +2813,7 @@
   var NotificationViewModel = class _NotificationViewModel {
     // init
     constructor(chatListViewModel2) {
+      this.chatListViewModel = chatListViewModel2;
       // data
       this.seenMessageIds = /* @__PURE__ */ new Set();
       this.messagesInMarquee = [];
@@ -2864,7 +2867,6 @@
         this.stopLoop();
         this.startLoop();
       };
-      this.chatListViewModel = chatListViewModel2;
     }
     // util
     static createNotification(message) {
@@ -2882,6 +2884,8 @@
     // init
     constructor(coreViewModel2, settingsViewModel2, connectionViewModel2) {
       this.coreViewModel = coreViewModel2;
+      this.settingsViewModel = settingsViewModel2;
+      this.connectionViewModel = connectionViewModel2;
       // data
       this.chatIndexManager = new IndexManager(
         (chatViewModel) => chatViewModel.settingsPageViewModel.primaryChannel.value
@@ -2947,9 +2951,7 @@
         }
         this.updateIndices();
       };
-      this.settingsViewModel = settingsViewModel2;
       this.notificationViewModel = new NotificationViewModel(this);
-      this.connectionViewModel = connectionViewModel2;
       this.loadChats();
     }
   };

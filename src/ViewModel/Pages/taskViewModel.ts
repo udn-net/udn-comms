@@ -11,13 +11,6 @@ import TaskContainingPageViewModel from "./taskContainingPageViewModel";
 import { allowDrag } from "../../View/utility";
 
 export default class TaskViewModel {
-    boardsAndTasksModel: BoardsAndTasksModel;
-
-    containingModel: TaskContainingPageViewModel;
-
-    // data
-    task: TaskFileContent;
-
     get sortingString(): string {
         const splitDate: string[] = this.date.value.split("-");
         const year = padZero(splitDate[0], 4);
@@ -213,15 +206,10 @@ export default class TaskViewModel {
     constructor(
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
-        boardsAndTasksModel: BoardsAndTasksModel,
-        containingModel: TaskContainingPageViewModel,
-        taskFileContent: TaskFileContent,
+        public boardsAndTasksModel: BoardsAndTasksModel,
+        public containingModel: TaskContainingPageViewModel,
+        public task: TaskFileContent,
     ) {
-        this.boardsAndTasksModel = boardsAndTasksModel;
-        this.containingModel = containingModel;
-
-        this.task = taskFileContent;
-
         // load
         this.loadAllData();
 

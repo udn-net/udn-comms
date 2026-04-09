@@ -10,8 +10,6 @@ import ChatViewModel from "../Chat/chatViewModel";
 import CoreViewModel from "../Global/coreViewModel";
 
 export default class MessagePageViewModel {
-    chatViewModel: ChatViewModel;
-
     // state
     chatMessageViewModels: React.MapState<ChatMessageViewModel> =
         new React.MapState();
@@ -97,10 +95,8 @@ export default class MessagePageViewModel {
     // init
     constructor(
         public coreViewModel: CoreViewModel,
-        chatViewModel: ChatViewModel,
+        public chatViewModel: ChatViewModel,
     ) {
-        this.chatViewModel = chatViewModel;
-
         this.cannotSendMessage = React.createProxyState(
             [
                 this.chatViewModel.settingsViewModel.username,

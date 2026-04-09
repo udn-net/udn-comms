@@ -8,7 +8,6 @@ import StorageModel, {
     filePaths,
 } from "../../Model/Global/storageModel";
 
-import ChatListModel from "../../Model/Chat/chatListModel";
 import ChatModel from "../../Model/Chat/chatModel";
 import CoreViewModel from "./coreViewModel";
 

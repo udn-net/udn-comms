@@ -15,13 +15,6 @@ import TaskPageViewModel from "./taskPageViewModel";
 import TaskViewModel from "./taskViewModel";
 
 export default class BoardViewModel extends TaskContainingPageViewModel {
-    boardsAndTasksModel: BoardsAndTasksModel;
-
-    taskPageViewModel: TaskPageViewModel;
-
-    // data
-    boardInfo: BoardInfoFileContent;
-
     // state
     name: React.State<string> = new React.State("");
     color: React.State<Colors> = new React.State<any>(Colors.Standard);
@@ -248,16 +241,11 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     constructor(
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
-        boardsAndTasksModel: BoardsAndTasksModel,
-        taskPageViewModel: TaskPageViewModel,
-        boardInfo: BoardInfoFileContent,
+        public boardsAndTasksModel: BoardsAndTasksModel,
+        public taskPageViewModel: TaskPageViewModel,
+        public boardInfo: BoardInfoFileContent,
     ) {
         super(coreViewModel, chatViewModel, boardsAndTasksModel);
-
-        // set
-        this.boardsAndTasksModel = boardsAndTasksModel;
-        this.taskPageViewModel = taskPageViewModel;
-        this.boardInfo = boardInfo;
 
         // load
         this.loadListRelevantData();

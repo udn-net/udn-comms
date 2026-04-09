@@ -4,8 +4,6 @@ import ChatListViewModel from "../Chat/chatListViewModel";
 import { ChatPageTypes } from "../Chat/chatViewModel";
 
 export default class NotificationViewModel {
-    chatListViewModel: ChatListViewModel;
-
     // data
     seenMessageIds = new Set<string>();
     messagesInMarquee: Notification[] = [];
@@ -78,9 +76,7 @@ export default class NotificationViewModel {
     };
 
     // init
-    constructor(chatListViewModel: ChatListViewModel) {
-        this.chatListViewModel = chatListViewModel;
-    }
+    constructor(public chatListViewModel: ChatListViewModel) {}
 
     // util
     static createNotification(message: ChatMessage): Notification {

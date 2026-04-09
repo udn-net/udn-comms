@@ -8,11 +8,8 @@ import BoardViewModel from "./boardViewModel";
 import ChatViewModel from "../Chat/chatViewModel";
 import CoreViewModel from "../Global/coreViewModel";
 import { IndexManager } from "../../Model/Utility/utility";
-import StorageModel from "../../Model/Global/storageModel";
 
 export default class TaskPageViewModel {
-    boardsAndTasksModel: BoardsAndTasksModel;
-
     // data
     boardIndexManager: IndexManager<BoardViewModel> = new IndexManager(
         (boardViewModel: BoardViewModel) => boardViewModel.name.value,
@@ -155,16 +152,14 @@ export default class TaskPageViewModel {
     constructor(
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
-        boardModel: BoardsAndTasksModel,
+        public boardsAndTasksModel: BoardsAndTasksModel,
     ) {
-        this.boardsAndTasksModel = boardModel;
-
         this.chatViewModel = chatViewModel;
 
         this.loadData();
 
         // handlers
-        boardModel.boardHandlerManager.addHandler(
+        boardsAndTasksModel.boardHandlerManager.addHandler(
             (boardInfoFileContent: BoardInfoFileContent) => {
                 this.showBoardInList(boardInfoFileContent);
                 this.updateBoardIndices();

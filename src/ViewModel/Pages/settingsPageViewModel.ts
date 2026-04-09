@@ -5,8 +5,6 @@ import { Colors } from "../../colors";
 import CoreViewModel from "../Global/coreViewModel";
 
 export default class SettingsPageViewModel {
-    chatViewModel: ChatViewModel;
-
     // state
     primaryChannel: React.State<string> = new React.State("");
     primaryChannelInput: React.State<string> = new React.State("");
@@ -113,9 +111,8 @@ export default class SettingsPageViewModel {
     // init
     constructor(
         public coreViewModel: CoreViewModel,
-        chatViewModel: ChatViewModel,
+        public chatViewModel: ChatViewModel,
     ) {
-        this.chatViewModel = chatViewModel;
         this.loadListRelevantData();
 
         this.cannotSetEncryptionKey = React.createProxyState(

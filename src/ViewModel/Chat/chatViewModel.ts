@@ -24,13 +24,6 @@ import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
 
 export default class ChatViewModel {
-    chatModel: ChatModel;
-
-    settingsViewModel: SettingsViewModel;
-    notificationViewModel: NotificationViewModel;
-    connectionViewModel: ConnectionViewModel;
-    chatListViewModel: ChatListViewModel;
-
     calendarViewModel: CalendarPageViewModel;
     taskPageViewModel: TaskPageViewModel;
     messagePageViewModel: MessagePageViewModel;
@@ -132,19 +125,12 @@ export default class ChatViewModel {
     // init
     constructor(
         public coreViewModel: CoreViewModel,
-        chatModel: ChatModel,
-        settingsViewModel: SettingsViewModel,
-        notificationViewModel: NotificationViewModel,
-        connectionViewModel: ConnectionViewModel,
-        chatListViewModel: ChatListViewModel,
+        public chatModel: ChatModel,
+        public settingsViewModel: SettingsViewModel,
+        public notificationViewModel: NotificationViewModel,
+        public connectionViewModel: ConnectionViewModel,
+        public chatListViewModel: ChatListViewModel,
     ) {
-        // models
-        this.chatModel = chatModel;
-        this.settingsViewModel = settingsViewModel;
-        this.connectionViewModel = connectionViewModel;
-        this.notificationViewModel = notificationViewModel;
-        this.chatListViewModel = chatListViewModel;
-
         // page viewModels
         this.calendarViewModel = new CalendarPageViewModel(
             coreViewModel,

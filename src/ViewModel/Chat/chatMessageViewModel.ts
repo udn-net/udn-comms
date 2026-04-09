@@ -12,8 +12,6 @@ import CoreViewModel from "../Global/coreViewModel";
 import MessagePageViewModel from "../Pages/messagePageViewModel";
 
 export default class ChatMessageViewModel {
-    messagePageViewModel: MessagePageViewModel;
-
     // data
     chatMessage: ChatMessage;
     channel: string;
@@ -126,12 +124,10 @@ export default class ChatMessageViewModel {
     // init
     constructor(
         public coreViewModel: CoreViewModel,
-        messagePageViewModel: MessagePageViewModel,
+        public messagePageViewModel: MessagePageViewModel,
         chatMessage: ChatMessage,
         sentByUser: boolean,
     ) {
-        this.messagePageViewModel = messagePageViewModel;
-
         this.chatMessage = chatMessage;
         this.sentByUser = sentByUser;
         this.loadData();

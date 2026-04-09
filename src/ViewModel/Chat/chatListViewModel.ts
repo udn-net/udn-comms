@@ -11,9 +11,7 @@ import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
 
 export default class ChatListViewModel {
-    settingsViewModel: SettingsViewModel;
     notificationViewModel: NotificationViewModel;
-    connectionViewModel: ConnectionViewModel;
 
     // data
     chatIndexManager: IndexManager<ChatViewModel> = new IndexManager(
@@ -99,12 +97,10 @@ export default class ChatListViewModel {
     // init
     constructor(
         public coreViewModel: CoreViewModel,
-        settingsViewModel: SettingsViewModel,
-        connectionViewModel: ConnectionViewModel,
+        public settingsViewModel: SettingsViewModel,
+        public connectionViewModel: ConnectionViewModel,
     ) {
-        this.settingsViewModel = settingsViewModel;
         this.notificationViewModel = new NotificationViewModel(this);
-        this.connectionViewModel = connectionViewModel;
 
         this.loadChats();
     }
