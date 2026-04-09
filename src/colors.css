@@ -60,7 +60,6 @@ body[theme="dark"] [color]:not([color="standard"]).tile {
     --surface-active: hsl(var(--hue), 100%, var(--active-luma));
 
     --text-normal: hsl(var(--hue), 100%, var(--text-luma));
-
 }
 
 /* fill */

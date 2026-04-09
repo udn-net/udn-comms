@@ -5611,7 +5611,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.09.B";
+      this.BUILD = "Build 26.04.09.C";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS
@@ -6842,7 +6842,7 @@
         ),
         detailView,
         new State(""),
-        false,
+        true,
         settingsViewModel2.selectedModalPage
       )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
@@ -6884,19 +6884,21 @@
     )));
   }
   function SettingsRegionalPane(coreViewModel2, settingsViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.settings.pages.regional), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.settings.firstDayOfWeekLabel), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.firstDayOfWeek }, ...coreViewModel2.translations.regional.weekdays.full.map(
-      (weekdayName, i) => Option(
-        weekdayName,
-        i.toString(),
-        i.toString() == settingsViewModel2.firstDayOfWeek.value
-      )
-    )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "language"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.settings.language), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.language }, ...[...Object.values(Languages)].map(
-      (language, i) => Option(
-        languageNames[language],
-        language,
-        language == settingsViewModel2.language.value
-      )
-    )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))));
+    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.settings.pages.regional), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.settings.language), OptionButtonList(
+      new ListState(
+        Object.values(Languages).map(
+          (x) => [languageNames[x], x]
+        )
+      ),
+      settingsViewModel2.language
+    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.settings.firstDayOfWeekLabel), OptionButtonList(
+      new ListState(
+        coreViewModel2.translations.regional.weekdays.full.map(
+          (x, i) => [x, i.toString()]
+        )
+      ),
+      settingsViewModel2.firstDayOfWeek
+    ));
   }
   function SettingsAppearancePane(coreViewModel2, settingsViewModel2) {
     return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.settings.pages.appearance), /* @__PURE__ */ createElement("hr", null), OptionButtonList(

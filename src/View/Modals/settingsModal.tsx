@@ -49,7 +49,7 @@ export function SettingsModal(
                         ),
                         detailView,
                         new React.State(""),
-                        false,
+                        true,
                         settingsViewModel.selectedModalPage,
                     )}
                 </main>
@@ -133,46 +133,28 @@ function SettingsRegionalPane(
     return (
         <div class="slide-up">
             <h2>{coreViewModel.translations.settings.pages.regional}</h2>
+
             <hr></hr>
-            <label class="tile flex-no">
-                <span class="icon">calendar_month</span>
-                <div>
-                    <span>
-                        {
-                            coreViewModel.translations.settings
-                                .firstDayOfWeekLabel
-                        }
-                    </span>
-                    <select bind:value={settingsViewModel.firstDayOfWeek}>
-                        {...coreViewModel.translations.regional.weekdays.full.map(
-                            (weekdayName, i) =>
-                                Option(
-                                    weekdayName,
-                                    i.toString(),
-                                    i.toString() ==
-                                        settingsViewModel.firstDayOfWeek.value,
-                                ),
-                        )}
-                    </select>
-                    <span class="icon">arrow_drop_down</span>
-                </div>
-            </label>
-            <label class="tile flex-no">
-                <span class="icon">language</span>
-                <div>
-                    <span>{coreViewModel.translations.settings.language}</span>
-                    <select bind:value={settingsViewModel.language}>
-                        {...[...Object.values(Languages)].map((language, i) =>
-                            Option(
-                                languageNames[language],
-                                language,
-                                language == settingsViewModel.language.value,
-                            ),
-                        )}
-                    </select>
-                    <span class="icon">arrow_drop_down</span>
-                </div>
-            </label>
+            <h3>{coreViewModel.translations.settings.language}</h3>
+            {OptionButtonList(
+                new React.ListState<[string, string]>(
+                    Object.values(Languages).map(
+                        (x) => [languageNames[x], x],
+                    ),
+                ),
+                settingsViewModel.language,
+            )}
+
+            <hr></hr>
+            <h3>{coreViewModel.translations.settings.firstDayOfWeekLabel}</h3>
+            {OptionButtonList(
+                new React.ListState<[string, string]>(
+                    coreViewModel.translations.regional.weekdays.full.map(
+                        (x, i) => [x, i.toString()],
+                    ),
+                ),
+                settingsViewModel.firstDayOfWeek,
+            )}
         </div>
     );
 }
