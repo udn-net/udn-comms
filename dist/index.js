@@ -6134,13 +6134,7 @@
       },
       translations.general.setButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "check")
-    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.firstDayOfWeekLabel), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.firstDayOfWeekInput }, ...translations.regional.weekdays.full.map(
-      (weekdayName, i) => Option(
-        weekdayName,
-        i.toString(),
-        i.toString() == settingsViewModel2.firstDayOfWeekInput.value
-      )
-    )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), HomePageButton(
+    )), /* @__PURE__ */ createElement("hr", null), HomePageButton(
       settingsViewModel2.showSettingsModal,
       translations.homePage.settingsButton,
       "settings"
@@ -6646,7 +6640,7 @@
           case 0 /* Appearance */:
             return /* @__PURE__ */ createElement("div", null, "Appearance");
           case 1 /* Regional */:
-            return /* @__PURE__ */ createElement("div", null, "Regional");
+            return SettingsRegionalPane(settingsViewModel2);
           case 2 /* Info */:
             return SettingsInfoPane(settingsViewModel2);
         }
@@ -6702,6 +6696,15 @@
       translations.settings.version,
       settingsViewModel2.coreViewModel.BUILD
     )));
+  }
+  function SettingsRegionalPane(settingsViewModel2) {
+    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, translations.settings.pages.regional), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, translations.homePage.firstDayOfWeekLabel), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.firstDayOfWeekInput }, ...translations.regional.weekdays.full.map(
+      (weekdayName, i) => Option(
+        weekdayName,
+        i.toString(),
+        i.toString() == settingsViewModel2.firstDayOfWeekInput.value
+      )
+    )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))));
   }
 
   // src/index.tsx

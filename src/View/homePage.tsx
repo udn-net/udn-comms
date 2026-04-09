@@ -108,28 +108,6 @@ export function HomePage(
 
             <hr></hr>
 
-            <label class="tile flex-no">
-                <span class="icon">calendar_month</span>
-                <div>
-                    <span>{translations.homePage.firstDayOfWeekLabel}</span>
-                    <select bind:value={settingsViewModel.firstDayOfWeekInput}>
-                        {...translations.regional.weekdays.full.map(
-                            (weekdayName, i) =>
-                                Option(
-                                    weekdayName,
-                                    i.toString(),
-                                    i.toString() ==
-                                        settingsViewModel.firstDayOfWeekInput
-                                            .value,
-                                ),
-                        )}
-                    </select>
-                    <span class="icon">arrow_drop_down</span>
-                </div>
-            </label>
-
-            <hr></hr>
-
             {HomePageButton(
                 settingsViewModel.showSettingsModal,
                 translations.homePage.settingsButton,
