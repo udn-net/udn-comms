@@ -79,7 +79,7 @@ const englishTranslations = {
     settings: {
         pages: {
             appearance: "Appearance",
-            regional: "Language+Region",
+            regional: "Language & Region",
             info: "About Comms",
         },
 
@@ -371,7 +371,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
         settings: {
             pages: {
                 appearance: "Erscheinungsbild",
-                regional: "Sprache+Region",
+                regional: "Sprache & Region",
                 info: "Über Comms",
             },
 
@@ -634,7 +634,7 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
         settings: {
             pages: {
                 appearance: "Aspecto",
-                regional: "Idioma+Región",
+                regional: "Idioma y Región",
                 info: "Sobre Comms",
             },
 

@@ -2752,7 +2752,7 @@
     settings: {
       pages: {
         appearance: "Appearance",
-        regional: "Language+Region",
+        regional: "Language & Region",
         info: "About Comms"
       },
       version: "Version"
@@ -2956,7 +2956,7 @@
       settings: {
         pages: {
           appearance: "Erscheinungsbild",
-          regional: "Sprache+Region",
+          regional: "Sprache & Region",
           info: "\xDCber Comms"
         },
         version: "Version"
@@ -3143,7 +3143,7 @@
       settings: {
         pages: {
           appearance: "Aspecto",
-          regional: "Idioma+Regi\xF3n",
+          regional: "Idioma y Regi\xF3n",
           info: "Sobre Comms"
         },
         version: "Versi\xF3n"
