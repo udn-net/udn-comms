@@ -57,22 +57,20 @@ main {
       var(--color-2) 30%,
       transparent 35%);
 }
-@media (prefers-color-scheme: dark) {
-  #background-wrapper {
-    opacity: 0.5;
-  }
-  #background-wrapper #sky {
-    --color-1: hsl(188, 100%, 30%);
-    --color-2: hsl(194, 72%, 24%);
-  }
-  #background-wrapper #grass-1 {
-    --color-1: hsl(120, 30%, 30%);
-    --color-2: hsl(120, 30%, 24%);
-  }
-  #background-wrapper #grass-2 {
-    --color-1: hsl(110, 60%, 30%);
-    --color-2: hsl(110, 50%, 24%);
-  }
+body[theme=dark] #background-wrapper {
+  opacity: 0.5;
+}
+body[theme=dark] #background-wrapper #sky {
+  --color-1: hsl(188, 100%, 30%);
+  --color-2: hsl(194, 72%, 24%);
+}
+body[theme=dark] #background-wrapper #grass-1 {
+  --color-1: hsl(120, 30%, 30%);
+  --color-2: hsl(120, 30%, 24%);
+}
+body[theme=dark] #background-wrapper #grass-2 {
+  --color-1: hsl(110, 60%, 30%);
+  --color-2: hsl(110, 50%, 24%);
 }
 
 /* src/colors.css */
@@ -86,14 +84,12 @@ main {
   --surface-hover: hsla(var(--hue), 100%, 5%, 10%);
   --surface-active: hsla(var(--hue), 100%, 5%, 15%);
 }
-@media (prefers-color-scheme: dark) {
-  [color]:not([color=standard]) {
-    --accent-luma: var(--accent-luma-dark);
-    --accent-text-luma: var(--accent-text-luma-dark);
-    --surface: hsla(var(--hue), 100%, 95%, 5%);
-    --surface-hover: hsla(var(--hue), 100%, 95%, 10%);
-    --surface-active: hsla(var(--hue), 100%, 95%, 15%);
-  }
+body[theme=dark] [color]:not([color=standard]) {
+  --accent-luma: var(--accent-luma-dark);
+  --accent-text-luma: var(--accent-text-luma-dark);
+  --surface: hsla(var(--hue), 100%, 95%, 5%);
+  --surface-hover: hsla(var(--hue), 100%, 95%, 10%);
+  --surface-active: hsla(var(--hue), 100%, 95%, 15%);
 }
 [color]:not([color=standard]).tile {
   --gradient-luma-1: 70%;
@@ -111,14 +107,12 @@ main {
   --surface-active: hsl(var(--hue), 100%, var(--active-luma));
   --text-normal: hsl(var(--hue), 100%, var(--text-luma));
 }
-@media (prefers-color-scheme: dark) {
-  [color]:not([color=standard]).tile {
-    --gradient-luma-1: 20%;
-    --gradient-luma-2: 15%;
-    --hover-luma: 25%;
-    --active-luma: 30%;
-    --text-luma: 90%;
-  }
+body[theme=dark] [color]:not([color=standard]).tile {
+  --gradient-luma-1: 20%;
+  --gradient-luma-2: 15%;
+  --hover-luma: 25%;
+  --active-luma: 30%;
+  --text-luma: 90%;
 }
 [color]:not([color=standard]).fill-color {
   color: white;
@@ -133,11 +127,9 @@ main {
     --sat: 100%;
     background: hsl(var(--hue), var(--sat), var(--luma), 40%);
   }
-  @media (prefers-color-scheme: dark) {
-    [color]:not([color=standard]).background {
-      --luma: var(--background-luma-dark);
-      --sat: 100%;
-    }
+  body[theme=dark] [color]:not([color=standard]).background {
+    --luma: var(--background-luma-dark);
+    --sat: 100%;
   }
   [color=standard].background {
     background: var(--surface);
@@ -147,14 +139,12 @@ main {
   --luma: var(--subtle-luma);
   background: hsl(var(--hue), 100%, var(--luma), 50%);
 }
-@media (prefers-color-scheme: dark) {
+body[theme=dark] [color]:not([color=standard]).subtle-background {
+  --luma: var(--subtle-luma-dark);
+}
+@media (display-mode: standalone) {
   [color]:not([color=standard]).subtle-background {
-    --luma: var(--subtle-luma-dark);
-  }
-  @media (display-mode: standalone) {
-    [color]:not([color=standard]).subtle-background {
-      --luma: 0%;
-    }
+    --luma: 0%;
   }
 }
 [color=coral] {

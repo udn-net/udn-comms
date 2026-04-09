@@ -1,8 +1,7 @@
 import * as React from "bloatless-react";
 
 import CoreViewModel from "./coreViewModel";
-import SettingsModel from "../../Model/Global/settingsModel";
-import { Languages } from "../../View/translations";
+import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
 
 export default class SettingsViewModel {
     // state
@@ -15,7 +14,12 @@ export default class SettingsViewModel {
     requiresReload = new React.State<boolean>(false);
 
     firstDayOfWeek: React.State<string> = new React.State("0");
-    language: React.State<Languages|string> = new React.State(Languages.English);
+    language: React.State<Languages | string> = new React.State(
+        Languages.English,
+    );
+    theme: React.State<ThemeSettings | string> = new React.State(
+        ThemeSettings.System,
+    );
 
     // guards
     cannotSetName: React.State<boolean> = React.createProxyState(
@@ -54,19 +58,49 @@ export default class SettingsViewModel {
         this.selectedModalPage.value = page;
     };
 
+    // view
+    applyTheme = (): void => {
+        let theme = this.theme.value;
+        if (theme == ThemeSettings.System) {
+            theme = SettingsViewModel.getSystemTheme();
+        }
+        document.body.setAttribute("theme", theme);
+    };
+
     // init
     constructor(public coreViewModel: CoreViewModel) {
         this.username.value = coreViewModel.settingsModel.username;
         this.usernameInput.value = coreViewModel.settingsModel.username;
         this.firstDayOfWeek.value = coreViewModel.settingsModel.firstDayOfWeek;
         this.language.value = coreViewModel.settingsModel.language;
+        this.theme.value = coreViewModel.settingsModel.theme;
 
         // subscriptions
         this.firstDayOfWeek.subscribe(this.setFirstDayofWeek);
         this.language.subscribeSilent((newValue) => {
             this.coreViewModel.settingsModel.setLanguage(newValue);
             this.requiresReload.value = true;
-        })
+        });
+        this.theme.subscribeSilent((newValue) => {
+            this.coreViewModel.settingsModel.setTheme(newValue);
+        });
+
+        // set theme
+        this.theme.subscribe(() => {
+            this.applyTheme();
+        });
+        SettingsViewModel.generateThemeMedia().addEventListener("change", () =>
+            this.applyTheme(),
+        );
+    }
+
+    static generateThemeMedia(): MediaQueryList {
+        return window.matchMedia("(prefers-color-scheme: dark)");
+    }
+
+    static getSystemTheme(): string {
+        const media = SettingsViewModel.generateThemeMedia();
+        return media.matches == true ? ThemeSettings.Dark : ThemeSettings.Light;
     }
 }
 

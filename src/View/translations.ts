@@ -80,6 +80,11 @@ const englishTranslations = {
             regional: "Language & Region",
             info: "About Comms",
         },
+        themes: {
+            dark: "Dark",
+            light: "Light",
+            system: "Device theme",
+        },
 
         version: "Version",
         language: "Language",
@@ -375,6 +380,11 @@ export const allTranslations: {
                 regional: "Sprache & Region",
                 info: "Über Comms",
             },
+            themes: {
+                dark: "Dunkel",
+                light: "Hell",
+                system: "Geräteeinstellung",
+            },
 
             version: "Version",
             language: "Sprache",
@@ -639,6 +649,11 @@ export const allTranslations: {
                 regional: "Idioma y Región",
                 info: "Sobre Comms",
             },
+            themes: {
+                dark: "Oscuro",
+                light: "Claro",
+                system: "Según dispositivo",
+            },
 
             version: "Versión",
             language: "Idioma",
@@ -832,6 +847,6 @@ export const languageNames = {
     en: "English",
     de: "Deutsch",
     es: "Español",
-}
+};
 
 export type Translations = typeof englishTranslations;

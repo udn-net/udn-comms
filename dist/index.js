@@ -620,7 +620,8 @@
     settingsModel: {
       username: ["user-name"],
       firstDayOfWeek: ["first-day-of-week"],
-      language: ["language"]
+      language: ["language"],
+      theme: ["theme"]
     }
   };
 
@@ -5060,6 +5061,11 @@
         regional: "Language & Region",
         info: "About Comms"
       },
+      themes: {
+        dark: "Dark",
+        light: "Light",
+        system: "Device theme"
+      },
       version: "Version",
       language: "Language",
       firstDayOfWeekLabel: "First day of week"
@@ -5265,6 +5271,11 @@
           regional: "Sprache & Region",
           info: "\xDCber Comms"
         },
+        themes: {
+          dark: "Dunkel",
+          light: "Hell",
+          system: "Ger\xE4teeinstellung"
+        },
         version: "Version",
         language: "Sprache",
         firstDayOfWeekLabel: "Erster Wochentag"
@@ -5453,6 +5464,11 @@
           regional: "Idioma y Regi\xF3n",
           info: "Sobre Comms"
         },
+        themes: {
+          dark: "Oscuro",
+          light: "Claro",
+          system: "Seg\xFAn dispositivo"
+        },
         version: "Versi\xF3n",
         language: "Idioma",
         firstDayOfWeekLabel: "Primer d\xEDa de la semana"
@@ -5585,12 +5601,6 @@
     de: "Deutsch",
     es: "Espa\xF1ol"
   };
-  var Languages = /* @__PURE__ */ ((Languages2) => {
-    Languages2["English"] = "en";
-    Languages2["German"] = "de";
-    Languages2["Spanish"] = "es";
-    return Languages2;
-  })(Languages || {});
 
   // src/ViewModel/Global/coreViewModel.ts
   var CoreViewModel = class {
@@ -6249,54 +6259,52 @@
   // src/Model/Global/settingsModel.ts
   var SettingsModel = class _SettingsModel {
     // storage
-    setName(newValue) {
-      this.username = newValue;
+    storeSetting(pathName, value) {
       const path = StorageModel.getPath(
         "settings" /* SettingsModel */,
-        filePaths.settingsModel.username
+        filePaths.settingsModel[pathName]
       );
-      this.storageModel.write(path, newValue);
+      this.storageModel.write(path, value);
+    }
+    setName(newValue) {
+      this.username = newValue;
+      this.storeSetting("username", newValue);
     }
     setFirstDayOfWeek(newValue) {
       this.firstDayOfWeek = newValue;
-      const path = StorageModel.getPath(
-        "settings" /* SettingsModel */,
-        filePaths.settingsModel.firstDayOfWeek
-      );
-      this.storageModel.write(path, newValue);
+      this.storeSetting("firstDayOfWeek", newValue);
     }
     setLanguage(newValue) {
       this.language = newValue;
-      const path = StorageModel.getPath(
-        "settings" /* SettingsModel */,
-        filePaths.settingsModel.language
-      );
-      this.storageModel.write(path, newValue);
+      this.storeSetting("language", newValue);
+    }
+    setTheme(newValue) {
+      this.theme = newValue;
+      this.storeSetting("theme", newValue);
     }
     // load
-    loadUsername() {
+    readSetting(pathName) {
       const path = StorageModel.getPath(
         "settings" /* SettingsModel */,
-        filePaths.settingsModel.username
+        filePaths.settingsModel[pathName]
       );
-      const content = this.storageModel.read(path);
+      return this.storageModel.read(path);
+    }
+    loadUsername() {
+      const content = this.readSetting("username");
       this.username = content ?? "";
     }
     loadFirstDayofWeek() {
-      const path = StorageModel.getPath(
-        "settings" /* SettingsModel */,
-        filePaths.settingsModel.firstDayOfWeek
-      );
-      const content = this.storageModel.read(path);
+      const content = this.readSetting("firstDayOfWeek");
       this.firstDayOfWeek = content ?? "0";
     }
     loadLanguage() {
-      const path = StorageModel.getPath(
-        "settings" /* SettingsModel */,
-        filePaths.settingsModel.language
-      );
-      const content = this.storageModel.read(path);
+      const content = this.readSetting("language");
       this.language = content ?? _SettingsModel.getSystemLanguage();
+    }
+    loadTheme() {
+      const content = this.readSetting("theme");
+      this.theme = content ?? "system" /* System */;
     }
     // init
     constructor(storageModel2) {
@@ -6304,6 +6312,7 @@
       this.loadUsername();
       this.loadFirstDayofWeek();
       this.loadLanguage();
+      this.loadTheme();
     }
     static getSystemLanguage() {
       switch (navigator.language.substring(0, 2)) {
@@ -6316,9 +6325,15 @@
       }
     }
   };
+  var Languages = /* @__PURE__ */ ((Languages2) => {
+    Languages2["English"] = "en";
+    Languages2["German"] = "de";
+    Languages2["Spanish"] = "es";
+    return Languages2;
+  })(Languages || {});
 
   // src/ViewModel/Global/settingsViewModel.ts
-  var SettingsViewModel = class {
+  var SettingsViewModel = class _SettingsViewModel {
     // init
     constructor(coreViewModel2) {
       this.coreViewModel = coreViewModel2;
@@ -6331,7 +6346,12 @@
       );
       this.requiresReload = new State(false);
       this.firstDayOfWeek = new State("0");
-      this.language = new State("en" /* English */);
+      this.language = new State(
+        "en" /* English */
+      );
+      this.theme = new State(
+        "system" /* System */
+      );
       // guards
       this.cannotSetName = createProxyState(
         [this.usernameInput],
@@ -6360,15 +6380,41 @@
       this.showModalPage = (page) => {
         this.selectedModalPage.value = page;
       };
+      // view
+      this.applyTheme = () => {
+        let theme = this.theme.value;
+        if (theme == "system" /* System */) {
+          theme = _SettingsViewModel.getSystemTheme();
+        }
+        document.body.setAttribute("theme", theme);
+      };
       this.username.value = coreViewModel2.settingsModel.username;
       this.usernameInput.value = coreViewModel2.settingsModel.username;
       this.firstDayOfWeek.value = coreViewModel2.settingsModel.firstDayOfWeek;
       this.language.value = coreViewModel2.settingsModel.language;
+      this.theme.value = coreViewModel2.settingsModel.theme;
       this.firstDayOfWeek.subscribe(this.setFirstDayofWeek);
       this.language.subscribeSilent((newValue) => {
         this.coreViewModel.settingsModel.setLanguage(newValue);
         this.requiresReload.value = true;
       });
+      this.theme.subscribeSilent((newValue) => {
+        this.coreViewModel.settingsModel.setTheme(newValue);
+      });
+      this.theme.subscribe(() => {
+        this.applyTheme();
+      });
+      _SettingsViewModel.generateThemeMedia().addEventListener(
+        "change",
+        () => this.applyTheme()
+      );
+    }
+    static generateThemeMedia() {
+      return window.matchMedia("(prefers-color-scheme: dark)");
+    }
+    static getSystemTheme() {
+      const media = _SettingsViewModel.generateThemeMedia();
+      return media.matches == true ? "dark" /* Dark */ : "light" /* Light */;
     }
   };
 
@@ -6736,6 +6782,33 @@
     return true;
   }
 
+  // src/View/Components/optionButton.tsx
+  function OptionButton(text, value, selection) {
+    function select() {
+      selection.value = value;
+    }
+    const isSelected = createProxyState(
+      [selection],
+      () => selection.value == value
+    );
+    return /* @__PURE__ */ createElement("button", { class: "standard", "toggle:selected": isSelected, "on:click": select }, text);
+  }
+
+  // src/View/Components/optionButtonList.tsx
+  function OptionButtonList(options, selection) {
+    function OptionToView(option) {
+      const [text, value] = option;
+      return OptionButton(text, value, selection);
+    }
+    return /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "flex-column gap",
+        "children:append": [options, OptionToView]
+      }
+    );
+  }
+
   // src/View/Modals/settingsModal.tsx
   function SettingsModal(coreViewModel2, settingsViewModel2) {
     const detailView = createProxyState(
@@ -6743,7 +6816,10 @@
       () => {
         switch (settingsViewModel2.selectedModalPage.value) {
           case 0 /* Appearance */:
-            return /* @__PURE__ */ createElement("div", null, "Appearance");
+            return SettingsAppearancePane(
+              coreViewModel2,
+              settingsViewModel2
+            );
           case 1 /* Regional */:
             return SettingsRegionalPane(
               coreViewModel2,
@@ -6821,6 +6897,25 @@
         language == settingsViewModel2.language.value
       )
     )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))));
+  }
+  function SettingsAppearancePane(coreViewModel2, settingsViewModel2) {
+    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.settings.pages.appearance), /* @__PURE__ */ createElement("hr", null), OptionButtonList(
+      new ListState([
+        [
+          coreViewModel2.translations.settings.themes.dark,
+          "dark" /* Dark */
+        ],
+        [
+          coreViewModel2.translations.settings.themes.light,
+          "light" /* Light */
+        ],
+        [
+          coreViewModel2.translations.settings.themes.system,
+          "system" /* System */
+        ]
+      ]),
+      settingsViewModel2.theme
+    ));
   }
 
   // src/index.tsx

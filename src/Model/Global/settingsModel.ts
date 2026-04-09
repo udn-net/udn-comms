@@ -12,7 +12,10 @@ export default class SettingsModel {
     theme: string;
 
     // storage
-    private storeSetting(pathName: keyof typeof filePaths.settingsModel, value: string): void {
+    private storeSetting(
+        pathName: keyof typeof filePaths.settingsModel,
+        value: string,
+    ): void {
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
             filePaths.settingsModel[pathName],
@@ -41,7 +44,9 @@ export default class SettingsModel {
     }
 
     // load
-    private readSetting(pathName: keyof typeof filePaths.settingsModel): string {
+    private readSetting(
+        pathName: keyof typeof filePaths.settingsModel,
+    ): string {
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
             filePaths.settingsModel[pathName],
@@ -76,6 +81,7 @@ export default class SettingsModel {
         this.loadUsername();
         this.loadFirstDayofWeek();
         this.loadLanguage();
+        this.loadTheme();
     }
 
     static getSystemLanguage(): Languages {

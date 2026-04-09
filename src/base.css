@@ -76,23 +76,21 @@ main {
     );
 }
 
-@media (prefers-color-scheme: dark) {
-    #background-wrapper {
-        opacity: 0.5;
-    }
+body[theme="dark"] #background-wrapper {
+    opacity: 0.5;
+}
 
-    #background-wrapper #sky {
-        --color-1: hsl(188, 100%, 30%);
-        --color-2: hsl(194, 72%, 24%);
-    }
+body[theme="dark"] #background-wrapper #sky {
+    --color-1: hsl(188, 100%, 30%);
+    --color-2: hsl(194, 72%, 24%);
+}
 
-    #background-wrapper #grass-1 {
-        --color-1: hsl(120, 30%, 30%);
-        --color-2: hsl(120, 30%, 24%);
-    }
+body[theme="dark"] #background-wrapper #grass-1 {
+    --color-1: hsl(120, 30%, 30%);
+    --color-2: hsl(120, 30%, 24%);
+}
 
-    #background-wrapper #grass-2 {
-        --color-1: hsl(110, 60%, 30%);
-        --color-2: hsl(110, 50%, 24%);
-    }
+body[theme="dark"] #background-wrapper #grass-2 {
+    --color-1: hsl(110, 60%, 30%);
+    --color-2: hsl(110, 50%, 24%);
 }

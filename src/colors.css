@@ -12,15 +12,13 @@
     --surface-active: hsla(var(--hue), 100%, 5%, 15%);
 }
 
-@media (prefers-color-scheme: dark) {
-    [color]:not([color="standard"]) {
-        --accent-luma: var(--accent-luma-dark);
-        --accent-text-luma: var(--accent-text-luma-dark);
+body[theme="dark"] [color]:not([color="standard"]) {
+    --accent-luma: var(--accent-luma-dark);
+    --accent-text-luma: var(--accent-text-luma-dark);
 
-        --surface: hsla(var(--hue), 100%, 95%, 5%);
-        --surface-hover: hsla(var(--hue), 100%, 95%, 10%);
-        --surface-active: hsla(var(--hue), 100%, 95%, 15%);
-    }
+    --surface: hsla(var(--hue), 100%, 95%, 5%);
+    --surface-hover: hsla(var(--hue), 100%, 95%, 10%);
+    --surface-active: hsla(var(--hue), 100%, 95%, 15%);
 }
 
 /* tile */
@@ -44,16 +42,14 @@
     --text-normal: hsl(var(--hue), 100%, var(--text-luma));
 }
 
-@media (prefers-color-scheme: dark) {
-    [color]:not([color="standard"]).tile {
-        --gradient-luma-1: 20%;
-        --gradient-luma-2: 15%;
+body[theme="dark"] [color]:not([color="standard"]).tile {
+    --gradient-luma-1: 20%;
+    --gradient-luma-2: 15%;
 
-        --hover-luma: 25%;
-        --active-luma: 30%;
+    --hover-luma: 25%;
+    --active-luma: 30%;
 
-        --text-luma: 90%;
-    }
+    --text-luma: 90%;
 }
 
 /* fill */
@@ -74,11 +70,9 @@
         background: hsl(var(--hue), var(--sat), var(--luma), 40%);
     }
 
-    @media (prefers-color-scheme: dark) {
-        [color]:not([color="standard"]).background {
-            --luma: var(--background-luma-dark);
-            --sat: 100%;
-        }
+    body[theme="dark"] [color]:not([color="standard"]).background {
+        --luma: var(--background-luma-dark);
+        --sat: 100%;
     }
 
     [color="standard"].background {
@@ -92,15 +86,13 @@
     background: hsl(var(--hue), 100%, var(--luma), 50%);
 }
 
-@media (prefers-color-scheme: dark) {
-    [color]:not([color="standard"]).subtle-background {
-        --luma: var(--subtle-luma-dark);
-    }
+body[theme="dark"] [color]:not([color="standard"]).subtle-background {
+    --luma: var(--subtle-luma-dark);
+}
 
-    @media (display-mode: standalone) {
-        [color]:not([color="standard"]).subtle-background {
-            --luma: 0%;
-        }
+@media (display-mode: standalone) {
+    [color]:not([color="standard"]).subtle-background {
+        --luma: 0%;
     }
 }
 

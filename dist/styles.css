@@ -74,52 +74,50 @@ COLORS
     --danger-active: #750e13;
 }
 
-@media (prefers-color-scheme: dark) {
+body[theme="dark"] {
+    --background: hsla(0, 0%, 9%, 100%);
+    --background-glass: hsla(0, 0%, 9%, 20%);
+    --background-transparent: hsla(0, 0%, 100%, 5%);
+    --background-hover: hsla(0, 0%, 55%, 16%);
+    --background-active: hsla(0, 0%, 55%, 40%);
+
+    --layer: hsla(0, 0%, 15%, 60%);
+
+    --surface: hsla(0, 0%, 100%, 4%);
+    --surface-hover: hsla(0, 0%, 100%, 10%);
+    --surface-active: hsla(0, 0%, 100%, 15%);
+
+    --border: hsla(0, 0%, 100%, 10%);
+    --surface-border: #6f6f6f;
+
+    --text-normal: #f4f4f4;
+    --text-placeholder: hsla(0, 0%, 100%, 30%);
+
+    --text-success: #42be65;
+    --text-warning: #f1c21b;
+    --text-error: #fa4d56;
+    --text-info: #4589ff;
+
+    --link: #78a9ff;
+    --link-hover: #a6c8ff;
+}
+
+@media (display-mode: standalone) {
     :root {
-        --background: hsla(0, 0%, 9%, 100%);
-        --background-glass: hsla(0, 0%, 9%, 20%);
-        --background-transparent: hsla(0, 0%, 100%, 5%);
-        --background-hover: hsla(0, 0%, 55%, 16%);
-        --background-active: hsla(0, 0%, 55%, 40%);
-
-        --layer: hsla(0, 0%, 15%, 60%);
-
-        --surface: hsla(0, 0%, 100%, 4%);
-        --surface-hover: hsla(0, 0%, 100%, 10%);
-        --surface-active: hsla(0, 0%, 100%, 15%);
-
-        --border: hsla(0, 0%, 100%, 10%);
-        --surface-border: #6f6f6f;
-
-        --text-normal: #f4f4f4;
-        --text-placeholder: hsla(0, 0%, 100%, 30%);
-
-        --text-success: #42be65;
-        --text-warning: #f1c21b;
-        --text-error: #fa4d56;
-        --text-info: #4589ff;
-
-        --link: #78a9ff;
-        --link-hover: #a6c8ff;
-    }
-
-    @media (display-mode: standalone) {
-        :root {
-            --background: hsla(0, 0%, 0%, 100%);
-            --background-transparent: hsla(0, 0%, 0%, 60%);
-            --layer: hsla(0, 0%, 0%, 60%);
-        }
+        --background: hsla(0, 0%, 0%, 100%);
+        --background-transparent: hsla(0, 0%, 0%, 60%);
+        --layer: hsla(0, 0%, 0%, 60%);
     }
 }
 
 /* basic */
 html {
     background: black;
-    color: var(--text-normal);
 }
 
 body {
     background: var(--background);
+    color: var(--text-normal);
 }
 
 .tile {
@@ -284,7 +282,7 @@ SIZES
 
     /* padding */
     --control-padding: 1rem;
-    --control-padding-compact: .4rem .8rem;
+    --control-padding-compact: 0.4rem 0.8rem;
     --control-marker-padding: 0.7rem;
     --content-padding: 1rem;
     --modal-padding: 1.25rem;

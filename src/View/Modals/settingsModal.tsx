@@ -8,7 +8,9 @@ import { SplitModal } from "../Components/splitModal";
 import { InfoTile } from "../Components/infoTile";
 import { Option } from "../Components/option";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { Languages } from "../../Model/Global/settingsModel";
+import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
+import { OptionButtonList } from "../Components/optionButtonList";
+import { stringify } from "../../Model/Utility/utility";
 
 export function SettingsModal(
     coreViewModel: CoreViewModel,
@@ -19,7 +21,10 @@ export function SettingsModal(
         () => {
             switch (settingsViewModel.selectedModalPage.value) {
                 case SettingsModalPages.Appearance:
-                    return <div>Appearance</div>;
+                    return SettingsAppearancePane(
+                        coreViewModel,
+                        settingsViewModel,
+                    );
                 case SettingsModalPages.Regional:
                     return SettingsRegionalPane(
                         coreViewModel,
@@ -161,14 +166,42 @@ function SettingsRegionalPane(
                             Option(
                                 languageNames[language],
                                 language,
-                                language ==
-                                    settingsViewModel.language.value,
+                                language == settingsViewModel.language.value,
                             ),
                         )}
                     </select>
                     <span class="icon">arrow_drop_down</span>
                 </div>
             </label>
+        </div>
+    );
+}
+
+function SettingsAppearancePane(
+    coreViewModel: CoreViewModel,
+    settingsViewModel: SettingsViewModel,
+) {
+    return (
+        <div class="slide-up">
+            <h2>{coreViewModel.translations.settings.pages.appearance}</h2>
+            <hr></hr>
+            {OptionButtonList(
+                new React.ListState<[string, ThemeSettings]>([
+                    [
+                        coreViewModel.translations.settings.themes.dark,
+                        ThemeSettings.Dark,
+                    ],
+                    [
+                        coreViewModel.translations.settings.themes.light,
+                        ThemeSettings.Light,
+                    ],
+                    [
+                        coreViewModel.translations.settings.themes.system,
+                        ThemeSettings.System,
+                    ],
+                ]),
+                settingsViewModel.theme,
+            )}
         </div>
     );
 }
