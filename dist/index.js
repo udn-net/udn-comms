@@ -5580,6 +5580,11 @@
       }
     }
   };
+  var languageNames = {
+    en: "English",
+    de: "Deutsch",
+    es: "Espa\xF1ol"
+  };
   var Languages = /* @__PURE__ */ ((Languages2) => {
     Languages2["English"] = "en";
     Languages2["German"] = "de";
@@ -6269,7 +6274,7 @@
       this.storageModel.write(path, newValue);
     }
     // load
-    loadUsernam() {
+    loadUsername() {
       const path = StorageModel.getPath(
         "settings" /* SettingsModel */,
         filePaths.settingsModel.username
@@ -6296,8 +6301,9 @@
     // init
     constructor(storageModel2) {
       this.storageModel = storageModel2;
-      this.loadUsernam();
+      this.loadUsername();
       this.loadFirstDayofWeek();
+      this.loadLanguage();
     }
     static getSystemLanguage() {
       switch (navigator.language.substring(0, 2)) {
@@ -6323,6 +6329,7 @@
       this.selectedModalPage = new State(
         0 /* Appearance */
       );
+      this.requiresReload = new State(false);
       this.firstDayOfWeek = new State("0");
       this.language = new State("en" /* English */);
       // guards
@@ -6346,6 +6353,9 @@
       };
       this.hideSettingsModal = () => {
         this.isShowingSettingsModal.value = false;
+        if (this.requiresReload.value == true) {
+          window.location.reload();
+        }
       };
       this.showModalPage = (page) => {
         this.selectedModalPage.value = page;
@@ -6353,7 +6363,12 @@
       this.username.value = coreViewModel2.settingsModel.username;
       this.usernameInput.value = coreViewModel2.settingsModel.username;
       this.firstDayOfWeek.value = coreViewModel2.settingsModel.firstDayOfWeek;
+      this.language.value = coreViewModel2.settingsModel.language;
       this.firstDayOfWeek.subscribe(this.setFirstDayofWeek);
+      this.language.subscribeSilent((newValue) => {
+        this.coreViewModel.settingsModel.setLanguage(newValue);
+        this.requiresReload.value = true;
+      });
     }
   };
 
@@ -6801,9 +6816,9 @@
       )
     )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "language"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.settings.language), /* @__PURE__ */ createElement("select", { "bind:value": settingsViewModel2.language }, ...[...Object.values(Languages)].map(
       (language, i) => Option(
+        languageNames[language],
         language,
-        i.toString(),
-        i.toString() == settingsViewModel2.language.value
+        language == settingsViewModel2.language.value
       )
     )), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))));
   }

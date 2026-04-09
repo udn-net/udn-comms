@@ -30,7 +30,7 @@ export default class SettingsModel {
         this.storageModel.write(path, newValue);
     }
 
-    setLanguage(newValue: Languages): void {
+    setLanguage(newValue: string): void {
         this.language = newValue;
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
@@ -40,7 +40,7 @@ export default class SettingsModel {
     }
 
     // load
-    loadUsernam(): void {
+    loadUsername(): void {
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
             filePaths.settingsModel.username,
@@ -71,8 +71,9 @@ export default class SettingsModel {
     constructor(storageModel: StorageModel) {
         this.storageModel = storageModel;
 
-        this.loadUsernam();
+        this.loadUsername();
         this.loadFirstDayofWeek();
+        this.loadLanguage();
     }
 
     static getSystemLanguage(): Languages {

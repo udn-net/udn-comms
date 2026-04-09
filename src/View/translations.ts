@@ -828,6 +828,12 @@ export const allTranslations: {
     },
 };
 
+export const languageNames = {
+    en: "English",
+    de: "Deutsch",
+    es: "Español",
+}
+
 export type Translations = typeof englishTranslations;
 export enum Languages {
     English = "en",

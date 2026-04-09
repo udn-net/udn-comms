@@ -1,6 +1,6 @@
 import * as React from "bloatless-react";
 
-import { Languages } from "../translations";
+import { languageNames, Languages } from "../translations";
 import SettingsViewModel, {
     SettingsModalPages,
 } from "../../ViewModel/Global/settingsViewModel";
@@ -158,9 +158,9 @@ function SettingsRegionalPane(
                     <select bind:value={settingsViewModel.language}>
                         {...[...Object.values(Languages)].map((language, i) =>
                             Option(
+                                languageNames[language],
                                 language,
-                                i.toString(),
-                                i.toString() ==
+                                language ==
                                     settingsViewModel.language.value,
                             ),
                         )}

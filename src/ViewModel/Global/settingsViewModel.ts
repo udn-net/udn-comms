@@ -12,9 +12,10 @@ export default class SettingsViewModel {
     selectedModalPage: React.State<SettingsModalPages> = new React.State(
         SettingsModalPages.Appearance,
     );
+    requiresReload = new React.State<boolean>(false);
 
     firstDayOfWeek: React.State<string> = new React.State("0");
-    language: React.State<Languages> = new React.State(Languages.English);
+    language: React.State<Languages|string> = new React.State(Languages.English);
 
     // guards
     cannotSetName: React.State<boolean> = React.createProxyState(
@@ -44,6 +45,9 @@ export default class SettingsViewModel {
 
     hideSettingsModal = (): void => {
         this.isShowingSettingsModal.value = false;
+        if (this.requiresReload.value == true) {
+            window.location.reload();
+        }
     };
 
     showModalPage = (page: SettingsModalPages): void => {
@@ -55,9 +59,14 @@ export default class SettingsViewModel {
         this.username.value = coreViewModel.settingsModel.username;
         this.usernameInput.value = coreViewModel.settingsModel.username;
         this.firstDayOfWeek.value = coreViewModel.settingsModel.firstDayOfWeek;
+        this.language.value = coreViewModel.settingsModel.language;
 
         // subscriptions
         this.firstDayOfWeek.subscribe(this.setFirstDayofWeek);
+        this.language.subscribeSilent((newValue) => {
+            this.coreViewModel.settingsModel.setLanguage(newValue);
+            this.requiresReload.value = true;
+        })
     }
 }
 
