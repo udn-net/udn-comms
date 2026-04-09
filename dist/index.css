@@ -113,6 +113,15 @@ body[theme=dark] [color]:not([color=standard]).tile {
   --hover-luma: 25%;
   --active-luma: 30%;
   --text-luma: 90%;
+  --surface:
+    linear-gradient(
+      
+      120deg,
+      hsl(var(--hue), 100%, var(--gradient-luma-1)),
+      hsla(var(--hue), 100%, var(--gradient-luma-2), 40%) );
+  --surface-hover: hsl(var(--hue), 100%, var(--hover-luma));
+  --surface-active: hsl(var(--hue), 100%, var(--active-luma));
+  --text-normal: hsl(var(--hue), 100%, var(--text-luma));
 }
 [color]:not([color=standard]).fill-color {
   color: white;
