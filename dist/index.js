@@ -5611,7 +5611,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.09.C";
+      this.BUILD = "Build 26.04.09.D";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS
@@ -6419,21 +6419,8 @@
   };
 
   // src/View/Components/splitModal.tsx
-  function SplitModal(leftView, rightView, scrollButtonLabel, extendedStyle = false, navigationState) {
-    const view = /* @__PURE__ */ createElement("div", { class: "split-modal", "toggle:extended": extendedStyle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView }), /* @__PURE__ */ createElement(
-      "div",
-      {
-        class: "detail-button-wrapper",
-        "toggle:hidden": navigationState != void 0
-      },
-      /* @__PURE__ */ createElement("button", { class: "ghost", "on:click": scrollToDetails }, /* @__PURE__ */ createElement(
-        "span",
-        {
-          class: "ellipsis",
-          "subscribe:innerText": scrollButtonLabel
-        }
-      ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward"))
-    )), /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView }));
+  function SplitModal(leftView, rightView, extendedStyle = false, navigationState) {
+    const view = /* @__PURE__ */ createElement("div", { class: "split-modal", "toggle:extended": extendedStyle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView })), /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView }));
     function scrollToDetails() {
       view.scrollLeft = view.scrollWidth;
     }
@@ -6524,7 +6511,6 @@
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": storageViewModel2.isShowingStorageModal }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
       new State(DirectoryItemList(storageViewModel2)),
       detailView,
-      storageViewModel2.selectedFileName,
       true
     )), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.hideStorageModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
@@ -6841,7 +6827,6 @@
           SettingsLeftPane(coreViewModel2, settingsViewModel2)
         ),
         detailView,
-        new State(""),
         true,
         settingsViewModel2.selectedModalPage
       )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))

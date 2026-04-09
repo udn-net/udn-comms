@@ -74,7 +74,6 @@ export function StorageModal(
                     {SplitModal(
                         new React.State(DirectoryItemList(storageViewModel)),
                         detailView,
-                        storageViewModel.selectedFileName,
                         true,
                     )}
                 </main>

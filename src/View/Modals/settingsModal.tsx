@@ -48,7 +48,6 @@ export function SettingsModal(
                             SettingsLeftPane(coreViewModel, settingsViewModel),
                         ),
                         detailView,
-                        new React.State(""),
                         true,
                         settingsViewModel.selectedModalPage,
                     )}

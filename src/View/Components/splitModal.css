@@ -19,7 +19,7 @@
     flex-direction: column;
 
     width: 100%;
-    min-width: 100%;
+    min-width: calc(100% - 4rem);
     flex: 0;
 
     scroll-snap-align: center;
