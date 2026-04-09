@@ -24,7 +24,7 @@ ANIMATION
     }
 }
 
-:root {
+body {
     --animation-duration: 0.4s;
 }
 
@@ -100,14 +100,6 @@ body[theme="dark"] {
 
     --link: #78a9ff;
     --link-hover: #a6c8ff;
-}
-
-@media (display-mode: standalone) {
-    :root {
-        --background: hsla(0, 0%, 0%, 100%);
-        --background-transparent: hsla(0, 0%, 0%, 60%);
-        --layer: hsla(0, 0%, 0%, 60%);
-    }
 }
 
 /* basic */
@@ -260,7 +252,7 @@ button.danger:active {
 /*
 SIZES
  */
-:root {
+body {
     /* gap */
     --gap-between-tiles: 4px;
     --gap-in-tab-links: 1rem;
@@ -1213,7 +1205,7 @@ main {
 
 /* desktop */
 @media (min-width: 1024px) {
-    :root {
+    body {
         --split-pane-width-desktop: 400px;
     }
 }

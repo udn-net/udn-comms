@@ -151,11 +151,6 @@ body[theme=dark] [color]:not([color=standard]).tile {
 body[theme=dark] [color]:not([color=standard]).subtle-background {
   --luma: var(--subtle-luma-dark);
 }
-@media (display-mode: standalone) {
-  [color]:not([color=standard]).subtle-background {
-    --luma: 0%;
-  }
-}
 [color=coral] {
   --hue: 20;
   --accent-luma: 50%;

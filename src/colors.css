@@ -101,12 +101,6 @@ body[theme="dark"] [color]:not([color="standard"]).subtle-background {
     --luma: var(--subtle-luma-dark);
 }
 
-@media (display-mode: standalone) {
-    [color]:not([color="standard"]).subtle-background {
-        --luma: 0%;
-    }
-}
-
 /* definitions */
 [color="coral"] {
     --hue: 20;
