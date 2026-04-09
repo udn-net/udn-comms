@@ -146,10 +146,6 @@ export function HomePage(
                 "hard_drive",
             )}
 
-            <hr></hr>
-
-            <b class="secondary">{coreVieWModel.BUILD}</b>
-
             <div class="mobile-only">
                 <hr></hr>
 

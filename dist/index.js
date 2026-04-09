@@ -2958,7 +2958,8 @@
           appearance: "Erscheinungsbild",
           regional: "Sprache+Region",
           info: "\xDCber Comms"
-        }
+        },
+        version: "Version"
       },
       connectionModal: {
         connectionModalHeadline: "Verbindungen verwalten",
@@ -3144,7 +3145,8 @@
           appearance: "Aspecto",
           regional: "Idioma+Regi\xF3n",
           info: "Sobre Comms"
-        }
+        },
+        version: "Versi\xF3n"
       },
       connectionModal: {
         connectionModalHeadline: "Gestionar Conexiones",
@@ -4117,7 +4119,23 @@
         class: "modal",
         "toggle:open": chatMessageViewModel.isPresentingInfoModal
       },
-      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.message.messageInfoHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile("account_circle", translations.chatPage.message.sentBy, chatMessageViewModel.sender), InfoTile("schedule", translations.chatPage.message.timeSent, chatMessageViewModel.dateSent), InfoTile("forum", translations.chatPage.message.channel, chatMessageViewModel.channel), InfoTile("description", translations.chatPage.message.messageContent, chatMessageViewModel.body)), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), MessageReactionButtonRow(chatMessageViewModel)), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, translations.chatPage.message.messageInfoHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile(
+        "account_circle",
+        translations.chatPage.message.sentBy,
+        chatMessageViewModel.sender
+      ), InfoTile(
+        "schedule",
+        translations.chatPage.message.timeSent,
+        chatMessageViewModel.dateSent
+      ), InfoTile(
+        "forum",
+        translations.chatPage.message.channel,
+        chatMessageViewModel.channel
+      ), InfoTile(
+        "description",
+        translations.chatPage.message.messageContent,
+        chatMessageViewModel.body
+      )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), MessageReactionButtonRow(chatMessageViewModel)), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
 
@@ -6134,7 +6152,7 @@
       storageViewModel2.showStorageModal,
       translations.homePage.manageStorageButton,
       "hard_drive"
-    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("b", { class: "secondary" }, coreVieWModel2.BUILD), /* @__PURE__ */ createElement("div", { class: "mobile-only" }, /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end" }, /* @__PURE__ */ createElement("button", { class: "ghost width-50", "on:click": scrollToChat }, translations.homePage.scrollToChatButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))));
+    ), /* @__PURE__ */ createElement("div", { class: "mobile-only" }, /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end" }, /* @__PURE__ */ createElement("button", { class: "ghost width-50", "on:click": scrollToChat }, translations.homePage.scrollToChatButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")))));
     const chatSection = /* @__PURE__ */ createElement("div", { id: "chat-section" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.chatsHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
@@ -6679,7 +6697,11 @@
     );
   }
   function SettingsInfoPane(settingsViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.appName), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile("build", translations.settings.version, settingsViewModel2.coreViewModel.BUILD)));
+    return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, translations.homePage.appName), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, InfoTile(
+      "build",
+      translations.settings.version,
+      settingsViewModel2.coreViewModel.BUILD
+    )));
   }
 
   // src/index.tsx
