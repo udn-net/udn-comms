@@ -177,10 +177,6 @@ select:not(.tile *),
     background: var(--surface);
 }
 
-[selected] {
-    background: var(--background);
-}
-
 @media (hover: hover) {
     button:hover,
     select:hover,
