@@ -6608,6 +6608,16 @@
 
   // src/View/Modals/settingsModal.tsx
   function SettingsModal(settingsViewModel2) {
+    const detailView = createProxyState([settingsViewModel2.selectedModalPage], () => {
+      switch (settingsViewModel2.selectedModalPage.value) {
+        case 0 /* Appearance */:
+          return /* @__PURE__ */ createElement("div", null, "Appearance");
+        case 1 /* Regional */:
+          return /* @__PURE__ */ createElement("div", null, "Regional");
+        case 2 /* Info */:
+          return /* @__PURE__ */ createElement("div", null, "Info");
+      }
+    });
     return /* @__PURE__ */ createElement(
       "div",
       {
@@ -6616,7 +6626,7 @@
       },
       /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
         new State(SettingsLeftPane(settingsViewModel2)),
-        new State(/* @__PURE__ */ createElement("span", null, "settings")),
+        detailView,
         new State(""),
         false,
         settingsViewModel2.selectedModalPage

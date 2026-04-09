@@ -7,6 +7,17 @@ import SettingsViewModel, {
 import { SplitModal } from "../Components/splitModal";
 
 export function SettingsModal(settingsViewModel: SettingsViewModel) {
+    const detailView = React.createProxyState([settingsViewModel.selectedModalPage], () => {
+        switch (settingsViewModel.selectedModalPage.value) {
+            case SettingsModalPages.Appearance: 
+                return <div>Appearance</div>
+            case SettingsModalPages.Regional: 
+                return <div>Regional</div>
+            case SettingsModalPages.Info: 
+                return <div>Info</div>
+        }
+    })
+
     return (
         <div
             class="modal"
@@ -16,7 +27,7 @@ export function SettingsModal(settingsViewModel: SettingsViewModel) {
                 <main class="padding-0">
                     {SplitModal(
                         new React.State(SettingsLeftPane(settingsViewModel)),
-                        new React.State(<span>settings</span>),
+                        detailView,
                         new React.State(""),
                         false,
                         settingsViewModel.selectedModalPage,
