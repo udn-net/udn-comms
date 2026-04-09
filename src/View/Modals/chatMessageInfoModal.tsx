@@ -3,6 +3,7 @@ import * as React from "bloatless-react";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { translations } from "../translations";
 import { MessageReactionButtonRow } from "../Components/messageReactionButtonRow";
+import { InfoTile } from "../Components/infoTile";
 
 export function ChatMessageInfoModal(
     chatMessageViewModel: ChatMessageViewModel,
@@ -17,59 +18,10 @@ export function ChatMessageInfoModal(
                     <h2>{translations.chatPage.message.messageInfoHeadline}</h2>
 
                     <div class="flex-column gap">
-                        <div class="tile">
-                            <span class="icon">account_circle</span>
-                            <div>
-                                <span>
-                                    {translations.chatPage.message.sentBy}
-                                </span>
-                                <b class="break-word">
-                                    {chatMessageViewModel.sender}
-                                </b>
-                            </div>
-                        </div>
-
-                        <div class="tile">
-                            <span class="icon">schedule</span>
-                            <div>
-                                <span>
-                                    {translations.chatPage.message.timeSent}
-                                </span>
-                                <b class="break-word">
-                                    {chatMessageViewModel.dateSent}
-                                </b>
-                            </div>
-                        </div>
-
-                        <div class="tile">
-                            <span class="icon">forum</span>
-                            <div>
-                                <span>
-                                    {translations.chatPage.message.channel}
-                                </span>
-                                <b class="break-word">
-                                    {chatMessageViewModel.channel}
-                                </b>
-                            </div>
-                        </div>
-
-                        <div class="tile">
-                            <span class="icon">description</span>
-                            <div>
-                                <span>
-                                    {
-                                        translations.chatPage.message
-                                            .messageContent
-                                    }
-                                </span>
-                                <b
-                                    class="break-word"
-                                    subscribe:innerText={
-                                        chatMessageViewModel.body
-                                    }
-                                ></b>
-                            </div>
-                        </div>
+                        {InfoTile("account_circle", translations.chatPage.message.sentBy, chatMessageViewModel.sender)}
+                        {InfoTile("schedule", translations.chatPage.message.timeSent, chatMessageViewModel.dateSent)}
+                        {InfoTile("forum", translations.chatPage.message.channel, chatMessageViewModel.channel)}
+                        {InfoTile("description", translations.chatPage.message.messageContent, chatMessageViewModel.body)}
                     </div>
 
                     <hr></hr>
