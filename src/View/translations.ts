@@ -82,6 +82,8 @@ const englishTranslations = {
             regional: "Language+Region",
             info: "About Comms",
         },
+
+        version: "Version",
     },
 
     connectionModal: {
@@ -370,8 +372,10 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
             pages: {
                 appearance: "Erscheinungsbild",
                 regional: "Sprache+Region",
-            info: "Über Comms",
+                info: "Über Comms",
             },
+
+            version: "Version",
         },
 
         connectionModal: {
@@ -633,6 +637,8 @@ const allTranslations: { [language: string]: typeof englishTranslations } = {
                 regional: "Idioma+Región",
                 info: "Sobre Comms",
             },
+
+            version: "Versión",
         },
         connectionModal: {
             connectionModalHeadline: "Gestionar Conexiones",

@@ -1,4 +1,4 @@
-.modal>div:has(.split-modal[extended]) {
+.modal > div:has(.split-modal[extended]) {
     max-width: 64rem;
 }
 

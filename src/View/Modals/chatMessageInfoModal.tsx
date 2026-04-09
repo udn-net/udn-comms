@@ -18,10 +18,26 @@ export function ChatMessageInfoModal(
                     <h2>{translations.chatPage.message.messageInfoHeadline}</h2>
 
                     <div class="flex-column gap">
-                        {InfoTile("account_circle", translations.chatPage.message.sentBy, chatMessageViewModel.sender)}
-                        {InfoTile("schedule", translations.chatPage.message.timeSent, chatMessageViewModel.dateSent)}
-                        {InfoTile("forum", translations.chatPage.message.channel, chatMessageViewModel.channel)}
-                        {InfoTile("description", translations.chatPage.message.messageContent, chatMessageViewModel.body)}
+                        {InfoTile(
+                            "account_circle",
+                            translations.chatPage.message.sentBy,
+                            chatMessageViewModel.sender,
+                        )}
+                        {InfoTile(
+                            "schedule",
+                            translations.chatPage.message.timeSent,
+                            chatMessageViewModel.dateSent,
+                        )}
+                        {InfoTile(
+                            "forum",
+                            translations.chatPage.message.channel,
+                            chatMessageViewModel.channel,
+                        )}
+                        {InfoTile(
+                            "description",
+                            translations.chatPage.message.messageContent,
+                            chatMessageViewModel.body,
+                        )}
                     </div>
 
                     <hr></hr>

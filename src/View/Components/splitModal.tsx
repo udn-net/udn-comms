@@ -13,7 +13,10 @@ export function SplitModal(
         <div class="split-modal" toggle:extended={extendedStyle}>
             <div>
                 <div class="scroll-area" children:set={leftView}></div>
-                <div class="detail-button-wrapper" toggle:hidden={navigationState != undefined}>
+                <div
+                    class="detail-button-wrapper"
+                    toggle:hidden={navigationState != undefined}
+                >
                     <button class="ghost" on:click={scrollToDetails}>
                         <span
                             class="ellipsis"

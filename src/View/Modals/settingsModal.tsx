@@ -5,18 +5,22 @@ import SettingsViewModel, {
     SettingsModalPages,
 } from "../../ViewModel/Global/settingsViewModel";
 import { SplitModal } from "../Components/splitModal";
+import { InfoTile } from "../Components/infoTile";
 
 export function SettingsModal(settingsViewModel: SettingsViewModel) {
-    const detailView = React.createProxyState([settingsViewModel.selectedModalPage], () => {
-        switch (settingsViewModel.selectedModalPage.value) {
-            case SettingsModalPages.Appearance: 
-                return <div>Appearance</div>
-            case SettingsModalPages.Regional: 
-                return <div>Regional</div>
-            case SettingsModalPages.Info: 
-                return <div>Info</div>
-        }
-    })
+    const detailView = React.createProxyState(
+        [settingsViewModel.selectedModalPage],
+        () => {
+            switch (settingsViewModel.selectedModalPage.value) {
+                case SettingsModalPages.Appearance:
+                    return <div>Appearance</div>;
+                case SettingsModalPages.Regional:
+                    return <div>Regional</div>;
+                case SettingsModalPages.Info:
+                    return SettingsInfoPane(settingsViewModel);
+            }
+        },
+    );
 
     return (
         <div
@@ -81,5 +85,21 @@ function SettingsPaneButton(
         >
             {label}
         </button>
+    );
+}
+
+function SettingsInfoPane(settingsViewModel: SettingsViewModel) {
+    return (
+        <div class="slide-up">
+            <h2>{translations.homePage.appName}</h2>
+            <hr></hr>
+            <div class="flex-column gap">
+                {InfoTile(
+                    "build",
+                    translations.settings.version,
+                    settingsViewModel.coreViewModel.BUILD,
+                )}
+            </div>
+        </div>
     );
 }
