@@ -137,9 +137,7 @@ function SettingsRegionalPane(
             <h3>{coreViewModel.translations.settings.language}</h3>
             {OptionButtonList(
                 new React.ListState<[string, string]>(
-                    Object.values(Languages).map(
-                        (x) => [languageNames[x], x],
-                    ),
+                    Object.values(Languages).map((x) => [languageNames[x], x]),
                 ),
                 settingsViewModel.language,
             )}

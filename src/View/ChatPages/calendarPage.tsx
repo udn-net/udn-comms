@@ -9,6 +9,7 @@ import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import { setFocusWithDelay } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { PlaceholderView } from "../Components/placeholderView";
 
 export function CalendarPage(
     coreViewModel: CoreViewModel,
@@ -58,15 +59,9 @@ export function CalendarPage(
                     [listState],
                     () => {
                         if (listState.value.size == 0) {
-                            return (
-                                <div class="width-100 height-100 flex-column justify-center align-center">
-                                    <span class="secondary slide-up">
-                                        {
-                                            coreViewModel.translations.chatPage
-                                                .calendar.noEvents
-                                        }
-                                    </span>
-                                </div>
+                            return PlaceholderView(
+                                coreViewModel.translations.chatPage.calendar
+                                    .noEvents,
                             );
                         } else {
                             return (

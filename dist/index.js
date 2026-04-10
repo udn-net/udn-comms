@@ -3238,6 +3238,11 @@
     return TaskEntry(taskViewModel);
   };
 
+  // src/View/Components/placeholderView.tsx
+  function PlaceholderView(text) {
+    return /* @__PURE__ */ createElement("div", { class: "width-100 height-100 flex-column justify-center align-center" }, /* @__PURE__ */ createElement("span", { class: "secondary slide-up" }, text));
+  }
+
   // src/View/ChatPages/calendarPage.tsx
   function CalendarPage(coreViewModel2, calendarPageViewModel) {
     calendarPageViewModel.loadData();
@@ -3279,7 +3284,9 @@
             [listState],
             () => {
               if (listState.value.size == 0) {
-                return /* @__PURE__ */ createElement("div", { class: "width-100 height-100 flex-column justify-center align-center" }, /* @__PURE__ */ createElement("span", { class: "secondary slide-up" }, coreViewModel2.translations.chatPage.calendar.noEvents));
+                return PlaceholderView(
+                  coreViewModel2.translations.chatPage.calendar.noEvents
+                );
               } else {
                 return /* @__PURE__ */ createElement(
                   "div",
@@ -4377,7 +4384,9 @@
       () => {
         const selectedBoardId = taskPageViewModel.selectedBoardId.value;
         if (selectedBoardId == void 0) {
-          return /* @__PURE__ */ createElement("div", { class: "pane align-center justify-center" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.chatPage.task.noBoardSelected));
+          return PlaceholderView(
+            coreViewModel2.translations.chatPage.task.noBoardSelected
+          );
         }
         const selectedBoard = taskPageViewModel.boardViewModels.value.get(selectedBoardId);
         if (selectedBoard == void 0) {
@@ -6420,7 +6429,16 @@
 
   // src/View/Components/splitModal.tsx
   function SplitModal(leftView, rightView, extendedStyle = false, navigationState) {
-    const view = /* @__PURE__ */ createElement("div", { class: "split-modal", "toggle:extended": extendedStyle, "toggle:primitive": navigationState == void 0 }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView })), /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView }));
+    const view = /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "split-modal",
+        "toggle:extended": extendedStyle,
+        "toggle:primitive": navigationState == void 0
+      },
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView })),
+      /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView })
+    );
     function scrollToDetails() {
       view.scrollLeft = view.scrollWidth;
     }
@@ -6871,9 +6889,7 @@
   function SettingsRegionalPane(coreViewModel2, settingsViewModel2) {
     return /* @__PURE__ */ createElement("div", { class: "slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.settings.pages.regional), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.settings.language), OptionButtonList(
       new ListState(
-        Object.values(Languages).map(
-          (x) => [languageNames[x], x]
-        )
+        Object.values(Languages).map((x) => [languageNames[x], x])
       ),
       settingsViewModel2.language
     ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.settings.firstDayOfWeekLabel), OptionButtonList(

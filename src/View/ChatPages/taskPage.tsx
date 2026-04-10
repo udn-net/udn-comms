@@ -6,6 +6,7 @@ import { BoardPage } from "./boardPage";
 import { BoardViewModelToEntry } from "../Components/boardEntry";
 import TaskPageViewModel from "../../ViewModel/Pages/taskPageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { PlaceholderView } from "../Components/placeholderView";
 
 export function TaskPage(
     coreViewModel: CoreViewModel,
@@ -23,15 +24,8 @@ export function TaskPage(
         () => {
             const selectedBoardId = taskPageViewModel.selectedBoardId.value;
             if (selectedBoardId == undefined) {
-                return (
-                    <div class="pane align-center justify-center">
-                        <span class="secondary">
-                            {
-                                coreViewModel.translations.chatPage.task
-                                    .noBoardSelected
-                            }
-                        </span>
-                    </div>
+                return PlaceholderView(
+                    coreViewModel.translations.chatPage.task.noBoardSelected,
                 );
             }
             const selectedBoard =

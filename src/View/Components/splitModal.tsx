@@ -9,7 +9,11 @@ export function SplitModal(
     navigationState?: React.State<any>,
 ) {
     const view = (
-        <div class="split-modal" toggle:extended={extendedStyle} toggle:primitive={navigationState == undefined}>
+        <div
+            class="split-modal"
+            toggle:extended={extendedStyle}
+            toggle:primitive={navigationState == undefined}
+        >
             <div>
                 <div class="scroll-area" children:set={leftView}></div>
             </div>
