@@ -5623,7 +5623,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.09.E";
+      this.BUILD = "Build 26.04.10.A";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS

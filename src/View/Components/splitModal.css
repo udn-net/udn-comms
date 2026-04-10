@@ -33,6 +33,7 @@
     justify-content: safe center;
 }
 
+.split-modal[navigation] > div,
 .split-modal[navigation] > div > .scroll-area{
     justify-content: start;
 }

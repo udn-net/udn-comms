@@ -877,6 +877,7 @@ body[showing-chat] #chat-page-wrapper {
   align-items: stretch;
   justify-content: safe center;
 }
+.split-modal[navigation] > div,
 .split-modal[navigation] > div > .scroll-area {
   justify-content: start;
 }
