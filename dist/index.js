@@ -5611,7 +5611,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.09.D";
+      this.BUILD = "Build 26.04.09.E";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS
@@ -6420,7 +6420,7 @@
 
   // src/View/Components/splitModal.tsx
   function SplitModal(leftView, rightView, extendedStyle = false, navigationState) {
-    const view = /* @__PURE__ */ createElement("div", { class: "split-modal", "toggle:extended": extendedStyle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView })), /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView }));
+    const view = /* @__PURE__ */ createElement("div", { class: "split-modal", "toggle:extended": extendedStyle, "toggle:primitive": navigationState == void 0 }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView })), /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView }));
     function scrollToDetails() {
       view.scrollLeft = view.scrollWidth;
     }

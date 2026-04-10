@@ -54,10 +54,18 @@
 
 @media (min-width: 640px) {
     .split-modal > div {
+        flex: 1;
+        min-width: unset;
+    }
+
+    .split-modal:not([primitive]) > div:first-child {
+        flex: 0;
+        min-width: 20rem;
+    }
+
+    .split-modal[primitive] > div {
         width: 50%;
         min-width: 50%;
-
-        flex: 1;
     }
 
     .split-modal .detail-button-wrapper {
