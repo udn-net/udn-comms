@@ -6834,6 +6834,19 @@
     );
   }
 
+  // src/View/Components/navigationButton.tsx
+  function NavigationButton(coreViewModel2, label, navigationState, page, arrowMobileOnly) {
+    const isSelected = createProxyState(
+      [navigationState],
+      () => navigationState.value == page
+    );
+    function open() {
+      navigationState.value = page;
+    }
+    const iconClass = `icon ${arrowMobileOnly == true ? "mobile-only" : ""}`;
+    return /* @__PURE__ */ createElement("button", { "toggle:selected": isSelected, "on:click": open }, label, /* @__PURE__ */ createElement("span", { class: iconClass }, "arrow_forward"));
+  }
+
   // src/View/Modals/settingsModal.tsx
   function SettingsModal(coreViewModel2, settingsViewModel2) {
     const detailView = createProxyState(
@@ -6879,31 +6892,29 @@
   }
   function SettingsLeftPane(coreViewModel2, settingsViewModel2) {
     return /* @__PURE__ */ createElement("div", { class: "flex-column gap slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.homePage.settingsButton), SettingsPaneButton(
+      coreViewModel2,
       settingsViewModel2,
       0 /* Appearance */,
       coreViewModel2.translations.settings.pages.appearance
     ), SettingsPaneButton(
+      coreViewModel2,
       settingsViewModel2,
       1 /* Regional */,
       coreViewModel2.translations.settings.pages.regional
     ), SettingsPaneButton(
+      coreViewModel2,
       settingsViewModel2,
       2 /* Info */,
       coreViewModel2.translations.settings.pages.info
     ));
   }
-  function SettingsPaneButton(settingsViewModel2, page, label) {
-    const isSelected = createProxyState(
-      [settingsViewModel2.selectedModalPage],
-      () => settingsViewModel2.selectedModalPage.value == page
-    );
-    return /* @__PURE__ */ createElement(
-      "button",
-      {
-        "toggle:selected": isSelected,
-        "on:click": () => settingsViewModel2.showModalPage(page)
-      },
-      label
+  function SettingsPaneButton(coreViewModel2, settingsViewModel2, page, label) {
+    return NavigationButton(
+      coreViewModel2,
+      label,
+      settingsViewModel2.selectedModalPage,
+      page,
+      true
     );
   }
   function SettingsInfoPane(coreViewModel2, settingsViewModel2) {

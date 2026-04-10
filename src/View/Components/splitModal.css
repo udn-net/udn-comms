@@ -34,7 +34,7 @@
 }
 
 .split-modal[navigation] > div,
-.split-modal[navigation] > div > .scroll-area{
+.split-modal[navigation] > div > .scroll-area {
     justify-content: start;
 }
 

@@ -12,6 +12,7 @@ import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
 import { OptionButtonList } from "../Components/optionButtonList";
 import { stringify } from "../../Model/Utility/utility";
 import { PlaceholderView } from "../Components/placeholderView";
+import { NavigationButton } from "../Components/navigationButton";
 
 export function SettingsModal(
     coreViewModel: CoreViewModel,
@@ -76,16 +77,19 @@ function SettingsLeftPane(
         <div class="flex-column gap slide-up">
             <h2>{coreViewModel.translations.homePage.settingsButton}</h2>
             {SettingsPaneButton(
+                coreViewModel,
                 settingsViewModel,
                 SettingsModalPages.Appearance,
                 coreViewModel.translations.settings.pages.appearance,
             )}
             {SettingsPaneButton(
+                coreViewModel,
                 settingsViewModel,
                 SettingsModalPages.Regional,
                 coreViewModel.translations.settings.pages.regional,
             )}
             {SettingsPaneButton(
+                coreViewModel,
                 settingsViewModel,
                 SettingsModalPages.Info,
                 coreViewModel.translations.settings.pages.info,
@@ -95,22 +99,17 @@ function SettingsLeftPane(
 }
 
 function SettingsPaneButton(
+    coreViewModel: CoreViewModel,
     settingsViewModel: SettingsViewModel,
     page: SettingsModalPages,
     label: string,
 ) {
-    const isSelected = React.createProxyState(
-        [settingsViewModel.selectedModalPage],
-        () => settingsViewModel.selectedModalPage.value == page,
-    );
-
-    return (
-        <button
-            toggle:selected={isSelected}
-            on:click={() => settingsViewModel.showModalPage(page)}
-        >
-            {label}
-        </button>
+    return NavigationButton(
+        coreViewModel,
+        label,
+        settingsViewModel.selectedModalPage,
+        page,
+        true
     );
 }
 
