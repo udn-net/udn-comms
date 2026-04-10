@@ -72,6 +72,7 @@ export function StorageModal(
             <div>
                 <main class="padding-0">
                     {SplitModal(
+                        coreViewModel,
                         new React.State(DirectoryItemList(storageViewModel)),
                         detailView,
                         true,

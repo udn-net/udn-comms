@@ -8,9 +8,8 @@ export default class SettingsViewModel {
     username: React.State<string> = new React.State("");
     usernameInput: React.State<string> = new React.State("");
     isShowingSettingsModal: React.State<boolean> = new React.State(false);
-    selectedModalPage: React.State<SettingsModalPages> = new React.State(
-        SettingsModalPages.Appearance,
-    );
+    selectedModalPage: React.State<SettingsModalPages | undefined> =
+        new React.State(undefined);
     requiresReload = new React.State<boolean>(false);
 
     firstDayOfWeek: React.State<string> = new React.State("0");

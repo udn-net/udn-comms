@@ -11,6 +11,7 @@ import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
 import { OptionButtonList } from "../Components/optionButtonList";
 import { stringify } from "../../Model/Utility/utility";
+import { PlaceholderView } from "../Components/placeholderView";
 
 export function SettingsModal(
     coreViewModel: CoreViewModel,
@@ -20,6 +21,11 @@ export function SettingsModal(
         [settingsViewModel.selectedModalPage],
         () => {
             switch (settingsViewModel.selectedModalPage.value) {
+                case undefined: {
+                    return PlaceholderView(
+                        coreViewModel.translations.general.noPageSelected,
+                    );
+                }
                 case SettingsModalPages.Appearance:
                     return SettingsAppearancePane(
                         coreViewModel,
@@ -44,6 +50,7 @@ export function SettingsModal(
             <div>
                 <main class="padding-0">
                     {SplitModal(
+                        coreViewModel,
                         new React.State(
                             SettingsLeftPane(coreViewModel, settingsViewModel),
                         ),
@@ -66,7 +73,8 @@ function SettingsLeftPane(
     settingsViewModel: SettingsViewModel,
 ) {
     return (
-        <div class="flex-column gap">
+        <div class="flex-column gap slide-up">
+            <h2>{coreViewModel.translations.homePage.settingsButton}</h2>
             {SettingsPaneButton(
                 settingsViewModel,
                 SettingsModalPages.Appearance,

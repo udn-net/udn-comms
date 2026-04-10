@@ -5025,7 +5025,8 @@
       fileVersionLabel: "Version",
       searchLabel: "Search",
       waitingLabel: "Waiting...",
-      restoreConnection: "Restore connection"
+      restoreConnection: "Restore connection",
+      noPageSelected: "No page selected"
     },
     regional: {
       weekdays: {
@@ -5237,7 +5238,8 @@
         fileVersionLabel: "Version",
         searchLabel: "Suche",
         waitingLabel: "Warten...",
-        restoreConnection: "Verbindung wiederherstellen"
+        restoreConnection: "Verbindung wiederherstellen",
+        noPageSelected: "Keine Seite ausgew\xE4hlt"
       },
       regional: {
         weekdays: {
@@ -5430,7 +5432,8 @@
         fileVersionLabel: "Versi\xF3n",
         searchLabel: "Buscar",
         waitingLabel: "Esperando...",
-        restoreConnection: "Conectar de nuevo"
+        restoreConnection: "Conectar de nuevo",
+        noPageSelected: "No p\xE1gina seleccionada"
       },
       regional: {
         weekdays: {
@@ -6350,9 +6353,7 @@
       this.username = new State("");
       this.usernameInput = new State("");
       this.isShowingSettingsModal = new State(false);
-      this.selectedModalPage = new State(
-        0 /* Appearance */
-      );
+      this.selectedModalPage = new State(void 0);
       this.requiresReload = new State(false);
       this.firstDayOfWeek = new State("0");
       this.language = new State(
@@ -6428,21 +6429,40 @@
   };
 
   // src/View/Components/splitModal.tsx
-  function SplitModal(leftView, rightView, extendedStyle = false, navigationState) {
+  function SplitModal(coreViewModel2, leftView, rightView, extendedStyle = false, navigationState) {
+    function closePage() {
+      navigationState.value = void 0;
+    }
+    const hasPageOpen = new State(false);
+    navigationState?.subscribe(
+      (newValue) => hasPageOpen.value = newValue != void 0
+    );
     const view = /* @__PURE__ */ createElement(
       "div",
       {
         class: "split-modal",
         "toggle:extended": extendedStyle,
-        "toggle:primitive": navigationState == void 0
+        "toggle:navigation": navigationState != void 0,
+        "toggle:page-open": hasPageOpen
       },
       /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": leftView })),
-      /* @__PURE__ */ createElement("div", { class: "scroll-area", "children:set": rightView })
+      /* @__PURE__ */ createElement("div", { class: "scroll-area slide-up" }, /* @__PURE__ */ createElement(
+        "div",
+        {
+          class: "flex-row width-100 mobile-only",
+          "toggle:hidden": navigationState == void 0
+        },
+        /* @__PURE__ */ createElement(
+          "button",
+          {
+            class: "ghost square",
+            "aria-label": coreViewModel2.translations.general.backButton,
+            "on:click": closePage
+          },
+          /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_back")
+        )
+      ), /* @__PURE__ */ createElement("div", { "children:set": rightView }))
     );
-    function scrollToDetails() {
-      view.scrollLeft = view.scrollWidth;
-    }
-    navigationState?.subscribe(scrollToDetails);
     return view;
   }
 
@@ -6527,6 +6547,7 @@
       }
     );
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": storageViewModel2.isShowingStorageModal }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
+      coreViewModel2,
       new State(DirectoryItemList(storageViewModel2)),
       detailView,
       true
@@ -6819,6 +6840,11 @@
       [settingsViewModel2.selectedModalPage],
       () => {
         switch (settingsViewModel2.selectedModalPage.value) {
+          case void 0: {
+            return PlaceholderView(
+              coreViewModel2.translations.general.noPageSelected
+            );
+          }
           case 0 /* Appearance */:
             return SettingsAppearancePane(
               coreViewModel2,
@@ -6841,6 +6867,7 @@
         "toggle:open": settingsViewModel2.isShowingSettingsModal
       },
       /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", { class: "padding-0" }, SplitModal(
+        coreViewModel2,
         new State(
           SettingsLeftPane(coreViewModel2, settingsViewModel2)
         ),
@@ -6851,7 +6878,7 @@
     );
   }
   function SettingsLeftPane(coreViewModel2, settingsViewModel2) {
-    return /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, SettingsPaneButton(
+    return /* @__PURE__ */ createElement("div", { class: "flex-column gap slide-up" }, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.homePage.settingsButton), SettingsPaneButton(
       settingsViewModel2,
       0 /* Appearance */,
       coreViewModel2.translations.settings.pages.appearance

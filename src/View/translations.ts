@@ -24,6 +24,8 @@ const englishTranslations = {
         waitingLabel: "Waiting...",
 
         restoreConnection: "Restore connection",
+
+        noPageSelected: "No page selected",
     },
 
     regional: {
@@ -328,6 +330,8 @@ export const allTranslations: {
             waitingLabel: "Warten...",
 
             restoreConnection: "Verbindung wiederherstellen",
+
+            noPageSelected: "Keine Seite ausgewählt",
         },
 
         regional: {
@@ -597,6 +601,8 @@ export const allTranslations: {
             waitingLabel: "Esperando...",
 
             restoreConnection: "Conectar de nuevo",
+
+            noPageSelected: "No página seleccionada",
         },
 
         regional: {
