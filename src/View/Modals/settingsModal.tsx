@@ -109,7 +109,7 @@ function SettingsPaneButton(
         label,
         settingsViewModel.selectedModalPage,
         page,
-        true
+        true,
     );
 }
 

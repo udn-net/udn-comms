@@ -875,11 +875,10 @@ body[showing-chat] #chat-page-wrapper {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  justify-content: safe center;
-}
-.split-modal[navigation] > div,
-.split-modal[navigation] > div > .scroll-area {
   justify-content: start;
+}
+.split-modal[navigation]:not([page-open]) > div {
+  justify-content: safe center;
 }
 .split-modal[navigation] > div {
   min-width: 100%;
