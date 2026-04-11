@@ -7,7 +7,7 @@ import ChatListModel from "../../Model/Chat/chatListModel";
 import FileTransferModel from "../../Model/Global/fileTransferModel";
 
 export default class CoreViewModel {
-    readonly BUILD = "Build 26.04.10.B";
+    readonly BUILD = "Build 26.04.11.A";
 
     translations: Translations;
 
