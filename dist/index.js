@@ -2221,6 +2221,9 @@
       this.openFilterModal = () => {
         this.isFilterModalOpen.value = true;
       };
+      this.closeFilterModal = () => {
+        this.isFilterModalOpen.value = false;
+      };
       // load
       this.loadData = () => {
         this.chatMessageViewModels.clear();
@@ -3607,50 +3610,25 @@
     );
   }
 
-  // src/View/Modals/searchModal.tsx
-  function SearchModal(coreViewModel2, searchViewModel, headline, converter, isOpen) {
-    function close() {
-      isOpen.value = false;
-    }
-    const suggestionId = v4_default();
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isOpen }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, headline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
+  // src/View/Modals/messageFilterModal.tsx
+  function MessageFilterModal(coreViewModel2, messagePageViewModel, converter) {
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": messagePageViewModel.isFilterModalOpen }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.message.messageFilterHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
         placeholder: coreViewModel2.translations.general.searchLabel,
-        "bind:value": searchViewModel.searchInput,
-        "on:enter": searchViewModel.applySearch,
-        list: suggestionId
-      }
-    ), /* @__PURE__ */ createElement(
-      "datalist",
-      {
-        hidden: true,
-        id: suggestionId,
-        "children:append": [
-          searchViewModel.suggestions,
-          StringToOption
-        ]
+        "bind:value": messagePageViewModel.searchViewModel.searchInput,
+        "on:enter": messagePageViewModel.searchViewModel.applySearch
       }
     ), /* @__PURE__ */ createElement(
       "button",
       {
         class: "primary",
         "aria-label": coreViewModel2.translations.general.searchButtonAudioLabel,
-        "on:click": searchViewModel.applySearch,
-        "toggle:disabled": searchViewModel.cannotApplySearch
+        "on:click": messagePageViewModel.searchViewModel.applySearch,
+        "toggle:disabled": messagePageViewModel.searchViewModel.cannotApplySearch
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "search")
-    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
-      "div",
-      {
-        class: "grid gap",
-        style: "grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr))",
-        "children:append": [
-          searchViewModel.matchingObjects,
-          converter
-        ]
-      }
-    )), /* @__PURE__ */ createElement("button", { "on:click": close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )), /* @__PURE__ */ createElement("hr", null)), /* @__PURE__ */ createElement("button", { "on:click": messagePageViewModel.closeFilterModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/View/ChatPages/messagePage.tsx
@@ -3709,12 +3687,10 @@
         "toggle:disabled": messagePageViewModel.cannotSendMessage
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "send")
-    ))))))), SearchModal(
+    ))))))), MessageFilterModal(
       coreViewModel2,
-      messagePageViewModel.searchViewModel,
-      coreViewModel2.translations.chatPage.message.messageFilterHeadline,
-      ChatMessageViewModelToView,
-      messagePageViewModel.isFilterModalOpen
+      messagePageViewModel,
+      ChatMessageViewModelToView
     ));
   }
 
@@ -4233,6 +4209,52 @@
       () => boardViewModel.selectedPage.value == page
     );
     return RibbonButton(label, icon, isSelected, select);
+  }
+
+  // src/View/Modals/searchModal.tsx
+  function SearchModal(coreViewModel2, searchViewModel, headline, converter, isOpen) {
+    function close() {
+      isOpen.value = false;
+    }
+    const suggestionId = v4_default();
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isOpen, extended: true }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, headline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
+      "input",
+      {
+        placeholder: coreViewModel2.translations.general.searchLabel,
+        "bind:value": searchViewModel.searchInput,
+        "on:enter": searchViewModel.applySearch,
+        list: suggestionId
+      }
+    ), /* @__PURE__ */ createElement(
+      "datalist",
+      {
+        hidden: true,
+        id: suggestionId,
+        "children:append": [
+          searchViewModel.suggestions,
+          StringToOption
+        ]
+      }
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "primary",
+        "aria-label": coreViewModel2.translations.general.searchButtonAudioLabel,
+        "on:click": searchViewModel.applySearch,
+        "toggle:disabled": searchViewModel.cannotApplySearch
+      },
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "search")
+    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "grid gap",
+        style: "grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr))",
+        "children:append": [
+          searchViewModel.matchingObjects,
+          converter
+        ]
+      }
+    )), /* @__PURE__ */ createElement("button", { "on:click": close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/View/ChatPages/boardPage.tsx

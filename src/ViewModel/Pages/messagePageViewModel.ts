@@ -90,6 +90,10 @@ export default class MessagePageViewModel {
         this.isFilterModalOpen.value = true;
     };
 
+    closeFilterModal = (): void => {
+        this.isFilterModalOpen.value = false;
+    };
+
     // load
     loadData = (): void => {
         this.chatMessageViewModels.clear();

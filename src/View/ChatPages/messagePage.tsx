@@ -6,7 +6,7 @@ import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { ChatMessage } from "../Components/chatMessage";
-import { SearchModal } from "../Modals/searchModal";
+import { MessageFilterModal } from "../Modals/messageFilterModal";
 
 export function MessagePage(
     coreViewModel: CoreViewModel,
@@ -114,13 +114,10 @@ export function MessagePage(
                 </div>
             </div>
 
-            {SearchModal(
+            {MessageFilterModal(
                 coreViewModel,
-                messagePageViewModel.searchViewModel,
-                coreViewModel.translations.chatPage.message
-                    .messageFilterHeadline,
+                messagePageViewModel,
                 ChatMessageViewModelToView,
-                messagePageViewModel.isFilterModalOpen,
             )}
         </div>
     );

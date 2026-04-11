@@ -19,8 +19,8 @@ export function SearchModal<T>(
     const suggestionId = v4();
 
     return (
-        <div class="modal" toggle:open={isOpen}>
-            <div style="max-width: 64rem">
+        <div class="modal" toggle:open={isOpen} extended>
+            <div>
                 <main>
                     <h2>{headline}</h2>
                     <div class="flex-row width-input">
