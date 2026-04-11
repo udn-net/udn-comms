@@ -13,21 +13,10 @@ export function MessageReactionButton(
 ) {
     let audioLabel: string;
     let count: React.State<number>;
-    let reactionState: React.MapState<ChatMessageReaction>;
-    let isActive = new React.State(false);
-    let isZero = new React.State(true);
+    let isActive = React.createProxyState([chatMessageViewModel.userReaction], (() => chatMessageViewModel.userReaction.value == content))
 
     function sendReaction() {
         chatMessageViewModel.sendReaction(content, isActive.value);
-    }
-
-    function getUsername(): string {
-        return chatMessageViewModel.messagePageViewModel.chatViewModel
-            .settingsViewModel.username.value;
-    }
-
-    function checkIsHighlighted(): boolean {
-        return reactionState.value.has(getUsername());
     }
 
     switch (content) {
@@ -35,28 +24,24 @@ export function MessageReactionButton(
             audioLabel =
                 coreViewModel.translations.chatPage.message.thumbsUpReaction;
             count = chatMessageViewModel.reactionsThumbsUpCount;
-            reactionState = chatMessageViewModel.reactionsThumbsUp;
             break;
         }
         case ReactionSymbols.Check: {
             audioLabel =
                 coreViewModel.translations.chatPage.message.checkReaction;
             count = chatMessageViewModel.reactionsCheckCount;
-            reactionState = chatMessageViewModel.reactionsCheck;
             break;
         }
         case ReactionSymbols.Stop: {
             audioLabel =
                 coreViewModel.translations.chatPage.message.stopReaction;
             count = chatMessageViewModel.reactionsStopCount;
-            reactionState = chatMessageViewModel.reactionsStop;
             break;
         }
         case ReactionSymbols.Attention: {
             audioLabel =
                 coreViewModel.translations.chatPage.message.attentionReaction;
             count = chatMessageViewModel.reactionsAttentionCount;
-            reactionState = chatMessageViewModel.reactionsAttention;
             break;
         }
         case ReactionSymbols.DoubleAttention: {
@@ -64,22 +49,15 @@ export function MessageReactionButton(
                 coreViewModel.translations.chatPage.message
                     .doubleAttentionReaction;
             count = chatMessageViewModel.reactionsDoubleAttentionCount;
-            reactionState = chatMessageViewModel.reactionsDoubleAttention;
             break;
         }
         case ReactionSymbols.Question: {
             audioLabel =
                 coreViewModel.translations.chatPage.message.questionReaction;
             count = chatMessageViewModel.reactionsQuestionCount;
-            reactionState = chatMessageViewModel.reactionsQuestion;
             break;
         }
     }
-
-    reactionState.subscribe(() => {
-        isActive.value = checkIsHighlighted();
-        isZero.value = reactionState.value.size == 0;
-    });
 
     return (
         <button
@@ -87,7 +65,7 @@ export function MessageReactionButton(
             on:click={sendReaction}
             aria-label={audioLabel}
             toggle:selected={isActive}
-            toggle:zero={isZero}
+            set:count={count}
         >
             {content}
             <span subscribe:innerText={count}></span>

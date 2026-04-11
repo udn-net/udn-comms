@@ -3,7 +3,6 @@ import * as React from "bloatless-react";
 import {
     ChatMessage,
     ChatMessageReaction,
-    ChatMessageReactionReference,
     ChatMessageStatuses,
     ReactionSymbols,
 } from "../../Model/Chat/chatModel";
@@ -23,36 +22,44 @@ export default class ChatMessageViewModel {
     );
     sentByUser: boolean;
 
-    reactionsThumbsUp = new React.MapState<ChatMessageReaction>();
-    reactionsCheck = new React.MapState<ChatMessageReaction>();
-    reactionsStop = new React.MapState<ChatMessageReaction>();
-    reactionsAttention = new React.MapState<ChatMessageReaction>();
-    reactionsDoubleAttention = new React.MapState<ChatMessageReaction>();
-    reactionsQuestion = new React.MapState<ChatMessageReaction>();
+    allReactions = new React.MapState<ChatMessageReaction>();
+    userReaction = new React.State<ReactionSymbols | string | undefined>(undefined);
+    reactionsThumbsUp = React.MapState<ChatMessageReaction>;
+    reactionsCheck = React.MapState<ChatMessageReaction>;
+    reactionsStop = React.MapState<ChatMessageReaction>;
+    reactionsAttention = React.MapState<ChatMessageReaction>;
+    reactionsDoubleAttention = React.MapState<ChatMessageReaction>;
+    reactionsQuestion = React.MapState<ChatMessageReaction>;
 
-    reactionsThumbsUpCount = React.createProxyState(
-        [this.reactionsThumbsUp],
-        () => this.reactionsThumbsUp.value.size,
+    generateReactionCountProxyState = (
+        content: ReactionSymbols,
+    ): React.State<number> => {
+        return React.createProxyState(
+            [this.allReactions],
+            () =>
+                [...this.allReactions.value.values()].filter(
+                    (x) => x.content == content,
+                ).length,
+        );
+    };
+
+    reactionsThumbsUpCount = this.generateReactionCountProxyState(
+        ReactionSymbols.ThumbsUp,
     );
-    reactionsCheckCount = React.createProxyState(
-        [this.reactionsCheck],
-        () => this.reactionsCheck.value.size,
+    reactionsCheckCount = this.generateReactionCountProxyState(
+        ReactionSymbols.Check,
     );
-    reactionsStopCount = React.createProxyState(
-        [this.reactionsStop],
-        () => this.reactionsStop.value.size,
+    reactionsStopCount = this.generateReactionCountProxyState(
+        ReactionSymbols.Stop,
     );
-    reactionsAttentionCount = React.createProxyState(
-        [this.reactionsAttention],
-        () => this.reactionsAttention.value.size,
+    reactionsAttentionCount = this.generateReactionCountProxyState(
+        ReactionSymbols.Attention,
     );
-    reactionsDoubleAttentionCount = React.createProxyState(
-        [this.reactionsDoubleAttention],
-        () => this.reactionsDoubleAttention.value.size,
+    reactionsDoubleAttentionCount = this.generateReactionCountProxyState(
+        ReactionSymbols.DoubleAttention,
     );
-    reactionsQuestionCount = React.createProxyState(
-        [this.reactionsQuestion],
-        () => this.reactionsQuestion.value.size,
+    reactionsQuestionCount = this.generateReactionCountProxyState(
+        ReactionSymbols.Question,
     );
 
     // state
@@ -80,28 +87,14 @@ export default class ChatMessageViewModel {
 
     // reactions
     handleReaction = (reaction: ChatMessageReaction): void => {
-        function setReaction(mapState: React.MapState<any>) {
-            if (reaction.isDeleting) {
-                mapState.remove(reaction.sender);
-            } else {
-                mapState.set(reaction.sender, reaction);
-            }
+        if (reaction.isDeleting) {
+            this.allReactions.remove(reaction.sender);
+        } else {
+            this.allReactions.set(reaction.sender, reaction);
         }
 
-        switch (reaction.content) {
-            case ReactionSymbols.ThumbsUp:
-                return setReaction(this.reactionsThumbsUp);
-            case ReactionSymbols.Check:
-                return setReaction(this.reactionsCheck);
-            case ReactionSymbols.Stop:
-                return setReaction(this.reactionsStop);
-            case ReactionSymbols.Attention:
-                return setReaction(this.reactionsAttention);
-            case ReactionSymbols.DoubleAttention:
-                return setReaction(this.reactionsDoubleAttention);
-            case ReactionSymbols.Question:
-                return setReaction(this.reactionsQuestion);
-        }
+        if (reaction.sender != this.coreViewModel.settingsModel.username) return;
+        this.userReaction.value = reaction.isDeleting ? undefined : reaction.content;
     };
 
     sendReaction = (content: ReactionSymbols, isDeleting: boolean): void => {

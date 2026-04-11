@@ -1498,11 +1498,7 @@
         const fileContent = FileModel2.createFileContent(v4_default(), "reaction");
         const reaction = {
           ...fileContent,
-          fileId: _ChatModel.createMessageReactionId(
-            messageId,
-            content,
-            sender
-          ),
+          fileId: _ChatModel.createMessageReactionId(messageId, sender),
           messageId,
           sender,
           content,
@@ -1512,24 +1508,11 @@
       };
     }
     static {
-      this.createMessageReactionId = (messageId, content, sender) => {
-        return messageId + sender + reactionStringMap[content];
+      this.createMessageReactionId = (messageId, sender) => {
+        return messageId + sender;
       };
     }
   };
-  var ReactionSymbols = /* @__PURE__ */ ((ReactionSymbols2) => {
-    ReactionSymbols2["ThumbsUp"] = "\u{1F44D}";
-    ReactionSymbols2["Check"] = "\u2705";
-    ReactionSymbols2["Stop"] = "\u{1F6D1}";
-    ReactionSymbols2["Attention"] = "\u2757\uFE0F";
-    ReactionSymbols2["DoubleAttention"] = "\u203C\uFE0F";
-    ReactionSymbols2["Question"] = "\u2753";
-    return ReactionSymbols2;
-  })(ReactionSymbols || {});
-  var reactionStringMap = {};
-  Object.entries(ReactionSymbols).forEach((value) => {
-    reactionStringMap[value[1]] = value[0];
-  });
   var ChatInfoReference = {
     dataVersion: DATA_VERSION,
     primaryChannel: "",
@@ -2038,35 +2021,39 @@
       this.status = new State(
         void 0
       );
-      this.reactionsThumbsUp = new MapState();
-      this.reactionsCheck = new MapState();
-      this.reactionsStop = new MapState();
-      this.reactionsAttention = new MapState();
-      this.reactionsDoubleAttention = new MapState();
-      this.reactionsQuestion = new MapState();
-      this.reactionsThumbsUpCount = createProxyState(
-        [this.reactionsThumbsUp],
-        () => this.reactionsThumbsUp.value.size
+      this.allReactions = new MapState();
+      this.userReaction = new State(void 0);
+      this.reactionsThumbsUp = MapState;
+      this.reactionsCheck = MapState;
+      this.reactionsStop = MapState;
+      this.reactionsAttention = MapState;
+      this.reactionsDoubleAttention = MapState;
+      this.reactionsQuestion = MapState;
+      this.generateReactionCountProxyState = (content) => {
+        return createProxyState(
+          [this.allReactions],
+          () => [...this.allReactions.value.values()].filter(
+            (x) => x.content == content
+          ).length
+        );
+      };
+      this.reactionsThumbsUpCount = this.generateReactionCountProxyState(
+        "\u{1F44D}" /* ThumbsUp */
       );
-      this.reactionsCheckCount = createProxyState(
-        [this.reactionsCheck],
-        () => this.reactionsCheck.value.size
+      this.reactionsCheckCount = this.generateReactionCountProxyState(
+        "\u2705" /* Check */
       );
-      this.reactionsStopCount = createProxyState(
-        [this.reactionsStop],
-        () => this.reactionsStop.value.size
+      this.reactionsStopCount = this.generateReactionCountProxyState(
+        "\u{1F6D1}" /* Stop */
       );
-      this.reactionsAttentionCount = createProxyState(
-        [this.reactionsAttention],
-        () => this.reactionsAttention.value.size
+      this.reactionsAttentionCount = this.generateReactionCountProxyState(
+        "\u2757\uFE0F" /* Attention */
       );
-      this.reactionsDoubleAttentionCount = createProxyState(
-        [this.reactionsDoubleAttention],
-        () => this.reactionsDoubleAttention.value.size
+      this.reactionsDoubleAttentionCount = this.generateReactionCountProxyState(
+        "\u203C\uFE0F" /* DoubleAttention */
       );
-      this.reactionsQuestionCount = createProxyState(
-        [this.reactionsQuestion],
-        () => this.reactionsQuestion.value.size
+      this.reactionsQuestionCount = this.generateReactionCountProxyState(
+        "\u2753" /* Question */
       );
       // state
       this.isPresentingInfoModal = new State(false);
@@ -2089,27 +2076,13 @@
       };
       // reactions
       this.handleReaction = (reaction) => {
-        function setReaction(mapState) {
-          if (reaction.isDeleting) {
-            mapState.remove(reaction.sender);
-          } else {
-            mapState.set(reaction.sender, reaction);
-          }
+        if (reaction.isDeleting) {
+          this.allReactions.remove(reaction.sender);
+        } else {
+          this.allReactions.set(reaction.sender, reaction);
         }
-        switch (reaction.content) {
-          case "\u{1F44D}" /* ThumbsUp */:
-            return setReaction(this.reactionsThumbsUp);
-          case "\u2705" /* Check */:
-            return setReaction(this.reactionsCheck);
-          case "\u{1F6D1}" /* Stop */:
-            return setReaction(this.reactionsStop);
-          case "\u2757\uFE0F" /* Attention */:
-            return setReaction(this.reactionsAttention);
-          case "\u203C\uFE0F" /* DoubleAttention */:
-            return setReaction(this.reactionsDoubleAttention);
-          case "\u2753" /* Question */:
-            return setReaction(this.reactionsQuestion);
-        }
+        if (reaction.sender != this.coreViewModel.settingsModel.username) return;
+        this.userReaction.value = reaction.isDeleting ? void 0 : reaction.content;
       };
       this.sendReaction = (content, isDeleting) => {
         this.messagePageViewModel.sendReaction(
@@ -3434,60 +3407,42 @@
   function MessageReactionButton(coreViewModel2, chatMessageViewModel, content) {
     let audioLabel;
     let count;
-    let reactionState;
-    let isActive = new State(false);
-    let isZero = new State(true);
+    let isActive = createProxyState([chatMessageViewModel.userReaction], () => chatMessageViewModel.userReaction.value == content);
     function sendReaction() {
       chatMessageViewModel.sendReaction(content, isActive.value);
-    }
-    function getUsername() {
-      return chatMessageViewModel.messagePageViewModel.chatViewModel.settingsViewModel.username.value;
-    }
-    function checkIsHighlighted() {
-      return reactionState.value.has(getUsername());
     }
     switch (content) {
       case "\u{1F44D}" /* ThumbsUp */: {
         audioLabel = coreViewModel2.translations.chatPage.message.thumbsUpReaction;
         count = chatMessageViewModel.reactionsThumbsUpCount;
-        reactionState = chatMessageViewModel.reactionsThumbsUp;
         break;
       }
       case "\u2705" /* Check */: {
         audioLabel = coreViewModel2.translations.chatPage.message.checkReaction;
         count = chatMessageViewModel.reactionsCheckCount;
-        reactionState = chatMessageViewModel.reactionsCheck;
         break;
       }
       case "\u{1F6D1}" /* Stop */: {
         audioLabel = coreViewModel2.translations.chatPage.message.stopReaction;
         count = chatMessageViewModel.reactionsStopCount;
-        reactionState = chatMessageViewModel.reactionsStop;
         break;
       }
       case "\u2757\uFE0F" /* Attention */: {
         audioLabel = coreViewModel2.translations.chatPage.message.attentionReaction;
         count = chatMessageViewModel.reactionsAttentionCount;
-        reactionState = chatMessageViewModel.reactionsAttention;
         break;
       }
       case "\u203C\uFE0F" /* DoubleAttention */: {
         audioLabel = coreViewModel2.translations.chatPage.message.doubleAttentionReaction;
         count = chatMessageViewModel.reactionsDoubleAttentionCount;
-        reactionState = chatMessageViewModel.reactionsDoubleAttention;
         break;
       }
       case "\u2753" /* Question */: {
         audioLabel = coreViewModel2.translations.chatPage.message.questionReaction;
         count = chatMessageViewModel.reactionsQuestionCount;
-        reactionState = chatMessageViewModel.reactionsQuestion;
         break;
       }
     }
-    reactionState.subscribe(() => {
-      isActive.value = checkIsHighlighted();
-      isZero.value = reactionState.value.size == 0;
-    });
     return /* @__PURE__ */ createElement(
       "button",
       {
@@ -3495,7 +3450,7 @@
         "on:click": sendReaction,
         "aria-label": audioLabel,
         "toggle:selected": isActive,
-        "toggle:zero": isZero
+        "set:count": count
       },
       content,
       /* @__PURE__ */ createElement("span", { "subscribe:innerText": count })
@@ -3542,6 +3497,11 @@
     return /* @__PURE__ */ createElement("div", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, icon), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, label), /* @__PURE__ */ createElement("b", { class: "break-word", "subscribe:innerText": contentState })));
   }
 
+  // src/View/Components/messageReactionEntry.tsx
+  function MessageReactionEntry(reaction) {
+    return /* @__PURE__ */ createElement("div", { class: "tile flex-row" }, /* @__PURE__ */ createElement("span", { class: "flex width-100" }, reaction.sender), /* @__PURE__ */ createElement("span", null, reaction.content));
+  }
+
   // src/View/Modals/chatMessageInfoModal.tsx
   function ChatMessageInfoModal(coreViewModel2, chatMessageViewModel) {
     return /* @__PURE__ */ createElement(
@@ -3566,10 +3526,19 @@
         "description",
         coreViewModel2.translations.chatPage.message.messageContent,
         chatMessageViewModel.body
-      )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, coreViewModel2.translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, coreViewModel2.translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, coreViewModel2.translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), MessageReactionButtonRow(
+      )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, coreViewModel2.translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, coreViewModel2.translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, coreViewModel2.translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, MessageReactionButtonRow(
         coreViewModel2,
         chatMessageViewModel
-      )), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      ), /* @__PURE__ */ createElement(
+        "div",
+        {
+          class: "flex-column gap",
+          "children:append": [
+            chatMessageViewModel.allReactions,
+            MessageReactionEntry
+          ]
+        }
+      ))), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.hideInfoModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
 
@@ -5623,7 +5592,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.10.A";
+      this.BUILD = "Build 26.04.10.B";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS

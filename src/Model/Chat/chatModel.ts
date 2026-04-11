@@ -416,11 +416,7 @@ export default class ChatModel {
         const fileContent = FileModel.createFileContent(v4(), "reaction");
         const reaction: ChatMessageReaction = {
             ...fileContent,
-            fileId: ChatModel.createMessageReactionId(
-                messageId,
-                content,
-                sender,
-            ),
+            fileId: ChatModel.createMessageReactionId(messageId, sender),
 
             messageId,
             sender,
@@ -432,10 +428,9 @@ export default class ChatModel {
 
     static createMessageReactionId = (
         messageId: string,
-        content: ReactionSymbols,
         sender: string,
     ): string => {
-        return messageId + sender + reactionStringMap[content];
+        return messageId + sender;
     };
 }
 
@@ -448,11 +443,6 @@ export enum ReactionSymbols {
     DoubleAttention = "‼️",
     Question = "❓",
 }
-
-const reactionStringMap: { [key: ReactionSymbols | string]: string } = {};
-Object.entries(ReactionSymbols).forEach((value) => {
-    reactionStringMap[value[1]] = value[0];
-});
 
 export interface ChatInfo extends ValidObject {
     primaryChannel: string;

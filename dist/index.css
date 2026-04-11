@@ -733,7 +733,7 @@ body[showing-chat] #chat-page-wrapper {
   display: none !important;
   overflow: hidden;
 }
-.message-bubble > .message-reaction-row:has(button:not([zero])) {
+.message-bubble > .message-reaction-row:has(button:not([count="0"])) {
   display: grid !important;
 }
 .message-bubble > .message-reaction-row button {
@@ -745,7 +745,7 @@ body[showing-chat] #chat-page-wrapper {
   flex: 1 !important;
   animation: slide-up var(--animation-duration);
 }
-.message-bubble > .message-reaction-row button[zero] {
+.message-bubble > .message-reaction-row button[count="0"] {
   display: none;
 }
 .message-reaction-row {

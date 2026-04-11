@@ -4,6 +4,7 @@ import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { MessageReactionButtonRow } from "../Components/messageReactionButtonRow";
 import { InfoTile } from "../Components/infoTile";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { MessageReactionEntry } from "../Components/messageReactionEntry";
 
 export function ChatMessageInfoModal(
     coreViewModel: CoreViewModel,
@@ -76,10 +77,20 @@ export function ChatMessageInfoModal(
 
                     <hr></hr>
 
-                    {MessageReactionButtonRow(
-                        coreViewModel,
-                        chatMessageViewModel,
-                    )}
+                    <div class="flex-column gap">
+                        {MessageReactionButtonRow(
+                            coreViewModel,
+                            chatMessageViewModel,
+                        )}
+
+                        <div
+                            class="flex-column gap"
+                            children:append={[
+                                chatMessageViewModel.allReactions,
+                                MessageReactionEntry,
+                            ]}
+                        ></div>
+                    </div>
                 </main>
                 <button on:click={chatMessageViewModel.hideInfoModal}>
                     {coreViewModel.translations.general.closeButton}
