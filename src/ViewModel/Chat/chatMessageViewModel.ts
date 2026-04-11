@@ -22,6 +22,8 @@ export default class ChatMessageViewModel {
     );
     sentByUser: boolean;
 
+    isHidden = new React.State<boolean>(false);
+
     allReactions = new React.MapState<ChatMessageReaction>();
     userReaction = new React.State<ReactionSymbols | string | undefined>(
         undefined,
@@ -129,5 +131,43 @@ export default class ChatMessageViewModel {
         this.chatMessage = chatMessage;
         this.sentByUser = sentByUser;
         this.loadData();
+
+        this.messagePageViewModel.reactionFilter.subscribe((content) => {
+            console.log(content, content==undefined)
+            if (content == undefined) {
+                this.isHidden.value = false;
+                return;
+            }
+
+            let count = 0;
+            switch (content) {
+                case ReactionSymbols.ThumbsUp: {
+                    count = this.reactionsThumbsUpCount.value;
+                    break;
+                }
+                case ReactionSymbols.Check: {
+                    count = this.reactionsCheckCount.value;
+                    break;
+                }
+                case ReactionSymbols.Stop: {
+                    count = this.reactionsStopCount.value;
+                    break;
+                }
+                case ReactionSymbols.Attention: {
+                    count = this.reactionsAttentionCount.value;
+                    break;
+                }
+                case ReactionSymbols.DoubleAttention: {
+                    count = this.reactionsDoubleAttentionCount.value;
+                    break;
+                }
+                case ReactionSymbols.Question: {
+                    count = this.reactionsQuestionCount.value;
+                    break;
+                }
+            }
+
+            this.isHidden.value = count == 0;
+        })
     }
 }

@@ -763,6 +763,9 @@ body[showing-chat] #chat-page-wrapper {
     grid-template-columns: repeat(3, minmax(80px, 1fr));
   }
 }
+.grid.message-reaction-filter {
+  grid-template-columns: repeat(3, 1fr);
+}
 
 /* src/View/ChatPages/taskPage.css */
 #chat-page > div > #main > #task-page > .pane-wrapper > .pane > .main-content {

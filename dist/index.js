@@ -2021,6 +2021,7 @@
       this.status = new State(
         void 0
       );
+      this.isHidden = new State(false);
       this.allReactions = new MapState();
       this.userReaction = new State(
         void 0
@@ -2105,6 +2106,41 @@
       this.chatMessage = chatMessage;
       this.sentByUser = sentByUser;
       this.loadData();
+      this.messagePageViewModel.reactionFilter.subscribe((content) => {
+        console.log(content, content == void 0);
+        if (content == void 0) {
+          this.isHidden.value = false;
+          return;
+        }
+        let count = 0;
+        switch (content) {
+          case "\u{1F44D}" /* ThumbsUp */: {
+            count = this.reactionsThumbsUpCount.value;
+            break;
+          }
+          case "\u2705" /* Check */: {
+            count = this.reactionsCheckCount.value;
+            break;
+          }
+          case "\u{1F6D1}" /* Stop */: {
+            count = this.reactionsStopCount.value;
+            break;
+          }
+          case "\u2757\uFE0F" /* Attention */: {
+            count = this.reactionsAttentionCount.value;
+            break;
+          }
+          case "\u203C\uFE0F" /* DoubleAttention */: {
+            count = this.reactionsDoubleAttentionCount.value;
+            break;
+          }
+          case "\u2753" /* Question */: {
+            count = this.reactionsQuestionCount.value;
+            break;
+          }
+        }
+        this.isHidden.value = count == 0;
+      });
     }
   };
 
@@ -2171,6 +2207,7 @@
       this.chatMessageViewModels = new MapState();
       this.filteredMessageViewModels = new ListState();
       this.isFilterModalOpen = new State(false);
+      this.reactionFilter = new State(void 0);
       this.composingMessage = new State("");
       // methods
       this.sendMessage = () => {
@@ -2223,6 +2260,12 @@
       };
       this.closeFilterModal = () => {
         this.isFilterModalOpen.value = false;
+      };
+      this.revokeReactionFilter = () => {
+        this.reactionFilter.value = void 0;
+      };
+      this.setReactionFilter = (content) => {
+        this.reactionFilter.value = content;
       };
       // load
       this.loadData = () => {
@@ -3583,7 +3626,8 @@
       "div",
       {
         class: "message-bubble",
-        "toggle:sentbyuser": chatMessageViewModel.sentByUser
+        "toggle:sentbyuser": chatMessageViewModel.sentByUser,
+        "toggle:hidden": chatMessageViewModel.isHidden
       },
       /* @__PURE__ */ createElement("div", { class: "main tile" }, /* @__PURE__ */ createElement("div", { class: "text-container" }, /* @__PURE__ */ createElement("span", { class: "sender-name ellipsis" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement(
         "span",
@@ -3610,8 +3654,32 @@
     );
   }
 
+  // src/View/Components/messageReactionFilterButton.tsx
+  function MessageReactionFilterButton(messagePageViewModel, content) {
+    const select = () => {
+      messagePageViewModel.setReactionFilter(content);
+    };
+    const isSelected = createProxyState(
+      [messagePageViewModel.reactionFilter],
+      () => messagePageViewModel.reactionFilter.value == content
+    );
+    return /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "flex justify-center",
+        "on:click": select,
+        "toggle:selected": isSelected
+      },
+      content
+    );
+  }
+
   // src/View/Modals/messageFilterModal.tsx
   function MessageFilterModal(coreViewModel2, messagePageViewModel, converter) {
+    const noFilter = createProxyState(
+      [messagePageViewModel.reactionFilter],
+      () => messagePageViewModel.reactionFilter.value == void 0
+    );
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": messagePageViewModel.isFilterModalOpen }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.message.messageFilterHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
@@ -3628,7 +3696,25 @@
         "toggle:disabled": messagePageViewModel.searchViewModel.cannotApplySearch
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "search")
-    )), /* @__PURE__ */ createElement("hr", null)), /* @__PURE__ */ createElement("button", { "on:click": messagePageViewModel.closeFilterModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.chatPage.message.messageFilterReactionsHadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "toggle:selected": noFilter, "on:click": messagePageViewModel.revokeReactionFilter }, coreViewModel2.translations.chatPage.message.messageFilterAllReactionsButton), /* @__PURE__ */ createElement("div", { class: "grid gap message-reaction-filter" }, MessageReactionFilterButton(
+      messagePageViewModel,
+      "\u{1F44D}" /* ThumbsUp */
+    ), MessageReactionFilterButton(
+      messagePageViewModel,
+      "\u2705" /* Check */
+    ), MessageReactionFilterButton(
+      messagePageViewModel,
+      "\u{1F6D1}" /* Stop */
+    ), MessageReactionFilterButton(
+      messagePageViewModel,
+      "\u2757\uFE0F" /* Attention */
+    ), MessageReactionFilterButton(
+      messagePageViewModel,
+      "\u203C\uFE0F" /* DoubleAttention */
+    ), MessageReactionFilterButton(
+      messagePageViewModel,
+      "\u2753" /* Question */
+    )))), /* @__PURE__ */ createElement("button", { "on:click": messagePageViewModel.closeFilterModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/View/ChatPages/messagePage.tsx
@@ -5164,6 +5250,8 @@
       message: {
         messagesHeadline: "Messages",
         messageFilterHeadline: "Filter messages",
+        messageFilterReactionsHadline: "Reactions",
+        messageFilterAllReactionsButton: "Show all",
         ///
         composerInputPlaceholder: "Type a message...",
         sendMessageButtonAudioLabel: "send message",
@@ -5372,6 +5460,8 @@
         message: {
           messagesHeadline: "Nachrichten",
           messageFilterHeadline: "Nachrichten filtern",
+          messageFilterReactionsHadline: "Reaktionen",
+          messageFilterAllReactionsButton: "Alle anzeigen",
           composerInputPlaceholder: "Schreib eine Nachricht...",
           sendMessageButtonAudioLabel: "nachricht senden",
           filterMessagesButtonAudioLabel: "nachrichten filtern",
@@ -5568,6 +5658,8 @@
         message: {
           messagesHeadline: "Mensajes",
           messageFilterHeadline: "Filtrar mensajes",
+          messageFilterReactionsHadline: "Reacciones",
+          messageFilterAllReactionsButton: "Mostrar todas",
           composerInputPlaceholder: "Escribe un mensaje...",
           sendMessageButtonAudioLabel: "enviar mensaje",
           filterMessagesButtonAudioLabel: "filtrar mensajes",

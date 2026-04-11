@@ -5,24 +5,40 @@ import { StringToOption } from "../Components/option";
 import { v4 } from "uuid";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
+import { MessageReactionFilterButton } from "../Components/messageReactionFilterButton";
+import { ReactionSymbols } from "../../Model/Chat/chatModel";
 
 export function MessageFilterModal<T>(
     coreViewModel: CoreViewModel,
     messagePageViewModel: MessagePageViewModel,
     converter: React.StateItemConverter<T>,
 ) {
+    const noFilter = React.createProxyState(
+        [messagePageViewModel.reactionFilter],
+        () => messagePageViewModel.reactionFilter.value == undefined,
+    );
+
     return (
         <div class="modal" toggle:open={messagePageViewModel.isFilterModalOpen}>
             <div>
                 <main>
-                    <h2>{coreViewModel.translations.chatPage.message.messageFilterHeadline}</h2>
+                    <h2>
+                        {
+                            coreViewModel.translations.chatPage.message
+                                .messageFilterHeadline
+                        }
+                    </h2>
                     <div class="flex-row width-input">
                         <input
                             placeholder={
                                 coreViewModel.translations.general.searchLabel
                             }
-                            bind:value={messagePageViewModel.searchViewModel.searchInput}
-                            on:enter={messagePageViewModel.searchViewModel.applySearch}
+                            bind:value={
+                                messagePageViewModel.searchViewModel.searchInput
+                            }
+                            on:enter={
+                                messagePageViewModel.searchViewModel.applySearch
+                            }
                         ></input>
                         <button
                             class="primary"
@@ -30,14 +46,61 @@ export function MessageFilterModal<T>(
                                 coreViewModel.translations.general
                                     .searchButtonAudioLabel
                             }
-                            on:click={messagePageViewModel.searchViewModel.applySearch}
-                            toggle:disabled={messagePageViewModel.searchViewModel.cannotApplySearch}
+                            on:click={
+                                messagePageViewModel.searchViewModel.applySearch
+                            }
+                            toggle:disabled={
+                                messagePageViewModel.searchViewModel
+                                    .cannotApplySearch
+                            }
                         >
                             <span class="icon">search</span>
                         </button>
                     </div>
 
                     <hr></hr>
+
+                    <h3>
+                        {
+                            coreViewModel.translations.chatPage.message
+                                .messageFilterReactionsHadline
+                        }
+                    </h3>
+
+                    <div class="flex-column gap">
+                        <button toggle:selected={noFilter} on:click={messagePageViewModel.revokeReactionFilter}>
+                            {
+                                coreViewModel.translations.chatPage.message
+                                    .messageFilterAllReactionsButton
+                            }
+                        </button>
+                        <div class="grid gap message-reaction-filter">
+                            {MessageReactionFilterButton(
+                                messagePageViewModel,
+                                ReactionSymbols.ThumbsUp,
+                            )}
+                            {MessageReactionFilterButton(
+                                messagePageViewModel,
+                                ReactionSymbols.Check,
+                            )}
+                            {MessageReactionFilterButton(
+                                messagePageViewModel,
+                                ReactionSymbols.Stop,
+                            )}
+                            {MessageReactionFilterButton(
+                                messagePageViewModel,
+                                ReactionSymbols.Attention,
+                            )}
+                            {MessageReactionFilterButton(
+                                messagePageViewModel,
+                                ReactionSymbols.DoubleAttention,
+                            )}
+                            {MessageReactionFilterButton(
+                                messagePageViewModel,
+                                ReactionSymbols.Question,
+                            )}
+                        </div>
+                    </div>
                 </main>
                 <button on:click={messagePageViewModel.closeFilterModal}>
                     {coreViewModel.translations.general.closeButton}

@@ -30,6 +30,7 @@ export function ChatMessage(
         <div
             class="message-bubble"
             toggle:sentbyuser={chatMessageViewModel.sentByUser}
+            toggle:hidden={chatMessageViewModel.isHidden}
         >
             <div class="main tile">
                 <div class="text-container">

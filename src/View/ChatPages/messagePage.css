@@ -216,3 +216,7 @@
         grid-template-columns: repeat(3, minmax(80px, 1fr));
     }
 }
+
+.grid.message-reaction-filter {
+    grid-template-columns: repeat(3, 1fr);
+}

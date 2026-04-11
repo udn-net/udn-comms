@@ -184,7 +184,10 @@ const englishTranslations = {
 
         message: {
             messagesHeadline: "Messages",
+
             messageFilterHeadline: "Filter messages",
+            messageFilterReactionsHadline: "Reactions",
+            messageFilterAllReactionsButton: "Show all",
 
             ///
 
@@ -482,7 +485,10 @@ export const allTranslations: {
 
             message: {
                 messagesHeadline: "Nachrichten",
+
                 messageFilterHeadline: "Nachrichten filtern",
+                messageFilterReactionsHadline: "Reaktionen",
+                messageFilterAllReactionsButton: "Alle anzeigen",
 
                 composerInputPlaceholder: "Schreib eine Nachricht...",
                 sendMessageButtonAudioLabel: "nachricht senden",
@@ -754,7 +760,10 @@ export const allTranslations: {
 
             message: {
                 messagesHeadline: "Mensajes",
+
                 messageFilterHeadline: "Filtrar mensajes",
+                messageFilterReactionsHadline: "Reacciones",
+                messageFilterAllReactionsButton: "Mostrar todas",
 
                 composerInputPlaceholder: "Escribe un mensaje...",
                 sendMessageButtonAudioLabel: "enviar mensaje",
