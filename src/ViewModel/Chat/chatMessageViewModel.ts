@@ -23,7 +23,9 @@ export default class ChatMessageViewModel {
     sentByUser: boolean;
 
     allReactions = new React.MapState<ChatMessageReaction>();
-    userReaction = new React.State<ReactionSymbols | string | undefined>(undefined);
+    userReaction = new React.State<ReactionSymbols | string | undefined>(
+        undefined,
+    );
     reactionsThumbsUp = React.MapState<ChatMessageReaction>;
     reactionsCheck = React.MapState<ChatMessageReaction>;
     reactionsStop = React.MapState<ChatMessageReaction>;
@@ -93,8 +95,11 @@ export default class ChatMessageViewModel {
             this.allReactions.set(reaction.sender, reaction);
         }
 
-        if (reaction.sender != this.coreViewModel.settingsModel.username) return;
-        this.userReaction.value = reaction.isDeleting ? undefined : reaction.content;
+        if (reaction.sender != this.coreViewModel.settingsModel.username)
+            return;
+        this.userReaction.value = reaction.isDeleting
+            ? undefined
+            : reaction.content;
     };
 
     sendReaction = (content: ReactionSymbols, isDeleting: boolean): void => {

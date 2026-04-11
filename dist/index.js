@@ -2022,7 +2022,9 @@
         void 0
       );
       this.allReactions = new MapState();
-      this.userReaction = new State(void 0);
+      this.userReaction = new State(
+        void 0
+      );
       this.reactionsThumbsUp = MapState;
       this.reactionsCheck = MapState;
       this.reactionsStop = MapState;
@@ -2081,7 +2083,8 @@
         } else {
           this.allReactions.set(reaction.sender, reaction);
         }
-        if (reaction.sender != this.coreViewModel.settingsModel.username) return;
+        if (reaction.sender != this.coreViewModel.settingsModel.username)
+          return;
         this.userReaction.value = reaction.isDeleting ? void 0 : reaction.content;
       };
       this.sendReaction = (content, isDeleting) => {
@@ -2105,6 +2108,59 @@
     }
   };
 
+  // src/ViewModel/Utility/searchViewModel.ts
+  var SearchViewModel = class {
+    // init
+    constructor(allObjects, matchingObjects, getStringsOfObject, suggestions) {
+      // state
+      this.appliedQuery = new State("");
+      this.searchInput = new State("");
+      // guards
+      this.cannotApplySearch = createProxyState(
+        [this.searchInput, this.appliedQuery],
+        () => this.searchInput.value == this.appliedQuery.value
+      );
+      // methods
+      this.search = (searchTerm) => {
+        this.searchInput.value = searchTerm;
+        this.applySearch();
+      };
+      this.applySearch = () => {
+        this.appliedQuery.value = this.searchInput.value;
+        this.matchingObjects.clear();
+        for (const object of this.allObjects.value.values()) {
+          const doesMatch = this.checkDoesMatchSearch(object);
+          if (doesMatch == false) continue;
+          this.matchingObjects.add(object);
+        }
+      };
+      // utility
+      this.checkDoesMatchSearch = (object) => {
+        return checkDoesObjectMatchSearch(
+          this.appliedQuery.value,
+          this.getStringsOfObject,
+          object
+        );
+      };
+      this.allObjects = allObjects;
+      this.matchingObjects = matchingObjects;
+      this.getStringsOfObject = getStringsOfObject;
+      this.suggestions = suggestions;
+      this.allObjects.handleAddition((newObject) => {
+        const doesMatch = this.checkDoesMatchSearch(newObject);
+        if (doesMatch == false) {
+          this.matchingObjects.remove(newObject);
+        } else {
+          if (this.matchingObjects.value.has(newObject)) return;
+          this.matchingObjects.add(newObject);
+          this.allObjects.handleRemoval(newObject, () => {
+            this.matchingObjects.remove(newObject);
+          });
+        }
+      });
+    }
+  };
+
   // src/ViewModel/Pages/messagePageViewModel.ts
   var MessagePageViewModel = class {
     // init
@@ -2113,6 +2169,8 @@
       this.chatViewModel = chatViewModel;
       // state
       this.chatMessageViewModels = new MapState();
+      this.filteredMessageViewModels = new ListState();
+      this.isFilterModalOpen = new State(false);
       this.composingMessage = new State("");
       // methods
       this.sendMessage = () => {
@@ -2160,6 +2218,9 @@
         if (messageViewModel == void 0) return;
         messageViewModel.handleReaction(reaction);
       };
+      this.openFilterModal = () => {
+        this.isFilterModalOpen.value = true;
+      };
       // load
       this.loadData = () => {
         this.chatMessageViewModels.clear();
@@ -2176,6 +2237,12 @@
           this.composingMessage
         ],
         () => this.chatViewModel.settingsViewModel.username.value == "" || this.composingMessage.value == ""
+      );
+      this.searchViewModel = new SearchViewModel(
+        this.chatMessageViewModels,
+        this.filteredMessageViewModels,
+        (chatMessageViewModel) => [chatMessageViewModel.body.value],
+        new ListState()
       );
     }
   };
@@ -2267,59 +2334,6 @@
       );
       this.color.subscribe((newColor) => {
         this.applyColor(newColor);
-      });
-    }
-  };
-
-  // src/ViewModel/Utility/searchViewModel.ts
-  var SearchViewModel = class {
-    // init
-    constructor(allObjects, matchingObjects, getStringsOfObject, suggestions) {
-      // state
-      this.appliedQuery = new State("");
-      this.searchInput = new State("");
-      // guards
-      this.cannotApplySearch = createProxyState(
-        [this.searchInput, this.appliedQuery],
-        () => this.searchInput.value == this.appliedQuery.value
-      );
-      // methods
-      this.search = (searchTerm) => {
-        this.searchInput.value = searchTerm;
-        this.applySearch();
-      };
-      this.applySearch = () => {
-        this.appliedQuery.value = this.searchInput.value;
-        this.matchingObjects.clear();
-        for (const object of this.allObjects.value.values()) {
-          const doesMatch = this.checkDoesMatchSearch(object);
-          if (doesMatch == false) continue;
-          this.matchingObjects.add(object);
-        }
-      };
-      // utility
-      this.checkDoesMatchSearch = (object) => {
-        return checkDoesObjectMatchSearch(
-          this.appliedQuery.value,
-          this.getStringsOfObject,
-          object
-        );
-      };
-      this.allObjects = allObjects;
-      this.matchingObjects = matchingObjects;
-      this.getStringsOfObject = getStringsOfObject;
-      this.suggestions = suggestions;
-      this.allObjects.handleAddition((newObject) => {
-        const doesMatch = this.checkDoesMatchSearch(newObject);
-        if (doesMatch == false) {
-          this.matchingObjects.remove(newObject);
-        } else {
-          if (this.matchingObjects.value.has(newObject)) return;
-          this.matchingObjects.add(newObject);
-          this.allObjects.handleRemoval(newObject, () => {
-            this.matchingObjects.remove(newObject);
-          });
-        }
       });
     }
   };
@@ -3407,7 +3421,10 @@
   function MessageReactionButton(coreViewModel2, chatMessageViewModel, content) {
     let audioLabel;
     let count;
-    let isActive = createProxyState([chatMessageViewModel.userReaction], () => chatMessageViewModel.userReaction.value == content);
+    let isActive = createProxyState(
+      [chatMessageViewModel.userReaction],
+      () => chatMessageViewModel.userReaction.value == content
+    );
     function sendReaction() {
       chatMessageViewModel.sendReaction(content, isActive.value);
     }
@@ -3590,6 +3607,52 @@
     );
   }
 
+  // src/View/Modals/searchModal.tsx
+  function SearchModal(coreViewModel2, searchViewModel, headline, converter, isOpen) {
+    function close() {
+      isOpen.value = false;
+    }
+    const suggestionId = v4_default();
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isOpen }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, headline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
+      "input",
+      {
+        placeholder: coreViewModel2.translations.general.searchLabel,
+        "bind:value": searchViewModel.searchInput,
+        "on:enter": searchViewModel.applySearch,
+        list: suggestionId
+      }
+    ), /* @__PURE__ */ createElement(
+      "datalist",
+      {
+        hidden: true,
+        id: suggestionId,
+        "children:append": [
+          searchViewModel.suggestions,
+          StringToOption
+        ]
+      }
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "primary",
+        "aria-label": coreViewModel2.translations.general.searchButtonAudioLabel,
+        "on:click": searchViewModel.applySearch,
+        "toggle:disabled": searchViewModel.cannotApplySearch
+      },
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "search")
+    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "grid gap",
+        style: "grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr))",
+        "children:append": [
+          searchViewModel.matchingObjects,
+          converter
+        ]
+      }
+    )), /* @__PURE__ */ createElement("button", { "on:click": close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+  }
+
   // src/View/ChatPages/messagePage.tsx
   function MessagePage(coreViewModel2, messagePageViewModel) {
     messagePageViewModel.loadData();
@@ -3601,7 +3664,7 @@
       {
         id: "message-container",
         "children:append": [
-          messagePageViewModel.chatMessageViewModels,
+          messagePageViewModel.filteredMessageViewModels,
           ChatMessageViewModelToView
         ]
       }
@@ -3618,11 +3681,19 @@
       if (scrollFromBottom > 400) return;
       scrollDown();
     }
-    messagePageViewModel.chatMessageViewModels.subscribeSilent(
+    messagePageViewModel.filteredMessageViewModels.subscribeSilent(
       scrollDownIfApplicable
     );
     setTimeout(() => scrollDown(true), 100);
-    return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.message.messagesHeadline)), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.message.messagesHeadline), /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "ghost",
+        "on:click": messagePageViewModel.openFilterModal,
+        "aria-label": coreViewModel2.translations.chatPage.message.filterMessagesButtonAudioLabel
+      },
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "filter_alt")
+    ))), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": messagePageViewModel.composingMessage,
@@ -3638,7 +3709,13 @@
         "toggle:disabled": messagePageViewModel.cannotSendMessage
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "send")
-    ))))))));
+    ))))))), SearchModal(
+      coreViewModel2,
+      messagePageViewModel.searchViewModel,
+      coreViewModel2.translations.chatPage.message.messageFilterHeadline,
+      ChatMessageViewModelToView,
+      messagePageViewModel.isFilterModalOpen
+    ));
   }
 
   // src/View/Components/colorPicker.tsx
@@ -4156,52 +4233,6 @@
       () => boardViewModel.selectedPage.value == page
     );
     return RibbonButton(label, icon, isSelected, select);
-  }
-
-  // src/View/Modals/searchModal.tsx
-  function SearchModal(coreViewModel2, searchViewModel, headline, converter, isOpen) {
-    function close() {
-      isOpen.value = false;
-    }
-    const suggestionId = v4_default();
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isOpen }, /* @__PURE__ */ createElement("div", { style: "max-width: 64rem" }, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, headline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
-      "input",
-      {
-        placeholder: coreViewModel2.translations.general.searchLabel,
-        "bind:value": searchViewModel.searchInput,
-        "on:enter": searchViewModel.applySearch,
-        list: suggestionId
-      }
-    ), /* @__PURE__ */ createElement(
-      "datalist",
-      {
-        hidden: true,
-        id: suggestionId,
-        "children:append": [
-          searchViewModel.suggestions,
-          StringToOption
-        ]
-      }
-    ), /* @__PURE__ */ createElement(
-      "button",
-      {
-        class: "primary",
-        "aria-label": coreViewModel2.translations.general.searchButtonAudioLabel,
-        "on:click": searchViewModel.applySearch,
-        "toggle:disabled": searchViewModel.cannotApplySearch
-      },
-      /* @__PURE__ */ createElement("span", { class: "icon" }, "search")
-    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
-      "div",
-      {
-        class: "grid gap",
-        style: "grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr))",
-        "children:append": [
-          searchViewModel.matchingObjects,
-          converter
-        ]
-      }
-    )), /* @__PURE__ */ createElement("button", { "on:click": close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/View/ChatPages/boardPage.tsx
@@ -5110,9 +5141,11 @@
       },
       message: {
         messagesHeadline: "Messages",
+        messageFilterHeadline: "Filter messages",
         ///
         composerInputPlaceholder: "Type a message...",
         sendMessageButtonAudioLabel: "send message",
+        filterMessagesButtonAudioLabel: "filter messages",
         ///
         showMessageInfoButtonAudioLabel: "show message info",
         messageInfoHeadline: "Message Info",
@@ -5316,8 +5349,10 @@
         },
         message: {
           messagesHeadline: "Nachrichten",
+          messageFilterHeadline: "Nachrichten filtern",
           composerInputPlaceholder: "Schreib eine Nachricht...",
           sendMessageButtonAudioLabel: "nachricht senden",
+          filterMessagesButtonAudioLabel: "nachrichten filtern",
           showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
           messageInfoHeadline: "Nachrichteninfo",
           sentBy: "Gesendet von",
@@ -5510,8 +5545,10 @@
         },
         message: {
           messagesHeadline: "Mensajes",
+          messageFilterHeadline: "Filtrar mensajes",
           composerInputPlaceholder: "Escribe un mensaje...",
           sendMessageButtonAudioLabel: "enviar mensaje",
+          filterMessagesButtonAudioLabel: "filtrar mensajes",
           showMessageInfoButtonAudioLabel: "mostrar informaci\xF3n del mensaje",
           messageInfoHeadline: "Informaci\xF3n del Mensaje",
           sentBy: "Enviado por",
@@ -5592,7 +5629,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.10.B";
+      this.BUILD = "Build 26.04.11.A";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS

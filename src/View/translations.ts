@@ -184,11 +184,13 @@ const englishTranslations = {
 
         message: {
             messagesHeadline: "Messages",
+            messageFilterHeadline: "Filter messages",
 
             ///
 
             composerInputPlaceholder: "Type a message...",
             sendMessageButtonAudioLabel: "send message",
+            filterMessagesButtonAudioLabel: "filter messages",
 
             ///
 
@@ -480,9 +482,11 @@ export const allTranslations: {
 
             message: {
                 messagesHeadline: "Nachrichten",
+                messageFilterHeadline: "Nachrichten filtern",
 
                 composerInputPlaceholder: "Schreib eine Nachricht...",
                 sendMessageButtonAudioLabel: "nachricht senden",
+                filterMessagesButtonAudioLabel: "nachrichten filtern",
 
                 showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
                 messageInfoHeadline: "Nachrichteninfo",
@@ -750,9 +754,11 @@ export const allTranslations: {
 
             message: {
                 messagesHeadline: "Mensajes",
+                messageFilterHeadline: "Filtrar mensajes",
 
                 composerInputPlaceholder: "Escribe un mensaje...",
                 sendMessageButtonAudioLabel: "enviar mensaje",
+                filterMessagesButtonAudioLabel: "filtrar mensajes",
 
                 showMessageInfoButtonAudioLabel:
                     "mostrar información del mensaje",

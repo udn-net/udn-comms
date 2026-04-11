@@ -13,7 +13,10 @@ export function MessageReactionButton(
 ) {
     let audioLabel: string;
     let count: React.State<number>;
-    let isActive = React.createProxyState([chatMessageViewModel.userReaction], (() => chatMessageViewModel.userReaction.value == content))
+    let isActive = React.createProxyState(
+        [chatMessageViewModel.userReaction],
+        () => chatMessageViewModel.userReaction.value == content,
+    );
 
     function sendReaction() {
         chatMessageViewModel.sendReaction(content, isActive.value);

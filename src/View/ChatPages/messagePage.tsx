@@ -6,6 +6,7 @@ import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { ChatMessage } from "../Components/chatMessage";
+import { SearchModal } from "../Modals/searchModal";
 
 export function MessagePage(
     coreViewModel: CoreViewModel,
@@ -22,7 +23,7 @@ export function MessagePage(
         <div
             id="message-container"
             children:append={[
-                messagePageViewModel.chatMessageViewModels,
+                messagePageViewModel.filteredMessageViewModels,
                 ChatMessageViewModelToView,
             ]}
         ></div>
@@ -43,7 +44,7 @@ export function MessagePage(
 
         scrollDown();
     }
-    messagePageViewModel.chatMessageViewModels.subscribeSilent(
+    messagePageViewModel.filteredMessageViewModels.subscribeSilent(
         scrollDownIfApplicable,
     );
     setTimeout(() => scrollDown(true), 100);
@@ -58,6 +59,18 @@ export function MessagePage(
                                 coreViewModel.translations.chatPage.message
                                     .messagesHeadline
                             }
+                        </span>
+                        <span>
+                            <button
+                                class="ghost"
+                                on:click={messagePageViewModel.openFilterModal}
+                                aria-label={
+                                    coreViewModel.translations.chatPage.message
+                                        .filterMessagesButtonAudioLabel
+                                }
+                            >
+                                <span class="icon">filter_alt</span>
+                            </button>
                         </span>
                     </div>
                     <div class="content">
@@ -100,6 +113,15 @@ export function MessagePage(
                     </div>
                 </div>
             </div>
+
+            {SearchModal(
+                coreViewModel,
+                messagePageViewModel.searchViewModel,
+                coreViewModel.translations.chatPage.message
+                    .messageFilterHeadline,
+                ChatMessageViewModelToView,
+                messagePageViewModel.isFilterModalOpen,
+            )}
         </div>
     );
 }

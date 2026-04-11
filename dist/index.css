@@ -709,6 +709,13 @@ body[showing-chat] #chat-page-wrapper {
 .message-bubble .tile.main .body {
   word-break: break-word;
 }
+.modal .message-bubble .tile.main .body {
+  word-break: keep-all;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
 .message-bubble[sentbyuser] {
   justify-content: flex-end;
 }

@@ -8,11 +8,16 @@ import {
 import ChatMessageViewModel from "../Chat/chatMessageViewModel";
 import ChatViewModel from "../Chat/chatViewModel";
 import CoreViewModel from "../Global/coreViewModel";
+import SearchViewModel from "../Utility/searchViewModel";
 
 export default class MessagePageViewModel {
     // state
     chatMessageViewModels: React.MapState<ChatMessageViewModel> =
         new React.MapState();
+    filteredMessageViewModels: React.ListState<ChatMessageViewModel> =
+        new React.ListState();
+    searchViewModel: SearchViewModel<ChatMessageViewModel>;
+    isFilterModalOpen = new React.State<boolean>(false);
     composingMessage: React.State<string> = new React.State("");
 
     // guards
@@ -81,6 +86,10 @@ export default class MessagePageViewModel {
         messageViewModel.handleReaction(reaction);
     };
 
+    openFilterModal = (): void => {
+        this.isFilterModalOpen.value = true;
+    };
+
     // load
     loadData = (): void => {
         this.chatMessageViewModels.clear();
@@ -105,6 +114,13 @@ export default class MessagePageViewModel {
             () =>
                 this.chatViewModel.settingsViewModel.username.value == "" ||
                 this.composingMessage.value == "",
+        );
+
+        this.searchViewModel = new SearchViewModel(
+            this.chatMessageViewModels,
+            this.filteredMessageViewModels,
+            (chatMessageViewModel) => [chatMessageViewModel.body.value],
+            new React.ListState(),
         );
     }
 }
