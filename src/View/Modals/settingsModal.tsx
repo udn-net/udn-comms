@@ -4,7 +4,7 @@ import { languageNames } from "../translations";
 import SettingsViewModel, {
     SettingsModalPages,
 } from "../../ViewModel/Global/settingsViewModel";
-import { SplitModal } from "../Components/splitModal";
+import { SplitModal } from "./splitModal";
 import { InfoTile } from "../Components/infoTile";
 import { Option } from "../Components/option";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";

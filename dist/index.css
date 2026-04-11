@@ -857,7 +857,7 @@ body[showing-chat] #chat-page-wrapper {
   }
 }
 
-/* src/View/Components/splitModal.css */
+/* src/View/Modals/splitModal.css */
 .modal > div:has(.split-modal[extended]) {
   max-width: 64rem;
 }

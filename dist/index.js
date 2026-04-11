@@ -3644,7 +3644,7 @@
       "div",
       {
         class: "grid gap",
-        style: "grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr))",
+        style: "grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr))",
         "children:append": [
           searchViewModel.matchingObjects,
           converter
@@ -6434,7 +6434,7 @@
     }
   };
 
-  // src/View/Components/splitModal.tsx
+  // src/View/Modals/splitModal.tsx
   function SplitModal(coreViewModel2, leftView, rightView, extendedStyle = false, navigationState) {
     function closePage() {
       navigationState.value = void 0;
