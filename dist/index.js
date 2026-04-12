@@ -2254,7 +2254,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.12.A";
+      this.BUILD = "Build 26.04.12.B";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.logContexts = () => {
@@ -2316,7 +2316,6 @@
       this.keystrokes = /* @__PURE__ */ new Map();
       this.handleKeystroke = (e) => {
         const fn = this.keystrokes.get(e.key.toLowerCase());
-        console.log(this.keystrokes);
         if (!fn) return false;
         e.preventDefault();
         fn();
@@ -5256,7 +5255,7 @@
     )), /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement(
       "button",
       {
-        class: "ghost",
+        class: "ghost inset-outline",
         "aria-label": coreViewModel2.translations.chatPage.task.filterTasksButtonAudioLabel,
         "on:click": boardViewModel.showFilterModal,
         "toggle:selected": boardViewModel.isFilterActive

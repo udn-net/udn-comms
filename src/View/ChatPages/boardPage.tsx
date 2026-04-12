@@ -128,7 +128,7 @@ export function BoardPage(
                 </span>
                 <span>
                     <button
-                        class="ghost"
+                        class="ghost inset-outline"
                         aria-label={
                             coreViewModel.translations.chatPage.task
                                 .filterTasksButtonAudioLabel

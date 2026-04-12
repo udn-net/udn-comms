@@ -186,15 +186,7 @@ body[showing-chat] #chat-page-wrapper {
     > .pane-wrapper
     > .pane
     > .toolbar
-    button.ribbon-button,
-#chat-page
-    > div
-    > #main
-    > div
-    > .pane-wrapper
-    > .pane
-    > .toolbar
-    button[selected] {
+    button.ribbon-button {
     min-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
     width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
     max-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
@@ -203,17 +195,6 @@ body[showing-chat] #chat-page-wrapper {
     height: calc(var(--control-height) - 2 * var(--gap-between-tiles));
 
     color: var(--primary);
-}
-
-#chat-page
-    > div
-    > #main
-    > div
-    > .pane-wrapper
-    > .pane
-    > .toolbar
-    button[selected]:not(.ribbon-button) {
-    margin: var(--gap-between-tiles);
 }
 
 #chat-page > div > #ribbon button > .icon,
