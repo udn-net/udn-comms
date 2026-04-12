@@ -6,11 +6,16 @@ import BoardsAndTasksModel, {
 import { localeCompare, padZero } from "../../Model/Utility/utility";
 
 import ChatViewModel from "../Chat/chatViewModel";
-import CoreViewModel from "../Global/coreViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
 import TaskContainingPageViewModel from "./taskContainingPageViewModel";
 import { allowDrag } from "../../View/utility";
+import { v4 } from "uuid";
+import { CommonKeys } from "../../View/keystrokes";
 
-export default class TaskViewModel {
+export default class TaskViewModel extends Context {
+    contextDebugDescription = "task";
+
+    // util
     get sortingString(): string {
         const splitDate: string[] = this.date.value.split("-");
         const year = padZero(splitDate[0], 4);
@@ -82,21 +87,21 @@ export default class TaskViewModel {
 
     // view
     open = (): void => {
+        this.coreViewModel.context = this;
         this.containingModel.selectTask(this);
     };
 
     close = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
         this.containingModel.closeTask();
     };
 
-    closeAndDiscard = (e: Event): void => {
-        e.preventDefault();
+    closeAndDiscard = (): void => {
         this.close();
         this.loadTaskData();
     };
 
-    closeAndSave = (e: Event): void => {
-        e.preventDefault();
+    closeAndSave = (): void => {
         this.close();
         this.save();
     };
@@ -211,6 +216,8 @@ export default class TaskViewModel {
         public containingModel: TaskContainingPageViewModel,
         public task: TaskFileContent,
     ) {
+        super();
+
         // load
         this.loadAllData();
 
@@ -218,6 +225,10 @@ export default class TaskViewModel {
         this.selectedVersionId.subscribeSilent((selectedVersionId) => {
             this.switchVersion(selectedVersionId);
         });
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.Apply, this.closeAndSave);
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.closeAndDiscard);
     }
 
     // utility

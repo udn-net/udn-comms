@@ -22,6 +22,7 @@ import StorageModel from "./Model/Global/storageModel";
 import StorageViewModel from "./ViewModel/Global/storageViewModel";
 import v1Upgrader from "./Upgrader/v1";
 import { SettingsModal } from "./View/Modals/settingsModal";
+import HomeViewModel from "./ViewModel/Pages/homeViewModel";
 
 // models
 const storageModel = new StorageModel();
@@ -55,6 +56,14 @@ const chatListViewModel = new ChatListViewModel(
     connectionViewModel,
 );
 const fileTransferViewModel = new FileTransferViewModel(coreViewModel);
+
+const homeViewModel = new HomeViewModel(
+    coreViewModel,
+    settingsViewModel,
+    fileTransferViewModel,
+    storageViewModel,
+    connectionViewModel,
+);
 
 // view
 chatListViewModel.selectedChat.subscribe(() => {

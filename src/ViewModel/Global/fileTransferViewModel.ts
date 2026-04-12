@@ -9,9 +9,12 @@ import StorageModel, {
 } from "../../Model/Global/storageModel";
 
 import ChatModel from "../../Model/Chat/chatModel";
-import CoreViewModel from "./coreViewModel";
+import CoreViewModel, { Context } from "./coreViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 
-export default class FileTransferViewModel {
+export default class FileTransferViewModel extends Context {
+    contextDebugDescription = "transfer";
+
     // state
     presentedModal: React.State<FileTransferModals | undefined> =
         new React.State<any>(undefined);
@@ -116,6 +119,7 @@ export default class FileTransferViewModel {
 
     // view
     showDirectionSelectionModal = (): void => {
+        this.coreViewModel.context = this;
         this.presentedModal.value = FileTransferModals.DirectionSelection;
         this.getOptions();
     };
@@ -162,11 +166,14 @@ export default class FileTransferViewModel {
     };
 
     hideModal = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
         this.presentedModal.value = undefined;
     };
 
     // init
     constructor(public coreViewModel: CoreViewModel) {
+        super();
+
         this.coreViewModel.fileTransferModel.fileHandlerManager.addHandler(
             this.handleReceivedFile,
         );
@@ -174,6 +181,9 @@ export default class FileTransferViewModel {
         this.coreViewModel.fileTransferModel.readyToSendHandlerManager.addHandler(
             () => this.initiateTransfer(),
         );
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideModal);
     }
 }
 

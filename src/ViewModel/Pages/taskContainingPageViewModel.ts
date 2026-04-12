@@ -5,11 +5,11 @@ import BoardsAndTasksModel, {
 } from "../../Model/Files/boardsAndTasksModel";
 
 import ChatViewModel from "../Chat/chatViewModel";
-import CoreViewModel from "../Global/coreViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
 import { IndexManager } from "../../Model/Utility/utility";
 import TaskViewModel from "./taskViewModel";
 
-export default class TaskContainingPageViewModel {
+export default class TaskContainingPageViewModel extends Context {
     // state
     taskIndexManager: IndexManager<TaskViewModel> = new IndexManager(
         (taskViewModel: TaskViewModel) => taskViewModel.sortingString,
@@ -59,5 +59,7 @@ export default class TaskContainingPageViewModel {
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
         public boardsAndTasksModel: BoardsAndTasksModel,
-    ) {}
+    ) {
+        super();
+    }
 }

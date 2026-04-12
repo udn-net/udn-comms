@@ -105,7 +105,7 @@ export function MessageFilterModal<T>(
                         </div>
                     </div>
                 </main>
-                <button on:click={messagePageViewModel.closeFilterModal}>
+                <button on:click={messagePageViewModel.hideFilterModal}>
                     {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>

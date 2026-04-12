@@ -1,10 +1,12 @@
 import * as React from "bloatless-react";
 
-import ChatViewModel from "../Chat/chatViewModel";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
 import { Colors } from "../../colors";
-import CoreViewModel from "../Global/coreViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
 
-export default class SettingsPageViewModel {
+export default class SettingsPageViewModel extends Context {
+    contextDebugDescription = "settings";
+
     // state
     primaryChannel: React.State<string> = new React.State("");
     primaryChannelInput: React.State<string> = new React.State("");
@@ -113,6 +115,8 @@ export default class SettingsPageViewModel {
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
     ) {
+        super();
+
         this.loadListRelevantData();
 
         this.cannotSetEncryptionKey = React.createProxyState(
@@ -125,5 +129,7 @@ export default class SettingsPageViewModel {
         this.color.subscribe((newColor) => {
             this.applyColor(newColor);
         });
+
+        this.chatViewModel.registerContext(ChatPageTypes.Settings, this);
     }
 }

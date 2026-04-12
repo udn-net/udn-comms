@@ -6,11 +6,15 @@ import {
     ReactionSymbols,
 } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../Chat/chatMessageViewModel";
-import ChatViewModel from "../Chat/chatViewModel";
-import CoreViewModel from "../Global/coreViewModel";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
 import SearchViewModel from "../Utility/searchViewModel";
+import { v4 } from "uuid";
+import { CommonKeys } from "../../View/keystrokes";
 
-export default class MessagePageViewModel {
+export default class MessagePageViewModel extends Context {
+    contextDebugDescription = "message-page";
+
     // state
     chatMessageViewModels: React.MapState<ChatMessageViewModel> =
         new React.MapState();
@@ -89,11 +93,11 @@ export default class MessagePageViewModel {
         messageViewModel.handleReaction(reaction);
     };
 
-    openFilterModal = (): void => {
+    showFilterModal = (): void => {
         this.isFilterModalOpen.value = true;
     };
 
-    closeFilterModal = (): void => {
+    hideFilterModal = (): void => {
         this.isFilterModalOpen.value = false;
     };
 
@@ -103,6 +107,11 @@ export default class MessagePageViewModel {
 
     setReactionFilter = (content: ReactionSymbols): void => {
         this.reactionFilter.value = content;
+    };
+
+    resetFilter = (): void => {
+        this.revokeReactionFilter();
+        this.searchViewModel.search("");
     };
 
     // load
@@ -121,6 +130,9 @@ export default class MessagePageViewModel {
         public coreViewModel: CoreViewModel,
         public chatViewModel: ChatViewModel,
     ) {
+        super();
+
+        // states
         this.cannotSendMessage = React.createProxyState(
             [
                 this.chatViewModel.settingsViewModel.username,
@@ -144,5 +156,12 @@ export default class MessagePageViewModel {
                 this.searchViewModel.appliedQuery.value != "" ||
                 this.reactionFilter.value != undefined,
         );
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.Filter, this.showFilterModal);
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideFilterModal);
+        this.registerKeyStroke(CommonKeys.Reset, this.resetFilter);
+
+        this.chatViewModel.registerContext(ChatPageTypes.Messages, this);
     }
 }

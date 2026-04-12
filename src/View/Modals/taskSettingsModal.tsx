@@ -27,12 +27,7 @@ export function TaskSettingsModal(
     };
 
     return (
-        <div
-            class="modal"
-            open
-            keystroke:s={taskViewModel.closeAndSave}
-            keystroke:Escape={taskViewModel.closeAndDiscard}
-        >
+        <div class="modal" open>
             <div>
                 <main>
                     <h2>

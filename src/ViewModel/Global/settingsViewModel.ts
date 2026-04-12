@@ -1,9 +1,12 @@
 import * as React from "bloatless-react";
 
-import CoreViewModel from "./coreViewModel";
+import CoreViewModel, { Context } from "./coreViewModel";
 import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
+import { CommonKeys } from "../../View/keystrokes";
 
-export default class SettingsViewModel {
+export default class SettingsViewModel extends Context {
+    contextDebugDescription = "settings";
+
     // state
     username: React.State<string> = new React.State("");
     usernameInput: React.State<string> = new React.State("");
@@ -43,10 +46,12 @@ export default class SettingsViewModel {
     };
 
     showSettingsModal = (): void => {
+        this.coreViewModel.context = this;
         this.isShowingSettingsModal.value = true;
     };
 
     hideSettingsModal = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
         this.isShowingSettingsModal.value = false;
         if (this.requiresReload.value == true) {
             window.location.reload();
@@ -68,6 +73,8 @@ export default class SettingsViewModel {
 
     // init
     constructor(public coreViewModel: CoreViewModel) {
+        super();
+
         this.username.value = coreViewModel.settingsModel.username;
         this.usernameInput.value = coreViewModel.settingsModel.username;
         this.firstDayOfWeek.value = coreViewModel.settingsModel.firstDayOfWeek;
@@ -91,6 +98,9 @@ export default class SettingsViewModel {
         SettingsViewModel.generateThemeMedia().addEventListener("change", () =>
             this.applyTheme(),
         );
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideSettingsModal);
     }
 
     static generateThemeMedia(): MediaQueryList {

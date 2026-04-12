@@ -5,15 +5,17 @@ import BoardsAndTasksModel, {
 } from "../../Model/Files/boardsAndTasksModel";
 import CalendarModel, { MonthGrid } from "../../Model/Files/calendarModel";
 
-import ChatViewModel from "../Chat/chatViewModel";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
 import CoreViewModel from "../Global/coreViewModel";
-import StorageModel from "../../Model/Global/storageModel";
 import TaskContainingPageViewModel from "./taskContainingPageViewModel";
 import TaskViewModel from "./taskViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 
 export const CALENDAR_EVENT_BOARD_ID = "events";
 
 export default class CalendarPageViewModel extends TaskContainingPageViewModel {
+    contextDebugDescription = "calendar";
+
     // data
     get monthString(): string {
         return CalendarModel.getMonthString(
@@ -208,6 +210,13 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
 
         // initiate
         this.showToday();
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.Reset, this.showToday);
+        this.registerKeyStroke("p", this.showNextMonth);
+        this.registerKeyStroke("o", this.showPreviousMonth);
+
+        this.chatViewModel.registerContext(ChatPageTypes.Calendar, this);
     }
 }
 

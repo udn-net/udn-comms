@@ -4,9 +4,12 @@ import StorageModel, {
     PATH_COMPONENT_SEPARATOR,
 } from "../../Model/Global/storageModel";
 
-import CoreViewModel from "./coreViewModel";
+import CoreViewModel, { Context } from "./coreViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 
-export default class StorageViewModel {
+export default class StorageViewModel extends Context {
+    contextDebugDescription = "storage";
+
     // state
     isShowingStorageModal: React.State<boolean> = new React.State(false);
     selectedPath: React.State<string> = new React.State(
@@ -48,10 +51,12 @@ export default class StorageViewModel {
 
     // view
     showStorageModal = (): void => {
+        this.coreViewModel.context = this;
         this.isShowingStorageModal.value = true;
     };
 
     hideStorageModal = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
         if (this.didMakeChanges.value == true) {
             window.location.reload();
             return;
@@ -61,6 +66,8 @@ export default class StorageViewModel {
 
     // init
     constructor(public coreViewModel: CoreViewModel) {
+        super();
+
         this.selectedFileName = React.createProxyState(
             [this.selectedPath],
             () => StorageModel.getFileNameFromString(this.selectedPath.value),
@@ -69,5 +76,8 @@ export default class StorageViewModel {
             [this.selectedPath],
             () => this.getSelectedItemContent(),
         );
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideStorageModal);
     }
 }

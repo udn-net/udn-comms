@@ -1,10 +1,9 @@
 (() => {
-  // node_modules/bloatless-react/index.ts
+  // ../../bloatless-react/index.ts
   var State = class {
-    _value;
-    _bindings = /* @__PURE__ */ new Set();
     // init
     constructor(initialValue) {
+      this._bindings = /* @__PURE__ */ new Set();
       this._value = initialValue;
     }
     // value
@@ -12,7 +11,6 @@
       return this._value;
     }
     set value(newValue) {
-      if (this._value == newValue) return;
       this._value = newValue;
       this.callSubscriptions();
     }
@@ -33,11 +31,11 @@
     }
   };
   var ListState = class extends State {
-    additionHandlers = /* @__PURE__ */ new Set();
-    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Set(initialItems));
+      this.additionHandlers = /* @__PURE__ */ new Set();
+      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     add(...items) {
@@ -77,11 +75,11 @@
     }
   };
   var MapState = class extends State {
-    additionHandlers = /* @__PURE__ */ new Set();
-    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Map(initialItems));
+      this.additionHandlers = /* @__PURE__ */ new Set();
+      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     set(key, item) {
@@ -1626,6 +1624,744 @@
     }
   };
 
+  // src/View/translations.ts
+  var englishTranslations = {
+    updater: {
+      migrated: "Migrated"
+    },
+    general: {
+      deleteItemButtonAudioLabel: "delete item",
+      searchButtonAudioLabel: "search",
+      abortButton: "Abort",
+      cancelButton: "Cancel",
+      closeButton: "Close",
+      backButton: "Back",
+      continueButton: "Continue",
+      confirmButton: "Confirm",
+      saveButton: "Save",
+      setButton: "Set",
+      reloadAppButton: "Reload App",
+      fileVersionLabel: "Version",
+      searchLabel: "Search",
+      waitingLabel: "Waiting...",
+      restoreConnection: "Restore connection",
+      noPageSelected: "No page selected"
+    },
+    regional: {
+      weekdays: {
+        full: [
+          "Sunday",
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday"
+        ],
+        abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+      }
+    },
+    homePage: {
+      appName: "Comms",
+      ///
+      overviewHeadline: "Overview",
+      serverAddress: "Server address",
+      serverAddressPlaceholder: "wss://192.168.0.69:3000",
+      connectAudioLabel: "connect to server",
+      disconnectAudioLabel: "disconnect from server",
+      manageConnectionsAudioLabel: "manage connections",
+      yourNameLabel: "Your name",
+      yourNamePlaceholder: "Jane Doe",
+      setNameButtonAudioLabel: "set name",
+      settingsButton: "Settings",
+      manageStorageButton: "Manage storage",
+      transferDataButton: "Data Transfer",
+      scrollToChatButton: "Chats",
+      ///
+      backToOverviewAudioLabel: "go back to overview",
+      chatsHeadline: "Chats",
+      addChatAudioLabel: "name of new chat",
+      addChatPlaceholder: "Add chat",
+      addChatButton: "Add chat"
+    },
+    settings: {
+      pages: {
+        appearance: "Appearance",
+        regional: "Language & Region",
+        info: "About Comms"
+      },
+      themes: {
+        dark: "Dark",
+        light: "Light",
+        system: "Device theme"
+      },
+      version: "Version",
+      language: "Language",
+      firstDayOfWeekLabel: "First day of week"
+    },
+    connectionModal: {
+      connectionModalHeadline: "Manage Connections",
+      ///
+      connectButtonAudioLabel: "connect"
+    },
+    dataTransferModal: {
+      transferDataHeadline: "Data Transfer",
+      selectionDescription: "Select the data that you want to transfer.",
+      dataEntryDescription: "Enter this data on the other device.",
+      dataEntryInputDescription: "Enter the data displayed on the other device.",
+      notConnectedError: "You are not connected to any server.",
+      ///
+      fromThisDeviceButton: "From this device",
+      toThisDeviceButton: "To this device",
+      ///
+      generalHeadline: "General",
+      connectionData: "Connection Data",
+      settingsData: "Settings Data",
+      chatsHeadline: "Chats",
+      ///
+      transferChannelHeadline: "Transfer Chanel",
+      transferKeyHeadline: "Transfer Encryption Key",
+      sendButton: "Send",
+      sendAgainButton: "Send again",
+      ///
+      filesSentCount: (count) => `Files sent: ${count}.`,
+      allFilesSent: "Done.",
+      filesReceivedCount: (count) => `Files received: ${count}.`
+    },
+    storage: {
+      noItemSelected: "No item selected",
+      notAFile: "(not a file)",
+      contentEmpty: "(empty)",
+      path: "Path",
+      content: "Content",
+      deleteItem: "Delete item",
+      removeJunkButton: "Delete junk files"
+    },
+    chatPage: {
+      closeChatAudioLabe: "close chat",
+      chatSettingsAudioLabel: "chat settings",
+      pages: {
+        settings: "Settings",
+        messages: "Messages",
+        tasks: "Tasks",
+        calendar: "Calendar"
+      },
+      settings: {
+        settingsHeadline: "Settings",
+        primaryChannelLabel: "Primary channel",
+        setPrimaryChannelButtonAudioLabel: "set primary channel",
+        newSecondaryChannelPlaceholder: "Add secondary channel",
+        newSecondaryChannelAudioLabel: "name of new secondary channel",
+        addSecondaryChannelButtonAudioLabel: "add secondary channel",
+        encryptionKeyLabel: "Encryption key",
+        setEncryptionKeyButtonAudioLabel: "set encryption key",
+        showEncryptionKey: "Show encryption key",
+        deleteChatButton: "Delete entire chat"
+      },
+      message: {
+        messagesHeadline: "Messages",
+        messageFilterHeadline: "Filter messages",
+        messageFilterReactionsHadline: "Reactions",
+        messageFilterAllReactionsButton: "Show all",
+        ///
+        composerInputPlaceholder: "Type a message...",
+        sendMessageButtonAudioLabel: "send message",
+        filterMessagesButtonAudioLabel: "filter messages",
+        ///
+        showMessageInfoButtonAudioLabel: "show message info",
+        messageInfoHeadline: "Message Info",
+        sentBy: "Sent by",
+        timeSent: "Time sent",
+        channel: "Channel",
+        messageContent: "Message content",
+        copyMessageButton: "Copy message",
+        resendMessageButton: "Resend message",
+        decryptMessageButton: "Decrypt message",
+        deleteMessageButton: "Delete message",
+        //
+        thumbsUpReaction: "Reaction: thumbs up",
+        checkReaction: "Reaction: check",
+        stopReaction: "Reaction: stop sign",
+        attentionReaction: "Reaction: exclamation mark",
+        doubleAttentionReaction: "Reaction: double exclamation mark",
+        questionReaction: "Reaction: question mark"
+      },
+      task: {
+        newBoardNamePlaceholder: "Create a board",
+        createBoardButtonAudioLabel: "create board",
+        ///
+        noBoardSelected: "No board selected",
+        boardNotFound: "Board not found",
+        ///
+        closeBoardButtonAudioLabel: "close board",
+        toggleBoardButtonAudioLabel: "toggle board list",
+        showBoardSettingsButtonAudioLabel: "show board settigns",
+        listViewButtonAudioLabel: "list view",
+        kanbanViewButtonAudioLabel: "kanban view",
+        statusViewButtonAudioLabel: "status grid view",
+        filterTasksButtonAudioLabel: "filter tasks",
+        createTaskButtonAudioLabel: "create new task",
+        ///
+        boardSettingsHeadline: "Board Settings",
+        boardNameInputLabel: "Board name",
+        deleteBoardButton: "Delete board and all tasks",
+        ///
+        taskSettingsHeadline: "Edit Task",
+        taskNameLabel: "Title",
+        taskBoardLabel: "Board",
+        taskCategoryLabel: "Category",
+        taskStatusLabel: "Status",
+        taskPriorityLabel: "Priority",
+        taskDescriptionLabel: "Description",
+        taskDateLabel: "Date",
+        taskTimeLabel: "Time",
+        deleteTaskButton: "Delete task",
+        ///
+        filterTasksHeadline: "Filter Tasks",
+        ///
+        renameCategoryInputPlaceholder: "Rename category",
+        renameStatusInputPlaceholder: "Rename status"
+      },
+      calendar: {
+        eventsBoard: "Events",
+        ///
+        todayButtonAudioLabel: "go to today",
+        previousMonthButtonAudioLabel: "previous month",
+        nextMonthButtonAudioLabel: "next month",
+        yearInputAudioLabel: "year",
+        monthInputAudioLabel: "month",
+        yearInputPlaceholder: "2000",
+        monthInputPlaceholder: "01",
+        ///
+        searchEventsHeadline: "Search Events",
+        ///
+        events: "Events",
+        noEvents: "No events"
+      }
+    }
+  };
+  var allTranslations = {
+    en: englishTranslations,
+    de: {
+      updater: {
+        migrated: "Migriert"
+      },
+      general: {
+        deleteItemButtonAudioLabel: "element l\xF6schen",
+        searchButtonAudioLabel: "suchen",
+        abortButton: "Abbrechen",
+        cancelButton: "Abbrechen",
+        closeButton: "Schlie\xDFen",
+        backButton: "Zur\xFCck",
+        continueButton: "Weiter",
+        confirmButton: "Best\xE4tigen",
+        saveButton: "Speichern",
+        setButton: "OK",
+        reloadAppButton: "Neu laden",
+        fileVersionLabel: "Version",
+        searchLabel: "Suche",
+        waitingLabel: "Warten...",
+        restoreConnection: "Verbindung wiederherstellen",
+        noPageSelected: "Keine Seite ausgew\xE4hlt"
+      },
+      regional: {
+        weekdays: {
+          full: [
+            "Sonntag",
+            "Montag",
+            "Dienstag",
+            "Mittwoch",
+            "Donnerstag",
+            "Freitag",
+            "Samstag"
+          ],
+          abbreviated: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
+        }
+      },
+      homePage: {
+        appName: "Comms",
+        overviewHeadline: "\xDCbersicht",
+        serverAddress: "Serveradresse",
+        serverAddressPlaceholder: "wss://192.168.0.69:3000",
+        connectAudioLabel: "mit Server verbinden",
+        disconnectAudioLabel: "vom Server trennen",
+        manageConnectionsAudioLabel: "Verbindungen verwalten",
+        yourNameLabel: "Dein Name",
+        yourNamePlaceholder: "Max Mustermann",
+        setNameButtonAudioLabel: "Name speichern",
+        settingsButton: "Einstellungen",
+        manageStorageButton: "Daten verwalten",
+        transferDataButton: "Daten\xFCbertragung",
+        scrollToChatButton: "Chats",
+        backToOverviewAudioLabel: "zur\xFCck zur \xFCbersicht",
+        chatsHeadline: "Chats",
+        addChatAudioLabel: "Name des neuen Chats",
+        addChatPlaceholder: "Chat hinzuf\xFCgen",
+        addChatButton: "Chat hinzuf\xFCgen"
+      },
+      settings: {
+        pages: {
+          appearance: "Erscheinungsbild",
+          regional: "Sprache & Region",
+          info: "\xDCber Comms"
+        },
+        themes: {
+          dark: "Dunkel",
+          light: "Hell",
+          system: "Ger\xE4teeinstellung"
+        },
+        version: "Version",
+        language: "Sprache",
+        firstDayOfWeekLabel: "Erster Wochentag"
+      },
+      connectionModal: {
+        connectionModalHeadline: "Verbindungen verwalten",
+        connectButtonAudioLabel: "verbinden"
+      },
+      dataTransferModal: {
+        transferDataHeadline: "Daten\xFCbertragung",
+        selectionDescription: "W\xE4hle die Daten aus, die du \xFCbertragen m\xF6chtest.",
+        dataEntryDescription: "Gib diese Informationen auf dem anderen Ger\xE4t ein.",
+        dataEntryInputDescription: "Gib die auf dem anderen Ger\xE4t angezeigten Informationen ein.",
+        notConnectedError: "Du bist mit keinem Server verbunden.",
+        fromThisDeviceButton: "Von diesem Ger\xE4t",
+        toThisDeviceButton: "An dieses Ger\xE4t",
+        generalHeadline: "Allgemein",
+        connectionData: "Verbindungsdaten",
+        settingsData: "Einstellungen",
+        chatsHeadline: "Chats",
+        transferChannelHeadline: "\xDCbertragungskanal",
+        transferKeyHeadline: "Schl\xFCssel",
+        sendButton: "Senden",
+        sendAgainButton: "Erneut senden",
+        filesSentCount: (count) => `Dateien gesendet: ${count}.`,
+        allFilesSent: "Fertig.",
+        filesReceivedCount: (count) => `Dateien empfangen: ${count}.`
+      },
+      storage: {
+        noItemSelected: "Kein Element ausgew\xE4hlt",
+        notAFile: "(keine Datei)",
+        contentEmpty: "(leer)",
+        path: "Pfad",
+        content: "Inhalt",
+        deleteItem: "Element l\xF6schen",
+        removeJunkButton: "Datenm\xFCll l\xF6schen"
+      },
+      chatPage: {
+        closeChatAudioLabe: "Chat schlie\xDFen",
+        chatSettingsAudioLabel: "Chateinstellungen",
+        pages: {
+          settings: "Einstellungen",
+          messages: "Nachrichten",
+          tasks: "Aufgaben",
+          calendar: "Kalender"
+        },
+        settings: {
+          settingsHeadline: "Einstellungen",
+          primaryChannelLabel: "Hauptkanal",
+          setPrimaryChannelButtonAudioLabel: "Hauptkanal festlegen",
+          newSecondaryChannelPlaceholder: "Sekund\xE4ren Kanal hinzuf\xFCgen",
+          newSecondaryChannelAudioLabel: "Name des neuen sekund\xE4ren Kanals",
+          addSecondaryChannelButtonAudioLabel: "Sekund\xE4ren Kanal hinzuf\xFCgen",
+          encryptionKeyLabel: "Schl\xFCssel",
+          setEncryptionKeyButtonAudioLabel: "Schl\xFCssel festlegen",
+          showEncryptionKey: "Schl\xFCssel anzeigen",
+          deleteChatButton: "Gesamten Chat l\xF6schen"
+        },
+        message: {
+          messagesHeadline: "Nachrichten",
+          messageFilterHeadline: "Nachrichten filtern",
+          messageFilterReactionsHadline: "Reaktionen",
+          messageFilterAllReactionsButton: "Alle anzeigen",
+          composerInputPlaceholder: "Schreib eine Nachricht...",
+          sendMessageButtonAudioLabel: "nachricht senden",
+          filterMessagesButtonAudioLabel: "nachrichten filtern",
+          showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
+          messageInfoHeadline: "Nachrichteninfo",
+          sentBy: "Gesendet von",
+          timeSent: "Sendezeit",
+          channel: "Kanal",
+          messageContent: "Nachrichteninhalt",
+          copyMessageButton: "Nachricht kopieren",
+          resendMessageButton: "Nachricht erneut senden",
+          decryptMessageButton: "Nachricht entschl\xFCsseln",
+          deleteMessageButton: "Nachricht l\xF6schen",
+          //
+          thumbsUpReaction: "Reaktion: Daumen hoch",
+          checkReaction: "Reaktion: Haken",
+          stopReaction: "Reaktion: Stopp",
+          attentionReaction: "Reaktion: Ausrufezeichen",
+          doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
+          questionReaction: "Reaktion: Fragezeichen"
+        },
+        task: {
+          newBoardNamePlaceholder: "Board erstellen",
+          createBoardButtonAudioLabel: "board erstellen",
+          noBoardSelected: "Kein Board ausgew\xE4hlt",
+          boardNotFound: "Board nicht gefunden",
+          closeBoardButtonAudioLabel: "board schlie\xDFen",
+          toggleBoardButtonAudioLabel: "board-liste ein/ausblenden",
+          showBoardSettingsButtonAudioLabel: "Board-Einstellungen anzeigen",
+          listViewButtonAudioLabel: "Listenansicht",
+          kanbanViewButtonAudioLabel: "Kanban-Ansicht",
+          statusViewButtonAudioLabel: "Statusrasteransicht",
+          filterTasksButtonAudioLabel: "Aufgaben filtern",
+          createTaskButtonAudioLabel: "Neue Aufgabe erstellen",
+          boardSettingsHeadline: "Board-Einstellungen",
+          boardNameInputLabel: "Boardname",
+          deleteBoardButton: "Board und alle Aufgaben l\xF6schen",
+          taskSettingsHeadline: "Aufgabe bearbeiten",
+          taskNameLabel: "Titel",
+          taskBoardLabel: "Board",
+          taskCategoryLabel: "Kategorie",
+          taskStatusLabel: "Status",
+          taskPriorityLabel: "Priorit\xE4t",
+          taskDescriptionLabel: "Beschreibung",
+          taskDateLabel: "Datum",
+          taskTimeLabel: "Uhrzeit",
+          deleteTaskButton: "Aufgabe l\xF6schen",
+          filterTasksHeadline: "Aufgaben filtern",
+          renameCategoryInputPlaceholder: "Kategorie umbenennen",
+          renameStatusInputPlaceholder: "Status umbenennen"
+        },
+        calendar: {
+          eventsBoard: "Ereignisse",
+          ///
+          todayButtonAudioLabel: "gehe zu heute",
+          previousMonthButtonAudioLabel: "vorheriger monat",
+          nextMonthButtonAudioLabel: "n\xE4chster monat",
+          yearInputAudioLabel: "Jahr",
+          monthInputAudioLabel: "Monat",
+          yearInputPlaceholder: "2000",
+          monthInputPlaceholder: "01",
+          searchEventsHeadline: "Ereignisse suchen",
+          events: "Ereignisse",
+          noEvents: "Keine Ereignisse"
+        }
+      }
+    },
+    es: {
+      updater: {
+        migrated: "Migrado"
+      },
+      general: {
+        deleteItemButtonAudioLabel: "eliminar elemento",
+        searchButtonAudioLabel: "buscar",
+        abortButton: "Abortar",
+        cancelButton: "Cancelar",
+        closeButton: "Cerrar",
+        backButton: "Atr\xE1s",
+        continueButton: "Continuar",
+        confirmButton: "Confirmar",
+        saveButton: "Guardar",
+        setButton: "OK",
+        reloadAppButton: "Recargar app",
+        fileVersionLabel: "Versi\xF3n",
+        searchLabel: "Buscar",
+        waitingLabel: "Esperando...",
+        restoreConnection: "Conectar de nuevo",
+        noPageSelected: "No p\xE1gina seleccionada"
+      },
+      regional: {
+        weekdays: {
+          full: [
+            "Domingo",
+            "Lunes",
+            "Martes",
+            "Mi\xE9rcoles",
+            "Jueves",
+            "Viernes",
+            "S\xE1bado"
+          ],
+          abbreviated: ["Dom", "Lun", "Mar", "Mi\xE9", "Jue", "Vie", "S\xE1b"]
+        }
+      },
+      homePage: {
+        appName: "Comms",
+        overviewHeadline: "Resumen",
+        serverAddress: "Direcci\xF3n del servidor",
+        serverAddressPlaceholder: "wss://192.168.0.69:3000",
+        connectAudioLabel: "conectar al servidor",
+        disconnectAudioLabel: "desconectar del servidor",
+        manageConnectionsAudioLabel: "gestionar conexiones",
+        yourNameLabel: "Tu nombre",
+        yourNamePlaceholder: "Juan P\xE9rez",
+        setNameButtonAudioLabel: "establecer nombre",
+        settingsButton: "Ajustes",
+        manageStorageButton: "Gestionar almacenamiento",
+        transferDataButton: "Transferencia de datos",
+        scrollToChatButton: "Chats",
+        backToOverviewAudioLabel: "volver al resumen",
+        chatsHeadline: "Chats",
+        addChatAudioLabel: "nombre del nuevo chat",
+        addChatPlaceholder: "A\xF1adir chat",
+        addChatButton: "A\xF1adir chat"
+      },
+      settings: {
+        pages: {
+          appearance: "Aspecto",
+          regional: "Idioma y Regi\xF3n",
+          info: "Sobre Comms"
+        },
+        themes: {
+          dark: "Oscuro",
+          light: "Claro",
+          system: "Seg\xFAn dispositivo"
+        },
+        version: "Versi\xF3n",
+        language: "Idioma",
+        firstDayOfWeekLabel: "Primer d\xEDa de la semana"
+      },
+      connectionModal: {
+        connectionModalHeadline: "Gestionar Conexiones",
+        connectButtonAudioLabel: "conectar"
+      },
+      dataTransferModal: {
+        transferDataHeadline: "Transferencia de Datos",
+        selectionDescription: "Selecciona los datos que quieres transferir.",
+        dataEntryDescription: "Introduce estos datos en el otro dispositivo.",
+        dataEntryInputDescription: "Introduce los datos mostrados en el otro dispositivo.",
+        notConnectedError: "No est\xE1s conectado a ning\xFAn servidor.",
+        fromThisDeviceButton: "Desde este dispositivo",
+        toThisDeviceButton: "A este dispositivo",
+        generalHeadline: "General",
+        connectionData: "Datos de Conexi\xF3n",
+        settingsData: "Datos de Configuraci\xF3n",
+        chatsHeadline: "Chats",
+        transferChannelHeadline: "Canal de Transferencia",
+        transferKeyHeadline: "Clave de Encriptaci\xF3n de Transferencia",
+        sendButton: "Enviar",
+        sendAgainButton: "Enviar otra vez",
+        filesSentCount: (count) => `Archivos enviados: ${count}.`,
+        allFilesSent: "Hecho.",
+        filesReceivedCount: (count) => `Archivos recibidos: ${count}.`
+      },
+      storage: {
+        noItemSelected: "Ning\xFAn elemento seleccionado",
+        notAFile: "(no es un archivo)",
+        contentEmpty: "(vac\xEDo)",
+        path: "Ruta",
+        content: "Contenido",
+        deleteItem: "Eliminar elemento",
+        removeJunkButton: "Eliminar archivos basura"
+      },
+      chatPage: {
+        closeChatAudioLabe: "cerrar chat",
+        chatSettingsAudioLabel: "configuraci\xF3n del chat",
+        pages: {
+          settings: "Configuraci\xF3n",
+          messages: "Mensajes",
+          tasks: "Tareas",
+          calendar: "Calendario"
+        },
+        settings: {
+          settingsHeadline: "Configuraci\xF3n",
+          primaryChannelLabel: "Canal principal",
+          setPrimaryChannelButtonAudioLabel: "establecer canal principal",
+          newSecondaryChannelPlaceholder: "A\xF1adir canal secundario",
+          newSecondaryChannelAudioLabel: "nombre del nuevo canal secundario",
+          addSecondaryChannelButtonAudioLabel: "a\xF1adir canal secundario",
+          encryptionKeyLabel: "Clave de encriptaci\xF3n",
+          setEncryptionKeyButtonAudioLabel: "establecer clave de encriptaci\xF3n",
+          showEncryptionKey: "Mostrar clave de encriptaci\xF3n",
+          deleteChatButton: "Eliminar todo el chat"
+        },
+        message: {
+          messagesHeadline: "Mensajes",
+          messageFilterHeadline: "Filtrar mensajes",
+          messageFilterReactionsHadline: "Reacciones",
+          messageFilterAllReactionsButton: "Mostrar todas",
+          composerInputPlaceholder: "Escribe un mensaje...",
+          sendMessageButtonAudioLabel: "enviar mensaje",
+          filterMessagesButtonAudioLabel: "filtrar mensajes",
+          showMessageInfoButtonAudioLabel: "mostrar informaci\xF3n del mensaje",
+          messageInfoHeadline: "Informaci\xF3n del Mensaje",
+          sentBy: "Enviado por",
+          timeSent: "Hora de env\xEDo",
+          channel: "Canal",
+          messageContent: "Contenido del mensaje",
+          copyMessageButton: "Copiar mensaje",
+          resendMessageButton: "Reenviar mensaje",
+          decryptMessageButton: "Desencriptar mensaje",
+          deleteMessageButton: "Eliminar mensaje",
+          //
+          thumbsUpReaction: "Reacci\xF3n: pulgar hacia arriba",
+          checkReaction: "Reacci\xF3n: marca de verificaci\xF3n",
+          stopReaction: "Reacci\xF3n: signo de parada",
+          attentionReaction: "Reaccion: signo de atenci\xF3n",
+          doubleAttentionReaction: "Reaccion: signo de atenci\xF3n doble",
+          questionReaction: "Reaccion: signo de interrogaci\xF3n"
+        },
+        task: {
+          newBoardNamePlaceholder: "Crear un tablero",
+          createBoardButtonAudioLabel: "crear tablero",
+          noBoardSelected: "Ning\xFAn tablero seleccionado",
+          boardNotFound: "Tablero no encontrado",
+          closeBoardButtonAudioLabel: "cerrar tablero",
+          toggleBoardButtonAudioLabel: "mostrar o ocultar lista de tableros",
+          showBoardSettingsButtonAudioLabel: "mostrar configuraci\xF3n del tablero",
+          listViewButtonAudioLabel: "vista de lista",
+          kanbanViewButtonAudioLabel: "vista kanban",
+          statusViewButtonAudioLabel: "vista de cuadr\xEDcula de estado",
+          filterTasksButtonAudioLabel: "filtrar tareas",
+          createTaskButtonAudioLabel: "crear nueva tarea",
+          boardSettingsHeadline: "Configuraci\xF3n del Tablero",
+          boardNameInputLabel: "Nombre del tablero",
+          deleteBoardButton: "Eliminar tablero y todas las tareas",
+          taskSettingsHeadline: "Editar Tarea",
+          taskNameLabel: "T\xEDtulo",
+          taskBoardLabel: "Tablero",
+          taskCategoryLabel: "Categor\xEDa",
+          taskStatusLabel: "Estado",
+          taskPriorityLabel: "Prioridad",
+          taskDescriptionLabel: "Descripci\xF3n",
+          taskDateLabel: "Fecha",
+          taskTimeLabel: "Hora",
+          deleteTaskButton: "Eliminar tarea",
+          filterTasksHeadline: "Filtrar Tareas",
+          renameCategoryInputPlaceholder: "Renombrar categor\xEDa",
+          renameStatusInputPlaceholder: "Renombrar estado"
+        },
+        calendar: {
+          eventsBoard: "Eventos",
+          ///
+          todayButtonAudioLabel: "ir a hoy",
+          previousMonthButtonAudioLabel: "mes anterior",
+          nextMonthButtonAudioLabel: "mes siguiente",
+          yearInputAudioLabel: "a\xF1o",
+          monthInputAudioLabel: "mes",
+          yearInputPlaceholder: "2000",
+          monthInputPlaceholder: "01",
+          searchEventsHeadline: "Buscar Eventos",
+          events: "Eventos",
+          noEvents: "No hay eventos"
+        }
+      }
+    }
+  };
+  var languageNames = {
+    en: "English",
+    de: "Deutsch",
+    es: "Espa\xF1ol"
+  };
+
+  // src/ViewModel/Global/coreViewModel.ts
+  var CoreViewModel = class _CoreViewModel {
+    // init
+    constructor(storageModel2, settingsModel2, connectionModel2, chatListModel2, fileTransferModel2) {
+      this.storageModel = storageModel2;
+      this.settingsModel = settingsModel2;
+      this.connectionModel = connectionModel2;
+      this.chatListModel = chatListModel2;
+      this.fileTransferModel = fileTransferModel2;
+      this.BUILD = "Build 26.04.12.A";
+      // CONTEXT
+      this.contextStack = /* @__PURE__ */ new Map();
+      this.logContexts = () => {
+        console.log(
+          "context",
+          this.contexts.map(
+            (x) => x.contextDebugDescription + "-" + x.contextId
+          )
+        );
+      };
+      this.closeContext = (contextId) => {
+        if (!this.contexts.map((context) => context.contextId).includes(contextId)) return;
+        while (this.contexts.length > 0) {
+          const currentContext = this.context;
+          this.contextStack.delete(currentContext.contextId);
+          if (currentContext.contextId == contextId) break;
+        }
+        this.logContexts();
+      };
+      this.handleKeyDown = (e) => {
+        if (!_CoreViewModel.checkIsKeystroke(e)) return;
+        const contexts = this.contexts;
+        while (contexts.length > 0) {
+          const currentContext = contexts.pop();
+          if (!currentContext) contexts;
+          const isHandled = currentContext.handleKeystroke(e);
+          if (isHandled == true) break;
+        }
+      };
+      // DRAG & DROP
+      this.draggedObject = new State(void 0);
+      // SUGGESTIONS
+      // boards & tasks
+      this.boardFilterStringSuggestions = new ListState();
+      this.taskCategorySuggestions = new ListState();
+      this.taskStatusSuggestions = new ListState();
+      this.translations = allTranslations[settingsModel2.language] || allTranslations.en;
+      document.body.addEventListener("keydown", this.handleKeyDown);
+    }
+    get contexts() {
+      return [...this.contextStack.values()];
+    }
+    get context() {
+      return this.contexts.pop();
+    }
+    set context(context) {
+      if (this.contextStack.has(context.contextId)) return;
+      this.contextStack.set(context.contextId, context);
+      this.logContexts();
+    }
+    // util
+    static checkIsKeystroke(e) {
+      return (e.metaKey || e.ctrlKey) && e.shiftKey;
+    }
+  };
+  var Context = class {
+    constructor() {
+      this.contextId = v4_default();
+      this.keystrokes = /* @__PURE__ */ new Map();
+      this.handleKeystroke = (e) => {
+        const fn = this.keystrokes.get(e.key.toLowerCase());
+        console.log(this.keystrokes);
+        if (!fn) return false;
+        e.preventDefault();
+        fn();
+        return true;
+      };
+      this.registerKeyStroke = (key, fn) => {
+        this.keystrokes.set(key, fn);
+      };
+    }
+  };
+  var ContextHost = class extends Context {
+    constructor() {
+      super(...arguments);
+      this.contexts = /* @__PURE__ */ new Map();
+      this.currentContext = new State(void 0);
+      this.registerContext = (key, context) => {
+        this.contexts.set(key, context);
+      };
+      this.closeContext = () => {
+        if (this.currentContext.value) {
+          this.coreViewModel.closeContext(this.currentContext.value.contextId);
+        }
+        this.currentContext.value = void 0;
+      };
+      this.updateContexts = () => {
+        if (this.isOpen == false) return;
+        const selectedContext = this.contexts.get(this.contextSelection);
+        if (!selectedContext) return;
+        if (selectedContext != this.currentContext.value) {
+          this.closeContext();
+        }
+        ;
+        this.coreViewModel.logContexts();
+        this.coreViewModel.context = selectedContext;
+        this.currentContext.value = selectedContext;
+      };
+    }
+    get isOpen() {
+      return false;
+    }
+    get contextSelection() {
+      return void 0;
+    }
+  };
+
   // src/View/utility.ts
   function allowDrop(event) {
     event.preventDefault();
@@ -1644,14 +2380,16 @@
   }
 
   // src/ViewModel/Pages/taskViewModel.ts
-  var TaskViewModel = class {
+  var TaskViewModel = class extends Context {
     // init
     constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, containingModel, task) {
+      super();
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
       this.containingModel = containingModel;
       this.task = task;
+      this.contextDebugDescription = "task";
       // paths
       this.getFilePath = () => {
         return this.boardsAndTasksModel.getTaskFilePath(this.task.fileId);
@@ -1688,18 +2426,18 @@
       };
       // view
       this.open = () => {
+        this.coreViewModel.context = this;
         this.containingModel.selectTask(this);
       };
       this.close = () => {
+        this.coreViewModel.closeContext(this.contextId);
         this.containingModel.closeTask();
       };
-      this.closeAndDiscard = (e) => {
-        e.preventDefault();
+      this.closeAndDiscard = () => {
         this.close();
         this.loadTaskData();
       };
-      this.closeAndSave = (e) => {
-        e.preventDefault();
+      this.closeAndSave = () => {
         this.close();
         this.save();
       };
@@ -1782,7 +2520,10 @@
       this.selectedVersionId.subscribeSilent((selectedVersionId) => {
         this.switchVersion(selectedVersionId);
       });
+      this.registerKeyStroke("enter" /* Apply */, this.closeAndSave);
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.closeAndDiscard);
     }
+    // util
     get sortingString() {
       const splitDate = this.date.value.split("-");
       const year = padZero(splitDate[0], 4);
@@ -1811,9 +2552,10 @@
   };
 
   // src/ViewModel/Pages/taskContainingPageViewModel.ts
-  var TaskContainingPageViewModel = class {
+  var TaskContainingPageViewModel = class extends Context {
     // init
     constructor(coreViewModel2, chatViewModel, boardsAndTasksModel) {
+      super();
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
@@ -1866,6 +2608,7 @@
       this.chatViewModel = chatViewModel;
       this.calendarModel = calendarModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
+      this.contextDebugDescription = "calendar";
       // paths
       this.getBasePath = () => {
         return [...this.calendarModel.getViewPath()];
@@ -2002,6 +2745,10 @@
         }
       );
       this.showToday();
+      this.registerKeyStroke("-" /* Reset */, this.showToday);
+      this.registerKeyStroke("p", this.showNextMonth);
+      this.registerKeyStroke("o", this.showPreviousMonth);
+      this.chatViewModel.registerContext("calendar" /* Calendar */, this);
     }
     // data
     get monthString() {
@@ -2108,7 +2855,6 @@
       this.sentByUser = sentByUser;
       this.loadData();
       this.messagePageViewModel.reactionFilter.subscribe((content) => {
-        console.log(content, content == void 0);
         if (content == void 0) {
           this.isHidden.value = false;
           return;
@@ -2199,11 +2945,13 @@
   };
 
   // src/ViewModel/Pages/messagePageViewModel.ts
-  var MessagePageViewModel = class {
+  var MessagePageViewModel = class extends Context {
     // init
     constructor(coreViewModel2, chatViewModel) {
+      super();
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
+      this.contextDebugDescription = "message-page";
       // state
       this.chatMessageViewModels = new MapState();
       this.filteredMessageViewModels = new ListState();
@@ -2256,10 +3004,10 @@
         if (messageViewModel == void 0) return;
         messageViewModel.handleReaction(reaction);
       };
-      this.openFilterModal = () => {
+      this.showFilterModal = () => {
         this.isFilterModalOpen.value = true;
       };
-      this.closeFilterModal = () => {
+      this.hideFilterModal = () => {
         this.isFilterModalOpen.value = false;
       };
       this.revokeReactionFilter = () => {
@@ -2267,6 +3015,10 @@
       };
       this.setReactionFilter = (content) => {
         this.reactionFilter.value = content;
+      };
+      this.resetFilter = () => {
+        this.revokeReactionFilter();
+        this.searchViewModel.search("");
       };
       // load
       this.loadData = () => {
@@ -2295,15 +3047,21 @@
         [this.searchViewModel.appliedQuery, this.reactionFilter],
         () => this.searchViewModel.appliedQuery.value != "" || this.reactionFilter.value != void 0
       );
+      this.registerKeyStroke("=" /* Filter */, this.showFilterModal);
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideFilterModal);
+      this.registerKeyStroke("-" /* Reset */, this.resetFilter);
+      this.chatViewModel.registerContext("messages" /* Messages */, this);
     }
   };
 
   // src/ViewModel/Pages/settingsPageViewModel.ts
-  var SettingsPageViewModel = class {
+  var SettingsPageViewModel = class extends Context {
     // init
     constructor(coreViewModel2, chatViewModel) {
+      super();
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
+      this.contextDebugDescription = "settings";
       // state
       this.primaryChannel = new State("");
       this.primaryChannelInput = new State("");
@@ -2386,6 +3144,7 @@
       this.color.subscribe((newColor) => {
         this.applyColor(newColor);
       });
+      this.chatViewModel.registerContext("settings" /* Settings */, this);
     }
   };
 
@@ -2399,6 +3158,7 @@
       this.boardsAndTasksModel = boardsAndTasksModel;
       this.taskPageViewModel = taskPageViewModel;
       this.boardInfo = boardInfo;
+      this.contextDebugDescription = "board";
       // state
       this.name = new State("");
       this.color = new State("standard" /* Standard */);
@@ -2526,6 +3286,9 @@
       this.hideFilterModal = () => {
         this.isPresentingFilterModal.value = false;
       };
+      this.resetFilter = () => {
+        this.searchViewModel.search("");
+      };
       this.updateIndex = () => {
         const index = this.taskPageViewModel.boardIndexManager.getIndex(this);
         this.index.value = index;
@@ -2606,16 +3369,22 @@
         [this.searchViewModel.appliedQuery],
         () => this.searchViewModel.appliedQuery.value != ""
       );
+      this.registerKeyStroke("=" /* Filter */, this.showFilterModal);
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideFilterModal);
+      this.registerKeyStroke("-" /* Reset */, this.resetFilter);
+      this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }
   };
 
   // src/ViewModel/Pages/taskPageViewModel.ts
-  var TaskPageViewModel = class {
+  var TaskPageViewModel = class extends ContextHost {
     // init
     constructor(coreViewModel2, chatViewModel, boardsAndTasksModel) {
+      super();
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
+      this.contextDebugDescription = "task-page";
       // data
       this.boardIndexManager = new IndexManager(
         (boardViewModel) => boardViewModel.name.value
@@ -2684,6 +3453,7 @@
         this.storeLastUsedBoard();
       };
       this.closeBoard = () => {
+        this.closeContext();
         this.selectedBoardId.value = void 0;
         this.chatViewModel.resetColor();
         this.storeLastUsedBoard();
@@ -2728,58 +3498,51 @@
           this.updateBoardIndices();
         }
       );
+      this.chatViewModel.registerContext("tasks" /* Tasks */, this);
+      this.selectedBoardId.subscribeSilent(this.updateContexts);
+    }
+    // context
+    get isOpen() {
+      return this.chatViewModel.isOpen && this.chatViewModel.selectedPage.value == "tasks" /* Tasks */;
+    }
+    get contextSelection() {
+      return this.selectedBoardId.value;
     }
   };
 
   // src/ViewModel/Chat/chatViewModel.ts
-  var ChatViewModel2 = class {
+  var ChatViewModel6 = class extends ContextHost {
     // init
     constructor(coreViewModel2, chatModel, settingsViewModel2, notificationViewModel, connectionViewModel2, chatListViewModel2) {
+      super();
       this.coreViewModel = coreViewModel2;
       this.chatModel = chatModel;
       this.settingsViewModel = settingsViewModel2;
       this.notificationViewModel = notificationViewModel;
       this.connectionViewModel = connectionViewModel2;
       this.chatListViewModel = chatListViewModel2;
+      this.contextDebugDescription = "chat";
       // state
       this.displayedColor = new State("standard" /* Standard */);
       this.selectedPage = new State(
         "messages" /* Messages */
       );
+      this.pageContexts = new MapState();
       this.index = new State(0);
       this.hasUnreadMessages = new State(false);
       this.taskBoardSuggestions = new MapState();
       // view
       this.open = () => {
+        this.coreViewModel.context = this;
         this.chatListViewModel.openChat(this);
-        document.body.addEventListener("keydown", this.handleKeystroke);
       };
       this.close = () => {
+        this.coreViewModel.closeContext(this.contextId);
         this.chatListViewModel.closeChat();
-        document.body.removeEventListener("keydown", this.handleKeystroke);
       };
-      this.handleKeystroke = (e) => {
-        if (!e.metaKey && !e.ctrlKey) return;
-        switch (e.key) {
-          case "e":
-            this.close();
-            break;
-          case "1":
-            this.selectedPage.value = "messages" /* Messages */;
-            break;
-          case "2":
-            this.selectedPage.value = "tasks" /* Tasks */;
-            break;
-          case "3":
-            this.selectedPage.value = "calendar" /* Calendar */;
-            break;
-          case ",":
-            this.selectedPage.value = "settings" /* Settings */;
-            break;
-          default:
-            return;
-        }
-        e.preventDefault();
+      this.openPage = (page) => {
+        this.closeContext();
+        this.selectedPage.value = page;
       };
       this.closeSubPages = () => {
       };
@@ -2874,6 +3637,29 @@
       this.resetColor();
       this.loadInfo();
       this.subscribeReadStatus();
+      this.registerKeyStroke(" " /* Home */, this.close);
+      this.registerKeyStroke(
+        "h",
+        () => this.openPage("messages" /* Messages */)
+      );
+      this.registerKeyStroke("j", () => this.openPage("tasks" /* Tasks */));
+      this.registerKeyStroke(
+        "k",
+        () => this.openPage("calendar" /* Calendar */)
+      );
+      this.registerKeyStroke(
+        "," /* Settings */,
+        () => this.openPage("settings" /* Settings */)
+      );
+      this.chatListViewModel.selectedChat.subscribeSilent(this.updateContexts);
+      this.selectedPage.subscribeSilent(this.updateContexts);
+    }
+    // context
+    get isOpen() {
+      return this.chatListViewModel.selectedChat.value == this;
+    }
+    get contextSelection() {
+      return this.selectedPage.value;
     }
   };
 
@@ -2987,7 +3773,7 @@
         this.chatViewModels.remove(chatViewModel);
       };
       this.createChatViewModel = (chatModel) => {
-        return new ChatViewModel2(
+        return new ChatViewModel6(
           this.coreViewModel,
           chatModel,
           this.settingsViewModel,
@@ -3151,116 +3937,107 @@
       const isSelected = entry[0] == taskViewModel.task.boardId;
       return Option(entry[1], entry[0], isSelected);
     };
-    return /* @__PURE__ */ createElement(
-      "div",
+    return /* @__PURE__ */ createElement("div", { class: "modal", open: true }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
+      "select",
       {
-        class: "modal",
-        open: true,
-        "keystroke:s": taskViewModel.closeAndSave,
-        "keystroke:Escape": taskViewModel.closeAndDiscard
+        "bind:value": taskViewModel.selectedVersionId,
+        "children:append": [
+          taskViewModel.versionIds,
+          VersionIdToOption
+        ]
+      }
+    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        "bind:value": taskViewModel.name,
+        id: "focused"
+      }
+    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
+      "select",
+      {
+        "bind:value": taskViewModel.boardId,
+        "children:append": [
+          taskViewModel.chatViewModel.taskBoardSuggestions,
+          BoardOptionConverter
+        ]
+      }
+    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "description"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDescriptionLabel), /* @__PURE__ */ createElement(
+      "textarea",
+      {
+        rows: "10",
+        "bind:value": taskViewModel.description
+      }
+    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskCategoryLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        "bind:value": taskViewModel.category,
+        list: categorySuggestionId
+      }
+    ))), /* @__PURE__ */ createElement(
+      "datalist",
+      {
+        hidden: true,
+        id: categorySuggestionId,
+        "children:append": [
+          taskViewModel.coreViewModel.taskCategorySuggestions,
+          StringToOption
+        ]
+      }
+    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "clock_loader_40"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskStatusLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        "bind:value": taskViewModel.status,
+        list: statusSuggestionId
+      }
+    ))), /* @__PURE__ */ createElement(
+      "datalist",
+      {
+        hidden: true,
+        id: statusSuggestionId,
+        "children:append": [
+          taskViewModel.coreViewModel.taskStatusSuggestions,
+          StringToOption
+        ]
+      }
+    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "priority_high"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskPriorityLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        type: "number",
+        "bind:value": taskViewModel.priority
+      }
+    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDateLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        type: "date",
+        "bind:value": taskViewModel.date
+      }
+    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "schedule"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskTimeLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        type: "time",
+        "bind:value": taskViewModel.time
+      }
+    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
+      coreViewModel2,
+      coreViewModel2.translations.chatPage.task.deleteTaskButton,
+      "delete_forever",
+      taskViewModel.deleteTask
+    ))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "flex",
+        "on:click": taskViewModel.closeAndDiscard
       },
-      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
-        "select",
-        {
-          "bind:value": taskViewModel.selectedVersionId,
-          "children:append": [
-            taskViewModel.versionIds,
-            VersionIdToOption
-          ]
-        }
-      ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement(
-        "input",
-        {
-          "bind:value": taskViewModel.name,
-          id: "focused"
-        }
-      ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
-        "select",
-        {
-          "bind:value": taskViewModel.boardId,
-          "children:append": [
-            taskViewModel.chatViewModel.taskBoardSuggestions,
-            BoardOptionConverter
-          ]
-        }
-      ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "description"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDescriptionLabel), /* @__PURE__ */ createElement(
-        "textarea",
-        {
-          rows: "10",
-          "bind:value": taskViewModel.description
-        }
-      ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskCategoryLabel), /* @__PURE__ */ createElement(
-        "input",
-        {
-          "bind:value": taskViewModel.category,
-          list: categorySuggestionId
-        }
-      ))), /* @__PURE__ */ createElement(
-        "datalist",
-        {
-          hidden: true,
-          id: categorySuggestionId,
-          "children:append": [
-            taskViewModel.coreViewModel.taskCategorySuggestions,
-            StringToOption
-          ]
-        }
-      ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "clock_loader_40"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskStatusLabel), /* @__PURE__ */ createElement(
-        "input",
-        {
-          "bind:value": taskViewModel.status,
-          list: statusSuggestionId
-        }
-      ))), /* @__PURE__ */ createElement(
-        "datalist",
-        {
-          hidden: true,
-          id: statusSuggestionId,
-          "children:append": [
-            taskViewModel.coreViewModel.taskStatusSuggestions,
-            StringToOption
-          ]
-        }
-      ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "priority_high"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskPriorityLabel), /* @__PURE__ */ createElement(
-        "input",
-        {
-          type: "number",
-          "bind:value": taskViewModel.priority
-        }
-      ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDateLabel), /* @__PURE__ */ createElement(
-        "input",
-        {
-          type: "date",
-          "bind:value": taskViewModel.date
-        }
-      ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "schedule"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskTimeLabel), /* @__PURE__ */ createElement(
-        "input",
-        {
-          type: "time",
-          "bind:value": taskViewModel.time
-        }
-      ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
-        coreViewModel2,
-        coreViewModel2.translations.chatPage.task.deleteTaskButton,
-        "delete_forever",
-        taskViewModel.deleteTask
-      ))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
-        "button",
-        {
-          class: "flex",
-          "on:click": taskViewModel.closeAndDiscard
-        },
-        coreViewModel2.translations.general.closeButton
-      ), /* @__PURE__ */ createElement(
-        "button",
-        {
-          class: "flex primary",
-          "on:click": taskViewModel.closeAndSave
-        },
-        coreViewModel2.translations.general.saveButton,
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "save")
-      )))
-    );
+      coreViewModel2.translations.general.closeButton
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "flex primary",
+        "on:click": taskViewModel.closeAndSave
+      },
+      coreViewModel2.translations.general.saveButton,
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "save")
+    ))));
   }
 
   // src/View/Components/taskEntry.tsx
@@ -3764,7 +4541,7 @@
     ), MessageReactionFilterButton(
       messagePageViewModel,
       "\u2753" /* Question */
-    )))), /* @__PURE__ */ createElement("button", { "on:click": messagePageViewModel.closeFilterModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )))), /* @__PURE__ */ createElement("button", { "on:click": messagePageViewModel.hideFilterModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/View/ChatPages/messagePage.tsx
@@ -3803,7 +4580,7 @@
       "button",
       {
         class: "ghost",
-        "on:click": messagePageViewModel.openFilterModal,
+        "on:click": messagePageViewModel.showFilterModal,
         "aria-label": coreViewModel2.translations.chatPage.message.filterMessagesButtonAudioLabel,
         "toggle:selected": messagePageViewModel.isFilterActive
       },
@@ -5165,653 +5942,13 @@
     }
   };
 
-  // src/View/translations.ts
-  var englishTranslations = {
-    updater: {
-      migrated: "Migrated"
-    },
-    general: {
-      deleteItemButtonAudioLabel: "delete item",
-      searchButtonAudioLabel: "search",
-      abortButton: "Abort",
-      cancelButton: "Cancel",
-      closeButton: "Close",
-      backButton: "Back",
-      continueButton: "Continue",
-      confirmButton: "Confirm",
-      saveButton: "Save",
-      setButton: "Set",
-      reloadAppButton: "Reload App",
-      fileVersionLabel: "Version",
-      searchLabel: "Search",
-      waitingLabel: "Waiting...",
-      restoreConnection: "Restore connection",
-      noPageSelected: "No page selected"
-    },
-    regional: {
-      weekdays: {
-        full: [
-          "Sunday",
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday"
-        ],
-        abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-      }
-    },
-    homePage: {
-      appName: "Comms",
-      ///
-      overviewHeadline: "Overview",
-      serverAddress: "Server address",
-      serverAddressPlaceholder: "wss://192.168.0.69:3000",
-      connectAudioLabel: "connect to server",
-      disconnectAudioLabel: "disconnect from server",
-      manageConnectionsAudioLabel: "manage connections",
-      yourNameLabel: "Your name",
-      yourNamePlaceholder: "Jane Doe",
-      setNameButtonAudioLabel: "set name",
-      settingsButton: "Settings",
-      manageStorageButton: "Manage storage",
-      transferDataButton: "Data Transfer",
-      scrollToChatButton: "Chats",
-      ///
-      backToOverviewAudioLabel: "go back to overview",
-      chatsHeadline: "Chats",
-      addChatAudioLabel: "name of new chat",
-      addChatPlaceholder: "Add chat",
-      addChatButton: "Add chat"
-    },
-    settings: {
-      pages: {
-        appearance: "Appearance",
-        regional: "Language & Region",
-        info: "About Comms"
-      },
-      themes: {
-        dark: "Dark",
-        light: "Light",
-        system: "Device theme"
-      },
-      version: "Version",
-      language: "Language",
-      firstDayOfWeekLabel: "First day of week"
-    },
-    connectionModal: {
-      connectionModalHeadline: "Manage Connections",
-      ///
-      connectButtonAudioLabel: "connect"
-    },
-    dataTransferModal: {
-      transferDataHeadline: "Data Transfer",
-      selectionDescription: "Select the data that you want to transfer.",
-      dataEntryDescription: "Enter this data on the other device.",
-      dataEntryInputDescription: "Enter the data displayed on the other device.",
-      notConnectedError: "You are not connected to any server.",
-      ///
-      fromThisDeviceButton: "From this device",
-      toThisDeviceButton: "To this device",
-      ///
-      generalHeadline: "General",
-      connectionData: "Connection Data",
-      settingsData: "Settings Data",
-      chatsHeadline: "Chats",
-      ///
-      transferChannelHeadline: "Transfer Chanel",
-      transferKeyHeadline: "Transfer Encryption Key",
-      sendButton: "Send",
-      sendAgainButton: "Send again",
-      ///
-      filesSentCount: (count) => `Files sent: ${count}.`,
-      allFilesSent: "Done.",
-      filesReceivedCount: (count) => `Files received: ${count}.`
-    },
-    storage: {
-      noItemSelected: "No item selected",
-      notAFile: "(not a file)",
-      contentEmpty: "(empty)",
-      path: "Path",
-      content: "Content",
-      deleteItem: "Delete item",
-      removeJunkButton: "Delete junk files"
-    },
-    chatPage: {
-      closeChatAudioLabe: "close chat",
-      chatSettingsAudioLabel: "chat settings",
-      pages: {
-        settings: "Settings",
-        messages: "Messages",
-        tasks: "Tasks",
-        calendar: "Calendar"
-      },
-      settings: {
-        settingsHeadline: "Settings",
-        primaryChannelLabel: "Primary channel",
-        setPrimaryChannelButtonAudioLabel: "set primary channel",
-        newSecondaryChannelPlaceholder: "Add secondary channel",
-        newSecondaryChannelAudioLabel: "name of new secondary channel",
-        addSecondaryChannelButtonAudioLabel: "add secondary channel",
-        encryptionKeyLabel: "Encryption key",
-        setEncryptionKeyButtonAudioLabel: "set encryption key",
-        showEncryptionKey: "Show encryption key",
-        deleteChatButton: "Delete entire chat"
-      },
-      message: {
-        messagesHeadline: "Messages",
-        messageFilterHeadline: "Filter messages",
-        messageFilterReactionsHadline: "Reactions",
-        messageFilterAllReactionsButton: "Show all",
-        ///
-        composerInputPlaceholder: "Type a message...",
-        sendMessageButtonAudioLabel: "send message",
-        filterMessagesButtonAudioLabel: "filter messages",
-        ///
-        showMessageInfoButtonAudioLabel: "show message info",
-        messageInfoHeadline: "Message Info",
-        sentBy: "Sent by",
-        timeSent: "Time sent",
-        channel: "Channel",
-        messageContent: "Message content",
-        copyMessageButton: "Copy message",
-        resendMessageButton: "Resend message",
-        decryptMessageButton: "Decrypt message",
-        deleteMessageButton: "Delete message",
-        //
-        thumbsUpReaction: "Reaction: thumbs up",
-        checkReaction: "Reaction: check",
-        stopReaction: "Reaction: stop sign",
-        attentionReaction: "Reaction: exclamation mark",
-        doubleAttentionReaction: "Reaction: double exclamation mark",
-        questionReaction: "Reaction: question mark"
-      },
-      task: {
-        newBoardNamePlaceholder: "Create a board",
-        createBoardButtonAudioLabel: "create board",
-        ///
-        noBoardSelected: "No board selected",
-        boardNotFound: "Board not found",
-        ///
-        closeBoardButtonAudioLabel: "close board",
-        toggleBoardButtonAudioLabel: "toggle board list",
-        showBoardSettingsButtonAudioLabel: "show board settigns",
-        listViewButtonAudioLabel: "list view",
-        kanbanViewButtonAudioLabel: "kanban view",
-        statusViewButtonAudioLabel: "status grid view",
-        filterTasksButtonAudioLabel: "filter tasks",
-        createTaskButtonAudioLabel: "create new task",
-        ///
-        boardSettingsHeadline: "Board Settings",
-        boardNameInputLabel: "Board name",
-        deleteBoardButton: "Delete board and all tasks",
-        ///
-        taskSettingsHeadline: "Edit Task",
-        taskNameLabel: "Title",
-        taskBoardLabel: "Board",
-        taskCategoryLabel: "Category",
-        taskStatusLabel: "Status",
-        taskPriorityLabel: "Priority",
-        taskDescriptionLabel: "Description",
-        taskDateLabel: "Date",
-        taskTimeLabel: "Time",
-        deleteTaskButton: "Delete task",
-        ///
-        filterTasksHeadline: "Filter Tasks",
-        ///
-        renameCategoryInputPlaceholder: "Rename category",
-        renameStatusInputPlaceholder: "Rename status"
-      },
-      calendar: {
-        eventsBoard: "Events",
-        ///
-        todayButtonAudioLabel: "go to today",
-        previousMonthButtonAudioLabel: "previous month",
-        nextMonthButtonAudioLabel: "next month",
-        yearInputAudioLabel: "year",
-        monthInputAudioLabel: "month",
-        yearInputPlaceholder: "2000",
-        monthInputPlaceholder: "01",
-        ///
-        searchEventsHeadline: "Search Events",
-        ///
-        events: "Events",
-        noEvents: "No events"
-      }
-    }
-  };
-  var allTranslations = {
-    en: englishTranslations,
-    de: {
-      updater: {
-        migrated: "Migriert"
-      },
-      general: {
-        deleteItemButtonAudioLabel: "element l\xF6schen",
-        searchButtonAudioLabel: "suchen",
-        abortButton: "Abbrechen",
-        cancelButton: "Abbrechen",
-        closeButton: "Schlie\xDFen",
-        backButton: "Zur\xFCck",
-        continueButton: "Weiter",
-        confirmButton: "Best\xE4tigen",
-        saveButton: "Speichern",
-        setButton: "OK",
-        reloadAppButton: "Neu laden",
-        fileVersionLabel: "Version",
-        searchLabel: "Suche",
-        waitingLabel: "Warten...",
-        restoreConnection: "Verbindung wiederherstellen",
-        noPageSelected: "Keine Seite ausgew\xE4hlt"
-      },
-      regional: {
-        weekdays: {
-          full: [
-            "Sonntag",
-            "Montag",
-            "Dienstag",
-            "Mittwoch",
-            "Donnerstag",
-            "Freitag",
-            "Samstag"
-          ],
-          abbreviated: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"]
-        }
-      },
-      homePage: {
-        appName: "Comms",
-        overviewHeadline: "\xDCbersicht",
-        serverAddress: "Serveradresse",
-        serverAddressPlaceholder: "wss://192.168.0.69:3000",
-        connectAudioLabel: "mit Server verbinden",
-        disconnectAudioLabel: "vom Server trennen",
-        manageConnectionsAudioLabel: "Verbindungen verwalten",
-        yourNameLabel: "Dein Name",
-        yourNamePlaceholder: "Max Mustermann",
-        setNameButtonAudioLabel: "Name speichern",
-        settingsButton: "Einstellungen",
-        manageStorageButton: "Daten verwalten",
-        transferDataButton: "Daten\xFCbertragung",
-        scrollToChatButton: "Chats",
-        backToOverviewAudioLabel: "zur\xFCck zur \xFCbersicht",
-        chatsHeadline: "Chats",
-        addChatAudioLabel: "Name des neuen Chats",
-        addChatPlaceholder: "Chat hinzuf\xFCgen",
-        addChatButton: "Chat hinzuf\xFCgen"
-      },
-      settings: {
-        pages: {
-          appearance: "Erscheinungsbild",
-          regional: "Sprache & Region",
-          info: "\xDCber Comms"
-        },
-        themes: {
-          dark: "Dunkel",
-          light: "Hell",
-          system: "Ger\xE4teeinstellung"
-        },
-        version: "Version",
-        language: "Sprache",
-        firstDayOfWeekLabel: "Erster Wochentag"
-      },
-      connectionModal: {
-        connectionModalHeadline: "Verbindungen verwalten",
-        connectButtonAudioLabel: "verbinden"
-      },
-      dataTransferModal: {
-        transferDataHeadline: "Daten\xFCbertragung",
-        selectionDescription: "W\xE4hle die Daten aus, die du \xFCbertragen m\xF6chtest.",
-        dataEntryDescription: "Gib diese Informationen auf dem anderen Ger\xE4t ein.",
-        dataEntryInputDescription: "Gib die auf dem anderen Ger\xE4t angezeigten Informationen ein.",
-        notConnectedError: "Du bist mit keinem Server verbunden.",
-        fromThisDeviceButton: "Von diesem Ger\xE4t",
-        toThisDeviceButton: "An dieses Ger\xE4t",
-        generalHeadline: "Allgemein",
-        connectionData: "Verbindungsdaten",
-        settingsData: "Einstellungen",
-        chatsHeadline: "Chats",
-        transferChannelHeadline: "\xDCbertragungskanal",
-        transferKeyHeadline: "Schl\xFCssel",
-        sendButton: "Senden",
-        sendAgainButton: "Erneut senden",
-        filesSentCount: (count) => `Dateien gesendet: ${count}.`,
-        allFilesSent: "Fertig.",
-        filesReceivedCount: (count) => `Dateien empfangen: ${count}.`
-      },
-      storage: {
-        noItemSelected: "Kein Element ausgew\xE4hlt",
-        notAFile: "(keine Datei)",
-        contentEmpty: "(leer)",
-        path: "Pfad",
-        content: "Inhalt",
-        deleteItem: "Element l\xF6schen",
-        removeJunkButton: "Datenm\xFCll l\xF6schen"
-      },
-      chatPage: {
-        closeChatAudioLabe: "Chat schlie\xDFen",
-        chatSettingsAudioLabel: "Chateinstellungen",
-        pages: {
-          settings: "Einstellungen",
-          messages: "Nachrichten",
-          tasks: "Aufgaben",
-          calendar: "Kalender"
-        },
-        settings: {
-          settingsHeadline: "Einstellungen",
-          primaryChannelLabel: "Hauptkanal",
-          setPrimaryChannelButtonAudioLabel: "Hauptkanal festlegen",
-          newSecondaryChannelPlaceholder: "Sekund\xE4ren Kanal hinzuf\xFCgen",
-          newSecondaryChannelAudioLabel: "Name des neuen sekund\xE4ren Kanals",
-          addSecondaryChannelButtonAudioLabel: "Sekund\xE4ren Kanal hinzuf\xFCgen",
-          encryptionKeyLabel: "Schl\xFCssel",
-          setEncryptionKeyButtonAudioLabel: "Schl\xFCssel festlegen",
-          showEncryptionKey: "Schl\xFCssel anzeigen",
-          deleteChatButton: "Gesamten Chat l\xF6schen"
-        },
-        message: {
-          messagesHeadline: "Nachrichten",
-          messageFilterHeadline: "Nachrichten filtern",
-          messageFilterReactionsHadline: "Reaktionen",
-          messageFilterAllReactionsButton: "Alle anzeigen",
-          composerInputPlaceholder: "Schreib eine Nachricht...",
-          sendMessageButtonAudioLabel: "nachricht senden",
-          filterMessagesButtonAudioLabel: "nachrichten filtern",
-          showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
-          messageInfoHeadline: "Nachrichteninfo",
-          sentBy: "Gesendet von",
-          timeSent: "Sendezeit",
-          channel: "Kanal",
-          messageContent: "Nachrichteninhalt",
-          copyMessageButton: "Nachricht kopieren",
-          resendMessageButton: "Nachricht erneut senden",
-          decryptMessageButton: "Nachricht entschl\xFCsseln",
-          deleteMessageButton: "Nachricht l\xF6schen",
-          //
-          thumbsUpReaction: "Reaktion: Daumen hoch",
-          checkReaction: "Reaktion: Haken",
-          stopReaction: "Reaktion: Stopp",
-          attentionReaction: "Reaktion: Ausrufezeichen",
-          doubleAttentionReaction: "Reaktion: doppeltes Ausrufezeichen",
-          questionReaction: "Reaktion: Fragezeichen"
-        },
-        task: {
-          newBoardNamePlaceholder: "Board erstellen",
-          createBoardButtonAudioLabel: "board erstellen",
-          noBoardSelected: "Kein Board ausgew\xE4hlt",
-          boardNotFound: "Board nicht gefunden",
-          closeBoardButtonAudioLabel: "board schlie\xDFen",
-          toggleBoardButtonAudioLabel: "board-liste ein/ausblenden",
-          showBoardSettingsButtonAudioLabel: "Board-Einstellungen anzeigen",
-          listViewButtonAudioLabel: "Listenansicht",
-          kanbanViewButtonAudioLabel: "Kanban-Ansicht",
-          statusViewButtonAudioLabel: "Statusrasteransicht",
-          filterTasksButtonAudioLabel: "Aufgaben filtern",
-          createTaskButtonAudioLabel: "Neue Aufgabe erstellen",
-          boardSettingsHeadline: "Board-Einstellungen",
-          boardNameInputLabel: "Boardname",
-          deleteBoardButton: "Board und alle Aufgaben l\xF6schen",
-          taskSettingsHeadline: "Aufgabe bearbeiten",
-          taskNameLabel: "Titel",
-          taskBoardLabel: "Board",
-          taskCategoryLabel: "Kategorie",
-          taskStatusLabel: "Status",
-          taskPriorityLabel: "Priorit\xE4t",
-          taskDescriptionLabel: "Beschreibung",
-          taskDateLabel: "Datum",
-          taskTimeLabel: "Uhrzeit",
-          deleteTaskButton: "Aufgabe l\xF6schen",
-          filterTasksHeadline: "Aufgaben filtern",
-          renameCategoryInputPlaceholder: "Kategorie umbenennen",
-          renameStatusInputPlaceholder: "Status umbenennen"
-        },
-        calendar: {
-          eventsBoard: "Ereignisse",
-          ///
-          todayButtonAudioLabel: "gehe zu heute",
-          previousMonthButtonAudioLabel: "vorheriger monat",
-          nextMonthButtonAudioLabel: "n\xE4chster monat",
-          yearInputAudioLabel: "Jahr",
-          monthInputAudioLabel: "Monat",
-          yearInputPlaceholder: "2000",
-          monthInputPlaceholder: "01",
-          searchEventsHeadline: "Ereignisse suchen",
-          events: "Ereignisse",
-          noEvents: "Keine Ereignisse"
-        }
-      }
-    },
-    es: {
-      updater: {
-        migrated: "Migrado"
-      },
-      general: {
-        deleteItemButtonAudioLabel: "eliminar elemento",
-        searchButtonAudioLabel: "buscar",
-        abortButton: "Abortar",
-        cancelButton: "Cancelar",
-        closeButton: "Cerrar",
-        backButton: "Atr\xE1s",
-        continueButton: "Continuar",
-        confirmButton: "Confirmar",
-        saveButton: "Guardar",
-        setButton: "OK",
-        reloadAppButton: "Recargar app",
-        fileVersionLabel: "Versi\xF3n",
-        searchLabel: "Buscar",
-        waitingLabel: "Esperando...",
-        restoreConnection: "Conectar de nuevo",
-        noPageSelected: "No p\xE1gina seleccionada"
-      },
-      regional: {
-        weekdays: {
-          full: [
-            "Domingo",
-            "Lunes",
-            "Martes",
-            "Mi\xE9rcoles",
-            "Jueves",
-            "Viernes",
-            "S\xE1bado"
-          ],
-          abbreviated: ["Dom", "Lun", "Mar", "Mi\xE9", "Jue", "Vie", "S\xE1b"]
-        }
-      },
-      homePage: {
-        appName: "Comms",
-        overviewHeadline: "Resumen",
-        serverAddress: "Direcci\xF3n del servidor",
-        serverAddressPlaceholder: "wss://192.168.0.69:3000",
-        connectAudioLabel: "conectar al servidor",
-        disconnectAudioLabel: "desconectar del servidor",
-        manageConnectionsAudioLabel: "gestionar conexiones",
-        yourNameLabel: "Tu nombre",
-        yourNamePlaceholder: "Juan P\xE9rez",
-        setNameButtonAudioLabel: "establecer nombre",
-        settingsButton: "Ajustes",
-        manageStorageButton: "Gestionar almacenamiento",
-        transferDataButton: "Transferencia de datos",
-        scrollToChatButton: "Chats",
-        backToOverviewAudioLabel: "volver al resumen",
-        chatsHeadline: "Chats",
-        addChatAudioLabel: "nombre del nuevo chat",
-        addChatPlaceholder: "A\xF1adir chat",
-        addChatButton: "A\xF1adir chat"
-      },
-      settings: {
-        pages: {
-          appearance: "Aspecto",
-          regional: "Idioma y Regi\xF3n",
-          info: "Sobre Comms"
-        },
-        themes: {
-          dark: "Oscuro",
-          light: "Claro",
-          system: "Seg\xFAn dispositivo"
-        },
-        version: "Versi\xF3n",
-        language: "Idioma",
-        firstDayOfWeekLabel: "Primer d\xEDa de la semana"
-      },
-      connectionModal: {
-        connectionModalHeadline: "Gestionar Conexiones",
-        connectButtonAudioLabel: "conectar"
-      },
-      dataTransferModal: {
-        transferDataHeadline: "Transferencia de Datos",
-        selectionDescription: "Selecciona los datos que quieres transferir.",
-        dataEntryDescription: "Introduce estos datos en el otro dispositivo.",
-        dataEntryInputDescription: "Introduce los datos mostrados en el otro dispositivo.",
-        notConnectedError: "No est\xE1s conectado a ning\xFAn servidor.",
-        fromThisDeviceButton: "Desde este dispositivo",
-        toThisDeviceButton: "A este dispositivo",
-        generalHeadline: "General",
-        connectionData: "Datos de Conexi\xF3n",
-        settingsData: "Datos de Configuraci\xF3n",
-        chatsHeadline: "Chats",
-        transferChannelHeadline: "Canal de Transferencia",
-        transferKeyHeadline: "Clave de Encriptaci\xF3n de Transferencia",
-        sendButton: "Enviar",
-        sendAgainButton: "Enviar otra vez",
-        filesSentCount: (count) => `Archivos enviados: ${count}.`,
-        allFilesSent: "Hecho.",
-        filesReceivedCount: (count) => `Archivos recibidos: ${count}.`
-      },
-      storage: {
-        noItemSelected: "Ning\xFAn elemento seleccionado",
-        notAFile: "(no es un archivo)",
-        contentEmpty: "(vac\xEDo)",
-        path: "Ruta",
-        content: "Contenido",
-        deleteItem: "Eliminar elemento",
-        removeJunkButton: "Eliminar archivos basura"
-      },
-      chatPage: {
-        closeChatAudioLabe: "cerrar chat",
-        chatSettingsAudioLabel: "configuraci\xF3n del chat",
-        pages: {
-          settings: "Configuraci\xF3n",
-          messages: "Mensajes",
-          tasks: "Tareas",
-          calendar: "Calendario"
-        },
-        settings: {
-          settingsHeadline: "Configuraci\xF3n",
-          primaryChannelLabel: "Canal principal",
-          setPrimaryChannelButtonAudioLabel: "establecer canal principal",
-          newSecondaryChannelPlaceholder: "A\xF1adir canal secundario",
-          newSecondaryChannelAudioLabel: "nombre del nuevo canal secundario",
-          addSecondaryChannelButtonAudioLabel: "a\xF1adir canal secundario",
-          encryptionKeyLabel: "Clave de encriptaci\xF3n",
-          setEncryptionKeyButtonAudioLabel: "establecer clave de encriptaci\xF3n",
-          showEncryptionKey: "Mostrar clave de encriptaci\xF3n",
-          deleteChatButton: "Eliminar todo el chat"
-        },
-        message: {
-          messagesHeadline: "Mensajes",
-          messageFilterHeadline: "Filtrar mensajes",
-          messageFilterReactionsHadline: "Reacciones",
-          messageFilterAllReactionsButton: "Mostrar todas",
-          composerInputPlaceholder: "Escribe un mensaje...",
-          sendMessageButtonAudioLabel: "enviar mensaje",
-          filterMessagesButtonAudioLabel: "filtrar mensajes",
-          showMessageInfoButtonAudioLabel: "mostrar informaci\xF3n del mensaje",
-          messageInfoHeadline: "Informaci\xF3n del Mensaje",
-          sentBy: "Enviado por",
-          timeSent: "Hora de env\xEDo",
-          channel: "Canal",
-          messageContent: "Contenido del mensaje",
-          copyMessageButton: "Copiar mensaje",
-          resendMessageButton: "Reenviar mensaje",
-          decryptMessageButton: "Desencriptar mensaje",
-          deleteMessageButton: "Eliminar mensaje",
-          //
-          thumbsUpReaction: "Reacci\xF3n: pulgar hacia arriba",
-          checkReaction: "Reacci\xF3n: marca de verificaci\xF3n",
-          stopReaction: "Reacci\xF3n: signo de parada",
-          attentionReaction: "Reaccion: signo de atenci\xF3n",
-          doubleAttentionReaction: "Reaccion: signo de atenci\xF3n doble",
-          questionReaction: "Reaccion: signo de interrogaci\xF3n"
-        },
-        task: {
-          newBoardNamePlaceholder: "Crear un tablero",
-          createBoardButtonAudioLabel: "crear tablero",
-          noBoardSelected: "Ning\xFAn tablero seleccionado",
-          boardNotFound: "Tablero no encontrado",
-          closeBoardButtonAudioLabel: "cerrar tablero",
-          toggleBoardButtonAudioLabel: "mostrar o ocultar lista de tableros",
-          showBoardSettingsButtonAudioLabel: "mostrar configuraci\xF3n del tablero",
-          listViewButtonAudioLabel: "vista de lista",
-          kanbanViewButtonAudioLabel: "vista kanban",
-          statusViewButtonAudioLabel: "vista de cuadr\xEDcula de estado",
-          filterTasksButtonAudioLabel: "filtrar tareas",
-          createTaskButtonAudioLabel: "crear nueva tarea",
-          boardSettingsHeadline: "Configuraci\xF3n del Tablero",
-          boardNameInputLabel: "Nombre del tablero",
-          deleteBoardButton: "Eliminar tablero y todas las tareas",
-          taskSettingsHeadline: "Editar Tarea",
-          taskNameLabel: "T\xEDtulo",
-          taskBoardLabel: "Tablero",
-          taskCategoryLabel: "Categor\xEDa",
-          taskStatusLabel: "Estado",
-          taskPriorityLabel: "Prioridad",
-          taskDescriptionLabel: "Descripci\xF3n",
-          taskDateLabel: "Fecha",
-          taskTimeLabel: "Hora",
-          deleteTaskButton: "Eliminar tarea",
-          filterTasksHeadline: "Filtrar Tareas",
-          renameCategoryInputPlaceholder: "Renombrar categor\xEDa",
-          renameStatusInputPlaceholder: "Renombrar estado"
-        },
-        calendar: {
-          eventsBoard: "Eventos",
-          ///
-          todayButtonAudioLabel: "ir a hoy",
-          previousMonthButtonAudioLabel: "mes anterior",
-          nextMonthButtonAudioLabel: "mes siguiente",
-          yearInputAudioLabel: "a\xF1o",
-          monthInputAudioLabel: "mes",
-          yearInputPlaceholder: "2000",
-          monthInputPlaceholder: "01",
-          searchEventsHeadline: "Buscar Eventos",
-          events: "Eventos",
-          noEvents: "No hay eventos"
-        }
-      }
-    }
-  };
-  var languageNames = {
-    en: "English",
-    de: "Deutsch",
-    es: "Espa\xF1ol"
-  };
-
-  // src/ViewModel/Global/coreViewModel.ts
-  var CoreViewModel = class {
-    // init
-    constructor(storageModel2, settingsModel2, connectionModel2, chatListModel2, fileTransferModel2) {
-      this.storageModel = storageModel2;
-      this.settingsModel = settingsModel2;
-      this.connectionModel = connectionModel2;
-      this.chatListModel = chatListModel2;
-      this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.11.B";
-      // DRAG & DROP
-      this.draggedObject = new State(void 0);
-      // SUGGESTIONS
-      // boards & tasks
-      this.boardFilterStringSuggestions = new ListState();
-      this.taskCategorySuggestions = new ListState();
-      this.taskStatusSuggestions = new ListState();
-      this.translations = allTranslations[settingsModel2.language] || allTranslations.en;
-    }
-  };
-
   // src/ViewModel/Global/fileTransferViewModel.ts
-  var FileTransferViewModel = class {
+  var FileTransferViewModel = class extends Context {
     // init
     constructor(coreViewModel2) {
+      super();
       this.coreViewModel = coreViewModel2;
+      this.contextDebugDescription = "transfer";
       // state
       this.presentedModal = new State(void 0);
       this.generalFileOptions = new ListState();
@@ -5893,6 +6030,7 @@
       };
       // view
       this.showDirectionSelectionModal = () => {
+        this.coreViewModel.context = this;
         this.presentedModal.value = 0 /* DirectionSelection */;
         this.getOptions();
       };
@@ -5930,6 +6068,7 @@
         this.coreViewModel.fileTransferModel.prepareToReceive(transferData);
       };
       this.hideModal = () => {
+        this.coreViewModel.closeContext(this.contextId);
         this.presentedModal.value = void 0;
       };
       this.coreViewModel.fileTransferModel.fileHandlerManager.addHandler(
@@ -5938,6 +6077,7 @@
       this.coreViewModel.fileTransferModel.readyToSendHandlerManager.addHandler(
         () => this.initiateTransfer()
       );
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideModal);
     }
   };
 
@@ -6517,10 +6657,12 @@
   })(Languages || {});
 
   // src/ViewModel/Global/settingsViewModel.ts
-  var SettingsViewModel = class _SettingsViewModel {
+  var SettingsViewModel = class _SettingsViewModel extends Context {
     // init
     constructor(coreViewModel2) {
+      super();
       this.coreViewModel = coreViewModel2;
+      this.contextDebugDescription = "settings";
       // state
       this.username = new State("");
       this.usernameInput = new State("");
@@ -6551,9 +6693,11 @@
         );
       };
       this.showSettingsModal = () => {
+        this.coreViewModel.context = this;
         this.isShowingSettingsModal.value = true;
       };
       this.hideSettingsModal = () => {
+        this.coreViewModel.closeContext(this.contextId);
         this.isShowingSettingsModal.value = false;
         if (this.requiresReload.value == true) {
           window.location.reload();
@@ -6590,6 +6734,7 @@
         "change",
         () => this.applyTheme()
       );
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideSettingsModal);
     }
     static generateThemeMedia() {
       return window.matchMedia("(prefers-color-scheme: dark)");
@@ -6727,10 +6872,12 @@
   }
 
   // src/ViewModel/Global/storageViewModel.ts
-  var StorageViewModel = class {
+  var StorageViewModel = class extends Context {
     // init
     constructor(coreViewModel2) {
+      super();
       this.coreViewModel = coreViewModel2;
+      this.contextDebugDescription = "storage";
       // state
       this.isShowingStorageModal = new State(false);
       this.selectedPath = new State(
@@ -6760,9 +6907,11 @@
       };
       // view
       this.showStorageModal = () => {
+        this.coreViewModel.context = this;
         this.isShowingStorageModal.value = true;
       };
       this.hideStorageModal = () => {
+        this.coreViewModel.closeContext(this.contextId);
         if (this.didMakeChanges.value == true) {
           window.location.reload();
           return;
@@ -6777,6 +6926,7 @@
         [this.selectedPath],
         () => this.getSelectedItemContent()
       );
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideStorageModal);
     }
   };
 
@@ -7131,6 +7281,31 @@
     ));
   }
 
+  // src/ViewModel/Pages/homeViewModel.ts
+  var HomeViewModel = class extends Context {
+    constructor(coreViewModel2, settingsViewModel2, fileTransferViewModel2, storageViewModel2, connectionViewModel2) {
+      super();
+      this.coreViewModel = coreViewModel2;
+      this.settingsViewModel = settingsViewModel2;
+      this.fileTransferViewModel = fileTransferViewModel2;
+      this.storageViewModel = storageViewModel2;
+      this.connectionViewModel = connectionViewModel2;
+      this.contextDebugDescription = "home";
+      this.coreViewModel.context = this;
+      this.registerKeyStroke(
+        "," /* Settings */,
+        this.settingsViewModel.showSettingsModal
+      );
+      this.registerKeyStroke(
+        "d",
+        this.fileTransferViewModel.showDirectionSelectionModal
+      );
+      this.registerKeyStroke("e", this.storageViewModel.showStorageModal);
+      this.registerKeyStroke("x", this.connectionViewModel.disconnect);
+      this.registerKeyStroke("c", this.connectionViewModel.connect);
+    }
+  };
+
   // src/index.tsx
   var storageModel = new StorageModel();
   var settingsModel = new SettingsModel(storageModel);
@@ -7158,6 +7333,13 @@
     connectionViewModel
   );
   var fileTransferViewModel = new FileTransferViewModel(coreViewModel);
+  var homeViewModel = new HomeViewModel(
+    coreViewModel,
+    settingsViewModel,
+    fileTransferViewModel,
+    storageViewModel,
+    connectionViewModel
+  );
   chatListViewModel.selectedChat.subscribe(() => {
     document.body.toggleAttribute(
       "showing-chat",

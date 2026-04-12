@@ -13,8 +13,11 @@ import StorageModel from "../../Model/Global/storageModel";
 import TaskContainingPageViewModel from "./taskContainingPageViewModel";
 import TaskPageViewModel from "./taskPageViewModel";
 import TaskViewModel from "./taskViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 
 export default class BoardViewModel extends TaskContainingPageViewModel {
+    contextDebugDescription = "board";
+
     // state
     name: React.State<string> = new React.State("");
     color: React.State<Colors> = new React.State<any>(Colors.Standard);
@@ -180,6 +183,10 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         this.isPresentingFilterModal.value = false;
     };
 
+    resetFilter = (): void => {
+        this.searchViewModel.search("");
+    };
+
     updateIndex = (): void => {
         const index: number =
             this.taskPageViewModel.boardIndexManager.getIndex(this);
@@ -295,6 +302,13 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
             [this.searchViewModel.appliedQuery],
             () => this.searchViewModel.appliedQuery.value != "",
         );
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.Filter, this.showFilterModal);
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideFilterModal);
+        this.registerKeyStroke(CommonKeys.Reset, this.resetFilter);
+
+        this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }
 }
 

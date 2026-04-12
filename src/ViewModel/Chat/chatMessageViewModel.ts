@@ -133,7 +133,6 @@ export default class ChatMessageViewModel {
         this.loadData();
 
         this.messagePageViewModel.reactionFilter.subscribe((content) => {
-            console.log(content, content == undefined);
             if (content == undefined) {
                 this.isHidden.value = false;
                 return;

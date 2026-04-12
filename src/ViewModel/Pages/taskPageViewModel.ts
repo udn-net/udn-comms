@@ -4,12 +4,14 @@ import BoardsAndTasksModel, {
     BoardInfoFileContent,
 } from "../../Model/Files/boardsAndTasksModel";
 
-import BoardViewModel from "./boardViewModel";
-import ChatViewModel from "../Chat/chatViewModel";
-import CoreViewModel from "../Global/coreViewModel";
+import BoardViewModel, { BoardPageTypes } from "./boardViewModel";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
+import CoreViewModel, { Context, ContextHost } from "../Global/coreViewModel";
 import { IndexManager } from "../../Model/Utility/utility";
 
-export default class TaskPageViewModel {
+export default class TaskPageViewModel extends ContextHost<string> {
+    contextDebugDescription = "task-page";
+
     // data
     boardIndexManager: IndexManager<BoardViewModel> = new IndexManager(
         (boardViewModel: BoardViewModel) => boardViewModel.name.value,
@@ -19,25 +21,32 @@ export default class TaskPageViewModel {
     getBasePath = (): string[] => {
         return [...this.boardsAndTasksModel.getViewPath()];
     };
-
     getBoardViewPath = (boardId): string[] => {
         return [...this.getBasePath(), boardId];
     };
-
     getLastUsedBoardPath = (): string[] => {
         return [...this.getBasePath(), TaskPageViewModelSubPaths.LastUsedBoard];
     };
 
     // state
     newBoardNameInput: React.State<string> = new React.State("");
-
     boardViewModels: React.MapState<BoardViewModel> = new React.MapState();
-
     isShowingBoadList: React.State<boolean> = new React.State(true);
-
     selectedBoardId: React.State<string | undefined> = new React.State<any>(
         undefined,
     );
+
+    // context
+    get isOpen(): boolean {
+        return (
+            this.chatViewModel.isOpen &&
+            this.chatViewModel.selectedPage.value == ChatPageTypes.Tasks
+        );
+    }
+
+    get contextSelection(): string {
+        return this.selectedBoardId.value;
+    }
 
     // guards
     cannotCreateBoard: React.State<boolean> = React.createProxyState(
@@ -98,6 +107,8 @@ export default class TaskPageViewModel {
     };
 
     closeBoard = (): void => {
+        this.closeContext();
+
         this.selectedBoardId.value = undefined;
         this.chatViewModel.resetColor();
 
@@ -154,6 +165,8 @@ export default class TaskPageViewModel {
         public chatViewModel: ChatViewModel,
         public boardsAndTasksModel: BoardsAndTasksModel,
     ) {
+        super();
+
         this.chatViewModel = chatViewModel;
 
         this.loadData();
@@ -165,6 +178,11 @@ export default class TaskPageViewModel {
                 this.updateBoardIndices();
             },
         );
+
+        // context
+        this.chatViewModel.registerContext(ChatPageTypes.Tasks, this);
+
+        this.selectedBoardId.subscribeSilent(this.updateContexts);
     }
 }
 

@@ -14,7 +14,7 @@ import StorageModel, {
 
 import ChatListViewModel from "./chatListViewModel";
 import { Colors } from "../../colors";
-import CoreViewModel from "../Global/coreViewModel";
+import CoreViewModel, { Context, ContextHost } from "../Global/coreViewModel";
 import { Entry } from "../../View/Components/option";
 import MessagePageViewModel from "../Pages/messagePageViewModel";
 import SettingsPageViewModel from "../Pages/settingsPageViewModel";
@@ -22,8 +22,12 @@ import SettingsViewModel from "../Global/settingsViewModel";
 import TaskPageViewModel from "../Pages/taskPageViewModel";
 import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
+import { v4 } from "uuid";
+import { CommonKeys } from "../../View/keystrokes";
 
-export default class ChatViewModel {
+export default class ChatViewModel extends ContextHost<ChatPageTypes> {
+    contextDebugDescription = "chat";
+
     calendarViewModel: CalendarPageViewModel;
     taskPageViewModel: TaskPageViewModel;
     messagePageViewModel: MessagePageViewModel;
@@ -34,47 +38,36 @@ export default class ChatViewModel {
     selectedPage: React.State<ChatPageTypes> = new React.State<any>(
         ChatPageTypes.Messages,
     );
+    pageContexts = new React.MapState<Context>();
 
     index: React.State<number> = new React.State(0);
     hasUnreadMessages: React.State<boolean> = new React.State(false);
 
     taskBoardSuggestions: React.MapState<Entry> = new React.MapState();
 
+    // context
+    get isOpen(): boolean {
+        return this.chatListViewModel.selectedChat.value == this;
+    }
+
+    get contextSelection(): ChatPageTypes {
+        return this.selectedPage.value;
+    }
+
     // view
     open = (): void => {
+        this.coreViewModel.context = this;
         this.chatListViewModel.openChat(this);
-        document.body.addEventListener("keydown", this.handleKeystroke);
     };
 
     close = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
         this.chatListViewModel.closeChat();
-        document.body.removeEventListener("keydown", this.handleKeystroke);
     };
 
-    handleKeystroke = (e: KeyboardEvent): any => {
-        if (!e.metaKey && !e.ctrlKey) return;
-
-        switch (e.key) {
-            case "e":
-                this.close();
-                break;
-            case "1":
-                this.selectedPage.value = ChatPageTypes.Messages;
-                break;
-            case "2":
-                this.selectedPage.value = ChatPageTypes.Tasks;
-                break;
-            case "3":
-                this.selectedPage.value = ChatPageTypes.Calendar;
-                break;
-            case ",":
-                this.selectedPage.value = ChatPageTypes.Settings;
-                break;
-            default:
-                return;
-        }
-
-        e.preventDefault();
+    openPage = (page: ChatPageTypes): void => {
+        this.closeContext();
+        this.selectedPage.value = page;
     };
 
     closeSubPages = (): void => {};
@@ -159,6 +152,8 @@ export default class ChatViewModel {
         public connectionViewModel: ConnectionViewModel,
         public chatListViewModel: ChatListViewModel,
     ) {
+        super();
+
         // page viewModels
         this.calendarViewModel = new CalendarPageViewModel(
             coreViewModel,
@@ -200,6 +195,23 @@ export default class ChatViewModel {
         this.resetColor();
         this.loadInfo();
         this.subscribeReadStatus();
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.Home, this.close);
+        this.registerKeyStroke("h", () =>
+            this.openPage(ChatPageTypes.Messages),
+        );
+        this.registerKeyStroke("j", () => this.openPage(ChatPageTypes.Tasks));
+        this.registerKeyStroke("k", () =>
+            this.openPage(ChatPageTypes.Calendar),
+        );
+        this.registerKeyStroke(CommonKeys.Settings, () =>
+            this.openPage(ChatPageTypes.Settings),
+        );
+
+        // context
+        this.chatListViewModel.selectedChat.subscribeSilent(this.updateContexts);
+        this.selectedPage.subscribeSilent(this.updateContexts);
     }
 }
 

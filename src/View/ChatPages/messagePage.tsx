@@ -63,7 +63,7 @@ export function MessagePage(
                         <span>
                             <button
                                 class="ghost"
-                                on:click={messagePageViewModel.openFilterModal}
+                                on:click={messagePageViewModel.showFilterModal}
                                 aria-label={
                                     coreViewModel.translations.chatPage.message
                                         .filterMessagesButtonAudioLabel
