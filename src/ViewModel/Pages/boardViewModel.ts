@@ -32,6 +32,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     searchViewModel: SearchViewModel<TaskViewModel>;
     filteredTaskViewModels: React.ListState<TaskViewModel> =
         new React.ListState();
+    isFilterActive: React.State<boolean>;
 
     // paths
     getBasePath = (): string[] => {
@@ -289,6 +290,11 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
             this.handleNewSearch(newQuery);
         });
         this.restoreSearch();
+
+        this.isFilterActive = React.createProxyState(
+            [this.searchViewModel.appliedQuery],
+            () => this.searchViewModel.appliedQuery.value != "",
+        );
     }
 }
 

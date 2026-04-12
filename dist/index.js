@@ -2601,6 +2601,10 @@
         this.handleNewSearch(newQuery);
       });
       this.restoreSearch();
+      this.isFilterActive = createProxyState(
+        [this.searchViewModel.appliedQuery],
+        () => this.searchViewModel.appliedQuery.value != ""
+      );
     }
   };
 
@@ -4367,6 +4371,10 @@
   // src/View/ChatPages/boardPage.tsx
   function BoardPage(coreViewModel2, boardViewModel) {
     boardViewModel.loadData();
+    const filterIcon = createProxyState(
+      [boardViewModel.isFilterActive],
+      () => boardViewModel.isFilterActive.value ? "filter_alt" : "filter_alt_off"
+    );
     const mainContent = createProxyState(
       [boardViewModel.selectedPage],
       () => {
@@ -4453,7 +4461,13 @@
         "aria-label": coreViewModel2.translations.chatPage.task.filterTasksButtonAudioLabel,
         "on:click": boardViewModel.showFilterModal
       },
-      /* @__PURE__ */ createElement("span", { class: "icon" }, "filter_alt")
+      /* @__PURE__ */ createElement(
+        "span",
+        {
+          class: "icon",
+          "subscribe:innerText": filterIcon
+        }
+      )
     ), /* @__PURE__ */ createElement(
       "button",
       {

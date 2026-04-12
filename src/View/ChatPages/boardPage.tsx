@@ -20,6 +20,14 @@ export function BoardPage(
 ) {
     boardViewModel.loadData();
 
+    const filterIcon = React.createProxyState(
+        [boardViewModel.isFilterActive],
+        () =>
+            boardViewModel.isFilterActive.value
+                ? "filter_alt"
+                : "filter_alt_off",
+    );
+
     // main content
     const mainContent = React.createProxyState(
         [boardViewModel.selectedPage],
@@ -135,7 +143,10 @@ export function BoardPage(
                         }
                         on:click={boardViewModel.showFilterModal}
                     >
-                        <span class="icon">filter_alt</span>
+                        <span
+                            class="icon"
+                            subscribe:innerText={filterIcon}
+                        ></span>
                     </button>
                     <button
                         class="ghost"
