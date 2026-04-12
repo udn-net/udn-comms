@@ -43,10 +43,38 @@ export default class ChatViewModel {
     // view
     open = (): void => {
         this.chatListViewModel.openChat(this);
+        document.body.addEventListener("keydown", this.handleKeystroke);
     };
 
     close = (): void => {
         this.chatListViewModel.closeChat();
+        document.body.removeEventListener("keydown", this.handleKeystroke);
+    };
+
+    handleKeystroke = (e: KeyboardEvent): any => {
+        if (!e.metaKey && !e.ctrlKey) return;
+
+        switch (e.key) {
+            case "e":
+                this.close();
+                break;
+            case "1":
+                this.selectedPage.value = ChatPageTypes.Messages;
+                break;
+            case "2":
+                this.selectedPage.value = ChatPageTypes.Tasks;
+                break;
+            case "3":
+                this.selectedPage.value = ChatPageTypes.Calendar;
+                break;
+            case ",":
+                this.selectedPage.value = ChatPageTypes.Settings;
+                break;
+            default:
+                return;
+        }
+
+        e.preventDefault();
     };
 
     closeSubPages = (): void => {};

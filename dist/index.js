@@ -1693,7 +1693,8 @@
       this.close = () => {
         this.containingModel.closeTask();
       };
-      this.closeAndDiscard = () => {
+      this.closeAndDiscard = (e) => {
+        e.preventDefault();
         this.close();
         this.loadTaskData();
       };
@@ -2751,9 +2752,34 @@
       // view
       this.open = () => {
         this.chatListViewModel.openChat(this);
+        document.body.addEventListener("keydown", this.handleKeystroke);
       };
       this.close = () => {
         this.chatListViewModel.closeChat();
+        document.body.removeEventListener("keydown", this.handleKeystroke);
+      };
+      this.handleKeystroke = (e) => {
+        if (!e.metaKey && !e.ctrlKey) return;
+        switch (e.key) {
+          case "e":
+            this.close();
+            break;
+          case "1":
+            this.selectedPage.value = "messages" /* Messages */;
+            break;
+          case "2":
+            this.selectedPage.value = "tasks" /* Tasks */;
+            break;
+          case "3":
+            this.selectedPage.value = "calendar" /* Calendar */;
+            break;
+          case ",":
+            this.selectedPage.value = "settings" /* Settings */;
+            break;
+          default:
+            return;
+        }
+        e.preventDefault();
       };
       this.closeSubPages = () => {
       };
@@ -3125,107 +3151,116 @@
       const isSelected = entry[0] == taskViewModel.task.boardId;
       return Option(entry[1], entry[0], isSelected);
     };
-    return /* @__PURE__ */ createElement("div", { class: "modal", open: true, "keystroke:s": taskViewModel.closeAndSave }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
-      "select",
+    return /* @__PURE__ */ createElement(
+      "div",
       {
-        "bind:value": taskViewModel.selectedVersionId,
-        "children:append": [
-          taskViewModel.versionIds,
-          VersionIdToOption
-        ]
-      }
-    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement(
-      "input",
-      {
-        "bind:value": taskViewModel.name,
-        id: "focused"
-      }
-    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
-      "select",
-      {
-        "bind:value": taskViewModel.boardId,
-        "children:append": [
-          taskViewModel.chatViewModel.taskBoardSuggestions,
-          BoardOptionConverter
-        ]
-      }
-    ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "description"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDescriptionLabel), /* @__PURE__ */ createElement(
-      "textarea",
-      {
-        rows: "10",
-        "bind:value": taskViewModel.description
-      }
-    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskCategoryLabel), /* @__PURE__ */ createElement(
-      "input",
-      {
-        "bind:value": taskViewModel.category,
-        list: categorySuggestionId
-      }
-    ))), /* @__PURE__ */ createElement(
-      "datalist",
-      {
-        hidden: true,
-        id: categorySuggestionId,
-        "children:append": [
-          taskViewModel.coreViewModel.taskCategorySuggestions,
-          StringToOption
-        ]
-      }
-    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "clock_loader_40"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskStatusLabel), /* @__PURE__ */ createElement(
-      "input",
-      {
-        "bind:value": taskViewModel.status,
-        list: statusSuggestionId
-      }
-    ))), /* @__PURE__ */ createElement(
-      "datalist",
-      {
-        hidden: true,
-        id: statusSuggestionId,
-        "children:append": [
-          taskViewModel.coreViewModel.taskStatusSuggestions,
-          StringToOption
-        ]
-      }
-    ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "priority_high"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskPriorityLabel), /* @__PURE__ */ createElement(
-      "input",
-      {
-        type: "number",
-        "bind:value": taskViewModel.priority
-      }
-    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDateLabel), /* @__PURE__ */ createElement(
-      "input",
-      {
-        type: "date",
-        "bind:value": taskViewModel.date
-      }
-    ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "schedule"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskTimeLabel), /* @__PURE__ */ createElement(
-      "input",
-      {
-        type: "time",
-        "bind:value": taskViewModel.time
-      }
-    ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
-      coreViewModel2,
-      coreViewModel2.translations.chatPage.task.deleteTaskButton,
-      "delete_forever",
-      taskViewModel.deleteTask
-    ))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
-      "button",
-      {
-        class: "flex",
-        "on:click": taskViewModel.closeAndDiscard
+        class: "modal",
+        open: true,
+        "keystroke:s": taskViewModel.closeAndSave,
+        "keystroke:Escape": taskViewModel.closeAndDiscard
       },
-      coreViewModel2.translations.general.closeButton
-    ), /* @__PURE__ */ createElement(
-      "button",
-      {
-        class: "flex primary",
-        "on:click": taskViewModel.closeAndSave
-      },
-      coreViewModel2.translations.general.saveButton,
-      /* @__PURE__ */ createElement("span", { class: "icon" }, "save")
-    ))));
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.task.taskSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "history"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.general.fileVersionLabel), /* @__PURE__ */ createElement(
+        "select",
+        {
+          "bind:value": taskViewModel.selectedVersionId,
+          "children:append": [
+            taskViewModel.versionIds,
+            VersionIdToOption
+          ]
+        }
+      ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskNameLabel), /* @__PURE__ */ createElement(
+        "input",
+        {
+          "bind:value": taskViewModel.name,
+          id: "focused"
+        }
+      ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskBoardLabel), /* @__PURE__ */ createElement(
+        "select",
+        {
+          "bind:value": taskViewModel.boardId,
+          "children:append": [
+            taskViewModel.chatViewModel.taskBoardSuggestions,
+            BoardOptionConverter
+          ]
+        }
+      ), /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_drop_down"))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "description"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDescriptionLabel), /* @__PURE__ */ createElement(
+        "textarea",
+        {
+          rows: "10",
+          "bind:value": taskViewModel.description
+        }
+      ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskCategoryLabel), /* @__PURE__ */ createElement(
+        "input",
+        {
+          "bind:value": taskViewModel.category,
+          list: categorySuggestionId
+        }
+      ))), /* @__PURE__ */ createElement(
+        "datalist",
+        {
+          hidden: true,
+          id: categorySuggestionId,
+          "children:append": [
+            taskViewModel.coreViewModel.taskCategorySuggestions,
+            StringToOption
+          ]
+        }
+      ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "clock_loader_40"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskStatusLabel), /* @__PURE__ */ createElement(
+        "input",
+        {
+          "bind:value": taskViewModel.status,
+          list: statusSuggestionId
+        }
+      ))), /* @__PURE__ */ createElement(
+        "datalist",
+        {
+          hidden: true,
+          id: statusSuggestionId,
+          "children:append": [
+            taskViewModel.coreViewModel.taskStatusSuggestions,
+            StringToOption
+          ]
+        }
+      ), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "priority_high"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskPriorityLabel), /* @__PURE__ */ createElement(
+        "input",
+        {
+          type: "number",
+          "bind:value": taskViewModel.priority
+        }
+      ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "calendar_month"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskDateLabel), /* @__PURE__ */ createElement(
+        "input",
+        {
+          type: "date",
+          "bind:value": taskViewModel.date
+        }
+      ))), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "schedule"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.taskTimeLabel), /* @__PURE__ */ createElement(
+        "input",
+        {
+          type: "time",
+          "bind:value": taskViewModel.time
+        }
+      ))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "width-input" }, DangerousActionButton(
+        coreViewModel2,
+        coreViewModel2.translations.chatPage.task.deleteTaskButton,
+        "delete_forever",
+        taskViewModel.deleteTask
+      ))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+        "button",
+        {
+          class: "flex",
+          "on:click": taskViewModel.closeAndDiscard
+        },
+        coreViewModel2.translations.general.closeButton
+      ), /* @__PURE__ */ createElement(
+        "button",
+        {
+          class: "flex primary",
+          "on:click": taskViewModel.closeAndSave
+        },
+        coreViewModel2.translations.general.saveButton,
+        /* @__PURE__ */ createElement("span", { class: "icon" }, "save")
+      )))
+    );
   }
 
   // src/View/Components/taskEntry.tsx

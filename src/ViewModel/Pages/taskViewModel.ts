@@ -89,7 +89,8 @@ export default class TaskViewModel {
         this.containingModel.closeTask();
     };
 
-    closeAndDiscard = (): void => {
+    closeAndDiscard = (e: Event): void => {
+        e.preventDefault();
         this.close();
         this.loadTaskData();
     };
