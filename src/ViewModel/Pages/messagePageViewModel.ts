@@ -19,6 +19,7 @@ export default class MessagePageViewModel {
     searchViewModel: SearchViewModel<ChatMessageViewModel>;
     isFilterModalOpen = new React.State<boolean>(false);
     reactionFilter = new React.State<ReactionSymbols | undefined>(undefined);
+    isFilterActive: React.State<boolean>;
 
     composingMessage: React.State<string> = new React.State("");
 
@@ -98,7 +99,7 @@ export default class MessagePageViewModel {
 
     revokeReactionFilter = (): void => {
         this.reactionFilter.value = undefined;
-    }
+    };
 
     setReactionFilter = (content: ReactionSymbols): void => {
         this.reactionFilter.value = content;
@@ -135,6 +136,13 @@ export default class MessagePageViewModel {
             this.filteredMessageViewModels,
             (chatMessageViewModel) => [chatMessageViewModel.body.value],
             new React.ListState(),
+        );
+
+        this.isFilterActive = React.createProxyState(
+            [this.searchViewModel.appliedQuery, this.reactionFilter],
+            () =>
+                this.searchViewModel.appliedQuery.value != "" ||
+                this.reactionFilter.value != undefined,
         );
     }
 }

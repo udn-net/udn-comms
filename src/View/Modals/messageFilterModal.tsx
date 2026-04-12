@@ -68,7 +68,10 @@ export function MessageFilterModal<T>(
                     </h3>
 
                     <div class="flex-column gap">
-                        <button toggle:selected={noFilter} on:click={messagePageViewModel.revokeReactionFilter}>
+                        <button
+                            toggle:selected={noFilter}
+                            on:click={messagePageViewModel.revokeReactionFilter}
+                        >
                             {
                                 coreViewModel.translations.chatPage.message
                                     .messageFilterAllReactionsButton

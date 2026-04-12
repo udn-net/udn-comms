@@ -133,7 +133,7 @@ export default class ChatMessageViewModel {
         this.loadData();
 
         this.messagePageViewModel.reactionFilter.subscribe((content) => {
-            console.log(content, content==undefined)
+            console.log(content, content == undefined);
             if (content == undefined) {
                 this.isHidden.value = false;
                 return;
@@ -168,6 +168,6 @@ export default class ChatMessageViewModel {
             }
 
             this.isHidden.value = count == 0;
-        })
+        });
     }
 }

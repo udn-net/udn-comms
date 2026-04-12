@@ -2290,6 +2290,10 @@
         (chatMessageViewModel) => [chatMessageViewModel.body.value],
         new ListState()
       );
+      this.isFilterActive = createProxyState(
+        [this.searchViewModel.appliedQuery, this.reactionFilter],
+        () => this.searchViewModel.appliedQuery.value != "" || this.reactionFilter.value != void 0
+      );
     }
   };
 
@@ -3696,7 +3700,14 @@
         "toggle:disabled": messagePageViewModel.searchViewModel.cannotApplySearch
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "search")
-    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.chatPage.message.messageFilterReactionsHadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "toggle:selected": noFilter, "on:click": messagePageViewModel.revokeReactionFilter }, coreViewModel2.translations.chatPage.message.messageFilterAllReactionsButton), /* @__PURE__ */ createElement("div", { class: "grid gap message-reaction-filter" }, MessageReactionFilterButton(
+    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.chatPage.message.messageFilterReactionsHadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement(
+      "button",
+      {
+        "toggle:selected": noFilter,
+        "on:click": messagePageViewModel.revokeReactionFilter
+      },
+      coreViewModel2.translations.chatPage.message.messageFilterAllReactionsButton
+    ), /* @__PURE__ */ createElement("div", { class: "grid gap message-reaction-filter" }, MessageReactionFilterButton(
       messagePageViewModel,
       "\u{1F44D}" /* ThumbsUp */
     ), MessageReactionFilterButton(
@@ -3723,6 +3734,10 @@
     const ChatMessageViewModelToView = (chatMessageViewModel) => {
       return ChatMessage4(coreViewModel2, chatMessageViewModel);
     };
+    const filterIcon = createProxyState(
+      [messagePageViewModel.isFilterActive],
+      () => messagePageViewModel.isFilterActive.value ? "filter_alt" : "filter_alt_off"
+    );
     const messageContainer = /* @__PURE__ */ createElement(
       "div",
       {
@@ -3756,7 +3771,13 @@
         "on:click": messagePageViewModel.openFilterModal,
         "aria-label": coreViewModel2.translations.chatPage.message.filterMessagesButtonAudioLabel
       },
-      /* @__PURE__ */ createElement("span", { class: "icon" }, "filter_alt")
+      /* @__PURE__ */ createElement(
+        "span",
+        {
+          class: "icon",
+          "subscribe:innerText": filterIcon
+        }
+      )
     ))), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
       "input",
       {
@@ -5743,7 +5764,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.11.A";
+      this.BUILD = "Build 26.04.11.B";
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS

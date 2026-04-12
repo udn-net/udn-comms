@@ -8,8 +8,8 @@ export default class SearchViewModel<T> {
     getStringsOfObject: (object: T) => string[];
 
     // state
-    appliedQuery: React.State<string> = new React.State("");
-    searchInput: React.State<string> = new React.State("");
+    appliedQuery = new React.State<string>("");
+    searchInput = new React.State<string>("");
     matchingObjects: React.ListState<T>;
 
     suggestions: React.ListState<string>;

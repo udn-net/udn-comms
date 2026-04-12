@@ -19,6 +19,14 @@ export function MessagePage(
         return ChatMessage(coreViewModel, chatMessageViewModel);
     };
 
+    const filterIcon = React.createProxyState(
+        [messagePageViewModel.isFilterActive],
+        () =>
+            messagePageViewModel.isFilterActive.value
+                ? "filter_alt"
+                : "filter_alt_off",
+    );
+
     const messageContainer = (
         <div
             id="message-container"
@@ -69,7 +77,10 @@ export function MessagePage(
                                         .filterMessagesButtonAudioLabel
                                 }
                             >
-                                <span class="icon">filter_alt</span>
+                                <span
+                                    class="icon"
+                                    subscribe:innerText={filterIcon}
+                                ></span>
                             </button>
                         </span>
                     </div>
