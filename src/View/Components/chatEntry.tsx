@@ -5,11 +5,11 @@ import ChatViewModel from "../../ViewModel/Chat/chatViewModel";
 export function ChatEntry(chatViewModel: ChatViewModel) {
     const view = (
         <button
-            class="tile colored-tile chat-entry"
+            class="tile colored-tile chat-entry animate-highlight"
             set:color={chatViewModel.settingsPageViewModel.color}
             style="height: 8rem"
             on:click={chatViewModel.open}
-            toggle:unread={chatViewModel.hasUnreadMessages}
+            toggle:highlight={chatViewModel.hasUnreadMessages}
         >
             <span
                 class="shadow"

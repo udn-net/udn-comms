@@ -13,7 +13,7 @@ export function RibbonButton(
 ) {
     return (
         <button
-            class="ribbon-button"
+            class="ribbon-button animate-highlight"
             aria-label={label}
             toggle:selected={isSelected}
             toggle:highlight={isHighlighted}

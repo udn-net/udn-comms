@@ -3443,7 +3443,7 @@
     return /* @__PURE__ */ createElement(
       "button",
       {
-        class: "ribbon-button",
+        class: "ribbon-button animate-highlight",
         "aria-label": label,
         "toggle:selected": isSelected,
         "toggle:highlight": isHighlighted,
@@ -3738,10 +3738,6 @@
     const ChatMessageViewModelToView = (chatMessageViewModel) => {
       return ChatMessage4(coreViewModel2, chatMessageViewModel);
     };
-    const filterIcon = createProxyState(
-      [messagePageViewModel.isFilterActive],
-      () => messagePageViewModel.isFilterActive.value ? "filter_alt" : "filter_alt_off"
-    );
     const messageContainer = /* @__PURE__ */ createElement(
       "div",
       {
@@ -3773,15 +3769,10 @@
       {
         class: "ghost",
         "on:click": messagePageViewModel.openFilterModal,
-        "aria-label": coreViewModel2.translations.chatPage.message.filterMessagesButtonAudioLabel
+        "aria-label": coreViewModel2.translations.chatPage.message.filterMessagesButtonAudioLabel,
+        "toggle:selected": messagePageViewModel.isFilterActive
       },
-      /* @__PURE__ */ createElement(
-        "span",
-        {
-          class: "icon",
-          "subscribe:innerText": filterIcon
-        }
-      )
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "filter_alt")
     ))), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
       "input",
       {
@@ -4371,10 +4362,6 @@
   // src/View/ChatPages/boardPage.tsx
   function BoardPage(coreViewModel2, boardViewModel) {
     boardViewModel.loadData();
-    const filterIcon = createProxyState(
-      [boardViewModel.isFilterActive],
-      () => boardViewModel.isFilterActive.value ? "filter_alt" : "filter_alt_off"
-    );
     const mainContent = createProxyState(
       [boardViewModel.selectedPage],
       () => {
@@ -4459,15 +4446,10 @@
       {
         class: "ghost",
         "aria-label": coreViewModel2.translations.chatPage.task.filterTasksButtonAudioLabel,
-        "on:click": boardViewModel.showFilterModal
+        "on:click": boardViewModel.showFilterModal,
+        "toggle:selected": boardViewModel.isFilterActive
       },
-      /* @__PURE__ */ createElement(
-        "span",
-        {
-          class: "icon",
-          "subscribe:innerText": filterIcon
-        }
-      )
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "filter_alt")
     ), /* @__PURE__ */ createElement(
       "button",
       {
@@ -6279,11 +6261,11 @@
     const view = /* @__PURE__ */ createElement(
       "button",
       {
-        class: "tile colored-tile chat-entry",
+        class: "tile colored-tile chat-entry animate-highlight",
         "set:color": chatViewModel.settingsPageViewModel.color,
         style: "height: 8rem",
         "on:click": chatViewModel.open,
-        "toggle:unread": chatViewModel.hasUnreadMessages
+        "toggle:highlight": chatViewModel.hasUnreadMessages
       },
       /* @__PURE__ */ createElement(
         "span",

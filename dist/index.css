@@ -376,7 +376,8 @@ body[showing-chat] #chat-page-wrapper {
   justify-content: center;
 }
 #chat-page > div > #ribbon button.ribbon-button,
-#chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar button.ribbon-button {
+#chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar button.ribbon-button,
+#chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar button[selected] {
   min-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
   width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
   max-width: calc(var(--control-height) - 2 * var(--gap-between-tiles));
@@ -384,17 +385,15 @@ body[showing-chat] #chat-page-wrapper {
   height: calc(var(--control-height) - 2 * var(--gap-between-tiles));
   color: var(--primary);
 }
+#chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar button[selected]:not(.ribbon-button) {
+  margin: var(--gap-between-tiles);
+}
 #chat-page > div > #ribbon button > .icon,
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar button > .icon {
   font-size: 1.1rem;
 }
 #chat-page > div > #ribbon > span {
   width: 100%;
-}
-#chat-page > div > #ribbon .ribbon-button[highlight] {
-  background: rgb(255, 217, 0) !important;
-  color: black;
-  outline-color: black;
 }
 #chat-page > div > #main > div > .pane-wrapper > .pane > .toolbar {
   height: var(--ribbon-size);
@@ -446,13 +445,6 @@ body[showing-chat] #chat-page-wrapper {
   display: grid;
   gap: var(--gap-between-tiles);
   grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
-}
-.chat-entry[unread] {
-  border: var(--outline-width) solid black;
-}
-.chat-entry[unread]:not(:hover):not(:active) {
-  background: rgb(255, 217, 0) !important;
-  color: black;
 }
 @media (min-width: 640px) {
   #home-page > div {
