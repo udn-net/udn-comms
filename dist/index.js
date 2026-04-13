@@ -2254,7 +2254,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.13.A";
+      this.BUILD = "Build 26.04.13.B";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.logContexts = () => {
@@ -2266,7 +2266,8 @@
         );
       };
       this.closeContext = (contextId) => {
-        if (!this.contexts.map((context) => context.contextId).includes(contextId)) return;
+        if (!this.contexts.map((context) => context.contextId).includes(contextId))
+          return;
         while (this.contexts.length > 0) {
           const currentContext = this.context;
           this.contextStack.delete(currentContext.contextId);
@@ -2315,7 +2316,9 @@
       this.contextId = v4_default();
       this.keystrokes = /* @__PURE__ */ new Map();
       this.handleKeystroke = (e) => {
-        const fn = this.keystrokes.get(e.key.toLowerCase());
+        const fn = this.keystrokes.get(
+          e.key.toLowerCase()
+        );
         if (!fn) return false;
         e.preventDefault();
         fn();
@@ -2336,18 +2339,21 @@
       };
       this.closeContext = () => {
         if (this.currentContext.value) {
-          this.coreViewModel.closeContext(this.currentContext.value.contextId);
+          this.coreViewModel.closeContext(
+            this.currentContext.value.contextId
+          );
         }
         this.currentContext.value = void 0;
       };
       this.updateContexts = () => {
         if (this.isOpen == false) return;
-        const selectedContext = this.contexts.get(this.contextSelection);
+        const selectedContext = this.contexts.get(
+          this.contextSelection
+        );
         if (!selectedContext) return;
         if (selectedContext != this.currentContext.value) {
           this.closeContext();
         }
-        ;
         this.coreViewModel.logContexts();
         this.coreViewModel.context = selectedContext;
         this.currentContext.value = selectedContext;
@@ -2372,7 +2378,9 @@
     window.location.reload();
   }
   function setFocus() {
-    const focusedInModal = document.querySelector(".modal[open] #focused");
+    const focusedInModal = document.querySelector(
+      ".modal[open] #focused"
+    );
     if (focusedInModal) return focusedInModal.focus();
     document.getElementById("focused")?.focus();
   }
@@ -3657,7 +3665,9 @@
         "," /* Settings */,
         () => this.openPage("settings" /* Settings */)
       );
-      this.chatListViewModel.selectedChat.subscribeSilent(this.updateContexts);
+      this.chatListViewModel.selectedChat.subscribeSilent(
+        this.updateContexts
+      );
       this.selectedPage.subscribeSilent(this.updateContexts);
     }
     // context
@@ -6751,7 +6761,10 @@
         "change",
         () => this.applyTheme()
       );
-      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideSettingsModal);
+      this.registerKeyStroke(
+        "backspace" /* CloseOrCancel */,
+        this.hideSettingsModal
+      );
     }
     static generateThemeMedia() {
       return window.matchMedia("(prefers-color-scheme: dark)");
