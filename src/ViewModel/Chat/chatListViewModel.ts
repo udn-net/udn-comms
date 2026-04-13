@@ -14,7 +14,7 @@ export default class ChatListViewModel {
     notificationViewModel: NotificationViewModel;
 
     // data
-    chatIndexManager = new IndexManager<ChatViewModel>(
+    readonly chatIndexManager = new IndexManager<ChatViewModel>(
         (chatViewModel: ChatViewModel) =>
             chatViewModel.settingsPageViewModel.primaryChannel.value,
     );
@@ -96,9 +96,9 @@ export default class ChatListViewModel {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public settingsViewModel: SettingsViewModel,
-        public connectionViewModel: ConnectionViewModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly settingsViewModel: SettingsViewModel,
+        public readonly connectionViewModel: ConnectionViewModel,
     ) {
         this.notificationViewModel = new NotificationViewModel(this);
 

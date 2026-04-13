@@ -2246,7 +2246,7 @@
   };
 
   // src/ViewModel/Global/coreViewModel.ts
-  var CoreViewModel = class _CoreViewModel {
+  var CoreViewModel = class {
     // init
     constructor(storageModel2, settingsModel2, connectionModel2, chatListModel2, fileTransferModel2) {
       this.storageModel = storageModel2;
@@ -2254,7 +2254,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.12.C";
+      this.BUILD = "Build 26.04.13.A";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.logContexts = () => {
@@ -2275,7 +2275,6 @@
         this.logContexts();
       };
       this.handleKeyDown = (e) => {
-        if (!_CoreViewModel.checkIsKeystroke(e)) return;
         const contexts = this.contexts;
         while (contexts.length > 0) {
           const currentContext = contexts.pop();
@@ -6067,6 +6066,7 @@
         this.presentedModal.value = 4 /* TransferDataInput */;
       };
       this.prepareReceivingData = () => {
+        if (this.cannotPrepareToReceive.value == true) return;
         this.presentedModal.value = 5 /* ReceptionDisplay */;
         this.filePathsReceived.clear();
         const transferData = {
@@ -6592,6 +6592,54 @@
 
   // src/Model/Global/settingsModel.ts
   var SettingsModel = class _SettingsModel {
+    // init
+    constructor(storageModel2) {
+      this.setName = (newValue) => {
+        this.username = newValue;
+        this.storeSetting("username", newValue);
+      };
+      this.setFirstDayOfWeek = (newValue) => {
+        this.firstDayOfWeek = newValue;
+        this.storeSetting("firstDayOfWeek", newValue);
+      };
+      this.setLanguage = (newValue) => {
+        this.language = newValue;
+        this.storeSetting("language", newValue);
+      };
+      this.setTheme = (newValue) => {
+        this.theme = newValue;
+        this.storeSetting("theme", newValue);
+      };
+      // load
+      this.readSetting = (pathName) => {
+        const path = StorageModel.getPath(
+          "settings" /* SettingsModel */,
+          filePaths.settingsModel[pathName]
+        );
+        return this.storageModel.read(path);
+      };
+      this.loadUsername = () => {
+        const content = this.readSetting("username");
+        this.username = content ?? "";
+      };
+      this.loadFirstDayofWeek = () => {
+        const content = this.readSetting("firstDayOfWeek");
+        this.firstDayOfWeek = content ?? "0";
+      };
+      this.loadLanguage = () => {
+        const content = this.readSetting("language");
+        this.language = content ?? _SettingsModel.getSystemLanguage();
+      };
+      this.loadTheme = () => {
+        const content = this.readSetting("theme");
+        this.theme = content ?? "system" /* System */;
+      };
+      this.storageModel = storageModel2;
+      this.loadUsername();
+      this.loadFirstDayofWeek();
+      this.loadLanguage();
+      this.loadTheme();
+    }
     // storage
     storeSetting(pathName, value) {
       const path = StorageModel.getPath(
@@ -6599,54 +6647,6 @@
         filePaths.settingsModel[pathName]
       );
       this.storageModel.write(path, value);
-    }
-    setName(newValue) {
-      this.username = newValue;
-      this.storeSetting("username", newValue);
-    }
-    setFirstDayOfWeek(newValue) {
-      this.firstDayOfWeek = newValue;
-      this.storeSetting("firstDayOfWeek", newValue);
-    }
-    setLanguage(newValue) {
-      this.language = newValue;
-      this.storeSetting("language", newValue);
-    }
-    setTheme(newValue) {
-      this.theme = newValue;
-      this.storeSetting("theme", newValue);
-    }
-    // load
-    readSetting(pathName) {
-      const path = StorageModel.getPath(
-        "settings" /* SettingsModel */,
-        filePaths.settingsModel[pathName]
-      );
-      return this.storageModel.read(path);
-    }
-    loadUsername() {
-      const content = this.readSetting("username");
-      this.username = content ?? "";
-    }
-    loadFirstDayofWeek() {
-      const content = this.readSetting("firstDayOfWeek");
-      this.firstDayOfWeek = content ?? "0";
-    }
-    loadLanguage() {
-      const content = this.readSetting("language");
-      this.language = content ?? _SettingsModel.getSystemLanguage();
-    }
-    loadTheme() {
-      const content = this.readSetting("theme");
-      this.theme = content ?? "system" /* System */;
-    }
-    // init
-    constructor(storageModel2) {
-      this.storageModel = storageModel2;
-      this.loadUsername();
-      this.loadFirstDayofWeek();
-      this.loadLanguage();
-      this.loadTheme();
     }
     static getSystemLanguage() {
       switch (navigator.language.substring(0, 2)) {

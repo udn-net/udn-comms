@@ -6,8 +6,8 @@ import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
 import UDNFrontend, { Message } from "udn-frontend";
 
 export default class ConnectionModel {
-    udn: UDNFrontend;
-    storageModel: StorageModel;
+    readonly udn: UDNFrontend;
+    readonly storageModel: StorageModel;
     reconnectInterval: number | undefined = undefined;
     shouldAttemptReconnect: boolean = false;
 
@@ -20,10 +20,10 @@ export default class ConnectionModel {
         return this.udn.ws?.url;
     }
 
-    connectionChangeHandlerManager = new HandlerManager<void>();
-    messageHandlerManager = new HandlerManager<Message>();
-    messageSentHandlerManager = new HandlerManager<ChatMessage>();
-    channelsToSubscribe = new Set<string>();
+    readonly connectionChangeHandlerManager = new HandlerManager<void>();
+    readonly messageHandlerManager = new HandlerManager<Message>();
+    readonly messageSentHandlerManager = new HandlerManager<ChatMessage>();
+    readonly channelsToSubscribe = new Set<string>();
 
     // handlers
     handleMessage = (data: Message): void => {

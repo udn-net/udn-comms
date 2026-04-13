@@ -11,10 +11,10 @@ import { IndexManager } from "../../Model/Utility/utility";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class TaskPageViewModel extends ContextHost<string> {
-    contextDebugDescription: string = "task-page";
+    contextDebugDescription = "task-page";
 
     // data
-    boardIndexManager = new IndexManager<BoardViewModel>(
+    readonly boardIndexManager = new IndexManager<BoardViewModel>(
         (boardViewModel: BoardViewModel) => boardViewModel.name.value,
     );
 
@@ -162,9 +162,9 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public chatViewModel: ChatViewModel,
-        public boardsAndTasksModel: BoardsAndTasksModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly chatViewModel: ChatViewModel,
+        public readonly boardsAndTasksModel: BoardsAndTasksModel,
     ) {
         super();
 

@@ -123,8 +123,8 @@ export default class ChatMessageViewModel {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public messagePageViewModel: MessagePageViewModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly messagePageViewModel: MessagePageViewModel,
         chatMessage: ChatMessage,
         sentByUser: boolean,
     ) {

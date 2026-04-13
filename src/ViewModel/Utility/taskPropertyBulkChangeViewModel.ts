@@ -19,7 +19,7 @@ export default class TaskPropertyBulkChangeViewModel {
         });
     };
 
-    setValue: (newValue: string, taskViewModel: TaskViewModel) => void = () => {};
+    setValue: (newValue: string, taskViewModel: TaskViewModel) => void;
 
     // init
     constructor(

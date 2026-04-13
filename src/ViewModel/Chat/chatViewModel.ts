@@ -145,12 +145,12 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public chatModel: ChatModel,
-        public settingsViewModel: SettingsViewModel,
-        public notificationViewModel: NotificationViewModel,
-        public connectionViewModel: ConnectionViewModel,
-        public chatListViewModel: ChatListViewModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly chatModel: ChatModel,
+        public readonly settingsViewModel: SettingsViewModel,
+        public readonly notificationViewModel: NotificationViewModel,
+        public readonly connectionViewModel: ConnectionViewModel,
+        public readonly chatListViewModel: ChatListViewModel,
     ) {
         super();
 

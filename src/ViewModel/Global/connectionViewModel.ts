@@ -87,7 +87,7 @@ export default class ConnectionViewModel {
     };
 
     // init
-    constructor(public coreViewModel: CoreViewModel) {
+    constructor(public readonly coreViewModel: CoreViewModel) {
         this.updatePreviousAddresses();
 
         coreViewModel.connectionModel.connectionChangeHandlerManager.addHandler(

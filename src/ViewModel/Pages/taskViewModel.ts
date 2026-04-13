@@ -210,10 +210,10 @@ export default class TaskViewModel extends Context {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public chatViewModel: ChatViewModel,
-        public boardsAndTasksModel: BoardsAndTasksModel,
-        public containingModel: TaskContainingPageViewModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly chatViewModel: ChatViewModel,
+        public readonly boardsAndTasksModel: BoardsAndTasksModel,
+        public readonly containingModel: TaskContainingPageViewModel,
         public task: TaskFileContent,
     ) {
         super();

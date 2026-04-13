@@ -14,15 +14,15 @@ import StorageModel from "./storageModel";
 import { checkMatchesObjectStructure } from "../Utility/typeSafety";
 
 export default class FileTransferModel {
-    storageModel: StorageModel;
-    connectionModel: ConnectionModel;
+    readonly storageModel: StorageModel;
+    readonly connectionModel: ConnectionModel;
 
     static READY_MESSAGE = "ready";
 
     // data
-    transferData: TransferData | undefined = undefined;
-    fileHandlerManager = new HandlerManager<string>();
-    readyToSendHandlerManager = new HandlerManager<boolean>();
+    transferData: TransferData | undefined;
+    readonly fileHandlerManager = new HandlerManager<string>();
+    readonly readyToSendHandlerManager = new HandlerManager<boolean>();
     direction: TransferDirections = TransferDirections.Send;
 
     // general
@@ -140,8 +140,8 @@ export default class FileTransferModel {
 }
 
 export interface TransferData {
-    channel: string;
-    key: string;
+    readonly channel: string;
+    readonly key: string;
 }
 
 export interface FileData {

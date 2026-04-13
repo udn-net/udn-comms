@@ -15,16 +15,16 @@ import StorageModel from "../Global/storageModel";
 import { v4 } from "uuid";
 
 export default class BoardsAndTasksModel {
-    storageModel: StorageModel;
-    settingsModel: SettingsModel;
-    chatModel: ChatModel;
-    fileModel: FileModel;
+    readonly storageModel: StorageModel;
+    readonly settingsModel: SettingsModel;
+    readonly chatModel: ChatModel;
+    readonly fileModel: FileModel;
 
-    calendarModel: CalendarModel;
+    readonly calendarModel: CalendarModel;
 
     // data
-    boardHandlerManager = new HandlerManager<BoardInfoFileContent>();
-    taskHandlerManager = new HandlerManager<TaskFileContent>();
+    readonly boardHandlerManager = new HandlerManager<BoardInfoFileContent>();
+    readonly taskHandlerManager = new HandlerManager<TaskFileContent>();
 
     // paths
     getBasePath = (): string[] => {

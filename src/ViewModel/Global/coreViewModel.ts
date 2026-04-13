@@ -66,11 +66,11 @@ export default class CoreViewModel {
 
     // init
     constructor(
-        public storageModel: StorageModel,
-        public settingsModel: SettingsModel,
-        public connectionModel: ConnectionModel,
-        public chatListModel: ChatListModel,
-        public fileTransferModel: FileTransferModel,
+        public readonly storageModel: StorageModel,
+        public readonly settingsModel: SettingsModel,
+        public readonly connectionModel: ConnectionModel,
+        public readonly chatListModel: ChatListModel,
+        public readonly fileTransferModel: FileTransferModel,
     ) {
         this.translations =
             allTranslations[settingsModel.language] || allTranslations.en;

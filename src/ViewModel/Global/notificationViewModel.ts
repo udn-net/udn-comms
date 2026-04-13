@@ -76,7 +76,7 @@ export default class NotificationViewModel {
     };
 
     // init
-    constructor(public chatListViewModel: ChatListViewModel) {}
+    constructor(public readonly chatListViewModel: ChatListViewModel) {}
 
     // util
     static createNotification(message: ChatMessage): Notification {

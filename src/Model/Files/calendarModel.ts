@@ -7,9 +7,9 @@ import StorageModel from "../Global/storageModel";
 import { TaskFileContent } from "./boardsAndTasksModel";
 
 export default class CalendarModel {
-    storageModel: StorageModel;
-    fileModel: FileModel;
-    settingsModel: SettingsModel;
+    readonly storageModel: StorageModel;
+    readonly fileModel: FileModel;
+    readonly settingsModel: SettingsModel;
 
     // paths
     getBasePath = (): string[] => {
@@ -155,12 +155,12 @@ export enum CalendarModelSubPaths {
 
 // types
 export interface MonthGrid<T> {
-    offset: number;
-    firstDayOfWeek: number;
-    isCurrentMonth: boolean;
+    readonly offset: number;
+    readonly firstDayOfWeek: number;
+    readonly isCurrentMonth: boolean;
 
-    year: number;
-    month: number;
+    readonly year: number;
+    readonly month: number;
 
-    days: { [date: string]: T };
+    readonly days: { [date: string]: T };
 }

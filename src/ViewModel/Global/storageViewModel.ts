@@ -65,7 +65,7 @@ export default class StorageViewModel extends Context {
     };
 
     // init
-    constructor(public coreViewModel: CoreViewModel) {
+    constructor(public readonly coreViewModel: CoreViewModel) {
         super();
 
         this.selectedFileName = React.createProxyState(

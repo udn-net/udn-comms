@@ -13,7 +13,7 @@ import CoreViewModel, { Context } from "./coreViewModel";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class FileTransferViewModel extends Context {
-    contextDebugDescription: string = "transfer";
+    contextDebugDescription = "transfer";
 
     // state
     presentedModal: React.State<FileTransferModals | undefined> =
@@ -172,7 +172,7 @@ export default class FileTransferViewModel extends Context {
     };
 
     // init
-    constructor(public coreViewModel: CoreViewModel) {
+    constructor(public readonly coreViewModel: CoreViewModel) {
         super();
 
         this.coreViewModel.fileTransferModel.fileHandlerManager.addHandler(

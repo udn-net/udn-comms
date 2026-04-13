@@ -10,12 +10,12 @@ import SettingsModel from "../Global/settingsModel";
 import { v4 } from "uuid";
 
 export default class ChatListModel {
-    storageModel: StorageModel;
-    settingsModel: SettingsModel;
-    connectionModel: ConnectionModel;
+    readonly storageModel: StorageModel;
+    readonly settingsModel: SettingsModel;
+    readonly connectionModel: ConnectionModel;
 
     // data
-    chatModels: Set<ChatModel> = new Set<ChatModel>();
+    chatModels = new Set<ChatModel>();
 
     // handlers
     messageHandler = (data: Message): void => {

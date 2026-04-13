@@ -112,8 +112,8 @@ export default class SettingsPageViewModel extends Context {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public chatViewModel: ChatViewModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly chatViewModel: ChatViewModel,
     ) {
         super();
 

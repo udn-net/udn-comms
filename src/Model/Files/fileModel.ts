@@ -18,11 +18,11 @@ import SettingsModel from "../Global/settingsModel";
 import { v4 } from "uuid";
 
 export default class FileModel {
-    storageModel: StorageModel;
-    settingsModel: SettingsModel;
+    readonly storageModel: StorageModel;
+    readonly settingsModel: SettingsModel;
 
-    chatModel: ChatModel;
-    boardsAndTasksModel: BoardsAndTasksModel;
+    readonly chatModel: ChatModel;
+    readonly boardsAndTasksModel: BoardsAndTasksModel;
 
     // paths
     getBasePath = (): string[] => {
@@ -193,11 +193,11 @@ export enum FileModelSubPath {
 // types
 export interface FileContent<T extends string>
     extends ValidObject, StringEntryObject {
-    fileId: string;
-    fileContentId: string;
-    creationDate: string;
+    readonly fileId: string;
+    readonly fileContentId: string;
+    readonly creationDate: string;
 
-    type: T;
+    readonly type: T;
 }
 
 // references

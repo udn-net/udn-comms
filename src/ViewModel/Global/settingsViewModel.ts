@@ -5,7 +5,7 @@ import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class SettingsViewModel extends Context {
-    contextDebugDescription: string = "settings";
+    contextDebugDescription = "settings";
 
     // state
     username: React.State<string> = new React.State("");
@@ -72,7 +72,7 @@ export default class SettingsViewModel extends Context {
     };
 
     // init
-    constructor(public coreViewModel: CoreViewModel) {
+    constructor(public readonly coreViewModel: CoreViewModel) {
         super();
 
         this.username.value = coreViewModel.settingsModel.username;

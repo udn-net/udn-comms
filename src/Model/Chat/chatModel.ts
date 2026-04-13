@@ -26,21 +26,21 @@ import SettingsModel from "../Global/settingsModel";
 import { v4 } from "uuid";
 
 export default class ChatModel {
-    connectionModel: ConnectionModel;
-    storageModel: StorageModel;
-    settingsModel: SettingsModel;
-    chatListModel: ChatListModel;
+    readonly connectionModel: ConnectionModel;
+    readonly storageModel: StorageModel;
+    readonly settingsModel: SettingsModel;
+    readonly chatListModel: ChatListModel;
 
-    fileModel: FileModel;
+    readonly fileModel: FileModel;
 
     // data
-    id: string;
+    readonly id: string;
     info: ChatInfo;
     color: Colors;
 
     chatMessageHandlerManager: HandlerManager<ChatMessage> =
         new HandlerManager();
-    reactionHandlerManager: HandlerManager<ChatMessageReaction> =
+    readonly reactionHandlerManager: HandlerManager<ChatMessageReaction> =
         new HandlerManager();
 
     get secondaryChannels(): string[] {
@@ -459,12 +459,12 @@ export enum ChatMessageStatuses {
 }
 
 export interface ChatMessage extends ValidObject {
-    id: string;
+    readonly id: string;
 
-    channel: string;
-    sender: string;
+    readonly channel: string;
+    readonly sender: string;
     body: string;
-    dateSent: string;
+    readonly dateSent: string;
 
     status: ChatMessageStatuses;
 
@@ -473,9 +473,9 @@ export interface ChatMessage extends ValidObject {
 
 export interface ChatMessageReaction
     extends ValidObject, FileContent<"reaction"> {
-    messageId: string;
-    sender: string;
-    content: ReactionSymbols | string;
+    readonly messageId: string;
+    readonly sender: string;
+    readonly content: ReactionSymbols | string;
     isDeleting: boolean;
 }
 

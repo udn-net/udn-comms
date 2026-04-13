@@ -11,7 +11,7 @@ import TaskViewModel from "./taskViewModel";
 
 export default class TaskContainingPageViewModel extends Context {
     // state
-    taskIndexManager = new IndexManager<TaskViewModel>(
+    readonly taskIndexManager = new IndexManager<TaskViewModel>(
         (taskViewModel: TaskViewModel) => taskViewModel.sortingString,
     );
 
@@ -56,9 +56,9 @@ export default class TaskContainingPageViewModel extends Context {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public chatViewModel: ChatViewModel,
-        public boardsAndTasksModel: BoardsAndTasksModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly chatViewModel: ChatViewModel,
+        public readonly boardsAndTasksModel: BoardsAndTasksModel,
     ) {
         super();
     }

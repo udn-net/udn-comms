@@ -3,7 +3,7 @@
 import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
 
 export default class SettingsModel {
-    storageModel: StorageModel;
+    readonly storageModel: StorageModel;
 
     // data
     username: string;

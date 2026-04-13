@@ -185,10 +185,10 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
 
     // init
     constructor(
-        public coreViewModel: CoreViewModel,
-        public chatViewModel: ChatViewModel,
-        public calendarModel: CalendarModel,
-        public boardsAndTasksModel: BoardsAndTasksModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly chatViewModel: ChatViewModel,
+        public readonly calendarModel: CalendarModel,
+        public readonly boardsAndTasksModel: BoardsAndTasksModel,
     ) {
         super(coreViewModel, chatViewModel, boardsAndTasksModel);
 

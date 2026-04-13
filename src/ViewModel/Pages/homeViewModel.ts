@@ -9,11 +9,11 @@ export default class HomeViewModel extends Context {
     contextDebugDescription = "home";
 
     constructor(
-        public coreViewModel: CoreViewModel,
-        public settingsViewModel: SettingsViewModel,
-        public fileTransferViewModel: FileTransferViewModel,
-        public storageViewModel: StorageViewModel,
-        public connectionViewModel: ConnectionViewModel,
+        public readonly coreViewModel: CoreViewModel,
+        public readonly settingsViewModel: SettingsViewModel,
+        public readonly fileTransferViewModel: FileTransferViewModel,
+        public readonly storageViewModel: StorageViewModel,
+        public readonly connectionViewModel: ConnectionViewModel,
     ) {
         super();
 
