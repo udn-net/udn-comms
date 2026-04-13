@@ -8,7 +8,7 @@ import FileTransferModel from "../../Model/Global/fileTransferModel";
 import { v4 } from "uuid";
 
 export default class CoreViewModel {
-    readonly BUILD = "Build 26.04.13.C";
+    readonly BUILD = "Build 26.04.13.D";
 
     translations: Translations;
 
@@ -29,13 +29,11 @@ export default class CoreViewModel {
         );
     };
     set context(context: Context) {
-        console.log("setting context", context.contextId, this.contextStack.has(context.contextId));
         if (this.contextStack.has(context.contextId)) return;
         this.contextStack.set(context.contextId, context);
         this.logContexts();
     }
     closeContext = (contextId: string): void => {
-        console.log("closing context", contextId);
         if (
             !this.contexts
                 .map((context) => context.contextId)
