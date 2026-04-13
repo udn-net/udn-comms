@@ -20,18 +20,9 @@ export default class CoreViewModel {
     get context(): Context | undefined {
         return this.contexts.pop();
     }
-    logContexts = (): void => {
-        console.log(
-            "context",
-            this.contexts.map(
-                (x) => x.contextDebugDescription + "-" + x.contextId,
-            ),
-        );
-    };
     set context(context: Context) {
         if (this.contextStack.has(context.contextId)) return;
         this.contextStack.set(context.contextId, context);
-        this.logContexts();
     }
     closeContext = (contextId: string): void => {
         if (
@@ -45,7 +36,6 @@ export default class CoreViewModel {
             this.contextStack.delete(currentContext.contextId);
             if (currentContext.contextId == contextId) break;
         }
-        this.logContexts();
     };
 
     handleKeyDown = (e: KeyboardEvent): void => {
