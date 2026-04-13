@@ -15,7 +15,7 @@ export default class ChatListModel {
     connectionModel: ConnectionModel;
 
     // data
-    chatModels = new Set<ChatModel>();
+    chatModels: Set<ChatModel> = new Set<ChatModel>();
 
     // handlers
     messageHandler = (data: Message): void => {

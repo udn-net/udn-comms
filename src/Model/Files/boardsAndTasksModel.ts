@@ -23,9 +23,8 @@ export default class BoardsAndTasksModel {
     calendarModel: CalendarModel;
 
     // data
-    boardHandlerManager: HandlerManager<BoardInfoFileContent> =
-        new HandlerManager();
-    taskHandlerManager: HandlerManager<TaskFileContent> = new HandlerManager();
+    boardHandlerManager = new HandlerManager<BoardInfoFileContent>();
+    taskHandlerManager = new HandlerManager<TaskFileContent>();
 
     // paths
     getBasePath = (): string[] => {

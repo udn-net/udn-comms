@@ -11,10 +11,10 @@ import { IndexManager } from "../../Model/Utility/utility";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class TaskPageViewModel extends ContextHost<string> {
-    contextDebugDescription = "task-page";
+    contextDebugDescription: string = "task-page";
 
     // data
-    boardIndexManager: IndexManager<BoardViewModel> = new IndexManager(
+    boardIndexManager = new IndexManager<BoardViewModel>(
         (boardViewModel: BoardViewModel) => boardViewModel.name.value,
     );
 

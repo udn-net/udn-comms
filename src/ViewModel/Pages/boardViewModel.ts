@@ -16,7 +16,7 @@ import TaskViewModel from "./taskViewModel";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class BoardViewModel extends TaskContainingPageViewModel {
-    contextDebugDescription = "board";
+    contextDebugDescription: string = "board";
 
     // state
     name: React.State<string> = new React.State("");

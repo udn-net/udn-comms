@@ -11,7 +11,7 @@ import TaskViewModel from "./taskViewModel";
 
 export default class TaskContainingPageViewModel extends Context {
     // state
-    taskIndexManager: IndexManager<TaskViewModel> = new IndexManager(
+    taskIndexManager = new IndexManager<TaskViewModel>(
         (taskViewModel: TaskViewModel) => taskViewModel.sortingString,
     );
 

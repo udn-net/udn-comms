@@ -20,9 +20,9 @@ export default class FileTransferModel {
     static READY_MESSAGE = "ready";
 
     // data
-    transferData: TransferData | undefined;
-    fileHandlerManager: HandlerManager<string> = new HandlerManager();
-    readyToSendHandlerManager: HandlerManager<boolean> = new HandlerManager();
+    transferData: TransferData | undefined = undefined;
+    fileHandlerManager = new HandlerManager<string>();
+    readyToSendHandlerManager = new HandlerManager<boolean>();
     direction: TransferDirections = TransferDirections.Send;
 
     // general

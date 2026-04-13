@@ -173,7 +173,7 @@ export function checkDoesObjectMatchSearch<T>(
 export type Handler<T> = (item: T) => void;
 
 export class HandlerManager<T> {
-    handlers: Set<Handler<T>> = new Set();
+    handlers = new Set<Handler<T>>();
 
     // manage
     addHandler = (handler: Handler<T>): void => {

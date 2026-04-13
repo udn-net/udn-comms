@@ -20,12 +20,10 @@ export default class ConnectionModel {
         return this.udn.ws?.url;
     }
 
-    connectionChangeHandlerManager: HandlerManager<void> = new HandlerManager();
-    messageHandlerManager: HandlerManager<Message> = new HandlerManager();
-    messageSentHandlerManager: HandlerManager<ChatMessage> =
-        new HandlerManager();
-
-    channelsToSubscribe: Set<string> = new Set();
+    connectionChangeHandlerManager = new HandlerManager<void>();
+    messageHandlerManager = new HandlerManager<Message>();
+    messageSentHandlerManager = new HandlerManager<ChatMessage>();
+    channelsToSubscribe = new Set<string>();
 
     // handlers
     handleMessage = (data: Message): void => {

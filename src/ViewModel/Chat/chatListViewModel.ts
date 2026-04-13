@@ -14,7 +14,7 @@ export default class ChatListViewModel {
     notificationViewModel: NotificationViewModel;
 
     // data
-    chatIndexManager: IndexManager<ChatViewModel> = new IndexManager(
+    chatIndexManager = new IndexManager<ChatViewModel>(
         (chatViewModel: ChatViewModel) =>
             chatViewModel.settingsPageViewModel.primaryChannel.value,
     );
