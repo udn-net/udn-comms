@@ -10,12 +10,13 @@ import { MessagePage } from "./ChatPages/messagePage";
 import { SettingsPage } from "./ChatPages/settingsPage";
 import { TaskPage } from "./ChatPages/taskPage";
 import CoreViewModel from "../ViewModel/Global/coreViewModel";
+import { ViewPersistence } from "./viewPersistence";
 
 export function ChatPage(
     coreViewModel: CoreViewModel,
     chatViewModel: ChatViewModel,
 ) {
-    const mainContent = React.createProxyState(
+    ViewPersistence.chatPages.pages = React.createProxyState(
         [chatViewModel.selectedPage],
         () => {
             switch (chatViewModel.selectedPage.value) {
@@ -129,7 +130,7 @@ export function ChatPage(
                         )}
                     </span>
                 </div>
-                <div id="main" children:set={mainContent}></div>
+                <div id="main" children:set={ViewPersistence.chatPages.pages}></div>
             </div>
         </article>
     );

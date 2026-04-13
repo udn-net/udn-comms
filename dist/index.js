@@ -1,10 +1,9 @@
 (() => {
-  // node_modules/bloatless-react/index.ts
+  // ../../bloatless-react/index.ts
   var State = class {
-    _value;
-    _bindings = /* @__PURE__ */ new Set();
     // init
     constructor(initialValue) {
+      this._bindings = /* @__PURE__ */ new Set();
       this._value = initialValue;
     }
     // value
@@ -32,15 +31,16 @@
     }
   };
   var ListState = class extends State {
-    additionHandlers = /* @__PURE__ */ new Set();
-    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Set(initialItems));
+      this.additionHandlers = /* @__PURE__ */ new Set();
+      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     add(...items) {
       items.forEach((item) => {
+        if (this.value.has(item)) return;
         this.value.add(item);
         this.additionHandlers.forEach((handler) => handler(item));
       });
@@ -76,11 +76,11 @@
     }
   };
   var MapState = class extends State {
-    additionHandlers = /* @__PURE__ */ new Set();
-    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Map(initialItems));
+      this.additionHandlers = /* @__PURE__ */ new Set();
+      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     set(key, item) {
@@ -350,7 +350,6 @@
       // manage
       this.setHandler = (id, handler) => {
         this.handlers.set(id, handler);
-        console.log(this.handlers.size);
       };
       this.deleteHandler = (id) => {
         this.handlers.delete(id);
@@ -3301,7 +3300,7 @@
           this.boardInfo.fileId
         );
         for (const taskId of taskIds) {
-          if (this.taskViewModels.value.has(taskId)) return;
+          if (this.taskViewModels.value.has(taskId)) continue;
           const taskFileContent = this.boardsAndTasksModel.getLatestTaskFileContent(taskId);
           if (taskFileContent == null) continue;
           const taskViewModel = new TaskViewModel(
@@ -3481,7 +3480,6 @@
       };
       // load
       this.loadData = () => {
-        console.log("LOADING TASK PAGE DATA");
         this.closeContext();
         this.boardViewModels.clear();
         const boardIds = this.boardsAndTasksModel.listBoardIds();
@@ -5189,10 +5187,49 @@
     )), /* @__PURE__ */ createElement("button", { "on:click": close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
+  // src/View/viewPersistence.ts
+  var PageTracker = class {
+  };
+  var PageTrackerMap = class {
+    constructor() {
+      this.trackers = /* @__PURE__ */ new Map();
+      this.register = (key) => {
+        if (this.trackers.has(key)) {
+          return this.trackers.get(key);
+        }
+        ;
+        const tracker = new PageTracker();
+        this.trackers.set(key, tracker);
+        return tracker;
+      };
+      this.setPages = (key, pages) => {
+        const tracker = this.register(key);
+        if (tracker.pages != void 0) {
+          return tracker.pages;
+        } else {
+          tracker.pages = pages();
+          return tracker.pages;
+        }
+      };
+    }
+  };
+  var ViewPersistence = class {
+    static {
+      this.chatPages = new PageTracker();
+    }
+    static {
+      this.taskPages = new PageTrackerMap();
+    }
+    static {
+      this.boardPages = new PageTrackerMap();
+    }
+  };
+
   // src/View/ChatPages/boardPage.tsx
   function BoardPage(coreViewModel2, boardViewModel) {
     boardViewModel.loadData();
-    const mainContent = createProxyState(
+    const persistenceId = boardViewModel.boardInfo.fileId;
+    const pages = ViewPersistence.boardPages.setPages(persistenceId, () => createProxyState(
       [boardViewModel.selectedPage],
       () => {
         switch (boardViewModel.selectedPage.value) {
@@ -5216,7 +5253,7 @@
           }
         }
       }
-    );
+    ));
     const taskSettingsModal = createProxyState(
       [boardViewModel.selectedTaskViewModel],
       () => {
@@ -5288,7 +5325,7 @@
         "on:click": boardViewModel.createTask
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "add")
-    ))), /* @__PURE__ */ createElement("div", { class: "content main-content", "children:set": mainContent }), BoardSettingsModal(coreViewModel2, boardViewModel), SearchModal(
+    ))), /* @__PURE__ */ createElement("div", { class: "content main-content", "children:set": pages }), BoardSettingsModal(coreViewModel2, boardViewModel), SearchModal(
       coreViewModel2,
       boardViewModel.searchViewModel,
       coreViewModel2.translations.chatPage.task.filterTasksHeadline,
@@ -5334,7 +5371,8 @@
       [taskPageViewModel.selectedBoardId],
       () => taskPageViewModel.selectedBoardId.value != void 0
     );
-    const paneContent = createProxyState(
+    const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
+    const pages = ViewPersistence.taskPages.setPages(persistenceId, () => createProxyState(
       [taskPageViewModel.selectedBoardId],
       () => {
         const selectedBoardId = taskPageViewModel.selectedBoardId.value;
@@ -5347,9 +5385,10 @@
         if (selectedBoard == void 0) {
           return /* @__PURE__ */ createElement("div", { class: "pane align-center justify-center" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.chatPage.task.boardNotFound));
         }
+        console.log("BOARD PAGE");
         return BoardPage(coreViewModel2, selectedBoard);
       }
-    );
+    ));
     return /* @__PURE__ */ createElement(
       "div",
       {
@@ -5398,7 +5437,7 @@
         {
           id: "board-content",
           class: "pane-wrapper",
-          "children:set": paneContent
+          "children:set": pages
         }
       )
     );
@@ -5406,7 +5445,7 @@
 
   // src/View/chatPage.tsx
   function ChatPage(coreViewModel2, chatViewModel) {
-    const mainContent = createProxyState(
+    ViewPersistence.chatPages.pages = createProxyState(
       [chatViewModel.selectedPage],
       () => {
         switch (chatViewModel.selectedPage.value) {
@@ -5497,7 +5536,7 @@
         "settings",
         "settings" /* Settings */,
         chatViewModel
-      ))), /* @__PURE__ */ createElement("div", { id: "main", "children:set": mainContent }))
+      ))), /* @__PURE__ */ createElement("div", { id: "main", "children:set": ViewPersistence.chatPages.pages }))
     );
   }
 

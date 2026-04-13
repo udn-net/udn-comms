@@ -13,6 +13,7 @@ import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import { setFocusWithDelay } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { ViewPersistence } from "../viewPersistence";
 
 export function BoardPage(
     coreViewModel: CoreViewModel,
@@ -21,7 +22,8 @@ export function BoardPage(
     boardViewModel.loadData();
 
     // main content
-    const mainContent = React.createProxyState(
+    const persistenceId = boardViewModel.boardInfo.fileId;
+    const pages = ViewPersistence.boardPages.setPages(persistenceId, ()=>React.createProxyState(
         [boardViewModel.selectedPage],
         () => {
             switch (boardViewModel.selectedPage.value) {
@@ -44,7 +46,7 @@ export function BoardPage(
                 }
             }
         },
-    );
+    ));
 
     // task modal
     const taskSettingsModal = React.createProxyState(
@@ -150,7 +152,7 @@ export function BoardPage(
                     </button>
                 </span>
             </div>
-            <div class="content main-content" children:set={mainContent}></div>
+            <div class="content main-content" children:set={pages}></div>
 
             {BoardSettingsModal(coreViewModel, boardViewModel)}
             {SearchModal(

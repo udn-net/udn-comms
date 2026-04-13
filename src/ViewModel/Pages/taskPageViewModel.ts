@@ -143,7 +143,6 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
     // load
     loadData = (): void => {
-        console.log("LOADING TASK PAGE DATA");
         this.closeContext();
         this.boardViewModels.clear();
 

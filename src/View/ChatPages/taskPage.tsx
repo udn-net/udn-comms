@@ -7,6 +7,8 @@ import { BoardViewModelToEntry } from "../Components/boardEntry";
 import TaskPageViewModel from "../../ViewModel/Pages/taskPageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { PlaceholderView } from "../Components/placeholderView";
+import { v4 } from "uuid";
+import { ViewPersistence } from "../viewPersistence";
 
 export function TaskPage(
     coreViewModel: CoreViewModel,
@@ -19,7 +21,8 @@ export function TaskPage(
         () => taskPageViewModel.selectedBoardId.value != undefined,
     );
 
-    const paneContent = React.createProxyState(
+    const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
+    const pages = ViewPersistence.taskPages.setPages(persistenceId, ()=>React.createProxyState(
         [taskPageViewModel.selectedBoardId],
         () => {
             const selectedBoardId = taskPageViewModel.selectedBoardId.value;
@@ -45,7 +48,7 @@ export function TaskPage(
 
             return BoardPage(coreViewModel, selectedBoard);
         },
-    );
+    ));
 
     return (
         <div
@@ -100,7 +103,7 @@ export function TaskPage(
             <div
                 id="board-content"
                 class="pane-wrapper"
-                children:set={paneContent}
+                children:set={pages}
             ></div>
         </div>
     );

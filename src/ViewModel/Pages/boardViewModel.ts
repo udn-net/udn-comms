@@ -204,7 +204,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
             this.boardInfo.fileId,
         );
         for (const taskId of taskIds) {
-            if (this.taskViewModels.value.has(taskId)) return;
+            if (this.taskViewModels.value.has(taskId)) continue;
 
             const taskFileContent: TaskFileContent | null =
                 this.boardsAndTasksModel.getLatestTaskFileContent(taskId);
