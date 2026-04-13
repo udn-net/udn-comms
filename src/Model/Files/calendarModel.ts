@@ -71,7 +71,7 @@ export default class CalendarModel {
         date.setMonth(month - 1);
         date.setFullYear(year);
 
-        const firstWeekdayOfMonth = date.getDay();
+        const firstWeekdayOfMonth: number = date.getDay();
         const firstDayOfWeekSetting: number = parseInt(
             this.settingsModel.firstDayOfWeek,
         );

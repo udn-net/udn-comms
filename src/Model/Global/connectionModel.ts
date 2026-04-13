@@ -75,7 +75,7 @@ export default class ConnectionModel {
             StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.mailboxes,
         );
-        const mailboxFilePath = [...mailboxDirPath, address];
+        const mailboxFilePath: string[] = [...mailboxDirPath, address];
         return mailboxFilePath;
     };
 

@@ -210,7 +210,9 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
         );
 
         // context
-        this.chatListViewModel.selectedChat.subscribeSilent(this.updateContexts);
+        this.chatListViewModel.selectedChat.subscribeSilent(
+            this.updateContexts,
+        );
         this.selectedPage.subscribeSilent(this.updateContexts);
     }
 }

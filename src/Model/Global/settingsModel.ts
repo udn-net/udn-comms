@@ -26,22 +26,22 @@ export default class SettingsModel {
     setName = (newValue: string): void => {
         this.username = newValue;
         this.storeSetting("username", newValue);
-    }
+    };
 
     setFirstDayOfWeek = (newValue: string): void => {
         this.firstDayOfWeek = newValue;
         this.storeSetting("firstDayOfWeek", newValue);
-    }
+    };
 
     setLanguage = (newValue: string): void => {
         this.language = newValue;
         this.storeSetting("language", newValue);
-    }
+    };
 
     setTheme = (newValue: string): void => {
         this.theme = newValue;
         this.storeSetting("theme", newValue);
-    }
+    };
 
     // load
     private readSetting = (
@@ -52,27 +52,27 @@ export default class SettingsModel {
             filePaths.settingsModel[pathName],
         );
         return this.storageModel.read(path);
-    }
+    };
 
     loadUsername = (): void => {
-        const content = this.readSetting("username");
+        const content: string | null = this.readSetting("username");
         this.username = content ?? "";
-    }
+    };
 
     loadFirstDayofWeek = (): void => {
-        const content = this.readSetting("firstDayOfWeek");
+        const content: string | null = this.readSetting("firstDayOfWeek");
         this.firstDayOfWeek = content ?? "0";
-    }
+    };
 
     loadLanguage = (): void => {
-        const content = this.readSetting("language");
+        const content: string | null = this.readSetting("language");
         this.language = content ?? SettingsModel.getSystemLanguage();
-    }
+    };
 
     loadTheme = (): void => {
-        const content = this.readSetting("theme");
+        const content: string | null = this.readSetting("theme");
         this.theme = content ?? ThemeSettings.System;
-    }
+    };
 
     // init
     constructor(storageModel: StorageModel) {

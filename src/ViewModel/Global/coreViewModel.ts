@@ -34,9 +34,14 @@ export default class CoreViewModel {
         this.logContexts();
     }
     closeContext = (contextId: string): void => {
-        if (!this.contexts.map(context=>context.contextId).includes(contextId)) return;
+        if (
+            !this.contexts
+                .map((context) => context.contextId)
+                .includes(contextId)
+        )
+            return;
         while (this.contexts.length > 0) {
-            const currentContext = this.context;
+            const currentContext: Context = this.context;
             this.contextStack.delete(currentContext.contextId);
             if (currentContext.contextId == contextId) break;
         }
@@ -44,9 +49,10 @@ export default class CoreViewModel {
     };
 
     handleKeyDown = (e: KeyboardEvent): void => {
-        const contexts = this.contexts;
+        if (CoreViewModel.checkIsKeystroke(e) == false) return;
+        const contexts: Context[] = this.contexts;
         while (contexts.length > 0) {
-            const currentContext = contexts.pop();
+            const currentContext: Context | undefined = contexts.pop();
             if (!currentContext) contexts;
             const isHandled: boolean = currentContext.handleKeystroke(e);
             if (isHandled == true) break;
@@ -90,7 +96,9 @@ export class Context {
     keystrokes = new Map<string, () => void>();
 
     handleKeystroke = (e: KeyboardEvent): boolean => {
-        const fn = this.keystrokes.get(e.key.toLowerCase());
+        const fn: (() => void) | undefined = this.keystrokes.get(
+            e.key.toLowerCase(),
+        );
         if (!fn) return false;
         e.preventDefault();
         fn();
@@ -122,7 +130,9 @@ export class ContextHost<T> extends Context {
 
     closeContext = (): void => {
         if (this.currentContext.value) {
-            this.coreViewModel.closeContext(this.currentContext.value.contextId);
+            this.coreViewModel.closeContext(
+                this.currentContext.value.contextId,
+            );
         }
         this.currentContext.value = undefined;
     };
@@ -130,11 +140,13 @@ export class ContextHost<T> extends Context {
     updateContexts = (): void => {
         if (this.isOpen == false) return;
 
-        const selectedContext = this.contexts.get(this.contextSelection);
+        const selectedContext: Context | undefined = this.contexts.get(
+            this.contextSelection,
+        );
         if (!selectedContext) return;
         if (selectedContext != this.currentContext.value) {
             this.closeContext();
-        };
+        }
 
         this.coreViewModel.logContexts();
 

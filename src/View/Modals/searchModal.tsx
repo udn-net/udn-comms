@@ -28,7 +28,7 @@ export function SearchModal<T>(
                     <h2>{headline}</h2>
                     <div class="flex-row width-input">
                         <input
-                        id="focused"
+                            id="focused"
                             placeholder={
                                 coreViewModel.translations.general.searchLabel
                             }

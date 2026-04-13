@@ -88,7 +88,8 @@ export default class ChatListViewModel {
     loadChats = (): void => {
         this.chatViewModels.clear();
         for (const chatModel of this.coreViewModel.chatListModel.chatModels.values()) {
-            const chatViewModel = this.createChatViewModel(chatModel);
+            const chatViewModel: ChatViewModel =
+                this.createChatViewModel(chatModel);
             this.trackChat(chatViewModel);
         }
         this.updateIndices();

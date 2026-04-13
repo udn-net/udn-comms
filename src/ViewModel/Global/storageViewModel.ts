@@ -24,10 +24,11 @@ export default class StorageViewModel extends Context {
 
     // methods
     getSelectedItemContent = (): string => {
-        const path = StorageModel.stringToPathComponents(
+        const path: string[] = StorageModel.stringToPathComponents(
             this.selectedPath.value,
         );
-        const content = this.coreViewModel.storageModel.read(path);
+        const content: string | undefined =
+            this.coreViewModel.storageModel.read(path);
         return (
             (content ?? this.coreViewModel.translations.storage.notAFile) ||
             this.coreViewModel.translations.storage.contentEmpty
@@ -35,7 +36,7 @@ export default class StorageViewModel extends Context {
     };
 
     deleteSelectedItem = (): void => {
-        const path = StorageModel.stringToPathComponents(
+        const path: string[] = StorageModel.stringToPathComponents(
             this.selectedPath.value,
         );
         this.lastDeletedItemPath.value = this.selectedPath.value;

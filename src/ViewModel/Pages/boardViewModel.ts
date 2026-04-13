@@ -65,6 +65,8 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
                 this.color.value,
             );
         this.taskPageViewModel.updateBoard(newBoardInfoFileContent);
+
+        this.taskPageViewModel.selectBoard(this);
     };
 
     applyColor = (): void => {
@@ -305,8 +307,10 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
         // keystrokes
         this.registerKeyStroke(CommonKeys.Filter, this.showFilterModal);
-        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideFilterModal);
         this.registerKeyStroke(CommonKeys.Reset, this.resetFilter);
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideFilterModal);
+        this.registerKeyStroke(CommonKeys.Settings, this.showSettings);
+        this.registerKeyStroke(CommonKeys.Apply, this.hideSettings);
 
         this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }

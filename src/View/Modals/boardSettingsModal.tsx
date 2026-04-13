@@ -4,11 +4,14 @@ import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import { ColorPicker } from "../Components/colorPicker";
 import { DangerousActionButton } from "../Components/dangerousActionButton";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { setFocusWithDelay } from "../utility";
 
 export function BoardSettingsModal(
     coreViewModel: CoreViewModel,
     boardViewModel: BoardViewModel,
 ) {
+    boardViewModel.isPresentingSettingsModal.subscribe(setFocusWithDelay);
+
     return (
         <div
             class="modal"
@@ -33,6 +36,7 @@ export function BoardSettingsModal(
                                 }
                             </span>
                             <input
+                                id="focused"
                                 on:enter={boardViewModel.saveSettings}
                                 bind:value={boardViewModel.name}
                             ></input>

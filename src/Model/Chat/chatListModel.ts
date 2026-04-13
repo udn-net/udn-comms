@@ -42,7 +42,7 @@ export default class ChatListModel {
         channel: string,
         fn: (chatModel: ChatModel) => void,
     ): void => {
-        const allChannels = channel.split("/");
+        const allChannels: string[] = channel.split("/");
 
         for (const chatModel of this.chatModels) {
             for (const channel of allChannels) {

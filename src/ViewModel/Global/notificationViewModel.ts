@@ -13,7 +13,8 @@ export default class NotificationViewModel {
 
     // main
     showNotification = (message: ChatMessage): void => {
-        const notification = NotificationViewModel.createNotification(message);
+        const notification: Notification =
+            NotificationViewModel.createNotification(message);
         if (this.seenMessageIds.has(message.id)) return;
 
         const currentChat =
@@ -32,7 +33,7 @@ export default class NotificationViewModel {
     };
 
     openNotification = () => {
-        const notification = this.marquee.value;
+        const notification: Notification = this.marquee.value;
         if (notification == undefined) return;
 
         const chat = [
@@ -51,7 +52,7 @@ export default class NotificationViewModel {
             return this.stopLoop();
         }
 
-        const notification = this.messagesInMarquee.shift();
+        const notification: Notification = this.messagesInMarquee.shift();
         this.seenMessageIds.delete(notification.messageId);
         this.marquee.value = notification;
     };

@@ -2246,7 +2246,7 @@
   };
 
   // src/ViewModel/Global/coreViewModel.ts
-  var CoreViewModel = class {
+  var CoreViewModel = class _CoreViewModel {
     // init
     constructor(storageModel2, settingsModel2, connectionModel2, chatListModel2, fileTransferModel2) {
       this.storageModel = storageModel2;
@@ -2275,6 +2275,7 @@
         this.logContexts();
       };
       this.handleKeyDown = (e) => {
+        if (_CoreViewModel.checkIsKeystroke(e) == false) return;
         const contexts = this.contexts;
         while (contexts.length > 0) {
           const currentContext = contexts.pop();
@@ -3192,6 +3193,7 @@
           this.color.value
         );
         this.taskPageViewModel.updateBoard(newBoardInfoFileContent);
+        this.taskPageViewModel.selectBoard(this);
       };
       this.applyColor = () => {
         this.taskPageViewModel.chatViewModel.setDisplayedColor(
@@ -3370,8 +3372,10 @@
         () => this.searchViewModel.appliedQuery.value != ""
       );
       this.registerKeyStroke("=" /* Filter */, this.showFilterModal);
-      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideFilterModal);
       this.registerKeyStroke("-" /* Reset */, this.resetFilter);
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideFilterModal);
+      this.registerKeyStroke("," /* Settings */, this.showSettings);
+      this.registerKeyStroke("enter" /* Apply */, this.hideSettings);
       this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }
   };
@@ -4584,7 +4588,7 @@
     return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.message.messagesHeadline), /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement(
       "button",
       {
-        class: "ghost",
+        class: "ghost inset-outline",
         "on:click": messagePageViewModel.showFilterModal,
         "aria-label": coreViewModel2.translations.chatPage.message.filterMessagesButtonAudioLabel,
         "toggle:selected": messagePageViewModel.isFilterActive
@@ -4927,6 +4931,7 @@
 
   // src/View/Modals/boardSettingsModal.tsx
   function BoardSettingsModal(coreViewModel2, boardViewModel) {
+    boardViewModel.isPresentingSettingsModal.subscribe(setFocusWithDelay);
     return /* @__PURE__ */ createElement(
       "div",
       {
@@ -4936,6 +4941,7 @@
       /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.task.boardSettingsHeadline), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "label"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.task.boardNameInputLabel), /* @__PURE__ */ createElement(
         "input",
         {
+          id: "focused",
           "on:enter": boardViewModel.saveSettings,
           "bind:value": boardViewModel.name
         }

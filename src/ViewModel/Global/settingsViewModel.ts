@@ -64,7 +64,7 @@ export default class SettingsViewModel extends Context {
 
     // view
     applyTheme = (): void => {
-        let theme = this.theme.value;
+        let theme: string = this.theme.value;
         if (theme == ThemeSettings.System) {
             theme = SettingsViewModel.getSystemTheme();
         }
@@ -100,7 +100,10 @@ export default class SettingsViewModel extends Context {
         );
 
         // keystrokes
-        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideSettingsModal);
+        this.registerKeyStroke(
+            CommonKeys.CloseOrCancel,
+            this.hideSettingsModal,
+        );
     }
 
     static generateThemeMedia(): MediaQueryList {

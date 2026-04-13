@@ -18,16 +18,16 @@ export default class TaskViewModel extends Context {
     // util
     get sortingString(): string {
         const splitDate: string[] = this.date.value.split("-");
-        const year = padZero(splitDate[0], 4);
-        const month = padZero(splitDate[1], 2);
-        const date = padZero(splitDate[2], 2);
+        const year: string = padZero(splitDate[0], 4);
+        const month: string = padZero(splitDate[1], 2);
+        const date: string = padZero(splitDate[2], 2);
 
         const splitTime: string[] = this.time.value.split(":");
-        const hour = padZero(splitTime[0], 2);
-        const minute = padZero(splitTime[1], 2);
+        const hour: string = padZero(splitTime[0], 2);
+        const minute: string = padZero(splitTime[1], 2);
 
-        const priorityNumber = parseInt(this.priority.value);
-        const invertedPriority = 100 - priorityNumber;
+        const priorityNumber: number = parseInt(this.priority.value);
+        const invertedPriority: number = 100 - priorityNumber;
 
         return (
             year +
@@ -168,7 +168,9 @@ export default class TaskViewModel extends Context {
     loadVersionIds = (): void => {
         const versionIds: string[] =
             this.boardsAndTasksModel.listTaskVersionIds(this.task.fileId);
-        const sortedVersionIds = versionIds.sort(localeCompare).reverse();
+        const sortedVersionIds: string[] = versionIds
+            .sort(localeCompare)
+            .reverse();
         this.versionIds.clear();
         this.versionIds.add(...sortedVersionIds);
     };

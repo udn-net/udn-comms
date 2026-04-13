@@ -22,7 +22,7 @@ export default class TaskPageViewModel extends ContextHost<string> {
     getBasePath = (): string[] => {
         return [...this.boardsAndTasksModel.getViewPath()];
     };
-    getBoardViewPath = (boardId): string[] => {
+    getBoardViewPath = (boardId: string): string[] => {
         return [...this.getBasePath(), boardId];
     };
     getLastUsedBoardPath = (): string[] => {

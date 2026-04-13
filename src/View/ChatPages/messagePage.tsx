@@ -66,7 +66,7 @@ export function MessagePage(
                         </span>
                         <span>
                             <button
-                                class="ghost"
+                                class="ghost inset-outline"
                                 on:click={messagePageViewModel.showFilterModal}
                                 aria-label={
                                     coreViewModel.translations.chatPage.message

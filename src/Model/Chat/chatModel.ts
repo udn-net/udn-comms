@@ -165,10 +165,10 @@ export default class ChatModel {
     };
 
     getNameAndChannel = (): [string, string] | false => {
-        const senderName = this.settingsModel.username;
+        const senderName: string = this.settingsModel.username;
         if (senderName == "") return false;
 
-        const allChannels = [this.info.primaryChannel];
+        const allChannels: string[] = [this.info.primaryChannel];
         for (const secondaryChannel of this.info.secondaryChannels) {
             allChannels.push(secondaryChannel);
         }
@@ -388,7 +388,7 @@ export default class ChatModel {
             stringifiedFile: "",
         };
         if (fileContent != undefined) {
-            const stringifiedFile = stringify(fileContent);
+            const stringifiedFile: string = stringify(fileContent);
             chatMessage.stringifiedFile = stringifiedFile;
         }
 
@@ -412,7 +412,8 @@ export default class ChatModel {
         content: ReactionSymbols,
         isDeleting: boolean,
     ): ChatMessageReaction => {
-        const fileContent = FileModel.createFileContent(v4(), "reaction");
+        const fileContent: FileContent<"reaction"> =
+            FileModel.createFileContent(v4(), "reaction");
         const reaction: ChatMessageReaction = {
             ...fileContent,
             fileId: ChatModel.createMessageReactionId(messageId, sender),

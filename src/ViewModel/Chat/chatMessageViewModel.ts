@@ -138,7 +138,7 @@ export default class ChatMessageViewModel {
                 return;
             }
 
-            let count = 0;
+            let count: number = 0;
             switch (content) {
                 case ReactionSymbols.ThumbsUp: {
                     count = this.reactionsThumbsUpCount.value;
