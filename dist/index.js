@@ -3491,15 +3491,16 @@
         this.openLastUsedBoard();
       };
       this.chatViewModel = chatViewModel;
+      this.chatViewModel.registerContext("tasks" /* Tasks */, this);
+      this.selectedBoardId.subscribeSilent(this.updateContexts);
       this.loadData();
       boardsAndTasksModel.boardHandlerManager.addHandler(
         (boardInfoFileContent) => {
           this.showBoardInList(boardInfoFileContent);
           this.updateBoardIndices();
+          this.updateContexts();
         }
       );
-      this.chatViewModel.registerContext("tasks" /* Tasks */, this);
-      this.selectedBoardId.subscribeSilent(this.updateContexts);
       this.registerKeyStroke("." /* Options */, this.toggleBoardList);
     }
     // context

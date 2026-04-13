@@ -45,7 +45,7 @@ export default class TaskPageViewModel extends ContextHost<string> {
         );
     }
 
-    get contextSelection(): string {
+    get contextSelection(): string | undefined {
         return this.selectedBoardId.value;
     }
 
@@ -170,6 +170,10 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
         this.chatViewModel = chatViewModel;
 
+        // context
+        this.chatViewModel.registerContext(ChatPageTypes.Tasks, this);
+        this.selectedBoardId.subscribeSilent(this.updateContexts);
+
         this.loadData();
 
         // handlers
@@ -177,12 +181,9 @@ export default class TaskPageViewModel extends ContextHost<string> {
             (boardInfoFileContent: BoardInfoFileContent) => {
                 this.showBoardInList(boardInfoFileContent);
                 this.updateBoardIndices();
+                this.updateContexts();
             },
         );
-
-        // context
-        this.chatViewModel.registerContext(ChatPageTypes.Tasks, this);
-        this.selectedBoardId.subscribeSilent(this.updateContexts);
 
         // keystrokes
         this.registerKeyStroke(CommonKeys.Options, this.toggleBoardList);
