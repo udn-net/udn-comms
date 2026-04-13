@@ -44,6 +44,7 @@ export default class CoreViewModel {
     };
 
     handleKeyDown = (e: KeyboardEvent): void => {
+        console.log("key", e);
         if (!CoreViewModel.checkIsKeystroke(e)) return;
         const contexts = this.contexts;
         while (contexts.length > 0) {
