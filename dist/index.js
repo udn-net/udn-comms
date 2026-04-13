@@ -2435,6 +2435,7 @@
       };
       // view
       this.open = () => {
+        console.log(this);
         this.coreViewModel.context = this;
         this.containingModel.selectTask(this);
       };
@@ -2584,7 +2585,7 @@
           this,
           taskFileContent
         );
-        this.selectTask(taskViewModel);
+        taskViewModel.open();
         this.updateTaskIndices();
       };
       // view
@@ -2642,7 +2643,7 @@
           this,
           taskFileContent
         );
-        this.selectTask(taskViewModel);
+        taskViewModel.open();
         this.updateTaskIndices();
       };
       this.getEventsForDate = () => {
@@ -2757,6 +2758,7 @@
       this.registerKeyStroke("-" /* Reset */, this.showToday);
       this.registerKeyStroke("p", this.showNextMonth);
       this.registerKeyStroke("o", this.showPreviousMonth);
+      this.registerKeyStroke(";" /* Create */, this.createEvent);
       this.chatViewModel.registerContext("calendar" /* Calendar */, this);
     }
     // data
@@ -3384,6 +3386,7 @@
       this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideFilterModal);
       this.registerKeyStroke("," /* Settings */, this.showSettings);
       this.registerKeyStroke("enter" /* Apply */, this.hideSettings);
+      this.registerKeyStroke(";" /* Create */, this.createTask);
       this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }
   };

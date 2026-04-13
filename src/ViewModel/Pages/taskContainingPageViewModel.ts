@@ -31,7 +31,7 @@ export default class TaskContainingPageViewModel extends Context {
             this,
             taskFileContent,
         );
-        this.selectTask(taskViewModel);
+        taskViewModel.open();
         this.updateTaskIndices();
     };
 

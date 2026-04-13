@@ -56,7 +56,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
             taskFileContent,
         );
 
-        this.selectTask(taskViewModel);
+        taskViewModel.open();
         this.updateTaskIndices();
     };
 
@@ -215,6 +215,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
         this.registerKeyStroke(CommonKeys.Reset, this.showToday);
         this.registerKeyStroke("p", this.showNextMonth);
         this.registerKeyStroke("o", this.showPreviousMonth);
+        this.registerKeyStroke(CommonKeys.Create, this.createEvent);
 
         this.chatViewModel.registerContext(ChatPageTypes.Calendar, this);
     }

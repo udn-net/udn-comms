@@ -87,6 +87,7 @@ export default class TaskViewModel extends Context {
 
     // view
     open = (): void => {
+        console.log(this);
         this.coreViewModel.context = this;
         this.containingModel.selectTask(this);
     };
