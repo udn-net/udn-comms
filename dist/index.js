@@ -2255,7 +2255,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.13.C";
+      this.BUILD = "Build 26.04.13.D";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.logContexts = () => {
@@ -2267,7 +2267,6 @@
         );
       };
       this.closeContext = (contextId) => {
-        console.log("closing context", contextId);
         if (!this.contexts.map((context) => context.contextId).includes(contextId))
           return;
         while (this.contexts.length > 0) {
@@ -2304,7 +2303,6 @@
       return this.contexts.pop();
     }
     set context(context) {
-      console.log("setting context", context.contextId, this.contextStack.has(context.contextId));
       if (this.contextStack.has(context.contextId)) return;
       this.contextStack.set(context.contextId, context);
       this.logContexts();
@@ -2437,7 +2435,6 @@
       };
       // view
       this.open = () => {
-        console.log(this);
         this.coreViewModel.context = this;
         this.containingModel.selectTask(this);
       };
