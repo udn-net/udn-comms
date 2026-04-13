@@ -2266,6 +2266,7 @@
         );
       };
       this.closeContext = (contextId) => {
+        console.log("closing context", contextId);
         if (!this.contexts.map((context) => context.contextId).includes(contextId))
           return;
         while (this.contexts.length > 0) {
@@ -2302,6 +2303,7 @@
       return this.contexts.pop();
     }
     set context(context) {
+      console.log("setting context", context.contextId, this.contextStack.has(context.contextId));
       if (this.contextStack.has(context.contextId)) return;
       this.contextStack.set(context.contextId, context);
       this.logContexts();
@@ -2354,7 +2356,6 @@
         if (selectedContext != this.currentContext.value) {
           this.closeContext();
         }
-        this.coreViewModel.logContexts();
         this.coreViewModel.context = selectedContext;
         this.currentContext.value = selectedContext;
       };
