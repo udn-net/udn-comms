@@ -90,7 +90,8 @@ export default class ConnectionViewModel {
     constructor(public readonly coreViewModel: CoreViewModel) {
         this.updatePreviousAddresses();
 
-        coreViewModel.connectionModel.connectionChangeHandlerManager.addHandler(
+        coreViewModel.connectionModel.connectionChangeHandlerManager.setHandler(
+            "connection-view-model",
             this.connectionChangeHandler,
         );
     }

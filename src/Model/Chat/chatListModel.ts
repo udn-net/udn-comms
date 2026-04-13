@@ -108,8 +108,8 @@ export default class ChatListModel {
         this.connectionModel = connectionModel;
         this.loadChats();
 
-        connectionModel.messageHandlerManager.addHandler(this.messageHandler);
-        connectionModel.messageSentHandlerManager.addHandler(
+        connectionModel.messageHandlerManager.setHandler("chat-list", this.messageHandler);
+        connectionModel.messageSentHandlerManager.setHandler("chat-list",
             this.messageSentHandler,
         );
     }

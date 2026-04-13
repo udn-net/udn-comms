@@ -173,7 +173,7 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
         );
 
         // handlers
-        chatModel.chatMessageHandlerManager.addHandler(
+        chatModel.chatMessageHandlerManager.setHandler(this.chatModel.id,
             (chatMessage: ChatMessage) => {
                 this.messagePageViewModel.showChatMessage(chatMessage);
                 this.updateReadStatus();
@@ -181,7 +181,7 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
                 this.notificationViewModel.showNotification(chatMessage);
             },
         );
-        chatModel.reactionHandlerManager.addHandler(
+        chatModel.reactionHandlerManager.setHandler(this.chatModel.id,
             (reaction: ChatMessageReaction) => {
                 this.messagePageViewModel.handleReaction(reaction);
             },

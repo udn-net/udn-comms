@@ -175,7 +175,7 @@ export default class TaskPageViewModel extends ContextHost<string> {
         this.selectedBoardId.subscribeSilent(this.updateContexts);
 
         // handlers
-        boardsAndTasksModel.boardHandlerManager.addHandler(
+        boardsAndTasksModel.boardHandlerManager.setHandler("task-page" + this.chatViewModel.chatModel.id,
             (boardInfoFileContent: BoardInfoFileContent) => {
                 this.showBoardInList(boardInfoFileContent);
                 this.updateBoardIndices();

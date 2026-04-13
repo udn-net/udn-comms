@@ -278,7 +278,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         });
 
         // handlers
-        boardsAndTasksModel.taskHandlerManager.addHandler(
+        boardsAndTasksModel.taskHandlerManager.setHandler(this.boardInfo.fileId,
             (taskFileContent: TaskFileContent) => {
                 if (taskFileContent.boardId != this.boardInfo.fileId) return;
                 this.showTask(taskFileContent);

@@ -346,19 +346,18 @@
   }
   var HandlerManager = class {
     constructor() {
-      this.handlers = /* @__PURE__ */ new Set();
+      this.handlers = /* @__PURE__ */ new Map();
       // manage
-      this.addHandler = (handler) => {
-        this.handlers.add(handler);
+      this.setHandler = (id, handler) => {
+        this.handlers.set(id, handler);
+        console.log(this.handlers.size);
       };
-      this.deleteHandler = (handler) => {
-        this.handlers.delete(handler);
+      this.deleteHandler = (id) => {
+        this.handlers.delete(id);
       };
       // trigger
       this.trigger = (item) => {
-        for (const handler of this.handlers) {
-          handler(item);
-        }
+        [...this.handlers.values()].forEach((handler) => handler(item));
       };
     }
   };
@@ -1618,8 +1617,9 @@
       this.settingsModel = settingsModel2;
       this.connectionModel = connectionModel2;
       this.loadChats();
-      connectionModel2.messageHandlerManager.addHandler(this.messageHandler);
-      connectionModel2.messageSentHandlerManager.addHandler(
+      connectionModel2.messageHandlerManager.setHandler("chat-list", this.messageHandler);
+      connectionModel2.messageSentHandlerManager.setHandler(
+        "chat-list",
         this.messageSentHandler
       );
     }
@@ -2258,14 +2258,6 @@
       this.BUILD = "Build 26.04.13.E";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
-      this.logContexts = () => {
-        console.log(
-          "context",
-          this.contexts.map(
-            (x) => x.contextDebugDescription + "-" + x.contextId
-          )
-        );
-      };
       this.closeContext = (contextId) => {
         if (!this.contexts.map((context) => context.contextId).includes(contextId))
           return;
@@ -2274,7 +2266,6 @@
           this.contextStack.delete(currentContext.contextId);
           if (currentContext.contextId == contextId) break;
         }
-        this.logContexts();
       };
       this.handleKeyDown = (e) => {
         if (_CoreViewModel.checkIsKeystroke(e) == false) return;
@@ -2305,7 +2296,6 @@
     set context(context) {
       if (this.contextStack.has(context.contextId)) return;
       this.contextStack.set(context.contextId, context);
-      this.logContexts();
     }
     // util
     static checkIsKeystroke(e) {
@@ -2747,7 +2737,8 @@
       bulkSubscribe([this.selectedYear, this.selectedMonth], () => {
         this.loadMonthTasks();
       });
-      boardsAndTasksModel.taskHandlerManager.addHandler(
+      boardsAndTasksModel.taskHandlerManager.setHandler(
+        "calendar" + this.chatViewModel.chatModel.id,
         (taskFileContent) => {
           this.showTask(taskFileContent);
         }
@@ -3355,7 +3346,8 @@
       this.selectedPage.subscribeSilent(() => {
         this.storeLastUsedView();
       });
-      boardsAndTasksModel.taskHandlerManager.addHandler(
+      boardsAndTasksModel.taskHandlerManager.setHandler(
+        this.boardInfo.fileId,
         (taskFileContent) => {
           if (taskFileContent.boardId != this.boardInfo.fileId) return;
           this.showTask(taskFileContent);
@@ -3504,7 +3496,8 @@
       this.chatViewModel = chatViewModel;
       this.chatViewModel.registerContext("tasks" /* Tasks */, this);
       this.selectedBoardId.subscribeSilent(this.updateContexts);
-      boardsAndTasksModel.boardHandlerManager.addHandler(
+      boardsAndTasksModel.boardHandlerManager.setHandler(
+        "task-page" + this.chatViewModel.chatModel.id,
         (boardInfoFileContent) => {
           this.showBoardInList(boardInfoFileContent);
           this.updateBoardIndices();
@@ -3634,14 +3627,16 @@
         this.coreViewModel,
         this
       );
-      chatModel.chatMessageHandlerManager.addHandler(
+      chatModel.chatMessageHandlerManager.setHandler(
+        this.chatModel.id,
         (chatMessage) => {
           this.messagePageViewModel.showChatMessage(chatMessage);
           this.updateReadStatus();
           this.notificationViewModel.showNotification(chatMessage);
         }
       );
-      chatModel.reactionHandlerManager.addHandler(
+      chatModel.reactionHandlerManager.setHandler(
+        this.chatModel.id,
         (reaction) => {
           this.messagePageViewModel.handleReaction(reaction);
         }
@@ -5958,7 +5953,8 @@
         );
       };
       this.updatePreviousAddresses();
-      coreViewModel2.connectionModel.connectionChangeHandlerManager.addHandler(
+      coreViewModel2.connectionModel.connectionChangeHandlerManager.setHandler(
+        "connection-view-model",
         this.connectionChangeHandler
       );
     }
@@ -6093,10 +6089,12 @@
         this.coreViewModel.closeContext(this.contextId);
         this.presentedModal.value = void 0;
       };
-      this.coreViewModel.fileTransferModel.fileHandlerManager.addHandler(
+      this.coreViewModel.fileTransferModel.fileHandlerManager.setHandler(
+        "file-transfer-view-model",
         this.handleReceivedFile
       );
-      this.coreViewModel.fileTransferModel.readyToSendHandlerManager.addHandler(
+      this.coreViewModel.fileTransferModel.readyToSendHandlerManager.setHandler(
+        "file-transfer-view-model",
         () => this.initiateTransfer()
       );
       this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideModal);
@@ -6442,7 +6440,8 @@
       };
       this.storageModel = storageModel2;
       this.connectionModel = connectionModel2;
-      this.connectionModel.messageHandlerManager.addHandler(
+      this.connectionModel.messageHandlerManager.setHandler(
+        "file-transfer",
         this.handleMessage
       );
     }

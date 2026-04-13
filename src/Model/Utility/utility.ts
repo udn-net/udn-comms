@@ -173,22 +173,20 @@ export function checkDoesObjectMatchSearch<T>(
 export type Handler<T> = (item: T) => void;
 
 export class HandlerManager<T> {
-    handlers = new Set<Handler<T>>();
+    handlers = new Map<string, Handler<T>>();
 
     // manage
-    addHandler = (handler: Handler<T>): void => {
-        this.handlers.add(handler);
+    setHandler = (id: string, handler: Handler<T>): void => {
+        this.handlers.set(id, handler);
     };
 
-    deleteHandler = (handler: Handler<T>): void => {
-        this.handlers.delete(handler);
+    deleteHandler = (id: string): void => {
+        this.handlers.delete(id);
     };
 
     // trigger
     trigger = (item: T): void => {
-        for (const handler of this.handlers) {
-            handler(item);
-        }
+        [...this.handlers.values()].forEach((handler) => handler(item));
     };
 }
 

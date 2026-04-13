@@ -200,7 +200,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
         });
 
         // handlers
-        boardsAndTasksModel.taskHandlerManager.addHandler(
+        boardsAndTasksModel.taskHandlerManager.setHandler("calendar" + this.chatViewModel.chatModel.id,
             (taskFileContent: TaskFileContent) => {
                 this.showTask(taskFileContent);
             },

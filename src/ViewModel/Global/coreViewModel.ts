@@ -100,7 +100,8 @@ export class Context {
         this.keystrokes.set(key, fn);
     };
 
-    constructor(public contextDebugDescription: string) {}
+    constructor(public contextDebugDescription: string) {
+    }
 }
 
 export class ContextHost<T> extends Context {
