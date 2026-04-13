@@ -155,6 +155,7 @@ export default class FileTransferViewModel extends Context {
     };
 
     prepareReceivingData = (): void => {
+        if (this.cannotPrepareToReceive.value == true) return;
         this.presentedModal.value = FileTransferModals.ReceptionDisplay;
         this.filePathsReceived.clear();
 

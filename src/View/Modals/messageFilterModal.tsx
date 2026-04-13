@@ -1,12 +1,10 @@
 import * as React from "bloatless-react";
 
-import SearchViewModel from "../../ViewModel/Utility/searchViewModel";
-import { StringToOption } from "../Components/option";
-import { v4 } from "uuid";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
 import { MessageReactionFilterButton } from "../Components/messageReactionFilterButton";
 import { ReactionSymbols } from "../../Model/Chat/chatModel";
+import { setFocusWithDelay } from "../utility";
 
 export function MessageFilterModal<T>(
     coreViewModel: CoreViewModel,
@@ -17,6 +15,8 @@ export function MessageFilterModal<T>(
         [messagePageViewModel.reactionFilter],
         () => messagePageViewModel.reactionFilter.value == undefined,
     );
+
+    messagePageViewModel.isFilterModalOpen.subscribe(setFocusWithDelay);
 
     return (
         <div class="modal" toggle:open={messagePageViewModel.isFilterModalOpen}>
@@ -30,6 +30,7 @@ export function MessageFilterModal<T>(
                     </h2>
                     <div class="flex-row width-input">
                         <input
+                            id="focused"
                             placeholder={
                                 coreViewModel.translations.general.searchLabel
                             }

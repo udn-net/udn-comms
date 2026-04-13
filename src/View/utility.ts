@@ -11,6 +11,8 @@ export function reload() {
 }
 
 export function setFocus() {
+    const focusedInModal = document.querySelector(".modal[open] #focused") as HTMLElement;
+    if (focusedInModal) return focusedInModal.focus();
     document.getElementById("focused")?.focus();
 }
 

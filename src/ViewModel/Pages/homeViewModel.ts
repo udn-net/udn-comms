@@ -24,7 +24,7 @@ export default class HomeViewModel extends Context {
             this.settingsViewModel.showSettingsModal,
         );
         this.registerKeyStroke(
-            "d",
+            "t",
             this.fileTransferViewModel.showDirectionSelectionModal,
         );
         this.registerKeyStroke("e", this.storageViewModel.showStorageModal);

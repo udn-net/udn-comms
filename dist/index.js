@@ -2372,6 +2372,8 @@
     window.location.reload();
   }
   function setFocus() {
+    const focusedInModal = document.querySelector(".modal[open] #focused");
+    if (focusedInModal) return focusedInModal.focus();
     document.getElementById("focused")?.focus();
   }
   function setFocusWithDelay() {
@@ -3499,6 +3501,7 @@
       );
       this.chatViewModel.registerContext("tasks" /* Tasks */, this);
       this.selectedBoardId.subscribeSilent(this.updateContexts);
+      this.registerKeyStroke("." /* Options */, this.toggleBoardList);
     }
     // context
     get isOpen() {
@@ -4499,9 +4502,11 @@
       [messagePageViewModel.reactionFilter],
       () => messagePageViewModel.reactionFilter.value == void 0
     );
+    messagePageViewModel.isFilterModalOpen.subscribe(setFocusWithDelay);
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": messagePageViewModel.isFilterModalOpen }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.message.messageFilterHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
+        id: "focused",
         placeholder: coreViewModel2.translations.general.searchLabel,
         "bind:value": messagePageViewModel.searchViewModel.searchInput,
         "on:enter": messagePageViewModel.searchViewModel.applySearch
@@ -4575,6 +4580,7 @@
       scrollDownIfApplicable
     );
     setTimeout(() => scrollDown(true), 100);
+    setFocusWithDelay();
     return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.message.messagesHeadline), /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement(
       "button",
       {
@@ -4587,6 +4593,7 @@
     ))), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
       "input",
       {
+        id: "focused",
         "bind:value": messagePageViewModel.composingMessage,
         "on:enter": messagePageViewModel.sendMessage,
         placeholder: coreViewModel2.translations.chatPage.message.composerInputPlaceholder
@@ -5130,9 +5137,11 @@
       isOpen.value = false;
     }
     const suggestionId = v4_default();
+    isOpen.subscribe(setFocusWithDelay);
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isOpen, extended: true }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, headline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
+        id: "focused",
         placeholder: coreViewModel2.translations.general.searchLabel,
         "bind:value": searchViewModel.searchInput,
         "on:enter": searchViewModel.applySearch,
@@ -6278,11 +6287,13 @@
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryInputDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
       "input",
       {
+        "on:enter": fileTransferViewModel2.prepareReceivingData,
         "bind:value": fileTransferViewModel2.receivingTransferChannel
       }
     ))), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferKeyHeadline), /* @__PURE__ */ createElement(
       "input",
       {
+        "on:enter": fileTransferViewModel2.prepareReceivingData,
         "bind:value": fileTransferViewModel2.receivingTransferKey
       }
     ))))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
@@ -7296,7 +7307,7 @@
         this.settingsViewModel.showSettingsModal
       );
       this.registerKeyStroke(
-        "d",
+        "t",
         this.fileTransferViewModel.showDirectionSelectionModal
       );
       this.registerKeyStroke("e", this.storageViewModel.showStorageModal);

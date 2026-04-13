@@ -450,6 +450,7 @@ function TransferDataInputModal(
                                     }
                                 </span>
                                 <input
+                                    on:enter={fileTransferViewModel.prepareReceivingData}
                                     bind:value={
                                         fileTransferViewModel.receivingTransferChannel
                                     }
@@ -467,6 +468,7 @@ function TransferDataInputModal(
                                     }
                                 </span>
                                 <input
+                                    on:enter={fileTransferViewModel.prepareReceivingData}
                                     bind:value={
                                         fileTransferViewModel.receivingTransferKey
                                     }

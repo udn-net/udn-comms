@@ -7,12 +7,14 @@ import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { ChatMessage } from "../Components/chatMessage";
 import { MessageFilterModal } from "../Modals/messageFilterModal";
+import { setFocusWithDelay } from "../utility";
 
 export function MessagePage(
     coreViewModel: CoreViewModel,
     messagePageViewModel: MessagePageViewModel,
 ) {
     messagePageViewModel.loadData();
+
     const ChatMessageViewModelToView: React.StateItemConverter<
         ChatMessageViewModel
     > = (chatMessageViewModel: ChatMessageViewModel) => {
@@ -49,6 +51,8 @@ export function MessagePage(
     );
     setTimeout(() => scrollDown(true), 100);
 
+    setFocusWithDelay();
+
     return (
         <div id="message-page">
             <div class="pane-wrapper">
@@ -82,6 +86,7 @@ export function MessagePage(
                             <div class="content-width-constraint">
                                 <div class="input-width-constraint">
                                     <input
+                                        id="focused"
                                         bind:value={
                                             messagePageViewModel.composingMessage
                                         }

@@ -8,6 +8,7 @@ import BoardViewModel, { BoardPageTypes } from "./boardViewModel";
 import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
 import CoreViewModel, { Context, ContextHost } from "../Global/coreViewModel";
 import { IndexManager } from "../../Model/Utility/utility";
+import { CommonKeys } from "../../View/keystrokes";
 
 export default class TaskPageViewModel extends ContextHost<string> {
     contextDebugDescription = "task-page";
@@ -181,8 +182,10 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
         // context
         this.chatViewModel.registerContext(ChatPageTypes.Tasks, this);
-
         this.selectedBoardId.subscribeSilent(this.updateContexts);
+
+        // keystrokes
+        this.registerKeyStroke(CommonKeys.Options, this.toggleBoardList);
     }
 }
 

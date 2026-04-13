@@ -4,6 +4,7 @@ import SearchViewModel from "../../ViewModel/Utility/searchViewModel";
 import { StringToOption } from "../Components/option";
 import { v4 } from "uuid";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { setFocusWithDelay } from "../utility";
 
 export function SearchModal<T>(
     coreViewModel: CoreViewModel,
@@ -18,6 +19,8 @@ export function SearchModal<T>(
 
     const suggestionId = v4();
 
+    isOpen.subscribe(setFocusWithDelay);
+
     return (
         <div class="modal" toggle:open={isOpen} extended>
             <div>
@@ -25,6 +28,7 @@ export function SearchModal<T>(
                     <h2>{headline}</h2>
                     <div class="flex-row width-input">
                         <input
+                        id="focused"
                             placeholder={
                                 coreViewModel.translations.general.searchLabel
                             }
