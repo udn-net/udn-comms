@@ -81,7 +81,7 @@ export default class CoreViewModel {
 
     // util
     static checkIsKeystroke(e: KeyboardEvent): boolean {
-        return (e.metaKey || e.ctrlKey) && e.shiftKey;
+        return (e.metaKey || e.altKey) && e.ctrlKey;
     }
 }
 

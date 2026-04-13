@@ -2254,7 +2254,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.12.B";
+      this.BUILD = "Build 26.04.12.C";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.logContexts = () => {
@@ -2307,7 +2307,7 @@
     }
     // util
     static checkIsKeystroke(e) {
-      return (e.metaKey || e.ctrlKey) && e.shiftKey;
+      return (e.metaKey || e.altKey) && e.ctrlKey;
     }
   };
   var Context = class {
