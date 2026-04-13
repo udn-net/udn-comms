@@ -13,8 +13,6 @@ import { v4 } from "uuid";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class MessagePageViewModel extends Context {
-    contextDebugDescription = "message-page";
-
     // state
     chatMessageViewModels: React.MapState<ChatMessageViewModel> =
         new React.MapState();
@@ -130,7 +128,7 @@ export default class MessagePageViewModel extends Context {
         public readonly coreViewModel: CoreViewModel,
         public readonly chatViewModel: ChatViewModel,
     ) {
-        super();
+        super("message-page");
 
         // states
         this.cannotSendMessage = React.createProxyState(

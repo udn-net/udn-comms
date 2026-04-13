@@ -59,7 +59,8 @@ export default class TaskContainingPageViewModel extends Context {
         public readonly coreViewModel: CoreViewModel,
         public readonly chatViewModel: ChatViewModel,
         public readonly boardsAndTasksModel: BoardsAndTasksModel,
+        contextDebugDescription: string,
     ) {
-        super();
+        super(contextDebugDescription);
     }
 }

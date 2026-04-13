@@ -16,8 +16,6 @@ import TaskViewModel from "./taskViewModel";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class BoardViewModel extends TaskContainingPageViewModel {
-    contextDebugDescription = "board";
-
     // state
     name: React.State<string> = new React.State("");
     color: React.State<Colors> = new React.State<any>(Colors.Standard);
@@ -255,7 +253,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         public readonly taskPageViewModel: TaskPageViewModel,
         public readonly boardInfo: BoardInfoFileContent,
     ) {
-        super(coreViewModel, chatViewModel, boardsAndTasksModel);
+        super(coreViewModel, chatViewModel, boardsAndTasksModel, "board");
 
         // load
         this.loadListRelevantData();

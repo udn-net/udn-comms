@@ -94,7 +94,6 @@ export default class CoreViewModel {
 
 export class Context {
     contextId = v4();
-    contextDebugDescription: string;
     keystrokes = new Map<string, () => void>();
 
     handleKeystroke = (e: KeyboardEvent): boolean => {
@@ -112,6 +111,8 @@ export class Context {
     registerKeyStroke = (key: string, fn: () => void): void => {
         this.keystrokes.set(key, fn);
     };
+
+    constructor(public contextDebugDescription: string) {}
 }
 
 export class ContextHost<T> extends Context {

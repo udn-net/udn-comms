@@ -8,8 +8,6 @@ import CoreViewModel, { Context } from "./coreViewModel";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class StorageViewModel extends Context {
-    contextDebugDescription = "storage";
-
     // state
     isShowingStorageModal: React.State<boolean> = new React.State(false);
     selectedPath: React.State<string> = new React.State(
@@ -67,7 +65,7 @@ export default class StorageViewModel extends Context {
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {
-        super();
+        super("storage");
 
         this.selectedFileName = React.createProxyState(
             [this.selectedPath],

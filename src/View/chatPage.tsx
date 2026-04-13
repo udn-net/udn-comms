@@ -18,8 +18,6 @@ export function ChatPage(
     const mainContent = React.createProxyState(
         [chatViewModel.selectedPage],
         () => {
-            chatViewModel.closeSubPages();
-
             switch (chatViewModel.selectedPage.value) {
                 case ChatPageTypes.Settings: {
                     return SettingsPage(

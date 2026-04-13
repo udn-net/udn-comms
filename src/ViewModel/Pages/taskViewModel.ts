@@ -13,8 +13,6 @@ import { v4 } from "uuid";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class TaskViewModel extends Context {
-    contextDebugDescription = "task";
-
     // util
     get sortingString(): string {
         const splitDate: string[] = this.date.value.split("-");
@@ -87,7 +85,6 @@ export default class TaskViewModel extends Context {
 
     // view
     open = (): void => {
-        console.log(this);
         this.coreViewModel.context = this;
         this.containingModel.selectTask(this);
     };
@@ -219,7 +216,7 @@ export default class TaskViewModel extends Context {
         public readonly containingModel: TaskContainingPageViewModel,
         public task: TaskFileContent,
     ) {
-        super();
+        super("task");
 
         // load
         this.loadAllData();

@@ -14,8 +14,6 @@ import { CommonKeys } from "../../View/keystrokes";
 export const CALENDAR_EVENT_BOARD_ID = "events";
 
 export default class CalendarPageViewModel extends TaskContainingPageViewModel {
-    contextDebugDescription = "calendar";
-
     // data
     get monthString(): string {
         return CalendarModel.getMonthString(
@@ -190,7 +188,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
         public readonly calendarModel: CalendarModel,
         public readonly boardsAndTasksModel: BoardsAndTasksModel,
     ) {
-        super(coreViewModel, chatViewModel, boardsAndTasksModel);
+        super(coreViewModel, chatViewModel, boardsAndTasksModel, "calendar");
 
         this.calendarModel = calendarModel;
         this.boardsAndTasksModel = boardsAndTasksModel;

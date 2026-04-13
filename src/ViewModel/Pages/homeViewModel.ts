@@ -6,8 +6,6 @@ import SettingsViewModel from "../Global/settingsViewModel";
 import StorageViewModel from "../Global/storageViewModel";
 
 export default class HomeViewModel extends Context {
-    contextDebugDescription = "home";
-
     constructor(
         public readonly coreViewModel: CoreViewModel,
         public readonly settingsViewModel: SettingsViewModel,
@@ -15,7 +13,7 @@ export default class HomeViewModel extends Context {
         public readonly storageViewModel: StorageViewModel,
         public readonly connectionViewModel: ConnectionViewModel,
     ) {
-        super();
+        super("home");
 
         this.coreViewModel.context = this;
 

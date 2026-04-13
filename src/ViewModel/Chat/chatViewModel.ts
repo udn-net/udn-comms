@@ -26,8 +26,6 @@ import { v4 } from "uuid";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class ChatViewModel extends ContextHost<ChatPageTypes> {
-    contextDebugDescription = "chat";
-
     calendarViewModel: CalendarPageViewModel;
     taskPageViewModel: TaskPageViewModel;
     messagePageViewModel: MessagePageViewModel;
@@ -58,6 +56,7 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
     open = (): void => {
         this.coreViewModel.context = this;
         this.chatListViewModel.openChat(this);
+        //this.selectedPage.callSubscriptions();
     };
 
     close = (): void => {
@@ -69,8 +68,6 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
         this.closeContext();
         this.selectedPage.value = page;
     };
-
-    closeSubPages = (): void => {};
 
     setColor = (color: Colors): void => {
         this.setDisplayedColor(color);
@@ -100,7 +97,7 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
         const lastUsedPage: string | null =
             this.coreViewModel.storageModel.read(path);
         if (lastUsedPage != null) {
-            this.selectedPage.value = lastUsedPage as any;
+            this.openPage(lastUsedPage as ChatPageTypes);
         }
 
         this.selectedPage.subscribeSilent((newPage) => {
@@ -152,7 +149,7 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
         public readonly connectionViewModel: ConnectionViewModel,
         public readonly chatListViewModel: ChatListViewModel,
     ) {
-        super();
+        super("chat");
 
         // page viewModels
         this.calendarViewModel = new CalendarPageViewModel(

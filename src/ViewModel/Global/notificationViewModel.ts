@@ -42,7 +42,7 @@ export default class NotificationViewModel {
             (chat) => chat.chatModel.info.primaryChannel == notification.chat,
         );
         chat.open();
-        chat.selectedPage.value = ChatPageTypes.Messages;
+        chat.openPage(ChatPageTypes.Messages);
     };
 
     // loop

@@ -13,7 +13,7 @@ export function ChatViewToggleButton(
     chatViewModel: ChatViewModel,
 ) {
     function select() {
-        chatViewModel.selectedPage.value = page;
+        chatViewModel.openPage(page);
     }
 
     const isSelected = React.createProxyState(

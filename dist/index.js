@@ -1,9 +1,10 @@
 (() => {
-  // ../../bloatless-react/index.ts
+  // node_modules/bloatless-react/index.ts
   var State = class {
+    _value;
+    _bindings = /* @__PURE__ */ new Set();
     // init
     constructor(initialValue) {
-      this._bindings = /* @__PURE__ */ new Set();
       this._value = initialValue;
     }
     // value
@@ -31,11 +32,11 @@
     }
   };
   var ListState = class extends State {
+    additionHandlers = /* @__PURE__ */ new Set();
+    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Set(initialItems));
-      this.additionHandlers = /* @__PURE__ */ new Set();
-      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     add(...items) {
@@ -75,11 +76,11 @@
     }
   };
   var MapState = class extends State {
+    additionHandlers = /* @__PURE__ */ new Set();
+    removalHandlers = /* @__PURE__ */ new Map();
     // init
     constructor(initialItems) {
       super(new Map(initialItems));
-      this.additionHandlers = /* @__PURE__ */ new Set();
-      this.removalHandlers = /* @__PURE__ */ new Map();
     }
     // list
     set(key, item) {
@@ -120,7 +121,7 @@
   function createProxyState(statesToSubscibe, fn) {
     const proxyState = new State(fn());
     statesToSubscibe.forEach(
-      (state) => state.subscribe(() => proxyState.value = fn())
+      (state) => state.subscribeSilent(() => proxyState.value = fn())
     );
     return proxyState;
   }
@@ -2254,7 +2255,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.13.B";
+      this.BUILD = "Build 26.04.13.C";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.logContexts = () => {
@@ -2314,7 +2315,8 @@
     }
   };
   var Context = class {
-    constructor() {
+    constructor(contextDebugDescription) {
+      this.contextDebugDescription = contextDebugDescription;
       this.contextId = v4_default();
       this.keystrokes = /* @__PURE__ */ new Map();
       this.handleKeystroke = (e) => {
@@ -2393,13 +2395,12 @@
   var TaskViewModel = class extends Context {
     // init
     constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, containingModel, task) {
-      super();
+      super("task");
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
       this.containingModel = containingModel;
       this.task = task;
-      this.contextDebugDescription = "task";
       // paths
       this.getFilePath = () => {
         return this.boardsAndTasksModel.getTaskFilePath(this.task.fileId);
@@ -2565,8 +2566,8 @@
   // src/ViewModel/Pages/taskContainingPageViewModel.ts
   var TaskContainingPageViewModel = class extends Context {
     // init
-    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel) {
-      super();
+    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, contextDebugDescription) {
+      super(contextDebugDescription);
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
@@ -2614,12 +2615,11 @@
   var CalendarPageViewModel = class extends TaskContainingPageViewModel {
     // init
     constructor(coreViewModel2, chatViewModel, calendarModel, boardsAndTasksModel) {
-      super(coreViewModel2, chatViewModel, boardsAndTasksModel);
+      super(coreViewModel2, chatViewModel, boardsAndTasksModel, "calendar");
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.calendarModel = calendarModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
-      this.contextDebugDescription = "calendar";
       // paths
       this.getBasePath = () => {
         return [...this.calendarModel.getViewPath()];
@@ -2960,10 +2960,9 @@
   var MessagePageViewModel = class extends Context {
     // init
     constructor(coreViewModel2, chatViewModel) {
-      super();
+      super("message-page");
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
-      this.contextDebugDescription = "message-page";
       // state
       this.chatMessageViewModels = new MapState();
       this.filteredMessageViewModels = new ListState();
@@ -3070,10 +3069,9 @@
   var SettingsPageViewModel = class extends Context {
     // init
     constructor(coreViewModel2, chatViewModel) {
-      super();
+      super("settings");
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
-      this.contextDebugDescription = "settings";
       // state
       this.primaryChannel = new State("");
       this.primaryChannelInput = new State("");
@@ -3164,13 +3162,12 @@
   var BoardViewModel = class extends TaskContainingPageViewModel {
     // init
     constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, taskPageViewModel, boardInfo) {
-      super(coreViewModel2, chatViewModel, boardsAndTasksModel);
+      super(coreViewModel2, chatViewModel, boardsAndTasksModel, "board");
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
       this.taskPageViewModel = taskPageViewModel;
       this.boardInfo = boardInfo;
-      this.contextDebugDescription = "board";
       // state
       this.name = new State("");
       this.color = new State("standard" /* Standard */);
@@ -3396,11 +3393,10 @@
   var TaskPageViewModel = class extends ContextHost {
     // init
     constructor(coreViewModel2, chatViewModel, boardsAndTasksModel) {
-      super();
+      super("task-page");
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
-      this.contextDebugDescription = "task-page";
       // data
       this.boardIndexManager = new IndexManager(
         (boardViewModel) => boardViewModel.name.value
@@ -3496,6 +3492,8 @@
       };
       // load
       this.loadData = () => {
+        console.log("LOADING TASK PAGE DATA");
+        this.closeContext();
         this.boardViewModels.clear();
         const boardIds = this.boardsAndTasksModel.listBoardIds();
         for (const boardId of boardIds) {
@@ -3509,14 +3507,17 @@
       this.chatViewModel = chatViewModel;
       this.chatViewModel.registerContext("tasks" /* Tasks */, this);
       this.selectedBoardId.subscribeSilent(this.updateContexts);
-      this.loadData();
       boardsAndTasksModel.boardHandlerManager.addHandler(
         (boardInfoFileContent) => {
           this.showBoardInList(boardInfoFileContent);
           this.updateBoardIndices();
-          this.updateContexts();
         }
       );
+      this.chatViewModel.currentContext.subscribeSilent((context) => {
+        if (!this.isOpen) return;
+        if (context != this) return;
+        this.openLastUsedBoard();
+      });
       this.registerKeyStroke("." /* Options */, this.toggleBoardList);
     }
     // context
@@ -3532,14 +3533,13 @@
   var ChatViewModel6 = class extends ContextHost {
     // init
     constructor(coreViewModel2, chatModel, settingsViewModel2, notificationViewModel, connectionViewModel2, chatListViewModel2) {
-      super();
+      super("chat");
       this.coreViewModel = coreViewModel2;
       this.chatModel = chatModel;
       this.settingsViewModel = settingsViewModel2;
       this.notificationViewModel = notificationViewModel;
       this.connectionViewModel = connectionViewModel2;
       this.chatListViewModel = chatListViewModel2;
-      this.contextDebugDescription = "chat";
       // state
       this.displayedColor = new State("standard" /* Standard */);
       this.selectedPage = new State(
@@ -3561,8 +3561,6 @@
       this.openPage = (page) => {
         this.closeContext();
         this.selectedPage.value = page;
-      };
-      this.closeSubPages = () => {
       };
       this.setColor = (color) => {
         this.setDisplayedColor(color);
@@ -3586,7 +3584,7 @@
         );
         const lastUsedPage = this.coreViewModel.storageModel.read(path);
         if (lastUsedPage != null) {
-          this.selectedPage.value = lastUsedPage;
+          this.openPage(lastUsedPage);
         }
         this.selectedPage.subscribeSilent((newPage) => {
           this.coreViewModel.storageModel.write(path, newPage);
@@ -3714,7 +3712,7 @@
           (chat2) => chat2.chatModel.info.primaryChannel == notification.chat
         );
         chat.open();
-        chat.selectedPage.value = "messages" /* Messages */;
+        chat.openPage("messages" /* Messages */);
       };
       // loop
       this.loop = () => {
@@ -4288,7 +4286,7 @@
   // src/View/Components/chatViewToggleButton.tsx
   function ChatViewToggleButton(label, icon, page, chatViewModel) {
     function select() {
-      chatViewModel.selectedPage.value = page;
+      chatViewModel.openPage(page);
     }
     const isSelected = createProxyState(
       [chatViewModel.selectedPage],
@@ -5419,7 +5417,6 @@
     const mainContent = createProxyState(
       [chatViewModel.selectedPage],
       () => {
-        chatViewModel.closeSubPages();
         switch (chatViewModel.selectedPage.value) {
           case "settings" /* Settings */: {
             return SettingsPage(
@@ -5974,9 +5971,8 @@
   var FileTransferViewModel = class extends Context {
     // init
     constructor(coreViewModel2) {
-      super();
+      super("file-transfer");
       this.coreViewModel = coreViewModel2;
-      this.contextDebugDescription = "transfer";
       // state
       this.presentedModal = new State(void 0);
       this.generalFileOptions = new ListState();
@@ -6691,9 +6687,8 @@
   var SettingsViewModel = class _SettingsViewModel extends Context {
     // init
     constructor(coreViewModel2) {
-      super();
+      super("settings");
       this.coreViewModel = coreViewModel2;
-      this.contextDebugDescription = "settings";
       // state
       this.username = new State("");
       this.usernameInput = new State("");
@@ -6909,9 +6904,8 @@
   var StorageViewModel = class extends Context {
     // init
     constructor(coreViewModel2) {
-      super();
+      super("storage");
       this.coreViewModel = coreViewModel2;
-      this.contextDebugDescription = "storage";
       // state
       this.isShowingStorageModal = new State(false);
       this.selectedPath = new State(
@@ -7318,13 +7312,12 @@
   // src/ViewModel/Pages/homeViewModel.ts
   var HomeViewModel = class extends Context {
     constructor(coreViewModel2, settingsViewModel2, fileTransferViewModel2, storageViewModel2, connectionViewModel2) {
-      super();
+      super("home");
       this.coreViewModel = coreViewModel2;
       this.settingsViewModel = settingsViewModel2;
       this.fileTransferViewModel = fileTransferViewModel2;
       this.storageViewModel = storageViewModel2;
       this.connectionViewModel = connectionViewModel2;
-      this.contextDebugDescription = "home";
       this.coreViewModel.context = this;
       this.registerKeyStroke(
         "," /* Settings */,

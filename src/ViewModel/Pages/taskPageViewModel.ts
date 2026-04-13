@@ -11,8 +11,6 @@ import { IndexManager } from "../../Model/Utility/utility";
 import { CommonKeys } from "../../View/keystrokes";
 
 export default class TaskPageViewModel extends ContextHost<string> {
-    contextDebugDescription = "task-page";
-
     // data
     readonly boardIndexManager = new IndexManager<BoardViewModel>(
         (boardViewModel: BoardViewModel) => boardViewModel.name.value,
@@ -145,6 +143,8 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
     // load
     loadData = (): void => {
+        console.log("LOADING TASK PAGE DATA");
+        this.closeContext();
         this.boardViewModels.clear();
 
         const boardIds: string[] = this.boardsAndTasksModel.listBoardIds();
@@ -166,7 +166,7 @@ export default class TaskPageViewModel extends ContextHost<string> {
         public readonly chatViewModel: ChatViewModel,
         public readonly boardsAndTasksModel: BoardsAndTasksModel,
     ) {
-        super();
+        super("task-page");
 
         this.chatViewModel = chatViewModel;
 
@@ -174,16 +174,19 @@ export default class TaskPageViewModel extends ContextHost<string> {
         this.chatViewModel.registerContext(ChatPageTypes.Tasks, this);
         this.selectedBoardId.subscribeSilent(this.updateContexts);
 
-        this.loadData();
-
         // handlers
         boardsAndTasksModel.boardHandlerManager.addHandler(
             (boardInfoFileContent: BoardInfoFileContent) => {
                 this.showBoardInList(boardInfoFileContent);
                 this.updateBoardIndices();
-                this.updateContexts();
             },
         );
+
+        this.chatViewModel.currentContext.subscribeSilent((context) => {
+            if (!this.isOpen) return;
+            if (context != this) return;
+            this.openLastUsedBoard();
+        });
 
         // keystrokes
         this.registerKeyStroke(CommonKeys.Options, this.toggleBoardList);

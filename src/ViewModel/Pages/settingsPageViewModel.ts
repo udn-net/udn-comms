@@ -5,8 +5,6 @@ import { Colors } from "../../colors";
 import CoreViewModel, { Context } from "../Global/coreViewModel";
 
 export default class SettingsPageViewModel extends Context {
-    contextDebugDescription = "settings";
-
     // state
     primaryChannel: React.State<string> = new React.State("");
     primaryChannelInput: React.State<string> = new React.State("");
@@ -115,7 +113,7 @@ export default class SettingsPageViewModel extends Context {
         public readonly coreViewModel: CoreViewModel,
         public readonly chatViewModel: ChatViewModel,
     ) {
-        super();
+        super("settings");
 
         this.loadListRelevantData();
 
