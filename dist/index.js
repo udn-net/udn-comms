@@ -2255,7 +2255,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.13.D";
+      this.BUILD = "Build 26.04.13.E";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.logContexts = () => {
