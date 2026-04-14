@@ -86,12 +86,12 @@ export default class TaskViewModel extends Context {
     // view
     open = (): void => {
         this.coreViewModel.context = this;
-        this.containingModel.selectTask(this);
+        this.containingViewModel.selectTask(this);
     };
 
     close = (): void => {
         this.coreViewModel.closeContext(this.contextId);
-        this.containingModel.closeTask();
+        this.containingViewModel.closeTask();
     };
 
     closeAndDiscard = (): void => {
@@ -106,7 +106,7 @@ export default class TaskViewModel extends Context {
 
     updateIndex = (): void => {
         const index: number =
-            this.containingModel.taskIndexManager.getIndex(this);
+            this.containingViewModel.taskIndexManager.getIndex(this);
         this.index.value = index;
     };
 
@@ -147,8 +147,8 @@ export default class TaskViewModel extends Context {
 
         this.boardsAndTasksModel.updateTaskAndSend(newTaskFileContent);
 
-        this.containingModel.showTask(newTaskFileContent);
-        this.containingModel.updateTaskIndices();
+        this.containingViewModel.showTask(newTaskFileContent);
+        this.containingViewModel.updateTaskIndices();
 
         this.updateSuggestions();
     };
@@ -159,7 +159,7 @@ export default class TaskViewModel extends Context {
             this.task.boardId,
             this.task.fileId,
         );
-        this.containingModel.removeTaskFromView(this.task);
+        this.containingViewModel.removeTaskFromView(this.task);
     };
 
     // load
@@ -213,7 +213,7 @@ export default class TaskViewModel extends Context {
         public readonly coreViewModel: CoreViewModel,
         public readonly chatViewModel: ChatViewModel,
         public readonly boardsAndTasksModel: BoardsAndTasksModel,
-        public readonly containingModel: TaskContainingPageViewModel,
+        public readonly containingViewModel: TaskContainingPageViewModel,
         public task: TaskFileContent,
     ) {
         super("task");

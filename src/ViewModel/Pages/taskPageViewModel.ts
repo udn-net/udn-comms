@@ -83,6 +83,8 @@ export default class TaskPageViewModel extends ContextHost<string> {
     };
 
     showBoardInList = (boardInfo: BoardInfoFileContent): void => {
+        if (this.boardViewModels.value.has(boardInfo.fileId)) return;
+
         const boardViewModel: BoardViewModel = new BoardViewModel(
             this.coreViewModel,
             this.chatViewModel,
@@ -99,8 +101,12 @@ export default class TaskPageViewModel extends ContextHost<string> {
     };
 
     selectBoard = (boardViewModel: BoardViewModel): void => {
-        this.selectedBoardId.value = boardViewModel.boardInfo.fileId;
         this.chatViewModel.displayedColor.value = boardViewModel.color.value;
+
+        if (this.selectedBoardId.value == boardViewModel.boardInfo.fileId) {
+            return this.updateContexts();
+        }
+        this.selectedBoardId.value = boardViewModel.boardInfo.fileId;
 
         this.storeLastUsedBoard();
     };
@@ -144,10 +150,11 @@ export default class TaskPageViewModel extends ContextHost<string> {
     // load
     loadData = (): void => {
         this.closeContext();
-        this.boardViewModels.clear();
 
         const boardIds: string[] = this.boardsAndTasksModel.listBoardIds();
         for (const boardId of boardIds) {
+            if (this.boardViewModels.value.has(boardId)) continue;
+
             const boardInfo: BoardInfoFileContent | null =
                 this.boardsAndTasksModel.getBoardInfo(boardId);
             if (boardInfo == null) continue;
@@ -174,7 +181,8 @@ export default class TaskPageViewModel extends ContextHost<string> {
         this.selectedBoardId.subscribeSilent(this.updateContexts);
 
         // handlers
-        boardsAndTasksModel.boardHandlerManager.setHandler("task-page" + this.chatViewModel.chatModel.id,
+        boardsAndTasksModel.boardHandlerManager.setHandler(
+            "task-page" + this.chatViewModel.chatModel.id,
             (boardInfoFileContent: BoardInfoFileContent) => {
                 this.showBoardInList(boardInfoFileContent);
                 this.updateBoardIndices();

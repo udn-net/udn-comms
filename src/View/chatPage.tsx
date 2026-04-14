@@ -130,7 +130,10 @@ export function ChatPage(
                         )}
                     </span>
                 </div>
-                <div id="main" children:set={ViewPersistence.chatPages.pages}></div>
+                <div
+                    id="main"
+                    children:set={ViewPersistence.chatPages.pages}
+                ></div>
             </div>
         </article>
     );

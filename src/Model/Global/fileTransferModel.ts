@@ -133,7 +133,8 @@ export default class FileTransferModel {
         this.storageModel = storageModel;
         this.connectionModel = connectionModel;
 
-        this.connectionModel.messageHandlerManager.setHandler("file-transfer",
+        this.connectionModel.messageHandlerManager.setHandler(
+            "file-transfer",
             this.handleMessage,
         );
     }

@@ -1616,7 +1616,10 @@
       this.settingsModel = settingsModel2;
       this.connectionModel = connectionModel2;
       this.loadChats();
-      connectionModel2.messageHandlerManager.setHandler("chat-list", this.messageHandler);
+      connectionModel2.messageHandlerManager.setHandler(
+        "chat-list",
+        this.messageHandler
+      );
       connectionModel2.messageSentHandlerManager.setHandler(
         "chat-list",
         this.messageSentHandler
@@ -2254,7 +2257,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.13.E";
+      this.BUILD = "Build 26.04.14.A";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId) => {
@@ -2381,12 +2384,12 @@
   // src/ViewModel/Pages/taskViewModel.ts
   var TaskViewModel = class extends Context {
     // init
-    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, containingModel, task) {
+    constructor(coreViewModel2, chatViewModel, boardsAndTasksModel, containingViewModel, task) {
       super("task");
       this.coreViewModel = coreViewModel2;
       this.chatViewModel = chatViewModel;
       this.boardsAndTasksModel = boardsAndTasksModel;
-      this.containingModel = containingModel;
+      this.containingViewModel = containingViewModel;
       this.task = task;
       // paths
       this.getFilePath = () => {
@@ -2425,11 +2428,11 @@
       // view
       this.open = () => {
         this.coreViewModel.context = this;
-        this.containingModel.selectTask(this);
+        this.containingViewModel.selectTask(this);
       };
       this.close = () => {
         this.coreViewModel.closeContext(this.contextId);
-        this.containingModel.closeTask();
+        this.containingViewModel.closeTask();
       };
       this.closeAndDiscard = () => {
         this.close();
@@ -2440,7 +2443,7 @@
         this.save();
       };
       this.updateIndex = () => {
-        const index = this.containingModel.taskIndexManager.getIndex(this);
+        const index = this.containingViewModel.taskIndexManager.getIndex(this);
         this.index.value = index;
       };
       this.updateSuggestions = () => {
@@ -2470,8 +2473,8 @@
         newTaskFileContent.date = this.date.value;
         newTaskFileContent.time = this.time.value;
         this.boardsAndTasksModel.updateTaskAndSend(newTaskFileContent);
-        this.containingModel.showTask(newTaskFileContent);
-        this.containingModel.updateTaskIndices();
+        this.containingViewModel.showTask(newTaskFileContent);
+        this.containingViewModel.updateTaskIndices();
         this.updateSuggestions();
       };
       this.deleteTask = () => {
@@ -2480,7 +2483,7 @@
           this.task.boardId,
           this.task.fileId
         );
-        this.containingModel.removeTaskFromView(this.task);
+        this.containingViewModel.removeTaskFromView(this.task);
       };
       // load
       this.loadVersionIds = () => {
@@ -3331,6 +3334,7 @@
         this.loadTasks();
         this.loadSearchSuggestions();
       };
+      console.log("NEW BOARD VM");
       this.loadListRelevantData();
       this.isSelected = createProxyState(
         [this.taskPageViewModel.selectedBoardId],
@@ -3344,6 +3348,11 @@
       });
       this.selectedPage.subscribeSilent(() => {
         this.storeLastUsedView();
+        console.log(
+          "SELECTED PAGE",
+          this.selectedPage.value,
+          this.contextId
+        );
       });
       boardsAndTasksModel.taskHandlerManager.setHandler(
         this.boardInfo.fileId,
@@ -3434,6 +3443,7 @@
         this.isShowingBoadList.value = !this.isShowingBoadList.value;
       };
       this.showBoardInList = (boardInfo) => {
+        if (this.boardViewModels.value.has(boardInfo.fileId)) return;
         const boardViewModel = new BoardViewModel(
           this.coreViewModel,
           this.chatViewModel,
@@ -3448,8 +3458,11 @@
         ]);
       };
       this.selectBoard = (boardViewModel) => {
-        this.selectedBoardId.value = boardViewModel.boardInfo.fileId;
         this.chatViewModel.displayedColor.value = boardViewModel.color.value;
+        if (this.selectedBoardId.value == boardViewModel.boardInfo.fileId) {
+          return this.updateContexts();
+        }
+        this.selectedBoardId.value = boardViewModel.boardInfo.fileId;
         this.storeLastUsedBoard();
       };
       this.closeBoard = () => {
@@ -3481,9 +3494,9 @@
       // load
       this.loadData = () => {
         this.closeContext();
-        this.boardViewModels.clear();
         const boardIds = this.boardsAndTasksModel.listBoardIds();
         for (const boardId of boardIds) {
+          if (this.boardViewModels.value.has(boardId)) continue;
           const boardInfo = this.boardsAndTasksModel.getBoardInfo(boardId);
           if (boardInfo == null) continue;
           this.showBoardInList(boardInfo);
@@ -5197,7 +5210,6 @@
         if (this.trackers.has(key)) {
           return this.trackers.get(key);
         }
-        ;
         const tracker = new PageTracker();
         this.trackers.set(key, tracker);
         return tracker;
@@ -5229,9 +5241,9 @@
   function BoardPage(coreViewModel2, boardViewModel) {
     boardViewModel.loadData();
     const persistenceId = boardViewModel.boardInfo.fileId;
-    const pages = ViewPersistence.boardPages.setPages(persistenceId, () => createProxyState(
-      [boardViewModel.selectedPage],
-      () => {
+    const pages = ViewPersistence.boardPages.setPages(
+      persistenceId,
+      () => createProxyState([boardViewModel.selectedPage], () => {
         switch (boardViewModel.selectedPage.value) {
           case "kanban" /* Kanban */: {
             return BoardKanbanPage(coreViewModel2, boardViewModel);
@@ -5252,8 +5264,8 @@
             );
           }
         }
-      }
-    ));
+      })
+    );
     const taskSettingsModal = createProxyState(
       [boardViewModel.selectedTaskViewModel],
       () => {
@@ -5372,9 +5384,9 @@
       () => taskPageViewModel.selectedBoardId.value != void 0
     );
     const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
-    const pages = ViewPersistence.taskPages.setPages(persistenceId, () => createProxyState(
-      [taskPageViewModel.selectedBoardId],
-      () => {
+    const pages = ViewPersistence.taskPages.setPages(
+      persistenceId,
+      () => createProxyState([taskPageViewModel.selectedBoardId], () => {
         const selectedBoardId = taskPageViewModel.selectedBoardId.value;
         if (selectedBoardId == void 0) {
           return PlaceholderView(
@@ -5385,10 +5397,9 @@
         if (selectedBoard == void 0) {
           return /* @__PURE__ */ createElement("div", { class: "pane align-center justify-center" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.chatPage.task.boardNotFound));
         }
-        console.log("BOARD PAGE");
         return BoardPage(coreViewModel2, selectedBoard);
-      }
-    ));
+      })
+    );
     return /* @__PURE__ */ createElement(
       "div",
       {
@@ -5536,7 +5547,13 @@
         "settings",
         "settings" /* Settings */,
         chatViewModel
-      ))), /* @__PURE__ */ createElement("div", { id: "main", "children:set": ViewPersistence.chatPages.pages }))
+      ))), /* @__PURE__ */ createElement(
+        "div",
+        {
+          id: "main",
+          "children:set": ViewPersistence.chatPages.pages
+        }
+      ))
     );
   }
 

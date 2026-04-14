@@ -22,9 +22,8 @@ export function TaskPage(
     );
 
     const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
-    const pages = ViewPersistence.taskPages.setPages(persistenceId, ()=>React.createProxyState(
-        [taskPageViewModel.selectedBoardId],
-        () => {
+    const pages = ViewPersistence.taskPages.setPages(persistenceId, () =>
+        React.createProxyState([taskPageViewModel.selectedBoardId], () => {
             const selectedBoardId = taskPageViewModel.selectedBoardId.value;
             if (selectedBoardId == undefined) {
                 return PlaceholderView(
@@ -47,8 +46,8 @@ export function TaskPage(
             }
 
             return BoardPage(coreViewModel, selectedBoard);
-        },
-    ));
+        }),
+    );
 
     return (
         <div

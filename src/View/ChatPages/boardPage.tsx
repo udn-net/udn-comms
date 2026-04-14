@@ -23,9 +23,8 @@ export function BoardPage(
 
     // main content
     const persistenceId = boardViewModel.boardInfo.fileId;
-    const pages = ViewPersistence.boardPages.setPages(persistenceId, ()=>React.createProxyState(
-        [boardViewModel.selectedPage],
-        () => {
+    const pages = ViewPersistence.boardPages.setPages(persistenceId, () =>
+        React.createProxyState([boardViewModel.selectedPage], () => {
             switch (boardViewModel.selectedPage.value) {
                 case BoardPageTypes.Kanban: {
                     return BoardKanbanPage(coreViewModel, boardViewModel);
@@ -45,8 +44,8 @@ export function BoardPage(
                     );
                 }
             }
-        },
-    ));
+        }),
+    );
 
     // task modal
     const taskSettingsModal = React.createProxyState(

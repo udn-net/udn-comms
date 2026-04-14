@@ -62,6 +62,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
                 this.name.value,
                 this.color.value,
             );
+
         this.taskPageViewModel.updateBoard(newBoardInfoFileContent);
 
         this.taskPageViewModel.selectBoard(this);
@@ -254,6 +255,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         public readonly boardInfo: BoardInfoFileContent,
     ) {
         super(coreViewModel, chatViewModel, boardsAndTasksModel, "board");
+        console.log("NEW BOARD VM")
 
         // load
         this.loadListRelevantData();
@@ -275,10 +277,16 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
         this.selectedPage.subscribeSilent(() => {
             this.storeLastUsedView();
+            console.log(
+                "SELECTED PAGE",
+                this.selectedPage.value,
+                this.contextId,
+            );
         });
 
         // handlers
-        boardsAndTasksModel.taskHandlerManager.setHandler(this.boardInfo.fileId,
+        boardsAndTasksModel.taskHandlerManager.setHandler(
+            this.boardInfo.fileId,
             (taskFileContent: TaskFileContent) => {
                 if (taskFileContent.boardId != this.boardInfo.fileId) return;
                 this.showTask(taskFileContent);

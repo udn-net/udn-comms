@@ -173,11 +173,13 @@ export default class FileTransferViewModel extends Context {
     constructor(public readonly coreViewModel: CoreViewModel) {
         super("file-transfer");
 
-        this.coreViewModel.fileTransferModel.fileHandlerManager.setHandler("file-transfer-view-model",
+        this.coreViewModel.fileTransferModel.fileHandlerManager.setHandler(
+            "file-transfer-view-model",
             this.handleReceivedFile,
         );
 
-        this.coreViewModel.fileTransferModel.readyToSendHandlerManager.setHandler("file-transfer-view-model",
+        this.coreViewModel.fileTransferModel.readyToSendHandlerManager.setHandler(
+            "file-transfer-view-model",
             () => this.initiateTransfer(),
         );
 
