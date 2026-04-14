@@ -174,6 +174,8 @@ export default class TaskPageViewModel extends ContextHost<string> {
     ) {
         super("task-page");
 
+        this.loadData(); // needed for board options in calendar
+
         this.chatViewModel = chatViewModel;
 
         // context

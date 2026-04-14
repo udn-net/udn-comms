@@ -195,7 +195,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
     };
 
     // load
-    loadListRelevantData = (): void => {
+    preloadData = (): void => {
         this.name.value = this.boardInfo.name;
         this.color.value = this.boardInfo.color;
     };
@@ -255,10 +255,9 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         public readonly boardInfo: BoardInfoFileContent,
     ) {
         super(coreViewModel, chatViewModel, boardsAndTasksModel, "board");
-        console.log("NEW BOARD VM")
 
         // load
-        this.loadListRelevantData();
+        this.preloadData();
 
         // subscriptions
         this.isSelected = React.createProxyState(

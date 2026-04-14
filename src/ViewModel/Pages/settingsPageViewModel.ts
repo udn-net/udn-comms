@@ -83,7 +83,7 @@ export default class SettingsPageViewModel extends Context {
     };
 
     // load
-    loadListRelevantData = (): void => {
+    preloadData = (): void => {
         this.primaryChannel.value =
             this.chatViewModel.chatModel.info.primaryChannel;
 
@@ -115,7 +115,7 @@ export default class SettingsPageViewModel extends Context {
     ) {
         super("settings");
 
-        this.loadListRelevantData();
+        this.preloadData();
 
         this.cannotSetEncryptionKey = React.createProxyState(
             [this.encryptionKeyInput],

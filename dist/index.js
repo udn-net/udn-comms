@@ -3123,7 +3123,7 @@
         this.chatViewModel.chatListViewModel.untrackChat(this.chatViewModel);
       };
       // load
-      this.loadListRelevantData = () => {
+      this.preloadData = () => {
         this.primaryChannel.value = this.chatViewModel.chatModel.info.primaryChannel;
         this.color.value = this.chatViewModel.chatModel.color;
       };
@@ -3138,7 +3138,7 @@
           this.secondaryChannels.add(secondaryChannel);
         }
       };
-      this.loadListRelevantData();
+      this.preloadData();
       this.cannotSetEncryptionKey = createProxyState(
         [this.encryptionKeyInput],
         () => this.encryptionKeyInput.value == this.chatViewModel.chatModel.info.encryptionKey
@@ -3296,7 +3296,7 @@
         this.index.value = index;
       };
       // load
-      this.loadListRelevantData = () => {
+      this.preloadData = () => {
         this.name.value = this.boardInfo.name;
         this.color.value = this.boardInfo.color;
       };
@@ -3336,8 +3336,7 @@
         this.loadTasks();
         this.loadSearchSuggestions();
       };
-      console.log("NEW BOARD VM");
-      this.loadListRelevantData();
+      this.preloadData();
       this.isSelected = createProxyState(
         [this.taskPageViewModel.selectedBoardId],
         () => this.taskPageViewModel.selectedBoardId.value == this.boardInfo.fileId
@@ -3509,6 +3508,7 @@
         this.updateBoardIndices();
         this.openLastUsedBoard();
       };
+      this.loadData();
       this.chatViewModel = chatViewModel;
       this.chatViewModel.registerContext("tasks" /* Tasks */, this);
       this.selectedBoardId.subscribeSilent(this.updateContexts);
