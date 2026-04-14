@@ -8,7 +8,7 @@ import TaskPageViewModel from "../../ViewModel/Pages/taskPageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { PlaceholderView } from "../Components/placeholderView";
 import { v4 } from "uuid";
-import { ViewPersistence } from "../viewPersistence";
+import { ViewController } from "../viewController";
 
 export function TaskPage(
     coreViewModel: CoreViewModel,
@@ -22,7 +22,7 @@ export function TaskPage(
     );
 
     const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
-    const pages = ViewPersistence.taskPages.setPages(persistenceId, () =>
+    const pages = ViewController.taskPages.setItems(persistenceId, () =>
         React.createProxyState([taskPageViewModel.selectedBoardId], () => {
             const selectedBoardId = taskPageViewModel.selectedBoardId.value;
             if (selectedBoardId == undefined) {

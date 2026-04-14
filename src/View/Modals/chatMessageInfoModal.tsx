@@ -73,6 +73,13 @@ export function ChatMessageInfoModal(
                             }
                             <span class="icon">key</span>
                         </button>
+                        <button on:click={chatMessageViewModel.reply}>
+                            {
+                                coreViewModel.translations.chatPage.message
+                                    .replyToMessageButton
+                            }
+                            <span class="icon">reply</span>
+                        </button>
                     </div>
 
                     <hr></hr>

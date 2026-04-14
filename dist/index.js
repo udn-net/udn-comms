@@ -1312,7 +1312,7 @@
         const combinedChannel = allChannels.join("/");
         return [senderName, combinedChannel];
       };
-      this.sendMessage = async (body, replyId, fileContent) => {
+      this.sendMessage = async (body, inlineReplyId, fileContent) => {
         const nameAndChannel = this.getNameAndChannel();
         if (nameAndChannel == false) return;
         const [senderName, combinedChannel] = nameAndChannel;
@@ -1321,6 +1321,7 @@
           senderName,
           this.info.encryptionKey,
           body,
+          inlineReplyId,
           fileContent
         );
         this.addMessage(chatMessage);
@@ -1462,7 +1463,7 @@
       };
     }
     static {
-      this.createChatMessage = async (channel, sender, encryptionKey, body, fileContent) => {
+      this.createChatMessage = async (channel, sender, encryptionKey, body, inlineReplyId, fileContent) => {
         const chatMessage = {
           dataVersion: DATA_VERSION,
           id: v4_default(),
@@ -1470,6 +1471,7 @@
           sender,
           body,
           dateSent: createTimestamp(),
+          inlineReplyId,
           status: "outbox" /* Outbox */,
           stringifiedFile: ""
         };
@@ -1773,6 +1775,7 @@
         ///
         showMessageInfoButtonAudioLabel: "show message info",
         messageInfoHeadline: "Message Info",
+        cancelReplyAudioLabel: "cancel reply",
         sentBy: "Sent by",
         timeSent: "Time sent",
         channel: "Channel",
@@ -1780,6 +1783,7 @@
         copyMessageButton: "Copy message",
         resendMessageButton: "Resend message",
         decryptMessageButton: "Decrypt message",
+        replyToMessageButton: "Reply to message",
         deleteMessageButton: "Delete message",
         //
         thumbsUpReaction: "Reaction: thumbs up",
@@ -1981,6 +1985,7 @@
           filterMessagesButtonAudioLabel: "nachrichten filtern",
           showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
           messageInfoHeadline: "Nachrichteninfo",
+          cancelReplyAudioLabel: "antwort abbrechen",
           sentBy: "Gesendet von",
           timeSent: "Sendezeit",
           channel: "Kanal",
@@ -1988,6 +1993,7 @@
           copyMessageButton: "Nachricht kopieren",
           resendMessageButton: "Nachricht erneut senden",
           decryptMessageButton: "Nachricht entschl\xFCsseln",
+          replyToMessageButton: "Auf Nachricht antworten",
           deleteMessageButton: "Nachricht l\xF6schen",
           //
           thumbsUpReaction: "Reaktion: Daumen hoch",
@@ -2179,6 +2185,7 @@
           filterMessagesButtonAudioLabel: "filtrar mensajes",
           showMessageInfoButtonAudioLabel: "mostrar informaci\xF3n del mensaje",
           messageInfoHeadline: "Informaci\xF3n del Mensaje",
+          cancelReplyAudioLabel: "abortar la respuesta",
           sentBy: "Enviado por",
           timeSent: "Hora de env\xEDo",
           channel: "Canal",
@@ -2186,6 +2193,7 @@
           copyMessageButton: "Copiar mensaje",
           resendMessageButton: "Reenviar mensaje",
           decryptMessageButton: "Desencriptar mensaje",
+          replyToMessageButton: "Responder al mensaje",
           deleteMessageButton: "Eliminar mensaje",
           //
           thumbsUpReaction: "Reacci\xF3n: pulgar hacia arriba",
@@ -2768,6 +2776,7 @@
       this.coreViewModel = coreViewModel2;
       this.messagePageViewModel = messagePageViewModel;
       this.body = new State("");
+      this.inlineReply = void 0;
       this.status = new State(
         void 0
       );
@@ -2820,6 +2829,14 @@
       this.decryptMessage = () => {
         this.messagePageViewModel.decryptMessage(this);
       };
+      this.reply = () => {
+        this.messagePageViewModel.replyingMessage.value = this;
+        this.hideInfoModal();
+      };
+      this.cancelReply = () => {
+        if (this.messagePageViewModel.replyingMessage.value != this) return;
+        this.messagePageViewModel.replyingMessage.value = void 0;
+      };
       // view
       this.showInfoModal = () => {
         this.isPresentingInfoModal.value = true;
@@ -2852,6 +2869,9 @@
         this.dateSent = new Date(this.chatMessage.dateSent).toLocaleString();
         this.body.value = this.chatMessage.body;
         this.status.value = this.chatMessage.status;
+        if (this.chatMessage.inlineReplyId) {
+          this.inlineReply = this.messagePageViewModel.chatMessageViewModels.value.get(this.chatMessage.inlineReplyId);
+        }
       };
       this.chatMessage = chatMessage;
       this.sentByUser = sentByUser;
@@ -2958,7 +2978,9 @@
       this.filteredMessageViewModels = new ListState();
       this.isFilterModalOpen = new State(false);
       this.reactionFilter = new State(void 0);
-      this.replyingMessageId = new State(void 0);
+      this.replyingMessage = new State(
+        void 0
+      );
       this.composingMessage = new State("");
       // methods
       this.sendMessage = () => {
@@ -2967,8 +2989,15 @@
         this.composingMessage.value = "";
       };
       this.sendMessageFromBody = (body) => {
-        this.chatViewModel.chatModel.sendMessage(body, this.replyingMessageId.value);
-        this.replyingMessageId.value = void 0;
+        let replyId = void 0;
+        if (this.replyingMessage.value) {
+          replyId = this.replyingMessage.value.chatMessage.id;
+        }
+        this.chatViewModel.chatModel.sendMessage(
+          body,
+          replyId
+        );
+        this.replyingMessage.value = void 0;
       };
       this.decryptMessage = async (messageViewModel) => {
         const chatMessage = messageViewModel.chatMessage;
@@ -3383,9 +3412,18 @@
       this.registerKeyStroke("," /* Settings */, this.showSettings);
       this.registerKeyStroke("enter" /* Apply */, this.hideSettings);
       this.registerKeyStroke(";" /* Create */, this.createTask);
-      this.registerKeyStroke("j", () => this.selectedPage.value = "list" /* List */);
-      this.registerKeyStroke("k", () => this.selectedPage.value = "kanban" /* Kanban */);
-      this.registerKeyStroke("l", () => this.selectedPage.value = "status-grid" /* StatusGrid */);
+      this.registerKeyStroke(
+        "j",
+        () => this.selectedPage.value = "list" /* List */
+      );
+      this.registerKeyStroke(
+        "k",
+        () => this.selectedPage.value = "kanban" /* Kanban */
+      );
+      this.registerKeyStroke(
+        "l",
+        () => this.selectedPage.value = "status-grid" /* StatusGrid */
+      );
       this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }
   };
@@ -4435,7 +4473,7 @@
         "description",
         coreViewModel2.translations.chatPage.message.messageContent,
         chatMessageViewModel.body
-      )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, coreViewModel2.translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, coreViewModel2.translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, coreViewModel2.translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, MessageReactionButtonRow(
+      )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.copyMessage }, coreViewModel2.translations.chatPage.message.copyMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "content_copy")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.resendMessage }, coreViewModel2.translations.chatPage.message.resendMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "redo")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.decryptMessage }, coreViewModel2.translations.chatPage.message.decryptMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "key")), /* @__PURE__ */ createElement("button", { "on:click": chatMessageViewModel.reply }, coreViewModel2.translations.chatPage.message.replyToMessageButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "reply"))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap" }, MessageReactionButtonRow(
         coreViewModel2,
         chatMessageViewModel
       ), /* @__PURE__ */ createElement(
@@ -4451,9 +4489,70 @@
     );
   }
 
+  // src/View/viewController.ts
+  var ItemTracker = class {
+  };
+  var ViewTrackerMap = class {
+    constructor() {
+      this.trackers = /* @__PURE__ */ new Map();
+      this.register = (key) => {
+        if (this.trackers.has(key)) {
+          return this.trackers.get(key);
+        }
+        const tracker = new ItemTracker();
+        this.trackers.set(key, tracker);
+        return tracker;
+      };
+      this.setItems = (key, views) => {
+        const tracker = this.register(key);
+        if (tracker.items != void 0) {
+          return tracker.items;
+        } else {
+          tracker.items = views();
+          return tracker.items;
+        }
+      };
+    }
+  };
+  var ViewController = class {
+    static {
+      this.chatPages = new ItemTracker();
+    }
+    static {
+      this.taskPages = new ViewTrackerMap();
+    }
+    static {
+      this.boardPages = new ViewTrackerMap();
+    }
+    static {
+      this.inlineReplies = new ViewTrackerMap();
+    }
+    static {
+      this.messageIcons = new ViewTrackerMap();
+    }
+    static scrollToView(id) {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.scrollIntoView();
+      element.setAttribute("scrolled", "");
+      setTimeout(() => element.removeAttribute("scrolled"), 1e3);
+    }
+  };
+
+  // src/View/Components/inlineReply.tsx
+  function InlineReply(chatMessageViewModel) {
+    const reply = chatMessageViewModel.inlineReply;
+    if (reply == void 0) return /* @__PURE__ */ createElement("div", null);
+    const scroll = () => {
+      ViewController.scrollToView(reply.chatMessage.id);
+    };
+    return /* @__PURE__ */ createElement("div", { class: "inline-reply", "on:click": scroll }, /* @__PURE__ */ createElement("span", null, reply.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": reply.body }));
+  }
+
   // src/View/Components/chatMessage.tsx
   function ChatMessage4(coreViewModel2, chatMessageViewModel) {
-    const statusIcon = createProxyState(
+    const persistenceId = chatMessageViewModel.chatMessage.id;
+    const statusIcon = ViewController.messageIcons.setItems(persistenceId, () => createProxyState(
       [chatMessageViewModel.status],
       () => {
         switch (chatMessageViewModel.status.value) {
@@ -4467,14 +4566,16 @@
             return "warning";
         }
       }
-    );
+    ));
     return /* @__PURE__ */ createElement(
       "div",
       {
         class: "message-bubble",
+        id: chatMessageViewModel.chatMessage.id,
         "toggle:sentbyuser": chatMessageViewModel.sentByUser,
         "toggle:hidden": chatMessageViewModel.isHidden
       },
+      InlineReply(chatMessageViewModel),
       /* @__PURE__ */ createElement("div", { class: "main tile" }, /* @__PURE__ */ createElement("div", { class: "text-container" }, /* @__PURE__ */ createElement("span", { class: "sender-name ellipsis" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement(
         "span",
         {
@@ -4494,6 +4595,13 @@
           "aria-label": coreViewModel2.translations.chatPage.message.showMessageInfoButtonAudioLabel
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "info")
+      ), /* @__PURE__ */ createElement(
+        "button",
+        {
+          "on:click": chatMessageViewModel.reply,
+          "aria-label": coreViewModel2.translations.chatPage.message.replyToMessageButton
+        },
+        /* @__PURE__ */ createElement("span", { class: "icon" }, "reply")
       ))),
       MessageReactionButtonRow(coreViewModel2, chatMessageViewModel),
       ChatMessageInfoModal(coreViewModel2, chatMessageViewModel)
@@ -4572,6 +4680,22 @@
     )))), /* @__PURE__ */ createElement("button", { "on:click": messagePageViewModel.hideFilterModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
+  // src/View/Components/replyPreview.tsx
+  function ReplyPreview(coreViewModel2, chatMessageViewModel) {
+    const scroll = () => {
+      chatMessageViewModel.scrollIntoView();
+    };
+    return /* @__PURE__ */ createElement("div", { class: "reply-preview slide-up", "on:click": scroll }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "standard square",
+        "on:click": chatMessageViewModel.cancelReply,
+        "aria-label": coreViewModel2.translations.chatPage.message.cancelReplyAudioLabel
+      },
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "close")
+    ));
+  }
+
   // src/View/ChatPages/messagePage.tsx
   function MessagePage(coreViewModel2, messagePageViewModel) {
     messagePageViewModel.loadData();
@@ -4587,6 +4711,21 @@
           ChatMessageViewModelToView
         ]
       }
+    );
+    const persistenceId = messagePageViewModel.chatViewModel.chatModel.id;
+    const replyPreview = ViewController.inlineReplies.setItems(
+      persistenceId,
+      () => createProxyState(
+        [messagePageViewModel.replyingMessage],
+        () => {
+          if (messagePageViewModel.replyingMessage.value == void 0)
+            return /* @__PURE__ */ createElement("div", null);
+          return ReplyPreview(
+            coreViewModel2,
+            messagePageViewModel.replyingMessage.value
+          );
+        }
+      )
     );
     function scrollDown(hard = false) {
       if (hard) {
@@ -4604,6 +4743,9 @@
       scrollDownIfApplicable
     );
     setTimeout(() => scrollDown(true), 100);
+    messagePageViewModel.replyingMessage.subscribeSilent(() => {
+      setFocusWithDelay();
+    });
     setFocusWithDelay();
     return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.message.messagesHeadline), /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement(
       "button",
@@ -4614,7 +4756,13 @@
         "toggle:selected": messagePageViewModel.isFilterActive
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "filter_alt")
-    ))), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
+    ))), /* @__PURE__ */ createElement("div", { class: "content" }, messageContainer, /* @__PURE__ */ createElement("div", { id: "composer" }, /* @__PURE__ */ createElement("div", { class: "content-width-constraint" }, /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "reply-preview-wrapper",
+        "children:set": replyPreview
+      }
+    ), /* @__PURE__ */ createElement("div", { class: "input-width-constraint" }, /* @__PURE__ */ createElement(
       "input",
       {
         id: "focused",
@@ -5205,48 +5353,11 @@
     )), /* @__PURE__ */ createElement("button", { "on:click": close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
-  // src/View/viewPersistence.ts
-  var PageTracker = class {
-  };
-  var PageTrackerMap = class {
-    constructor() {
-      this.trackers = /* @__PURE__ */ new Map();
-      this.register = (key) => {
-        if (this.trackers.has(key)) {
-          return this.trackers.get(key);
-        }
-        const tracker = new PageTracker();
-        this.trackers.set(key, tracker);
-        return tracker;
-      };
-      this.setPages = (key, pages) => {
-        const tracker = this.register(key);
-        if (tracker.pages != void 0) {
-          return tracker.pages;
-        } else {
-          tracker.pages = pages();
-          return tracker.pages;
-        }
-      };
-    }
-  };
-  var ViewPersistence = class {
-    static {
-      this.chatPages = new PageTracker();
-    }
-    static {
-      this.taskPages = new PageTrackerMap();
-    }
-    static {
-      this.boardPages = new PageTrackerMap();
-    }
-  };
-
   // src/View/ChatPages/boardPage.tsx
   function BoardPage(coreViewModel2, boardViewModel) {
     boardViewModel.loadData();
     const persistenceId = boardViewModel.boardInfo.fileId;
-    const pages = ViewPersistence.boardPages.setPages(
+    const pages = ViewController.boardPages.setItems(
       persistenceId,
       () => createProxyState([boardViewModel.selectedPage], () => {
         switch (boardViewModel.selectedPage.value) {
@@ -5389,7 +5500,7 @@
       () => taskPageViewModel.selectedBoardId.value != void 0
     );
     const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
-    const pages = ViewPersistence.taskPages.setPages(
+    const pages = ViewController.taskPages.setItems(
       persistenceId,
       () => createProxyState([taskPageViewModel.selectedBoardId], () => {
         const selectedBoardId = taskPageViewModel.selectedBoardId.value;
@@ -5461,7 +5572,7 @@
 
   // src/View/chatPage.tsx
   function ChatPage(coreViewModel2, chatViewModel) {
-    ViewPersistence.chatPages.pages = createProxyState(
+    ViewController.chatPages.items = createProxyState(
       [chatViewModel.selectedPage],
       () => {
         switch (chatViewModel.selectedPage.value) {
@@ -5556,7 +5667,7 @@
         "div",
         {
           id: "main",
-          "children:set": ViewPersistence.chatPages.pages
+          "children:set": ViewController.chatPages.items
         }
       ))
     );

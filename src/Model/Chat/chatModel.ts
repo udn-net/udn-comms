@@ -180,7 +180,7 @@ export default class ChatModel {
 
     sendMessage = async (
         body: string,
-        replyId?: string,
+        inlineReplyId?: string,
         fileContent?: FileContent<string>,
     ): Promise<boolean> => {
         const nameAndChannel = this.getNameAndChannel();
@@ -192,6 +192,7 @@ export default class ChatModel {
             senderName,
             this.info.encryptionKey,
             body,
+            inlineReplyId,
             fileContent,
         );
 
@@ -373,6 +374,7 @@ export default class ChatModel {
         sender: string,
         encryptionKey: string,
         body: string,
+        inlineReplyId?: string,
         fileContent?: FileContent<string>,
     ): Promise<ChatMessage> => {
         const chatMessage: ChatMessage = {
@@ -384,6 +386,7 @@ export default class ChatModel {
             sender,
             body,
             dateSent: createTimestamp(),
+            inlineReplyId,
 
             status: ChatMessageStatuses.Outbox,
             stringifiedFile: "",

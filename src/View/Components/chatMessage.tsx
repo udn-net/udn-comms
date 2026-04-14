@@ -5,12 +5,15 @@ import { ChatMessageStatuses } from "../../Model/Chat/chatModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { MessageReactionButtonRow } from "./messageReactionButtonRow";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { InlineReply } from "./inlineReply";
+import { ViewController } from "../viewController";
 
 export function ChatMessage(
     coreViewModel: CoreViewModel,
     chatMessageViewModel: ChatMessageViewModel,
 ) {
-    const statusIcon = React.createProxyState(
+    const persistenceId = chatMessageViewModel.chatMessage.id;
+    const statusIcon = ViewController.messageIcons.setItems(persistenceId,()=> React.createProxyState(
         [chatMessageViewModel.status],
         () => {
             switch (chatMessageViewModel.status.value) {
@@ -23,15 +26,17 @@ export function ChatMessage(
                 default:
                     return "warning";
             }
-        },
-    );
+        }
+    ));
 
     return (
         <div
             class="message-bubble"
+            id={chatMessageViewModel.chatMessage.id}
             toggle:sentbyuser={chatMessageViewModel.sentByUser}
             toggle:hidden={chatMessageViewModel.isHidden}
         >
+            {InlineReply(chatMessageViewModel)}
             <div class="main tile">
                 <div class="text-container">
                     <span class="sender-name ellipsis">
@@ -59,6 +64,15 @@ export function ChatMessage(
                         }
                     >
                         <span class="icon">info</span>
+                    </button>
+                    <button
+                        on:click={chatMessageViewModel.reply}
+                        aria-label={
+                            coreViewModel.translations.chatPage.message
+                                .replyToMessageButton
+                        }
+                    >
+                        <span class="icon">reply</span>
                     </button>
                 </div>
             </div>

@@ -23,7 +23,9 @@ export default class MessagePageViewModel extends Context {
     reactionFilter = new React.State<ReactionSymbols | undefined>(undefined);
     isFilterActive: React.State<boolean>;
 
-    replyingMessageId = new React.State<string|undefined>(undefined)
+    replyingMessage = new React.State<ChatMessageViewModel | undefined>(
+        undefined,
+    );
     composingMessage = new React.State<string>("");
 
     // guards
@@ -38,8 +40,15 @@ export default class MessagePageViewModel extends Context {
     };
 
     sendMessageFromBody = (body: string): void => {
-        this.chatViewModel.chatModel.sendMessage(body, this.replyingMessageId.value);
-        this.replyingMessageId.value = undefined;
+        let replyId: string|undefined = undefined;
+        if (this.replyingMessage.value) {
+            replyId = this.replyingMessage.value.chatMessage.id;
+        }
+        this.chatViewModel.chatModel.sendMessage(
+            body,
+            replyId,
+        );
+        this.replyingMessage.value = undefined;
     };
 
     decryptMessage = async (

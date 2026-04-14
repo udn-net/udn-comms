@@ -590,7 +590,11 @@ body[showing-chat] #chat-page-wrapper {
   padding: 0px;
   overflow: hidden;
   display: grid;
-  grid-template-rows: 1fr var(--control-height) var(--safe-area-bottom);
+  --composer-height: var(--control-height);
+  grid-template-rows: 1fr calc(var(--composer-height) + var(--gap-between-tiles)) var(--safe-area-bottom);
+}
+#chat-page #main #message-page .content:has(.reply-preview-wrapper .reply-preview) {
+  --composer-height: calc( 2 * var(--control-height) + var(--gap-between-tiles) );
 }
 #message-page #message-container {
   overflow: auto;
@@ -606,6 +610,32 @@ body[showing-chat] #chat-page-wrapper {
   flex: 1;
   border-top: 1px solid var(--border);
   border-left: 1px solid var(--border);
+}
+#message-page #composer .content-width-constraint {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--gap-between-tiles);
+}
+#message-page #composer .reply-preview-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+#message-page #composer .reply-preview-wrapper .reply-preview {
+  width: 100%;
+  max-width: var(--max-input-width);
+  display: flex;
+  gap: var(--gap-between-tiles);
+}
+#message-page #composer .reply-preview-wrapper .reply-preview > div {
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: var(--text-gap);
+  padding: 0px var(--content-padding);
+  width: calc(100% - var(--control-height) - var(--gap-between-tiles));
 }
 @media (max-width: 700px) {
   #message-page #composer div {
@@ -720,11 +750,24 @@ body[showing-chat] #chat-page-wrapper {
 .message-bubble[sentbyuser] .tile.main span {
   text-align: right;
 }
+.message-bubble > .inline-reply {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  background: var(--surface-alt);
+  height: var(--control-height);
+  max-width: var(--max-input-width);
+  width: 100%;
+  overflow: hidden;
+  padding: 0px var(--control-padding);
+  gap: var(--text-gap);
+  border-left: var(--outline-width) solid var(--primary);
+}
 .message-bubble > .message-reaction-row {
   max-width: var(--max-input-width);
   width: 100%;
   padding: var(--gap-between-tiles);
-  background: var(--surface);
+  background: var(--surface-alt);
   display: none !important;
   overflow: hidden;
 }

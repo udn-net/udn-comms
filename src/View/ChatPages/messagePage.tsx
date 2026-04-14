@@ -8,6 +8,8 @@ import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { ChatMessage } from "../Components/chatMessage";
 import { MessageFilterModal } from "../Modals/messageFilterModal";
 import { setFocusWithDelay } from "../utility";
+import { ViewController } from "../viewController";
+import { ReplyPreview } from "../Components/replyPreview";
 
 export function MessagePage(
     coreViewModel: CoreViewModel,
@@ -31,6 +33,23 @@ export function MessagePage(
         ></div>
     );
 
+    const persistenceId = messagePageViewModel.chatViewModel.chatModel.id;
+    const replyPreview = ViewController.inlineReplies.setItems(
+        persistenceId,
+        () =>
+            React.createProxyState(
+                [messagePageViewModel.replyingMessage],
+                () => {
+                    if (messagePageViewModel.replyingMessage.value == undefined)
+                        return <div></div>;
+                    return ReplyPreview(
+                        coreViewModel,
+                        messagePageViewModel.replyingMessage.value,
+                    );
+                },
+            ),
+    );
+
     function scrollDown(hard: boolean = false) {
         if (hard) {
             messageContainer.setAttribute("scroll-hard", "");
@@ -51,6 +70,9 @@ export function MessagePage(
     );
     setTimeout(() => scrollDown(true), 100);
 
+    messagePageViewModel.replyingMessage.subscribeSilent(() => {
+        setFocusWithDelay();
+    })
     setFocusWithDelay();
 
     return (
@@ -84,6 +106,10 @@ export function MessagePage(
                         {messageContainer}
                         <div id="composer">
                             <div class="content-width-constraint">
+                                <div
+                                    class="reply-preview-wrapper"
+                                    children:set={replyPreview}
+                                ></div>
                                 <div class="input-width-constraint">
                                     <input
                                         id="focused"

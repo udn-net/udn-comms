@@ -13,7 +13,7 @@ import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import { setFocusWithDelay } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { ViewPersistence } from "../viewPersistence";
+import { ViewController } from "../viewController";
 
 export function BoardPage(
     coreViewModel: CoreViewModel,
@@ -23,7 +23,7 @@ export function BoardPage(
 
     // main content
     const persistenceId = boardViewModel.boardInfo.fileId;
-    const pages = ViewPersistence.boardPages.setPages(persistenceId, () =>
+    const pages = ViewController.boardPages.setItems(persistenceId, () =>
         React.createProxyState([boardViewModel.selectedPage], () => {
             switch (boardViewModel.selectedPage.value) {
                 case BoardPageTypes.Kanban: {

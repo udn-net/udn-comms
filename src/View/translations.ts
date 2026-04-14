@@ -199,6 +199,7 @@ const englishTranslations = {
 
             showMessageInfoButtonAudioLabel: "show message info",
             messageInfoHeadline: "Message Info",
+            cancelReplyAudioLabel: "cancel reply",
 
             sentBy: "Sent by",
             timeSent: "Time sent",
@@ -208,6 +209,7 @@ const englishTranslations = {
             copyMessageButton: "Copy message",
             resendMessageButton: "Resend message",
             decryptMessageButton: "Decrypt message",
+            replyToMessageButton: "Reply to message",
             deleteMessageButton: "Delete message",
 
             //
@@ -496,6 +498,7 @@ export const allTranslations: {
 
                 showMessageInfoButtonAudioLabel: "nachrichteninfo anzeigen",
                 messageInfoHeadline: "Nachrichteninfo",
+                cancelReplyAudioLabel: "antwort abbrechen",
 
                 sentBy: "Gesendet von",
                 timeSent: "Sendezeit",
@@ -505,6 +508,7 @@ export const allTranslations: {
                 copyMessageButton: "Nachricht kopieren",
                 resendMessageButton: "Nachricht erneut senden",
                 decryptMessageButton: "Nachricht entschlüsseln",
+                replyToMessageButton: "Auf Nachricht antworten",
                 deleteMessageButton: "Nachricht löschen",
 
                 //
@@ -772,6 +776,7 @@ export const allTranslations: {
                 showMessageInfoButtonAudioLabel:
                     "mostrar información del mensaje",
                 messageInfoHeadline: "Información del Mensaje",
+                cancelReplyAudioLabel: "abortar la respuesta",
 
                 sentBy: "Enviado por",
                 timeSent: "Hora de envío",
@@ -781,6 +786,7 @@ export const allTranslations: {
                 copyMessageButton: "Copiar mensaje",
                 resendMessageButton: "Reenviar mensaje",
                 decryptMessageButton: "Desencriptar mensaje",
+                replyToMessageButton: "Responder al mensaje",
                 deleteMessageButton: "Eliminar mensaje",
 
                 //

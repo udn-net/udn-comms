@@ -17,6 +17,7 @@ export default class ChatMessageViewModel {
     sender: string;
     dateSent: string;
     body: React.State<string> = new React.State("");
+    inlineReply: ChatMessageViewModel | undefined = undefined;
     status: React.State<ChatMessageStatuses | any> = new React.State<any>(
         undefined,
     );
@@ -80,6 +81,15 @@ export default class ChatMessageViewModel {
         this.messagePageViewModel.decryptMessage(this);
     };
 
+    reply = (): void => {
+        this.messagePageViewModel.replyingMessage.value = this;
+        this.hideInfoModal();
+    };
+    cancelReply = (): void => {
+        if (this.messagePageViewModel.replyingMessage.value != this) return;
+        this.messagePageViewModel.replyingMessage.value = undefined;
+    };
+
     // view
     showInfoModal = (): void => {
         this.isPresentingInfoModal.value = true;
@@ -119,6 +129,10 @@ export default class ChatMessageViewModel {
         this.dateSent = new Date(this.chatMessage.dateSent).toLocaleString();
         this.body.value = this.chatMessage.body;
         this.status.value = this.chatMessage.status;
+
+        if (this.chatMessage.inlineReplyId) {
+            this.inlineReply = this.messagePageViewModel.chatMessageViewModels.value.get(this.chatMessage.inlineReplyId);
+        }
     };
 
     // init

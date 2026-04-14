@@ -49,6 +49,7 @@ body {
     --surface: hsla(0, 0%, 0%, 5%);
     --surface-hover: hsla(0, 0%, 5%, 10%);
     --surface-active: hsla(0, 0%, 5%, 15%);
+    --surface-alt: hsla(0, 0%, 0%, 2%);
 
     --border: hsla(0, 0%, 0%, 10%);
     --surface-border: #8d8d8d;
@@ -86,9 +87,10 @@ body[theme="dark"] {
 
     --layer: hsla(0, 0%, 15%, 60%);
 
-    --surface: hsla(0, 0%, 100%, 4%);
+    --surface: hsla(0, 0%, 100%, 5%);
     --surface-hover: hsla(0, 0%, 100%, 10%);
     --surface-active: hsla(0, 0%, 100%, 15%);
+    --surface-alt: hsla(0, 0%, 100%, 2%);
 
     --border: hsla(0, 0%, 100%, 10%);
     --surface-border: #6f6f6f;
@@ -166,8 +168,11 @@ select:not(.tile *),
     background: var(--surface);
 }
 
-@media (hover: hover) {
+.surface-alt {
+    background: var(--surface-alt);
+}
 
+@media (hover: hover) {
     button:hover,
     select:hover,
     button.tile.ghost:hover {
@@ -259,8 +264,9 @@ SIZES
 body {
     /* gap */
     --gap-between-tiles: 4px;
+    --gap-in-controls: 7px;
     --gap-in-tab-links: 1rem;
-    --gap-in-controls: 1.2rem;
+    --text-gap: 1.2rem;
     --large-gap: 2rem;
 
     /* outline */
@@ -822,6 +828,12 @@ select+.icon {
     height: var(--control-height);
 }
 
+button.square {
+    width: var(--control-height);
+    padding: 0px;
+    justify-content: center;
+}
+
 header {
     height: var(--header-height);
 }
@@ -1224,6 +1236,19 @@ STATE
     }
     0%, 100% {
         opacity: .1;
+    }
+}
+
+[scrolled] {
+    animation: 1s ease scroll-highlight;
+}
+
+@keyframes scroll-highlight {
+    0%, 40%, 50%, 90% {
+        opacity: 1;
+    }
+    10%, 30%, 60%, 80% {
+        opacity: .5;
     }
 }
 
