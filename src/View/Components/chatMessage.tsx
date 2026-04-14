@@ -13,7 +13,7 @@ export function ChatMessage(
     chatMessageViewModel: ChatMessageViewModel,
 ) {
     const persistenceId = chatMessageViewModel.chatMessage.id;
-    const statusIcon = ViewController.messageIcons.setItems(persistenceId,()=> React.createProxyState(
+    const statusIcon = ViewController.messageIcons.setItems(persistenceId, () => React.createProxyState(
         [chatMessageViewModel.status],
         () => {
             switch (chatMessageViewModel.status.value) {
@@ -66,6 +66,7 @@ export function ChatMessage(
                         <span class="icon">info</span>
                     </button>
                     <button
+                        class="reply-button"
                         on:click={chatMessageViewModel.reply}
                         aria-label={
                             coreViewModel.translations.chatPage.message

@@ -7,11 +7,8 @@ export function ReplyPreview(
     coreViewModel: CoreViewModel,
     chatMessageViewModel: ChatMessageViewModel,
 ) {
-    const scroll = () => {
-        chatMessageViewModel.scrollIntoView();
-    }
     return (
-        <div class="reply-preview slide-up" on:click={scroll}>
+        <div class="reply-preview slide-up">
             <div>
                 <span class="secondary">{chatMessageViewModel.sender}</span>
                 <b class="ellipsis" subscribe:innerText={chatMessageViewModel.body}></b>

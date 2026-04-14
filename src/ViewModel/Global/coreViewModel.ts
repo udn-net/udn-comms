@@ -8,7 +8,7 @@ import FileTransferModel from "../../Model/Global/fileTransferModel";
 import { v4 } from "uuid";
 
 export default class CoreViewModel {
-    readonly BUILD = "Build 26.04.14.D";
+    readonly BUILD = "Build 26.04.14.E";
 
     translations: Translations;
 

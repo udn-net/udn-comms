@@ -2265,7 +2265,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.14.C";
+      this.BUILD = "Build 26.04.14.D";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId) => {
@@ -4598,6 +4598,7 @@
       ), /* @__PURE__ */ createElement(
         "button",
         {
+          class: "reply-button",
           "on:click": chatMessageViewModel.reply,
           "aria-label": coreViewModel2.translations.chatPage.message.replyToMessageButton
         },
@@ -4682,10 +4683,7 @@
 
   // src/View/Components/replyPreview.tsx
   function ReplyPreview(coreViewModel2, chatMessageViewModel) {
-    const scroll = () => {
-      chatMessageViewModel.scrollIntoView();
-    };
-    return /* @__PURE__ */ createElement("div", { class: "reply-preview slide-up", "on:click": scroll }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "reply-preview slide-up" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
       "button",
       {
         class: "standard square",

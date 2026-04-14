@@ -159,6 +159,14 @@
     --surface: transparent;
 }
 
+.message-bubble .tile.main .reply-button {
+    display: none;
+}
+
+.message-bubble:hover .tile.main .reply-button {
+    display: flex;
+}
+
 .message-bubble .tile.main .text-container {
     padding: var(--control-padding);
 }
