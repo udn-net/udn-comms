@@ -104,7 +104,8 @@ export default class TaskPageViewModel extends ContextHost<string> {
         this.chatViewModel.displayedColor.value = boardViewModel.color.value;
 
         if (this.selectedBoardId.value == boardViewModel.boardInfo.fileId) {
-            return this.updateContexts();
+            this.updateContexts();
+            return;
         }
         this.selectedBoardId.value = boardViewModel.boardInfo.fileId;
 
@@ -112,12 +113,14 @@ export default class TaskPageViewModel extends ContextHost<string> {
     };
 
     closeBoard = (): void => {
-        this.closeContext();
+        this.closeCurrentContext();
+    }
+
+    handleBoardClosed = (boardViewModel: BoardViewModel): void => {
+        if (boardViewModel.boardInfo.fileId != this.selectedBoardId.value) return;
 
         this.selectedBoardId.value = undefined;
         this.chatViewModel.resetColor();
-
-        this.storeLastUsedBoard();
     };
 
     updateBoardIndices = (): void => {
@@ -149,7 +152,7 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
     // load
     loadData = (): void => {
-        this.closeContext();
+        this.closeCurrentContext();
 
         const boardIds: string[] = this.boardsAndTasksModel.listBoardIds();
         for (const boardId of boardIds) {

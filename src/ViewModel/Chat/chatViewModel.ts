@@ -58,14 +58,9 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
         this.chatListViewModel.openChat(this);
         //this.selectedPage.callSubscriptions();
     };
-
-    close = (): void => {
-        this.coreViewModel.closeContext(this.contextId);
-        this.chatListViewModel.closeChat();
-    };
-
+    
     openPage = (page: ChatPageTypes): void => {
-        this.closeContext();
+        this.closeCurrentContext();
         this.selectedPage.value = page;
     };
 
@@ -139,6 +134,15 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
             },
         );
     };
+
+    // exit
+    close = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
+    };
+
+    handleContextClose = (): void => {
+        this.chatListViewModel.closeChat();
+    }
 
     // init
     constructor(

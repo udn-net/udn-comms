@@ -112,7 +112,7 @@ function DirectionSelectionModal(
                         </button>
                     </div>
                 </main>
-                <button on:click={fileTransferViewModel.hideModal}>
+                <button on:click={fileTransferViewModel.close}>
                     {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>
@@ -393,7 +393,7 @@ function TransferDisplayModal(
                     </button>
                     <button
                         class="flex"
-                        on:click={fileTransferViewModel.hideModal}
+                        on:click={fileTransferViewModel.close}
                         toggle:disabled={
                             fileTransferViewModel.didNotFinishSending
                         }

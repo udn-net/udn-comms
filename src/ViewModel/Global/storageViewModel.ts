@@ -54,14 +54,18 @@ export default class StorageViewModel extends Context {
         this.isShowingStorageModal.value = true;
     };
 
-    hideStorageModal = (): void => {
+    // exit
+    close = (): void => {
         this.coreViewModel.closeContext(this.contextId);
+    };
+
+    handleContextClose = (): void => {
         if (this.didMakeChanges.value == true) {
             window.location.reload();
             return;
         }
         this.isShowingStorageModal.value = false;
-    };
+    }
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {
@@ -77,6 +81,6 @@ export default class StorageViewModel extends Context {
         );
 
         // keystrokes
-        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideStorageModal);
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.close);
     }
 }

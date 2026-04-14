@@ -14,6 +14,7 @@ export default class CoreViewModel {
 
     // CONTEXT
     private contextStack = new Map<string, Context>();
+
     get contexts(): Context[] {
         return [...this.contextStack.values()];
     }
@@ -23,16 +24,20 @@ export default class CoreViewModel {
     set context(context: Context) {
         if (this.contextStack.has(context.contextId)) return;
         this.contextStack.set(context.contextId, context);
+        history.pushState({ id: context.contextId }, "");
     }
-    closeContext = (contextId: string): void => {
+
+    closeContext = (contextId: string, fromHistoryEvent: boolean = false): void => {
         if (
             !this.contexts
                 .map((context) => context.contextId)
                 .includes(contextId)
         )
             return;
+
         while (this.contexts.length > 0) {
             const currentContext: Context = this.context;
+            currentContext.handleContextClose(fromHistoryEvent);
             this.contextStack.delete(currentContext.contextId);
             if (currentContext.contextId == contextId) break;
         }
@@ -73,6 +78,10 @@ export default class CoreViewModel {
             allTranslations[settingsModel.language] || allTranslations.en;
 
         document.body.addEventListener("keydown", this.handleKeyDown);
+
+        window.onpopstate = () => {
+            this.closeContext(this.context.contextId, true);
+        }
     }
 
     // util
@@ -94,13 +103,14 @@ export class Context {
         return true;
     };
 
-    close: () => void;
+    close = (): void => {};
+    handleContextClose = (fromHistoryEvent: boolean): void => {};
 
     registerKeyStroke = (key: string, fn: () => void): void => {
         this.keystrokes.set(key, fn);
     };
 
-    constructor(public contextDebugDescription: string) {}
+    constructor(public contextDebugDescription: string) { }
 }
 
 export class ContextHost<T> extends Context {
@@ -119,7 +129,7 @@ export class ContextHost<T> extends Context {
         this.contexts.set(key, context);
     };
 
-    closeContext = (): void => {
+    closeCurrentContext = (): void => {
         if (this.currentContext.value) {
             this.coreViewModel.closeContext(
                 this.currentContext.value.contextId,
@@ -136,7 +146,7 @@ export class ContextHost<T> extends Context {
         );
         if (!selectedContext) return;
         if (selectedContext != this.currentContext.value) {
-            this.closeContext();
+            this.closeCurrentContext();
         }
 
         this.coreViewModel.context = selectedContext;

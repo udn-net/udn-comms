@@ -89,11 +89,6 @@ export default class TaskViewModel extends Context {
         this.containingViewModel.selectTask(this);
     };
 
-    close = (): void => {
-        this.coreViewModel.closeContext(this.contextId);
-        this.containingViewModel.closeTask();
-    };
-
     closeAndDiscard = (): void => {
         this.close();
         this.loadTaskData();
@@ -203,9 +198,16 @@ export default class TaskViewModel extends Context {
         this.date.value = this.task.date ?? "";
         this.time.value = this.task.time ?? "";
 
-        this.selectedVersionId.value = this.task.fileContentId;
-
         this.updateSuggestions();
+    };
+
+    // exit
+    close = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
+    };
+
+    handleContextClose = (): void => {
+        this.containingViewModel.closeTask();
     };
 
     // init

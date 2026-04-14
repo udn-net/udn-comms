@@ -60,7 +60,7 @@ export function SettingsModal(
                         settingsViewModel.selectedModalPage,
                     )}
                 </main>
-                <button on:click={settingsViewModel.hideSettingsModal}>
+                <button on:click={settingsViewModel.close}>
                     {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>

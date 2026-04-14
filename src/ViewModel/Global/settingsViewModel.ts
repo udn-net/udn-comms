@@ -48,14 +48,6 @@ export default class SettingsViewModel extends Context {
         this.isShowingSettingsModal.value = true;
     };
 
-    hideSettingsModal = (): void => {
-        this.coreViewModel.closeContext(this.contextId);
-        this.isShowingSettingsModal.value = false;
-        if (this.requiresReload.value == true) {
-            window.location.reload();
-        }
-    };
-
     showModalPage = (page: SettingsModalPages): void => {
         this.selectedModalPage.value = page;
     };
@@ -68,6 +60,18 @@ export default class SettingsViewModel extends Context {
         }
         document.body.setAttribute("theme", theme);
     };
+
+    // exit
+    close = (): void => {
+        this.coreViewModel.closeContext(this.contextId);
+    };
+
+    handleContextClose = (): void => {
+        this.isShowingSettingsModal.value = false;
+        if (this.requiresReload.value == true) {
+            window.location.reload();
+        }
+    }
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {
@@ -100,7 +104,7 @@ export default class SettingsViewModel extends Context {
         // keystrokes
         this.registerKeyStroke(
             CommonKeys.CloseOrCancel,
-            this.hideSettingsModal,
+            this.close,
         );
     }
 

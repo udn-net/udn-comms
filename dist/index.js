@@ -2265,14 +2265,15 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.14.D";
+      this.BUILD = "Build 26.04.14.E";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
-      this.closeContext = (contextId) => {
+      this.closeContext = (contextId, fromHistoryEvent = false) => {
         if (!this.contexts.map((context) => context.contextId).includes(contextId))
           return;
         while (this.contexts.length > 0) {
           const currentContext = this.context;
+          currentContext.handleContextClose(fromHistoryEvent);
           this.contextStack.delete(currentContext.contextId);
           if (currentContext.contextId == contextId) break;
         }
@@ -2297,6 +2298,9 @@
       this.taskStatusSuggestions = new ListState();
       this.translations = allTranslations[settingsModel2.language] || allTranslations.en;
       document.body.addEventListener("keydown", this.handleKeyDown);
+      window.onpopstate = () => {
+        this.closeContext(this.context.contextId, true);
+      };
     }
     get contexts() {
       return [...this.contextStack.values()];
@@ -2307,6 +2311,7 @@
     set context(context) {
       if (this.contextStack.has(context.contextId)) return;
       this.contextStack.set(context.contextId, context);
+      history.pushState({ id: context.contextId }, "");
     }
     // util
     static checkIsKeystroke(e) {
@@ -2326,6 +2331,10 @@
         fn();
         return true;
       };
+      this.close = () => {
+      };
+      this.handleContextClose = (fromHistoryEvent) => {
+      };
       this.registerKeyStroke = (key, fn) => {
         this.keystrokes.set(key, fn);
       };
@@ -2339,7 +2348,7 @@
       this.registerContext = (key, context) => {
         this.contexts.set(key, context);
       };
-      this.closeContext = () => {
+      this.closeCurrentContext = () => {
         if (this.currentContext.value) {
           this.coreViewModel.closeContext(
             this.currentContext.value.contextId
@@ -2354,7 +2363,7 @@
         );
         if (!selectedContext) return;
         if (selectedContext != this.currentContext.value) {
-          this.closeContext();
+          this.closeCurrentContext();
         }
         this.coreViewModel.context = selectedContext;
         this.currentContext.value = selectedContext;
@@ -2438,10 +2447,6 @@
         this.coreViewModel.context = this;
         this.containingViewModel.selectTask(this);
       };
-      this.close = () => {
-        this.coreViewModel.closeContext(this.contextId);
-        this.containingViewModel.closeTask();
-      };
       this.closeAndDiscard = () => {
         this.close();
         this.loadTaskData();
@@ -2522,8 +2527,14 @@
         this.priority.value = this.task.priority ?? "";
         this.date.value = this.task.date ?? "";
         this.time.value = this.task.time ?? "";
-        this.selectedVersionId.value = this.task.fileContentId;
         this.updateSuggestions();
+      };
+      // exit
+      this.close = () => {
+        this.coreViewModel.closeContext(this.contextId);
+      };
+      this.handleContextClose = () => {
+        this.containingViewModel.closeTask();
       };
       this.loadAllData();
       this.selectedVersionId.subscribeSilent((selectedVersionId) => {
@@ -3302,6 +3313,7 @@
       };
       this.close = () => {
         this.taskPageViewModel.closeBoard();
+        this.taskPageViewModel.storeLastUsedBoard();
         this.taskViewModels.clear();
       };
       this.showSettings = () => {
@@ -3365,6 +3377,12 @@
         this.loadTasks();
         this.loadSearchSuggestions();
       };
+      // exit
+      this.handleContextClose = (fromHistoryEvent) => {
+        this.taskPageViewModel.handleBoardClosed(this);
+        if (!fromHistoryEvent) return;
+        this.taskPageViewModel.storeLastUsedBoard();
+      };
       this.preloadData();
       this.isSelected = createProxyState(
         [this.taskPageViewModel.selectedBoardId],
@@ -3378,11 +3396,6 @@
       });
       this.selectedPage.subscribeSilent(() => {
         this.storeLastUsedView();
-        console.log(
-          "SELECTED PAGE",
-          this.selectedPage.value,
-          this.contextId
-        );
       });
       boardsAndTasksModel.taskHandlerManager.setHandler(
         this.boardInfo.fileId,
@@ -3502,16 +3515,19 @@
       this.selectBoard = (boardViewModel) => {
         this.chatViewModel.displayedColor.value = boardViewModel.color.value;
         if (this.selectedBoardId.value == boardViewModel.boardInfo.fileId) {
-          return this.updateContexts();
+          this.updateContexts();
+          return;
         }
         this.selectedBoardId.value = boardViewModel.boardInfo.fileId;
         this.storeLastUsedBoard();
       };
       this.closeBoard = () => {
-        this.closeContext();
+        this.closeCurrentContext();
+      };
+      this.handleBoardClosed = (boardViewModel) => {
+        if (boardViewModel.boardInfo.fileId != this.selectedBoardId.value) return;
         this.selectedBoardId.value = void 0;
         this.chatViewModel.resetColor();
-        this.storeLastUsedBoard();
       };
       this.updateBoardIndices = () => {
         this.boardIndexManager.update([...this.boardViewModels.value.values()]);
@@ -3535,7 +3551,7 @@
       };
       // load
       this.loadData = () => {
-        this.closeContext();
+        this.closeCurrentContext();
         const boardIds = this.boardsAndTasksModel.listBoardIds();
         for (const boardId of boardIds) {
           if (this.boardViewModels.value.has(boardId)) continue;
@@ -3598,12 +3614,8 @@
         this.coreViewModel.context = this;
         this.chatListViewModel.openChat(this);
       };
-      this.close = () => {
-        this.coreViewModel.closeContext(this.contextId);
-        this.chatListViewModel.closeChat();
-      };
       this.openPage = (page) => {
-        this.closeContext();
+        this.closeCurrentContext();
         this.selectedPage.value = page;
       };
       this.setColor = (color) => {
@@ -3661,6 +3673,13 @@
             this.setReadStatus(false);
           }
         );
+      };
+      // exit
+      this.close = () => {
+        this.coreViewModel.closeContext(this.contextId);
+      };
+      this.handleContextClose = () => {
+        this.chatListViewModel.closeChat();
       };
       this.calendarViewModel = new CalendarPageViewModel(
         coreViewModel2,
@@ -6255,8 +6274,11 @@
         };
         this.coreViewModel.fileTransferModel.prepareToReceive(transferData);
       };
-      this.hideModal = () => {
+      // exit
+      this.close = () => {
         this.coreViewModel.closeContext(this.contextId);
+      };
+      this.handleContextClose = () => {
         this.presentedModal.value = void 0;
       };
       this.coreViewModel.fileTransferModel.fileHandlerManager.setHandler(
@@ -6267,7 +6289,7 @@
         "file-transfer-view-model",
         () => this.initiateTransfer()
       );
-      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideModal);
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.close);
     }
   };
 
@@ -6326,7 +6348,7 @@
         /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.toThisDeviceButton)),
         /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
       )
-    )), /* @__PURE__ */ createElement("button", { "on:click": fileTransferViewModel2.hideModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )), /* @__PURE__ */ createElement("button", { "on:click": fileTransferViewModel2.close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
   function FileSelectionModal(coreViewModel2, fileTransferViewModel2) {
     const OptionConverter = (fileOption) => {
@@ -6454,7 +6476,7 @@
       "button",
       {
         class: "flex",
-        "on:click": fileTransferViewModel2.hideModal,
+        "on:click": fileTransferViewModel2.close,
         "toggle:disabled": fileTransferViewModel2.didNotFinishSending
       },
       coreViewModel2.translations.general.closeButton,
@@ -6888,13 +6910,6 @@
         this.coreViewModel.context = this;
         this.isShowingSettingsModal.value = true;
       };
-      this.hideSettingsModal = () => {
-        this.coreViewModel.closeContext(this.contextId);
-        this.isShowingSettingsModal.value = false;
-        if (this.requiresReload.value == true) {
-          window.location.reload();
-        }
-      };
       this.showModalPage = (page) => {
         this.selectedModalPage.value = page;
       };
@@ -6905,6 +6920,16 @@
           theme = _SettingsViewModel.getSystemTheme();
         }
         document.body.setAttribute("theme", theme);
+      };
+      // exit
+      this.close = () => {
+        this.coreViewModel.closeContext(this.contextId);
+      };
+      this.handleContextClose = () => {
+        this.isShowingSettingsModal.value = false;
+        if (this.requiresReload.value == true) {
+          window.location.reload();
+        }
       };
       this.username.value = coreViewModel2.settingsModel.username;
       this.usernameInput.value = coreViewModel2.settingsModel.username;
@@ -6928,7 +6953,7 @@
       );
       this.registerKeyStroke(
         "backspace" /* CloseOrCancel */,
-        this.hideSettingsModal
+        this.close
       );
     }
     static generateThemeMedia() {
@@ -7063,7 +7088,7 @@
       new State(DirectoryItemList(storageViewModel2)),
       detailView,
       true
-    )), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.hideStorageModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )), /* @__PURE__ */ createElement("button", { "on:click": storageViewModel2.close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
 
   // src/ViewModel/Global/storageViewModel.ts
@@ -7104,8 +7129,11 @@
         this.coreViewModel.context = this;
         this.isShowingStorageModal.value = true;
       };
-      this.hideStorageModal = () => {
+      // exit
+      this.close = () => {
         this.coreViewModel.closeContext(this.contextId);
+      };
+      this.handleContextClose = () => {
         if (this.didMakeChanges.value == true) {
           window.location.reload();
           return;
@@ -7120,7 +7148,7 @@
         [this.selectedPath],
         () => this.getSelectedItemContent()
       );
-      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideStorageModal);
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.close);
     }
   };
 
@@ -7403,7 +7431,7 @@
         detailView,
         true,
         settingsViewModel2.selectedModalPage
-      )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.hideSettingsModal }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
+      )), /* @__PURE__ */ createElement("button", { "on:click": settingsViewModel2.close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close")))
     );
   }
   function SettingsLeftPane(coreViewModel2, settingsViewModel2) {

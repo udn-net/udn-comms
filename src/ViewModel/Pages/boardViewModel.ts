@@ -9,7 +9,6 @@ import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
 import { Colors } from "../../colors";
 import CoreViewModel from "../Global/coreViewModel";
 import SearchViewModel from "../Utility/searchViewModel";
-import StorageModel from "../../Model/Global/storageModel";
 import TaskContainingPageViewModel from "./taskContainingPageViewModel";
 import TaskPageViewModel from "./taskPageViewModel";
 import TaskViewModel from "./taskViewModel";
@@ -164,6 +163,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
     close = (): void => {
         this.taskPageViewModel.closeBoard();
+        this.taskPageViewModel.storeLastUsedBoard();
         this.taskViewModels.clear();
     };
 
@@ -246,6 +246,14 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         this.loadSearchSuggestions();
     };
 
+    // exit
+    handleContextClose = (fromHistoryEvent: boolean): void => {
+        this.taskPageViewModel.handleBoardClosed(this);
+
+        if (!fromHistoryEvent) return;
+        this.taskPageViewModel.storeLastUsedBoard();
+    }
+
     // init
     constructor(
         public readonly coreViewModel: CoreViewModel,
@@ -276,11 +284,6 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
         this.selectedPage.subscribeSilent(() => {
             this.storeLastUsedView();
-            console.log(
-                "SELECTED PAGE",
-                this.selectedPage.value,
-                this.contextId,
-            );
         });
 
         // handlers

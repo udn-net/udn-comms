@@ -78,7 +78,7 @@ export function StorageModal(
                         true,
                     )}
                 </main>
-                <button on:click={storageViewModel.hideStorageModal}>
+                <button on:click={storageViewModel.close}>
                     {coreViewModel.translations.general.closeButton}
                     <span class="icon">close</span>
                 </button>

@@ -164,10 +164,14 @@ export default class FileTransferViewModel extends Context {
         this.coreViewModel.fileTransferModel.prepareToReceive(transferData);
     };
 
-    hideModal = (): void => {
+    // exit
+    close = (): void => {
         this.coreViewModel.closeContext(this.contextId);
-        this.presentedModal.value = undefined;
     };
+
+    handleContextClose = (): void => {
+        this.presentedModal.value = undefined;
+    }
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {
@@ -184,7 +188,7 @@ export default class FileTransferViewModel extends Context {
         );
 
         // keystrokes
-        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideModal);
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.close);
     }
 }
 

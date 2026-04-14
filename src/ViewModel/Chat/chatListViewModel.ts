@@ -1,12 +1,10 @@
 import * as React from "bloatless-react";
 
-import ChatListModel from "../../Model/Chat/chatListModel";
 import ChatModel from "../../Model/Chat/chatModel";
 import ChatViewModel from "./chatViewModel";
 import CoreViewModel from "../Global/coreViewModel";
 import { IndexManager } from "../../Model/Utility/utility";
 import SettingsViewModel from "../Global/settingsViewModel";
-import StorageModel from "../../Model/Global/storageModel";
 import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
 
