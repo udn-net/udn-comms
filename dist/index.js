@@ -2271,6 +2271,7 @@
       };
       this.handleKeyDown = (e) => {
         if (_CoreViewModel.checkIsKeystroke(e) == false) return;
+        e.preventDefault();
         const contexts = this.contexts;
         while (contexts.length > 0) {
           const currentContext = contexts.pop();
@@ -2314,7 +2315,6 @@
           e.key.toLowerCase()
         );
         if (!fn) return false;
-        e.preventDefault();
         fn();
         return true;
       };

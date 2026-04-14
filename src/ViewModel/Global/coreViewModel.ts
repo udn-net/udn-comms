@@ -8,7 +8,7 @@ import FileTransferModel from "../../Model/Global/fileTransferModel";
 import { v4 } from "uuid";
 
 export default class CoreViewModel {
-    readonly BUILD = "Build 26.04.14.B";
+    readonly BUILD = "Build 26.04.14.C";
 
     translations: Translations;
 
@@ -40,6 +40,7 @@ export default class CoreViewModel {
 
     handleKeyDown = (e: KeyboardEvent): void => {
         if (CoreViewModel.checkIsKeystroke(e) == false) return;
+        e.preventDefault();
         const contexts: Context[] = this.contexts;
         while (contexts.length > 0) {
             const currentContext: Context | undefined = contexts.pop();
@@ -89,7 +90,6 @@ export class Context {
             e.key.toLowerCase(),
         );
         if (!fn) return false;
-        e.preventDefault();
         fn();
         return true;
     };
