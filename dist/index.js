@@ -2265,7 +2265,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.14.F";
+      this.BUILD = "Build 26.04.14.G";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -4702,10 +4702,10 @@
 
   // src/View/Components/replyPreview.tsx
   function ReplyPreview(coreViewModel2, chatMessageViewModel) {
-    return /* @__PURE__ */ createElement("div", { class: "reply-preview" }, /* @__PURE__ */ createElement("div", { class: "surface" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "reply-preview" }, /* @__PURE__ */ createElement("div", { class: "surface blur" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
       "button",
       {
-        class: "standard square",
+        class: "standard square blur",
         "on:click": chatMessageViewModel.cancelReply,
         "aria-label": coreViewModel2.translations.chatPage.message.cancelReplyAudioLabel
       },
@@ -4783,6 +4783,7 @@
       "input",
       {
         id: "focused",
+        class: "blur",
         "bind:value": messagePageViewModel.composingMessage,
         "on:enter": messagePageViewModel.sendMessage,
         placeholder: coreViewModel2.translations.chatPage.message.composerInputPlaceholder
@@ -4790,7 +4791,7 @@
     ), /* @__PURE__ */ createElement(
       "button",
       {
-        class: "primary",
+        class: "primary blur",
         "aria-label": coreViewModel2.translations.chatPage.message.sendMessageButtonAudioLabel,
         "on:click": messagePageViewModel.sendMessage,
         "toggle:disabled": messagePageViewModel.cannotSendMessage

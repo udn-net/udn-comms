@@ -113,6 +113,7 @@ export function MessagePage(
                                 <div class="input-width-constraint">
                                     <input
                                         id="focused"
+                                        class="blur"
                                         bind:value={
                                             messagePageViewModel.composingMessage
                                         }
@@ -126,7 +127,7 @@ export function MessagePage(
                                         }
                                     ></input>
                                     <button
-                                        class="primary"
+                                        class="primary blur"
                                         aria-label={
                                             coreViewModel.translations.chatPage
                                                 .message

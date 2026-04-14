@@ -349,12 +349,7 @@ select {
 header,
 menu,
 .modal>div,
-button,
-input,
-textarea,
-select,
-.surface,
-.surface-alt {
+.blur {
     backdrop-filter: blur(var(--blur));
     -webkit-backdrop-filter: blur(var(--blur));
 }
