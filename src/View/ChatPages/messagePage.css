@@ -2,20 +2,18 @@
 #chat-page #main #message-page .content {
     padding: 0px;
     overflow: hidden;
-    display: grid;
-    --composer-height: var(--control-height);
-    grid-template-rows:
-        1fr calc(var(--composer-height) + var(--gap-between-tiles))
-        var(--safe-area-bottom);
+    display: flex;
+
+    position: relative;
 }
 
-#chat-page
-    #main
-    #message-page
-    .content:has(.reply-preview-wrapper .reply-preview) {
-    --composer-height: calc(
-        2 * var(--control-height) + var(--gap-between-tiles)
-    );
+#chat-page #main #message-page .content #message-container {
+    --message-container-padding: var(--control-height);
+    padding-bottom: calc(var(--message-container-padding) + var(--content-padding)) !important;
+}
+
+#chat-page #main #message-page .content:has(.reply-preview-wrapper .reply-preview) #message-container {
+    --message-container-padding: calc(2 * var(--control-height) + var(--gap-between-tiles));
 }
 
 #message-page #message-container {
@@ -26,6 +24,11 @@
 #message-page #composer {
     display: flex;
     justify-content: center;
+
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
 }
 
 #message-page #composer input {
@@ -59,9 +62,7 @@
     gap: var(--gap-between-tiles);
 }
 
-#message-page #composer .reply-preview-wrapper .reply-preview > div {
-    background: var(--surface);
-
+#message-page #composer .reply-preview-wrapper .reply-preview>div {
     display: flex;
     align-items: center;
     gap: var(--text-gap);
@@ -73,13 +74,14 @@
 
 @media (max-width: 700px) {
     #message-page #composer div {
-        width: 100%;
+        width: calc(100vw - var(--control-height));
         max-width: unset;
         display: flex;
     }
 }
 
 @media (min-width: 700px) {
+
     #message-page #composer .content-width-constraint,
     #message-page #composer .input-width-constraint {
         display: flex;
@@ -225,7 +227,7 @@
     text-align: right;
 }
 
-.message-bubble > .inline-reply {
+.message-bubble>.inline-reply {
     cursor: pointer;
 
     display: flex;
@@ -244,7 +246,7 @@
     border-left: var(--outline-width) solid var(--primary);
 }
 
-.message-bubble > .message-reaction-row {
+.message-bubble>.message-reaction-row {
     max-width: var(--max-input-width);
     width: 100%;
 
@@ -255,11 +257,11 @@
     overflow: hidden;
 }
 
-.message-bubble > .message-reaction-row:has(button:not([count="0"])) {
+.message-bubble>.message-reaction-row:has(button:not([count="0"])) {
     display: grid !important;
 }
 
-.message-bubble > .message-reaction-row button {
+.message-bubble>.message-reaction-row button {
     min-height: unset;
     height: 100%;
     width: 100%;
@@ -269,7 +271,7 @@
     animation: slide-up var(--animation-duration);
 }
 
-.message-bubble > .message-reaction-row button[count="0"] {
+.message-bubble>.message-reaction-row button[count="0"] {
     display: none;
 }
 
@@ -282,6 +284,7 @@
         grid-template-columns: repeat(3, minmax(80px, 1fr));
     }
 }
+
 
 .grid.message-reaction-filter {
     grid-template-columns: repeat(3, 1fr);

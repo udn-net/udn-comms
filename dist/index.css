@@ -589,12 +589,15 @@ body[showing-chat] #chat-page-wrapper {
 #chat-page #main #message-page .content {
   padding: 0px;
   overflow: hidden;
-  display: grid;
-  --composer-height: var(--control-height);
-  grid-template-rows: 1fr calc(var(--composer-height) + var(--gap-between-tiles)) var(--safe-area-bottom);
+  display: flex;
+  position: relative;
 }
-#chat-page #main #message-page .content:has(.reply-preview-wrapper .reply-preview) {
-  --composer-height: calc( 2 * var(--control-height) + var(--gap-between-tiles) );
+#chat-page #main #message-page .content #message-container {
+  --message-container-padding: var(--control-height);
+  padding-bottom: calc(var(--message-container-padding) + var(--content-padding)) !important;
+}
+#chat-page #main #message-page .content:has(.reply-preview-wrapper .reply-preview) #message-container {
+  --message-container-padding: calc(2 * var(--control-height) + var(--gap-between-tiles));
 }
 #message-page #message-container {
   overflow: auto;
@@ -602,6 +605,10 @@ body[showing-chat] #chat-page-wrapper {
 #message-page #composer {
   display: flex;
   justify-content: center;
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
 }
 #message-page #composer input {
   margin: 0px;
@@ -630,7 +637,6 @@ body[showing-chat] #chat-page-wrapper {
   gap: var(--gap-between-tiles);
 }
 #message-page #composer .reply-preview-wrapper .reply-preview > div {
-  background: var(--surface);
   display: flex;
   align-items: center;
   gap: var(--text-gap);
@@ -639,7 +645,7 @@ body[showing-chat] #chat-page-wrapper {
 }
 @media (max-width: 700px) {
   #message-page #composer div {
-    width: 100%;
+    width: calc(100vw - var(--control-height));
     max-width: unset;
     display: flex;
   }

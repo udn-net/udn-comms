@@ -8,8 +8,8 @@ export function ReplyPreview(
     chatMessageViewModel: ChatMessageViewModel,
 ) {
     return (
-        <div class="reply-preview slide-up">
-            <div>
+        <div class="reply-preview">
+            <div class="surface">
                 <span class="secondary">{chatMessageViewModel.sender}</span>
                 <b class="ellipsis" subscribe:innerText={chatMessageViewModel.body}></b>
             </div>

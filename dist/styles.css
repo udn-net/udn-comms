@@ -51,6 +51,8 @@ body {
     --surface-active: hsla(0, 0%, 5%, 15%);
     --surface-alt: hsla(0, 0%, 0%, 2%);
 
+    --blur: 70px;
+
     --border: hsla(0, 0%, 0%, 10%);
     --surface-border: #8d8d8d;
 
@@ -63,7 +65,7 @@ body {
     --text-error: #da1e28;
     --text-info: #0043ce;
 
-        --highlight-background: linear-gradient(45deg, hsl(30, 100%, 50%), hsl(40, 100%, 50%));
+    --highlight-background: linear-gradient(45deg, hsl(30, 100%, 50%), hsl(40, 100%, 50%));
     --highlight-color: black;
 
     --link: #0f62fe;
@@ -346,9 +348,15 @@ select {
 /* backdrop-filter */
 header,
 menu,
-.modal>div {
-    backdrop-filter: blur(70px);
-    -webkit-backdrop-filter: blur(70px);
+.modal>div,
+button,
+input,
+textarea,
+select,
+.surface,
+.surface-alt {
+    backdrop-filter: blur(var(--blur));
+    -webkit-backdrop-filter: blur(var(--blur));
 }
 
 /* border, outline, etc */

@@ -4702,7 +4702,7 @@
 
   // src/View/Components/replyPreview.tsx
   function ReplyPreview(coreViewModel2, chatMessageViewModel) {
-    return /* @__PURE__ */ createElement("div", { class: "reply-preview slide-up" }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "reply-preview" }, /* @__PURE__ */ createElement("div", { class: "surface" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
       "button",
       {
         class: "standard square",
