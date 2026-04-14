@@ -212,8 +212,8 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
 
         // keystrokes
         this.registerKeyStroke(CommonKeys.Reset, this.showToday);
-        this.registerKeyStroke("p", this.showNextMonth);
-        this.registerKeyStroke("o", this.showPreviousMonth);
+        this.registerKeyStroke("k", this.showPreviousMonth);
+        this.registerKeyStroke("l", this.showNextMonth);
         this.registerKeyStroke(CommonKeys.Create, this.createEvent);
 
         this.chatViewModel.registerContext(ChatPageTypes.Calendar, this);

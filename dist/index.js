@@ -2257,7 +2257,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.14.A";
+      this.BUILD = "Build 26.04.14.B";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId) => {
@@ -2747,8 +2747,8 @@
       );
       this.showToday();
       this.registerKeyStroke("-" /* Reset */, this.showToday);
-      this.registerKeyStroke("p", this.showNextMonth);
-      this.registerKeyStroke("o", this.showPreviousMonth);
+      this.registerKeyStroke("k", this.showPreviousMonth);
+      this.registerKeyStroke("l", this.showNextMonth);
       this.registerKeyStroke(";" /* Create */, this.createEvent);
       this.chatViewModel.registerContext("calendar" /* Calendar */, this);
     }
@@ -3382,6 +3382,9 @@
       this.registerKeyStroke("," /* Settings */, this.showSettings);
       this.registerKeyStroke("enter" /* Apply */, this.hideSettings);
       this.registerKeyStroke(";" /* Create */, this.createTask);
+      this.registerKeyStroke("j", () => this.selectedPage.value = "list" /* List */);
+      this.registerKeyStroke("k", () => this.selectedPage.value = "kanban" /* Kanban */);
+      this.registerKeyStroke("l", () => this.selectedPage.value = "status-grid" /* StatusGrid */);
       this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }
   };
@@ -3658,12 +3661,12 @@
       this.subscribeReadStatus();
       this.registerKeyStroke(" " /* Home */, this.close);
       this.registerKeyStroke(
-        "h",
+        "u",
         () => this.openPage("messages" /* Messages */)
       );
-      this.registerKeyStroke("j", () => this.openPage("tasks" /* Tasks */));
+      this.registerKeyStroke("i", () => this.openPage("tasks" /* Tasks */));
       this.registerKeyStroke(
-        "k",
+        "o",
         () => this.openPage("calendar" /* Calendar */)
       );
       this.registerKeyStroke(

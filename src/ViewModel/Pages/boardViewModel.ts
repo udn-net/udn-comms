@@ -319,6 +319,10 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
         this.registerKeyStroke(CommonKeys.Apply, this.hideSettings);
         this.registerKeyStroke(CommonKeys.Create, this.createTask);
 
+        this.registerKeyStroke("j", ()=>this.selectedPage.value = BoardPageTypes.List);
+        this.registerKeyStroke("k", ()=>this.selectedPage.value = BoardPageTypes.Kanban);
+        this.registerKeyStroke("l", ()=>this.selectedPage.value = BoardPageTypes.StatusGrid);
+
         this.taskPageViewModel.registerContext(this.boardInfo.fileId, this);
     }
 }

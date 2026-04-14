@@ -197,11 +197,11 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
 
         // keystrokes
         this.registerKeyStroke(CommonKeys.Home, this.close);
-        this.registerKeyStroke("h", () =>
+        this.registerKeyStroke("u", () =>
             this.openPage(ChatPageTypes.Messages),
         );
-        this.registerKeyStroke("j", () => this.openPage(ChatPageTypes.Tasks));
-        this.registerKeyStroke("k", () =>
+        this.registerKeyStroke("i", () => this.openPage(ChatPageTypes.Tasks));
+        this.registerKeyStroke("o", () =>
             this.openPage(ChatPageTypes.Calendar),
         );
         this.registerKeyStroke(CommonKeys.Settings, () =>
