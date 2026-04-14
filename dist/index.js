@@ -1312,7 +1312,7 @@
         const combinedChannel = allChannels.join("/");
         return [senderName, combinedChannel];
       };
-      this.sendMessage = async (body, fileContent) => {
+      this.sendMessage = async (body, replyId, fileContent) => {
         const nameAndChannel = this.getNameAndChannel();
         if (nameAndChannel == false) return;
         const [senderName, combinedChannel] = nameAndChannel;
@@ -1349,7 +1349,7 @@
           content,
           isDeleting
         );
-        this.sendMessage("", reaction);
+        this.sendMessage("", void 0, reaction);
         this.handleReaction(reaction);
       };
       this.subscribe = () => {
@@ -2257,7 +2257,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.14.B";
+      this.BUILD = "Build 26.04.14.C";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId) => {
@@ -2958,6 +2958,7 @@
       this.filteredMessageViewModels = new ListState();
       this.isFilterModalOpen = new State(false);
       this.reactionFilter = new State(void 0);
+      this.replyingMessageId = new State(void 0);
       this.composingMessage = new State("");
       // methods
       this.sendMessage = () => {
@@ -2966,7 +2967,8 @@
         this.composingMessage.value = "";
       };
       this.sendMessageFromBody = (body) => {
-        this.chatViewModel.chatModel.sendMessage(body);
+        this.chatViewModel.chatModel.sendMessage(body, this.replyingMessageId.value);
+        this.replyingMessageId.value = void 0;
       };
       this.decryptMessage = async (messageViewModel) => {
         const chatMessage = messageViewModel.chatMessage;

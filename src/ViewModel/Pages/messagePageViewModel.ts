@@ -23,7 +23,8 @@ export default class MessagePageViewModel extends Context {
     reactionFilter = new React.State<ReactionSymbols | undefined>(undefined);
     isFilterActive: React.State<boolean>;
 
-    composingMessage: React.State<string> = new React.State("");
+    replyingMessageId = new React.State<string|undefined>(undefined)
+    composingMessage = new React.State<string>("");
 
     // guards
     cannotSendMessage: React.State<boolean>;
@@ -37,7 +38,8 @@ export default class MessagePageViewModel extends Context {
     };
 
     sendMessageFromBody = (body: string): void => {
-        this.chatViewModel.chatModel.sendMessage(body);
+        this.chatViewModel.chatModel.sendMessage(body, this.replyingMessageId.value);
+        this.replyingMessageId.value = undefined;
     };
 
     decryptMessage = async (

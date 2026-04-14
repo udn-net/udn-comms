@@ -180,6 +180,7 @@ export default class ChatModel {
 
     sendMessage = async (
         body: string,
+        replyId?: string,
         fileContent?: FileContent<string>,
     ): Promise<boolean> => {
         const nameAndChannel = this.getNameAndChannel();
@@ -227,7 +228,7 @@ export default class ChatModel {
             content,
             isDeleting,
         );
-        this.sendMessage("", reaction);
+        this.sendMessage("", undefined, reaction);
         this.handleReaction(reaction);
     };
 
@@ -466,6 +467,7 @@ export interface ChatMessage extends ValidObject {
     readonly sender: string;
     body: string;
     readonly dateSent: string;
+    readonly inlineReplyId?: string;
 
     status: ChatMessageStatuses;
 
