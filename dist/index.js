@@ -860,7 +860,7 @@
       };
       this.updateBoardAndSend = (boardInfoFileContent) => {
         this.updateBoard(boardInfoFileContent);
-        this.chatModel.sendMessage("", boardInfoFileContent);
+        this.chatModel.sendMessage("", void 0, boardInfoFileContent);
       };
       this.storeBoard = (boardInfoFileContent) => {
         this.fileModel.storeFileContent(boardInfoFileContent);
@@ -903,7 +903,7 @@
       };
       this.updateTaskAndSend = (taskFileContent) => {
         this.updateTask(taskFileContent);
-        this.chatModel.sendMessage("", taskFileContent);
+        this.chatModel.sendMessage("", void 0, taskFileContent);
       };
       this.storeTask = (taskFileContent) => {
         this.fileModel.storeFileContent(taskFileContent);
@@ -1046,7 +1046,7 @@
       // methods
       this.addFileContentAndSend = (fileContent) => {
         this.handleFileContent(fileContent);
-        this.chatModel.sendMessage("", fileContent);
+        this.chatModel.sendMessage("", void 0, fileContent);
       };
       // storage
       this.storeFileContent = (fileContent) => {
@@ -1255,6 +1255,7 @@
         if (chatMessage == null) return;
         chatMessage.status = "received" /* Received */;
         this.addMessage(chatMessage);
+        if (chatMessage.stringifiedFile != void 0) return;
         this.setReadStatus(true);
       };
       this.handleReaction = (reaction) => {

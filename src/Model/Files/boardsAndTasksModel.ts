@@ -107,7 +107,7 @@ export default class BoardsAndTasksModel {
 
     updateBoardAndSend = (boardInfoFileContent: BoardInfoFileContent): void => {
         this.updateBoard(boardInfoFileContent);
-        this.chatModel.sendMessage("", boardInfoFileContent);
+        this.chatModel.sendMessage("", undefined, boardInfoFileContent);
     };
 
     storeBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
@@ -166,7 +166,7 @@ export default class BoardsAndTasksModel {
 
     updateTaskAndSend = (taskFileContent: TaskFileContent): void => {
         this.updateTask(taskFileContent);
-        this.chatModel.sendMessage("", taskFileContent);
+        this.chatModel.sendMessage("", undefined, taskFileContent);
     };
 
     storeTask = (taskFileContent: TaskFileContent): void => {

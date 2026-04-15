@@ -102,6 +102,8 @@ export default class ChatModel {
         chatMessage.status = ChatMessageStatuses.Received;
 
         this.addMessage(chatMessage);
+
+        if (chatMessage.stringifiedFile != undefined) return;
         this.setReadStatus(true);
     };
 

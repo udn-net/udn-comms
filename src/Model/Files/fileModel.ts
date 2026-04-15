@@ -71,7 +71,7 @@ export default class FileModel {
     // methods
     addFileContentAndSend = (fileContent: FileContent<string>): void => {
         this.handleFileContent(fileContent);
-        this.chatModel.sendMessage("", fileContent);
+        this.chatModel.sendMessage("", undefined, fileContent);
     };
 
     // storage
