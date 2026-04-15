@@ -2266,7 +2266,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.15.A";
+      this.BUILD = "Build 26.04.15.B";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -4599,18 +4599,21 @@
 
   // src/View/Components/chatMessage.tsx
   function ChatMessage4(coreViewModel2, chatMessageViewModel) {
-    const statusIcon = createProxyState([chatMessageViewModel.status], () => {
-      switch (chatMessageViewModel.status.value) {
-        case "outbox" /* Outbox */:
-          return "hourglass_top";
-        case "sent" /* Sent */:
-          return "check";
-        case "received" /* Received */:
-          return "done_all";
-        default:
-          return "warning";
+    const statusIcon = createProxyState(
+      [chatMessageViewModel.status],
+      () => {
+        switch (chatMessageViewModel.status.value) {
+          case "outbox" /* Outbox */:
+            return "hourglass_top";
+          case "sent" /* Sent */:
+            return "check";
+          case "received" /* Received */:
+            return "done_all";
+          default:
+            return "warning";
+        }
       }
-    });
+    );
     return /* @__PURE__ */ createElement(
       "div",
       {
@@ -4683,14 +4686,10 @@
       if (isOpen == false) return;
       ViewController.setFocusWithDelay();
     });
-    createProxyState(
-      [messagePageViewModel.isFilterModalOpen],
-      () => {
-        if (messagePageViewModel.isFilterModalOpen.value == false)
-          return;
-        ViewController.setFocusWithDelay();
-      }
-    );
+    createProxyState([messagePageViewModel.isFilterModalOpen], () => {
+      if (messagePageViewModel.isFilterModalOpen.value == false) return;
+      ViewController.setFocusWithDelay();
+    });
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": messagePageViewModel.isFilterModalOpen }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.message.messageFilterHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
@@ -5158,7 +5157,9 @@
 
   // src/View/Modals/boardSettingsModal.tsx
   function BoardSettingsModal(coreViewModel2, boardViewModel) {
-    boardViewModel.isPresentingSettingsModal.subscribe(ViewController.setFocusWithDelay);
+    boardViewModel.isPresentingSettingsModal.subscribe(
+      ViewController.setFocusWithDelay
+    );
     return /* @__PURE__ */ createElement(
       "div",
       {
