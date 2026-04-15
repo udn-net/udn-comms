@@ -17,6 +17,8 @@ export default class NotificationViewModel {
             NotificationViewModel.createNotification(message);
         if (this.seenMessageIds.has(message.id)) return;
 
+        if (this.chatListViewModel.selectedChat.value == undefined) return;
+
         const currentChat =
             this.chatListViewModel.selectedChat.value.chatModel.info
                 .primaryChannel;

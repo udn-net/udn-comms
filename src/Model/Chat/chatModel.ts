@@ -103,7 +103,7 @@ export default class ChatModel {
 
         this.addMessage(chatMessage);
 
-        if (chatMessage.stringifiedFile != undefined) return;
+        if (chatMessage.stringifiedFile) return;
         this.setReadStatus(true);
     };
 

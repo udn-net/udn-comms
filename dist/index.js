@@ -1255,7 +1255,8 @@
         if (chatMessage == null) return;
         chatMessage.status = "received" /* Received */;
         this.addMessage(chatMessage);
-        if (chatMessage.stringifiedFile != void 0) return;
+        console.log("MESSAGE", chatMessage.stringifiedFile);
+        if (chatMessage.stringifiedFile) return;
         this.setReadStatus(true);
       };
       this.handleReaction = (reaction) => {
@@ -3762,6 +3763,7 @@
       this.showNotification = (message) => {
         const notification = _NotificationViewModel.createNotification(message);
         if (this.seenMessageIds.has(message.id)) return;
+        if (this.chatListViewModel.selectedChat.value == void 0) return;
         const currentChat = this.chatListViewModel.selectedChat.value.chatModel.info.primaryChannel;
         const currentPage = this.chatListViewModel.selectedChat.value.selectedPage.value;
         if (notification.chat == currentChat && currentPage == "messages" /* Messages */)
