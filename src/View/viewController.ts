@@ -1,48 +1,72 @@
 import * as React from "bloatless-react";
 
-class ItemTracker<T> {
-    items: React.State<T | undefined> | undefined;
+class Tracker<T> {
+    state: React.State<T> | undefined;
 }
 
-class ViewTrackerMap<T> {
-    trackers = new Map<string, ItemTracker<T>>();
+class TrackerMap<T> {
+    trackers = new Map<string, Tracker<T>>();
 
-    private register = (key: string): ItemTracker<T> => {
+    private register = (key: string): Tracker<T> => {
         if (this.trackers.has(key)) {
             return this.trackers.get(key);
         }
-        const tracker = new ItemTracker<T>();
+        const tracker = new Tracker<T>();
         this.trackers.set(key, tracker);
         return tracker;
     };
 
-    setItems = (
+    setState = (
         key: string,
-        views: () => React.State<T>,
+        stateBuilder: () => React.State<T>,
     ): React.State<T | undefined> | undefined => {
-        const tracker: ItemTracker<T> = this.register(key);
+        const tracker: Tracker<T> = this.register(key);
 
-        if (tracker.items != undefined) {
-            return tracker.items;
+        if (tracker.state != undefined) {
+            return tracker.state;
         } else {
-            tracker.items = views();
-            return tracker.items;
+            tracker.state = stateBuilder();
+            return tracker.state;
         }
     };
 }
 
 export class ViewController {
-    static readonly chatPages = new ItemTracker<HTMLElement>();
-    static readonly taskPages = new ViewTrackerMap<HTMLElement>();
-    static readonly boardPages = new ViewTrackerMap<HTMLElement>();
-    static readonly inlineReplies = new ViewTrackerMap<HTMLElement>();
-    static readonly messageIcons = new ViewTrackerMap<string>();
+    static readonly chatPages = new Tracker<HTMLElement>();
+    static readonly taskPages = new TrackerMap<HTMLElement>();
+    static readonly boardPages = new TrackerMap<HTMLElement>();
+    static readonly inlineReplies = new TrackerMap<HTMLElement>();
 
-    static scrollToView(id: string) {
+    static readonly scrollToView = (id: string) => {
         const element = document.getElementById(id);
-        if (!element) return
+        if (!element) return;
         element.scrollIntoView();
         element.setAttribute("scrolled", "");
-        setTimeout(()=>element.removeAttribute("scrolled"), 1000);
-    }
+        setTimeout(() => element.removeAttribute("scrolled"), 1000);
+    };
+
+    static readonly allowDrop = (event: DragEvent) => {
+        event.preventDefault();
+    };
+
+    static readonly allowDrag = (event: DragEvent) => {
+        event.dataTransfer?.setData("text", "");
+    };
+
+    static readonly reload = () => {
+        window.location.reload();
+    };
+
+    static readonly setFocus = () => {
+        const focusedInModal = document.querySelector(
+            ".modal[open] #focused",
+        ) as HTMLElement;
+        if (focusedInModal) return focusedInModal.focus();
+        document.getElementById("focused")?.focus();
+    };
+
+    static readonly setFocusWithDelay = () => {
+        console.trace("focus");
+        setTimeout(this.setFocus, 100);
+    };
 }

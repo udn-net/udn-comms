@@ -11,7 +11,6 @@ import { BoardViewToggleButton } from "../Components/boardViewToggleButton";
 import { SearchModal } from "../Modals/searchModal";
 import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
-import { setFocusWithDelay } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { ViewController } from "../viewController";
 
@@ -23,7 +22,7 @@ export function BoardPage(
 
     // main content
     const persistenceId = boardViewModel.boardInfo.fileId;
-    const pages = ViewController.boardPages.setItems(persistenceId, () =>
+    const pages = ViewController.boardPages.setState(persistenceId, () =>
         React.createProxyState([boardViewModel.selectedPage], () => {
             switch (boardViewModel.selectedPage.value) {
                 case BoardPageTypes.Kanban: {
@@ -54,7 +53,7 @@ export function BoardPage(
             if (boardViewModel.selectedTaskViewModel.value == undefined) {
                 return <div></div>;
             } else {
-                setFocusWithDelay();
+                ViewController.setFocusWithDelay();
 
                 return TaskSettingsModal(
                     coreViewModel,

@@ -114,10 +114,11 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
     closeBoard = (): void => {
         this.closeCurrentContext();
-    }
+    };
 
     handleBoardClosed = (boardViewModel: BoardViewModel): void => {
-        if (boardViewModel.boardInfo.fileId != this.selectedBoardId.value) return;
+        if (boardViewModel.boardInfo.fileId != this.selectedBoardId.value)
+            return;
 
         this.selectedBoardId.value = undefined;
         this.chatViewModel.resetColor();

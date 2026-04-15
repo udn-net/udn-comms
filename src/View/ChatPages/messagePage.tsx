@@ -7,7 +7,6 @@ import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { ChatMessage } from "../Components/chatMessage";
 import { MessageFilterModal } from "../Modals/messageFilterModal";
-import { setFocusWithDelay } from "../utility";
 import { ViewController } from "../viewController";
 import { ReplyPreview } from "../Components/replyPreview";
 
@@ -34,7 +33,7 @@ export function MessagePage(
     );
 
     const persistenceId = messagePageViewModel.chatViewModel.chatModel.id;
-    const replyPreview = ViewController.inlineReplies.setItems(
+    const replyPreview = ViewController.inlineReplies.setState(
         persistenceId,
         () =>
             React.createProxyState(
@@ -70,10 +69,9 @@ export function MessagePage(
     );
     setTimeout(() => scrollDown(true), 100);
 
-    messagePageViewModel.replyingMessage.subscribeSilent(() => {
-        setFocusWithDelay();
-    })
-    setFocusWithDelay();
+    messagePageViewModel.focusSetter.subscribeSilent(() => {
+        ViewController.setFocusWithDelay();
+    });
 
     return (
         <div id="message-page">

@@ -27,7 +27,10 @@ export default class CoreViewModel {
         history.pushState({ id: context.contextId }, "");
     }
 
-    closeContext = (contextId: string, fromHistoryEvent: boolean = false): void => {
+    closeContext = (
+        contextId: string,
+        fromHistoryEvent: boolean = false,
+    ): void => {
         if (
             !this.contexts
                 .map((context) => context.contextId)
@@ -81,7 +84,7 @@ export default class CoreViewModel {
 
         window.onpopstate = () => {
             this.closeContext(this.context.contextId, true);
-        }
+        };
     }
 
     // util
@@ -110,7 +113,7 @@ export class Context {
         this.keystrokes.set(key, fn);
     };
 
-    constructor(public contextDebugDescription: string) { }
+    constructor(public contextDebugDescription: string) {}
 }
 
 export class ContextHost<T> extends Context {

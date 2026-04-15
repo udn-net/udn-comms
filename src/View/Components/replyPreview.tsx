@@ -11,12 +11,18 @@ export function ReplyPreview(
         <div class="reply-preview">
             <div class="surface blur">
                 <span class="secondary">{chatMessageViewModel.sender}</span>
-                <b class="ellipsis" subscribe:innerText={chatMessageViewModel.body}></b>
+                <b
+                    class="ellipsis"
+                    subscribe:innerText={chatMessageViewModel.body}
+                ></b>
             </div>
             <button
                 class="standard square blur"
                 on:click={chatMessageViewModel.cancelReply}
-                aria-label={coreViewModel.translations.chatPage.message.cancelReplyAudioLabel}
+                aria-label={
+                    coreViewModel.translations.chatPage.message
+                        .cancelReplyAudioLabel
+                }
             >
                 <span class="icon">close</span>
             </button>

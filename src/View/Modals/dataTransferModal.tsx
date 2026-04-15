@@ -8,8 +8,8 @@ import FileTransferViewModel, {
 import ConnectionViewModel from "../../ViewModel/Global/connectionViewModel";
 import StorageModel from "../../Model/Global/storageModel";
 import { StringToTextSpan } from "../Components/textSpan";
-import { reload } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { ViewController } from "../viewController";
 
 export function DataTransferModalWrapper(
     coreViewModel: CoreViewModel,
@@ -545,7 +545,7 @@ function DataReceptionModal(
                         ]}
                     ></div>
                 </main>
-                <button on:click={reload}>
+                <button on:click={ViewController.reload}>
                     {coreViewModel.translations.general.reloadAppButton}
                     <span class="icon">refresh</span>
                 </button>

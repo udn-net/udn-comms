@@ -10,8 +10,8 @@ import { FilteredList } from "../Components/filteredList";
 import { TaskCategoryBulkChangeViewModel } from "../../ViewModel/Utility/taskPropertyBulkChangeViewModel";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
-import { allowDrop } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { ViewController } from "../viewController";
 
 export function BoardKanbanPage(
     coreViewModel: CoreViewModel,
@@ -75,7 +75,7 @@ function Column(
             const view = (
                 <div
                     class="flex-column flex-no"
-                    on:dragover={allowDrop}
+                    on:dragover={ViewController.allowDrop}
                     on:drop={drop}
                 >
                     <div class="flex-row width-input">

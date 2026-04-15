@@ -12,8 +12,7 @@ export function ChatMessage(
     coreViewModel: CoreViewModel,
     chatMessageViewModel: ChatMessageViewModel,
 ) {
-    const persistenceId = chatMessageViewModel.chatMessage.id;
-    const statusIcon = ViewController.messageIcons.setItems(persistenceId, () => React.createProxyState(
+    const statusIcon = React.createProxyState(
         [chatMessageViewModel.status],
         () => {
             switch (chatMessageViewModel.status.value) {
@@ -26,8 +25,8 @@ export function ChatMessage(
                 default:
                     return "warning";
             }
-        }
-    ));
+        },
+    );
 
     return (
         <div

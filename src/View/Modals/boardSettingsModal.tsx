@@ -4,13 +4,15 @@ import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import { ColorPicker } from "../Components/colorPicker";
 import { DangerousActionButton } from "../Components/dangerousActionButton";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { setFocusWithDelay } from "../utility";
+import { ViewController } from "../viewController";
 
 export function BoardSettingsModal(
     coreViewModel: CoreViewModel,
     boardViewModel: BoardViewModel,
 ) {
-    boardViewModel.isPresentingSettingsModal.subscribe(setFocusWithDelay);
+    boardViewModel.isPresentingSettingsModal.subscribe(
+        ViewController.setFocusWithDelay,
+    );
 
     return (
         <div

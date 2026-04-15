@@ -8,9 +8,8 @@ import { localeCompare, padZero } from "../../Model/Utility/utility";
 import ChatViewModel from "../Chat/chatViewModel";
 import CoreViewModel, { Context } from "../Global/coreViewModel";
 import TaskContainingPageViewModel from "./taskContainingPageViewModel";
-import { allowDrag } from "../../View/utility";
-import { v4 } from "uuid";
 import { CommonKeys } from "../../View/keystrokes";
+import { ViewController } from "../../View/viewController";
 
 export default class TaskViewModel extends Context {
     // util
@@ -63,7 +62,7 @@ export default class TaskViewModel extends Context {
 
     // methods
     dragStart = (event: DragEvent): void => {
-        allowDrag(event);
+        ViewController.allowDrag(event);
         this.coreViewModel.draggedObject.value = this;
     };
 

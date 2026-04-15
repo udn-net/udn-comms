@@ -597,7 +597,7 @@ body[showing-chat] #chat-page-wrapper {
   padding-bottom: calc(var(--message-container-padding) + var(--content-padding)) !important;
 }
 #chat-page #main #message-page .content:has(.reply-preview-wrapper .reply-preview) #message-container {
-  --message-container-padding: calc(2 * var(--control-height) + var(--gap-between-tiles));
+  --message-container-padding: calc( 2 * var(--control-height) + var(--gap-between-tiles) );
 }
 #message-page #message-container {
   overflow: auto;

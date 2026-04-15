@@ -252,7 +252,7 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
 
         if (!fromHistoryEvent) return;
         this.taskPageViewModel.storeLastUsedBoard();
-    }
+    };
 
     // init
     constructor(

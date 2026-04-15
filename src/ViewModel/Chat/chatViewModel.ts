@@ -58,7 +58,7 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
         this.chatListViewModel.openChat(this);
         //this.selectedPage.callSubscriptions();
     };
-    
+
     openPage = (page: ChatPageTypes): void => {
         this.closeCurrentContext();
         this.selectedPage.value = page;
@@ -142,7 +142,7 @@ export default class ChatViewModel extends ContextHost<ChatPageTypes> {
 
     handleContextClose = (): void => {
         this.chatListViewModel.closeChat();
-    }
+    };
 
     // init
     constructor(

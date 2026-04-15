@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
 
 import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
-import { allowDrop } from "../utility";
+import { ViewController } from "../viewController";
 
 export function BoardEntry(boardViewModel: BoardViewModel) {
     const view = (
@@ -10,7 +10,7 @@ export function BoardEntry(boardViewModel: BoardViewModel) {
             class="tile colored-tile"
             toggle:selected={boardViewModel.isSelected}
             on:click={boardViewModel.select}
-            on:dragover={allowDrop}
+            on:dragover={ViewController.allowDrop}
             on:drop={boardViewModel.handleDropBetweenBoards}
         >
             <span

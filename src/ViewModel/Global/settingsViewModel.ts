@@ -71,7 +71,7 @@ export default class SettingsViewModel extends Context {
         if (this.requiresReload.value == true) {
             window.location.reload();
         }
-    }
+    };
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {
@@ -102,10 +102,7 @@ export default class SettingsViewModel extends Context {
         );
 
         // keystrokes
-        this.registerKeyStroke(
-            CommonKeys.CloseOrCancel,
-            this.close,
-        );
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.close);
     }
 
     static generateThemeMedia(): MediaQueryList {

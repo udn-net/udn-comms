@@ -15,8 +15,8 @@ import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import { FilteredList } from "../Components/filteredList";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
-import { allowDrop } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { ViewController } from "../viewController";
 
 export function BoardStatusGridPage(
     coreViewModel: CoreViewModel,
@@ -246,7 +246,7 @@ function StatusColumn(
     const view = (
         <div
             class="status-column gap"
-            on:dragover={allowDrop}
+            on:dragover={ViewController.allowDrop}
             on:drop={drop}
             children:append={[taskViewModels, TaskViewModelToEntry]}
         ></div>

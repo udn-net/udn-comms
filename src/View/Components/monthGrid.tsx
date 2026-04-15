@@ -3,9 +3,9 @@ import "./monthGrid.css";
 import * as React from "bloatless-react";
 import { MonthGrid } from "../../Model/Files/calendarModel";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
-import { allowDrop } from "../utility";
 import { localeCompare } from "../../Model/Utility/utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { ViewController } from "../viewController";
 
 export function MonthGrid<T>(
     coreViewModel: CoreViewModel,
@@ -93,7 +93,7 @@ export function MonthGrid<T>(
                                 on:click={select}
                                 toggle:selected={isSelected}
                                 toggle:today={isToday}
-                                on:dragover={allowDrop}
+                                on:dragover={ViewController.allowDrop}
                                 on:drop={drop}
                             >
                                 <div>

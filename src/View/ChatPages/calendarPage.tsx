@@ -2,14 +2,13 @@ import "./calendarPage.css";
 
 import * as React from "bloatless-react";
 
-import CalendarModel from "../../Model/Files/calendarModel";
 import CalendarPageViewModel from "../../ViewModel/Pages/calendarPageViewModel";
 import { MonthGrid } from "../Components/monthGrid";
 import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
-import { setFocusWithDelay } from "../utility";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { PlaceholderView } from "../Components/placeholderView";
+import { ViewController } from "../viewController";
 
 export function CalendarPage(
     coreViewModel: CoreViewModel,
@@ -95,7 +94,7 @@ export function CalendarPage(
             ) {
                 return <div></div>;
             } else {
-                setFocusWithDelay();
+                ViewController.setFocusWithDelay();
 
                 return TaskSettingsModal(
                     coreViewModel,

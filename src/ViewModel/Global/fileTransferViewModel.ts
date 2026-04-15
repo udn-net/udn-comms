@@ -171,7 +171,7 @@ export default class FileTransferViewModel extends Context {
 
     handleContextClose = (): void => {
         this.presentedModal.value = undefined;
-    }
+    };
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {

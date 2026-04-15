@@ -4,7 +4,7 @@ import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
 import { MessageReactionFilterButton } from "../Components/messageReactionFilterButton";
 import { ReactionSymbols } from "../../Model/Chat/chatModel";
-import { setFocusWithDelay } from "../utility";
+import { ViewController } from "../viewController";
 
 export function MessageFilterModal<T>(
     coreViewModel: CoreViewModel,
@@ -16,7 +16,14 @@ export function MessageFilterModal<T>(
         () => messagePageViewModel.reactionFilter.value == undefined,
     );
 
-    messagePageViewModel.isFilterModalOpen.subscribe(setFocusWithDelay);
+    messagePageViewModel.isFilterModalOpen.subscribe((isOpen) => {
+        if (isOpen == false) return;
+        ViewController.setFocusWithDelay();
+    });
+    React.createProxyState([messagePageViewModel.isFilterModalOpen], () => {
+        if (messagePageViewModel.isFilterModalOpen.value == false) return;
+        ViewController.setFocusWithDelay();
+    });
 
     return (
         <div class="modal" toggle:open={messagePageViewModel.isFilterModalOpen}>

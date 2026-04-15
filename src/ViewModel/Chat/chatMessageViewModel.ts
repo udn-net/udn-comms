@@ -82,12 +82,12 @@ export default class ChatMessageViewModel {
     };
 
     reply = (): void => {
-        this.messagePageViewModel.replyingMessage.value = this;
+        this.messagePageViewModel.setReply(this);
         this.hideInfoModal();
     };
     cancelReply = (): void => {
         if (this.messagePageViewModel.replyingMessage.value != this) return;
-        this.messagePageViewModel.replyingMessage.value = undefined;
+        this.messagePageViewModel.setReply(undefined);
     };
 
     // view
@@ -131,7 +131,10 @@ export default class ChatMessageViewModel {
         this.status.value = this.chatMessage.status;
 
         if (this.chatMessage.inlineReplyId) {
-            this.inlineReply = this.messagePageViewModel.chatMessageViewModels.value.get(this.chatMessage.inlineReplyId);
+            this.inlineReply =
+                this.messagePageViewModel.chatMessageViewModels.value.get(
+                    this.chatMessage.inlineReplyId,
+                );
         }
     };
 

@@ -4,15 +4,13 @@ import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { ViewController } from "../viewController";
 
-export function InlineReply (
-    chatMessageViewModel: ChatMessageViewModel,
-) {
+export function InlineReply(chatMessageViewModel: ChatMessageViewModel) {
     const reply = chatMessageViewModel.inlineReply;
-    if (reply == undefined) return <div></div>
+    if (reply == undefined) return <div></div>;
 
     const scroll = () => {
         ViewController.scrollToView(reply.chatMessage.id);
-    }
+    };
 
     return (
         <div class="inline-reply" on:click={scroll}>

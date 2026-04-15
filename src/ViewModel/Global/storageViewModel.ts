@@ -65,7 +65,7 @@ export default class StorageViewModel extends Context {
             return;
         }
         this.isShowingStorageModal.value = false;
-    }
+    };
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {

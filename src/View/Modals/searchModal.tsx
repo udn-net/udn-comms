@@ -4,7 +4,7 @@ import SearchViewModel from "../../ViewModel/Utility/searchViewModel";
 import { StringToOption } from "../Components/option";
 import { v4 } from "uuid";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { setFocusWithDelay } from "../utility";
+import { ViewController } from "../viewController";
 
 export function SearchModal<T>(
     coreViewModel: CoreViewModel,
@@ -19,7 +19,10 @@ export function SearchModal<T>(
 
     const suggestionId = v4();
 
-    isOpen.subscribe(setFocusWithDelay);
+    isOpen.subscribe((isOpen) => {
+        if (!isOpen) return;
+        ViewController.setFocusWithDelay();
+    });
 
     return (
         <div class="modal" toggle:open={isOpen} extended>

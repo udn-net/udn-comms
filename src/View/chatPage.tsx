@@ -16,7 +16,7 @@ export function ChatPage(
     coreViewModel: CoreViewModel,
     chatViewModel: ChatViewModel,
 ) {
-    ViewController.chatPages.items = React.createProxyState(
+    ViewController.chatPages.state = React.createProxyState(
         [chatViewModel.selectedPage],
         () => {
             switch (chatViewModel.selectedPage.value) {
@@ -132,7 +132,7 @@ export function ChatPage(
                 </div>
                 <div
                     id="main"
-                    children:set={ViewController.chatPages.items}
+                    children:set={ViewController.chatPages.state}
                 ></div>
             </div>
         </article>

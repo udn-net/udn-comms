@@ -27,6 +27,7 @@ export default class MessagePageViewModel extends Context {
         undefined,
     );
     composingMessage = new React.State<string>("");
+    focusSetter = new React.State(null);
 
     // guards
     cannotSendMessage: React.State<boolean>;
@@ -40,14 +41,11 @@ export default class MessagePageViewModel extends Context {
     };
 
     sendMessageFromBody = (body: string): void => {
-        let replyId: string|undefined = undefined;
+        let replyId: string | undefined = undefined;
         if (this.replyingMessage.value) {
             replyId = this.replyingMessage.value.chatMessage.id;
         }
-        this.chatViewModel.chatModel.sendMessage(
-            body,
-            replyId,
-        );
+        this.chatViewModel.chatModel.sendMessage(body, replyId);
         this.replyingMessage.value = undefined;
     };
 
@@ -70,6 +68,16 @@ export default class MessagePageViewModel extends Context {
             content,
             isDeleting,
         );
+    };
+
+    setReply = (chatMessageViewModel: ChatMessageViewModel): void => {
+        this.replyingMessage.value = chatMessageViewModel;
+        this.setFocus();
+    };
+
+    resetReply = (): void => {
+        this.replyingMessage.value = undefined;
+        this.setFocus();
     };
 
     // view
@@ -123,6 +131,10 @@ export default class MessagePageViewModel extends Context {
         this.searchViewModel.search("");
     };
 
+    setFocus = (): void => {
+        this.focusSetter.callSubscriptions();
+    };
+
     // load
     loadData = (): void => {
         this.chatMessageViewModels.clear();
@@ -168,8 +180,15 @@ export default class MessagePageViewModel extends Context {
 
         // keystrokes
         this.registerKeyStroke(CommonKeys.Filter, this.showFilterModal);
-        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.hideFilterModal);
+        this.registerKeyStroke(CommonKeys.CloseOrCancel, () => {
+            if (this.isFilterModalOpen.value == true) {
+                this.hideFilterModal();
+            } else {
+                this.replyingMessage.value = undefined;
+            }
+        });
         this.registerKeyStroke(CommonKeys.Reset, this.resetFilter);
+        this.registerKeyStroke(CommonKeys.Create, this.setFocus);
 
         this.chatViewModel.registerContext(ChatPageTypes.Messages, this);
     }

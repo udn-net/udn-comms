@@ -2378,26 +2378,84 @@
     }
   };
 
-  // src/View/utility.ts
-  function allowDrop(event) {
-    event.preventDefault();
-  }
-  function allowDrag(event) {
-    event.dataTransfer?.setData("text", "");
-  }
-  function reload() {
-    window.location.reload();
-  }
-  function setFocus() {
-    const focusedInModal = document.querySelector(
-      ".modal[open] #focused"
-    );
-    if (focusedInModal) return focusedInModal.focus();
-    document.getElementById("focused")?.focus();
-  }
-  function setFocusWithDelay() {
-    setTimeout(setFocus, 100);
-  }
+  // src/View/viewController.ts
+  var Tracker = class {
+  };
+  var TrackerMap = class {
+    constructor() {
+      this.trackers = /* @__PURE__ */ new Map();
+      this.register = (key) => {
+        if (this.trackers.has(key)) {
+          return this.trackers.get(key);
+        }
+        const tracker = new Tracker();
+        this.trackers.set(key, tracker);
+        return tracker;
+      };
+      this.setState = (key, stateBuilder) => {
+        const tracker = this.register(key);
+        if (tracker.state != void 0) {
+          return tracker.state;
+        } else {
+          tracker.state = stateBuilder();
+          return tracker.state;
+        }
+      };
+    }
+  };
+  var ViewController = class {
+    static {
+      this.chatPages = new Tracker();
+    }
+    static {
+      this.taskPages = new TrackerMap();
+    }
+    static {
+      this.boardPages = new TrackerMap();
+    }
+    static {
+      this.inlineReplies = new TrackerMap();
+    }
+    static {
+      this.scrollToView = (id) => {
+        const element = document.getElementById(id);
+        if (!element) return;
+        element.scrollIntoView();
+        element.setAttribute("scrolled", "");
+        setTimeout(() => element.removeAttribute("scrolled"), 1e3);
+      };
+    }
+    static {
+      this.allowDrop = (event) => {
+        event.preventDefault();
+      };
+    }
+    static {
+      this.allowDrag = (event) => {
+        event.dataTransfer?.setData("text", "");
+      };
+    }
+    static {
+      this.reload = () => {
+        window.location.reload();
+      };
+    }
+    static {
+      this.setFocus = () => {
+        const focusedInModal = document.querySelector(
+          ".modal[open] #focused"
+        );
+        if (focusedInModal) return focusedInModal.focus();
+        document.getElementById("focused")?.focus();
+      };
+    }
+    static {
+      this.setFocusWithDelay = () => {
+        console.trace("focus");
+        setTimeout(this.setFocus, 100);
+      };
+    }
+  };
 
   // src/ViewModel/Pages/taskViewModel.ts
   var TaskViewModel = class extends Context {
@@ -2427,7 +2485,7 @@
       this.versionIds = new ListState();
       // methods
       this.dragStart = (event) => {
-        allowDrag(event);
+        ViewController.allowDrag(event);
         this.coreViewModel.draggedObject.value = this;
       };
       this.setCategoryAndStatus = (category, status) => {
@@ -2842,12 +2900,12 @@
         this.messagePageViewModel.decryptMessage(this);
       };
       this.reply = () => {
-        this.messagePageViewModel.replyingMessage.value = this;
+        this.messagePageViewModel.setReply(this);
         this.hideInfoModal();
       };
       this.cancelReply = () => {
         if (this.messagePageViewModel.replyingMessage.value != this) return;
-        this.messagePageViewModel.replyingMessage.value = void 0;
+        this.messagePageViewModel.setReply(void 0);
       };
       // view
       this.showInfoModal = () => {
@@ -2882,7 +2940,9 @@
         this.body.value = this.chatMessage.body;
         this.status.value = this.chatMessage.status;
         if (this.chatMessage.inlineReplyId) {
-          this.inlineReply = this.messagePageViewModel.chatMessageViewModels.value.get(this.chatMessage.inlineReplyId);
+          this.inlineReply = this.messagePageViewModel.chatMessageViewModels.value.get(
+            this.chatMessage.inlineReplyId
+          );
         }
       };
       this.chatMessage = chatMessage;
@@ -2994,6 +3054,7 @@
         void 0
       );
       this.composingMessage = new State("");
+      this.focusSetter = new State(null);
       // methods
       this.sendMessage = () => {
         if (this.cannotSendMessage.value == true) return;
@@ -3005,10 +3066,7 @@
         if (this.replyingMessage.value) {
           replyId = this.replyingMessage.value.chatMessage.id;
         }
-        this.chatViewModel.chatModel.sendMessage(
-          body,
-          replyId
-        );
+        this.chatViewModel.chatModel.sendMessage(body, replyId);
         this.replyingMessage.value = void 0;
       };
       this.decryptMessage = async (messageViewModel) => {
@@ -3023,6 +3081,14 @@
           content,
           isDeleting
         );
+      };
+      this.setReply = (chatMessageViewModel) => {
+        this.replyingMessage.value = chatMessageViewModel;
+        this.setFocus();
+      };
+      this.resetReply = () => {
+        this.replyingMessage.value = void 0;
+        this.setFocus();
       };
       // view
       this.showChatMessage = (chatMessage) => {
@@ -3064,6 +3130,9 @@
         this.revokeReactionFilter();
         this.searchViewModel.search("");
       };
+      this.setFocus = () => {
+        this.focusSetter.callSubscriptions();
+      };
       // load
       this.loadData = () => {
         this.chatMessageViewModels.clear();
@@ -3092,8 +3161,15 @@
         () => this.searchViewModel.appliedQuery.value != "" || this.reactionFilter.value != void 0
       );
       this.registerKeyStroke("=" /* Filter */, this.showFilterModal);
-      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.hideFilterModal);
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, () => {
+        if (this.isFilterModalOpen.value == true) {
+          this.hideFilterModal();
+        } else {
+          this.replyingMessage.value = void 0;
+        }
+      });
       this.registerKeyStroke("-" /* Reset */, this.resetFilter);
+      this.registerKeyStroke(";" /* Create */, this.setFocus);
       this.chatViewModel.registerContext("messages" /* Messages */, this);
     }
   };
@@ -3526,7 +3602,8 @@
         this.closeCurrentContext();
       };
       this.handleBoardClosed = (boardViewModel) => {
-        if (boardViewModel.boardInfo.fileId != this.selectedBoardId.value) return;
+        if (boardViewModel.boardInfo.fileId != this.selectedBoardId.value)
+          return;
         this.selectedBoardId.value = void 0;
         this.chatViewModel.resetColor();
       };
@@ -3945,7 +4022,7 @@
           "on:click": select,
           "toggle:selected": isSelected,
           "toggle:today": isToday,
-          "on:dragover": allowDrop,
+          "on:dragover": ViewController.allowDrop,
           "on:drop": drop
         },
         /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, date), /* @__PURE__ */ createElement(
@@ -4255,7 +4332,7 @@
         if (calendarPageViewModel.selectedTaskViewModel.value == void 0) {
           return /* @__PURE__ */ createElement("div", null);
         } else {
-          setFocusWithDelay();
+          ViewController.setFocusWithDelay();
           return TaskSettingsModal(
             coreViewModel2,
             calendarPageViewModel.selectedTaskViewModel.value
@@ -4510,56 +4587,6 @@
     );
   }
 
-  // src/View/viewController.ts
-  var ItemTracker = class {
-  };
-  var ViewTrackerMap = class {
-    constructor() {
-      this.trackers = /* @__PURE__ */ new Map();
-      this.register = (key) => {
-        if (this.trackers.has(key)) {
-          return this.trackers.get(key);
-        }
-        const tracker = new ItemTracker();
-        this.trackers.set(key, tracker);
-        return tracker;
-      };
-      this.setItems = (key, views) => {
-        const tracker = this.register(key);
-        if (tracker.items != void 0) {
-          return tracker.items;
-        } else {
-          tracker.items = views();
-          return tracker.items;
-        }
-      };
-    }
-  };
-  var ViewController = class {
-    static {
-      this.chatPages = new ItemTracker();
-    }
-    static {
-      this.taskPages = new ViewTrackerMap();
-    }
-    static {
-      this.boardPages = new ViewTrackerMap();
-    }
-    static {
-      this.inlineReplies = new ViewTrackerMap();
-    }
-    static {
-      this.messageIcons = new ViewTrackerMap();
-    }
-    static scrollToView(id) {
-      const element = document.getElementById(id);
-      if (!element) return;
-      element.scrollIntoView();
-      element.setAttribute("scrolled", "");
-      setTimeout(() => element.removeAttribute("scrolled"), 1e3);
-    }
-  };
-
   // src/View/Components/inlineReply.tsx
   function InlineReply(chatMessageViewModel) {
     const reply = chatMessageViewModel.inlineReply;
@@ -4572,22 +4599,18 @@
 
   // src/View/Components/chatMessage.tsx
   function ChatMessage4(coreViewModel2, chatMessageViewModel) {
-    const persistenceId = chatMessageViewModel.chatMessage.id;
-    const statusIcon = ViewController.messageIcons.setItems(persistenceId, () => createProxyState(
-      [chatMessageViewModel.status],
-      () => {
-        switch (chatMessageViewModel.status.value) {
-          case "outbox" /* Outbox */:
-            return "hourglass_top";
-          case "sent" /* Sent */:
-            return "check";
-          case "received" /* Received */:
-            return "done_all";
-          default:
-            return "warning";
-        }
+    const statusIcon = createProxyState([chatMessageViewModel.status], () => {
+      switch (chatMessageViewModel.status.value) {
+        case "outbox" /* Outbox */:
+          return "hourglass_top";
+        case "sent" /* Sent */:
+          return "check";
+        case "received" /* Received */:
+          return "done_all";
+        default:
+          return "warning";
       }
-    ));
+    });
     return /* @__PURE__ */ createElement(
       "div",
       {
@@ -4656,7 +4679,18 @@
       [messagePageViewModel.reactionFilter],
       () => messagePageViewModel.reactionFilter.value == void 0
     );
-    messagePageViewModel.isFilterModalOpen.subscribe(setFocusWithDelay);
+    messagePageViewModel.isFilterModalOpen.subscribe((isOpen) => {
+      if (isOpen == false) return;
+      ViewController.setFocusWithDelay();
+    });
+    createProxyState(
+      [messagePageViewModel.isFilterModalOpen],
+      () => {
+        if (messagePageViewModel.isFilterModalOpen.value == false)
+          return;
+        ViewController.setFocusWithDelay();
+      }
+    );
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": messagePageViewModel.isFilterModalOpen }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.chatPage.message.messageFilterHeadline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
@@ -4704,7 +4738,13 @@
 
   // src/View/Components/replyPreview.tsx
   function ReplyPreview(coreViewModel2, chatMessageViewModel) {
-    return /* @__PURE__ */ createElement("div", { class: "reply-preview" }, /* @__PURE__ */ createElement("div", { class: "surface blur" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement("b", { class: "ellipsis", "subscribe:innerText": chatMessageViewModel.body })), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "reply-preview" }, /* @__PURE__ */ createElement("div", { class: "surface blur" }, /* @__PURE__ */ createElement("span", { class: "secondary" }, chatMessageViewModel.sender), /* @__PURE__ */ createElement(
+      "b",
+      {
+        class: "ellipsis",
+        "subscribe:innerText": chatMessageViewModel.body
+      }
+    )), /* @__PURE__ */ createElement(
       "button",
       {
         class: "standard square blur",
@@ -4732,7 +4772,7 @@
       }
     );
     const persistenceId = messagePageViewModel.chatViewModel.chatModel.id;
-    const replyPreview = ViewController.inlineReplies.setItems(
+    const replyPreview = ViewController.inlineReplies.setState(
       persistenceId,
       () => createProxyState(
         [messagePageViewModel.replyingMessage],
@@ -4762,10 +4802,9 @@
       scrollDownIfApplicable
     );
     setTimeout(() => scrollDown(true), 100);
-    messagePageViewModel.replyingMessage.subscribeSilent(() => {
-      setFocusWithDelay();
+    messagePageViewModel.focusSetter.subscribeSilent(() => {
+      ViewController.setFocusWithDelay();
     });
-    setFocusWithDelay();
     return /* @__PURE__ */ createElement("div", { id: "message-page" }, /* @__PURE__ */ createElement("div", { class: "pane-wrapper" }, /* @__PURE__ */ createElement("div", { class: "pane" }, /* @__PURE__ */ createElement("div", { class: "toolbar" }, /* @__PURE__ */ createElement("span", { class: "title" }, coreViewModel2.translations.chatPage.message.messagesHeadline), /* @__PURE__ */ createElement("span", null, /* @__PURE__ */ createElement(
       "button",
       {
@@ -5081,7 +5120,7 @@
           "div",
           {
             class: "flex-column flex-no",
-            "on:dragover": allowDrop,
+            "on:dragover": ViewController.allowDrop,
             "on:drop": drop
           },
           /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
@@ -5119,7 +5158,7 @@
 
   // src/View/Modals/boardSettingsModal.tsx
   function BoardSettingsModal(coreViewModel2, boardViewModel) {
-    boardViewModel.isPresentingSettingsModal.subscribe(setFocusWithDelay);
+    boardViewModel.isPresentingSettingsModal.subscribe(ViewController.setFocusWithDelay);
     return /* @__PURE__ */ createElement(
       "div",
       {
@@ -5302,7 +5341,7 @@
       "div",
       {
         class: "status-column gap",
-        "on:dragover": allowDrop,
+        "on:dragover": ViewController.allowDrop,
         "on:drop": drop,
         "children:append": [taskViewModels, TaskViewModelToEntry]
       }
@@ -5331,7 +5370,10 @@
       isOpen.value = false;
     }
     const suggestionId = v4_default();
-    isOpen.subscribe(setFocusWithDelay);
+    isOpen.subscribe((isOpen2) => {
+      if (!isOpen2) return;
+      ViewController.setFocusWithDelay();
+    });
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isOpen, extended: true }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, headline), /* @__PURE__ */ createElement("div", { class: "flex-row width-input" }, /* @__PURE__ */ createElement(
       "input",
       {
@@ -5377,7 +5419,7 @@
   function BoardPage(coreViewModel2, boardViewModel) {
     boardViewModel.loadData();
     const persistenceId = boardViewModel.boardInfo.fileId;
-    const pages = ViewController.boardPages.setItems(
+    const pages = ViewController.boardPages.setState(
       persistenceId,
       () => createProxyState([boardViewModel.selectedPage], () => {
         switch (boardViewModel.selectedPage.value) {
@@ -5408,7 +5450,7 @@
         if (boardViewModel.selectedTaskViewModel.value == void 0) {
           return /* @__PURE__ */ createElement("div", null);
         } else {
-          setFocusWithDelay();
+          ViewController.setFocusWithDelay();
           return TaskSettingsModal(
             coreViewModel2,
             boardViewModel.selectedTaskViewModel.value
@@ -5491,7 +5533,7 @@
         class: "tile colored-tile",
         "toggle:selected": boardViewModel.isSelected,
         "on:click": boardViewModel.select,
-        "on:dragover": allowDrop,
+        "on:dragover": ViewController.allowDrop,
         "on:drop": boardViewModel.handleDropBetweenBoards
       },
       /* @__PURE__ */ createElement(
@@ -5520,7 +5562,7 @@
       () => taskPageViewModel.selectedBoardId.value != void 0
     );
     const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
-    const pages = ViewController.taskPages.setItems(
+    const pages = ViewController.taskPages.setState(
       persistenceId,
       () => createProxyState([taskPageViewModel.selectedBoardId], () => {
         const selectedBoardId = taskPageViewModel.selectedBoardId.value;
@@ -5592,7 +5634,7 @@
 
   // src/View/chatPage.tsx
   function ChatPage(coreViewModel2, chatViewModel) {
-    ViewController.chatPages.items = createProxyState(
+    ViewController.chatPages.state = createProxyState(
       [chatViewModel.selectedPage],
       () => {
         switch (chatViewModel.selectedPage.value) {
@@ -5687,7 +5729,7 @@
         "div",
         {
           id: "main",
-          "children:set": ViewController.chatPages.items
+          "children:set": ViewController.chatPages.state
         }
       ))
     );
@@ -6541,7 +6583,7 @@
           StringToTextSpan
         ]
       }
-    )), /* @__PURE__ */ createElement("button", { "on:click": reload }, coreViewModel2.translations.general.reloadAppButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "refresh"))));
+    )), /* @__PURE__ */ createElement("button", { "on:click": ViewController.reload }, coreViewModel2.translations.general.reloadAppButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "refresh"))));
   }
 
   // src/Model/Global/fileTransferModel.ts
@@ -6954,10 +6996,7 @@
         "change",
         () => this.applyTheme()
       );
-      this.registerKeyStroke(
-        "backspace" /* CloseOrCancel */,
-        this.close
-      );
+      this.registerKeyStroke("backspace" /* CloseOrCancel */, this.close);
     }
     static generateThemeMedia() {
       return window.matchMedia("(prefers-color-scheme: dark)");

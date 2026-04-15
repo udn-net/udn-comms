@@ -22,7 +22,7 @@ export function TaskPage(
     );
 
     const persistenceId = taskPageViewModel.chatViewModel.chatModel.id;
-    const pages = ViewController.taskPages.setItems(persistenceId, () =>
+    const pages = ViewController.taskPages.setState(persistenceId, () =>
         React.createProxyState([taskPageViewModel.selectedBoardId], () => {
             const selectedBoardId = taskPageViewModel.selectedBoardId.value;
             if (selectedBoardId == undefined) {
