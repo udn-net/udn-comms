@@ -1255,7 +1255,6 @@
         if (chatMessage == null) return;
         chatMessage.status = "received" /* Received */;
         this.addMessage(chatMessage);
-        console.log("MESSAGE", chatMessage.stringifiedFile);
         if (chatMessage.stringifiedFile) return;
         this.setReadStatus(true);
       };
@@ -2267,7 +2266,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.14.H";
+      this.BUILD = "Build 26.04.15.A";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
