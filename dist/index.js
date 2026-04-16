@@ -660,8 +660,8 @@
         const monthPath = this.getMonthPath(monthString);
         return this.storageModel.list(monthPath);
       };
-      this.generateMonthGrid = (year, month, defaultValueCreator) => {
-        const date = /* @__PURE__ */ new Date();
+      this.generateMonthGrid = (coreViewModel2, year, month, defaultValueCreator) => {
+        const date = coreViewModel2.unwrappedTodayDate;
         const isCurrentMonth = year == date.getFullYear() && month == date.getMonth() + 1;
         date.setDate(1);
         date.setMonth(month - 1);
@@ -2290,6 +2290,17 @@
           if (isHandled == true) break;
         }
       };
+      // CHRON
+      this.chronHandlerManager = new HandlerManager();
+      this.todayDate = new State(/* @__PURE__ */ new Date());
+      this.startChron = () => {
+        setInterval(this.chronHandlerManager.trigger, 2e3);
+      };
+      this.handleChron = () => {
+        const newDate = /* @__PURE__ */ new Date();
+        if (this.unwrappedTodayDate.toDateString() == newDate.toDateString()) return;
+        this.todayDate.value = /* @__PURE__ */ new Date();
+      };
       // DRAG & DROP
       this.draggedObject = new State(void 0);
       // SUGGESTIONS
@@ -2302,6 +2313,11 @@
       window.onpopstate = () => {
         this.closeContext(this.context.contextId, true);
       };
+      this.startChron();
+      this.chronHandlerManager.setHandler(
+        "core-view-model",
+        this.handleChron
+      );
     }
     get contexts() {
       return [...this.contextStack.values()];
@@ -2313,6 +2329,9 @@
       if (this.contextStack.has(context.contextId)) return;
       this.contextStack.set(context.contextId, context);
       history.pushState({ id: context.contextId }, "");
+    }
+    get unwrappedTodayDate() {
+      return new Date(this.todayDate.value);
     }
     // util
     static checkIsKeystroke(e) {
@@ -2692,6 +2711,7 @@
         return [...this.calendarModel.getViewPath()];
       };
       // state
+      this.currentTodayDate = void 0;
       this.selectedYear = new State(0);
       this.selectedMonth = new State(0);
       this.selectedDate = new State(0);
@@ -2763,7 +2783,7 @@
         this.taskViewModels.remove(taskFileContent.fileId);
       };
       this.showToday = () => {
-        const today = /* @__PURE__ */ new Date();
+        const today = this.coreViewModel.todayDate.value;
         this.selectedYear.value = today.getFullYear();
         this.selectedMonth.value = today.getMonth() + 1;
         this.selectedDate.value = today.getDate();
@@ -2792,9 +2812,16 @@
         if (draggedObject instanceof TaskViewModel == false) return;
         draggedObject.setDate(ISOString);
       };
+      this.updateMonthGrid = () => {
+        if (this.currentTodayDate == this.coreViewModel.todayDate.value.toISOString())
+          return;
+        this.loadMonthTasks();
+        this.currentTodayDate = this.coreViewModel.todayDate.value.toISOString();
+      };
       // load
       this.loadMonthTasks = () => {
         this.monthGrid.value = this.calendarModel.generateMonthGrid(
+          this.coreViewModel,
           this.selectedYear.value,
           this.selectedMonth.value,
           () => new MapState()
@@ -2822,6 +2849,10 @@
         (taskFileContent) => {
           this.showTask(taskFileContent);
         }
+      );
+      this.coreViewModel.chronHandlerManager.setHandler(
+        `calendar-${this.chatViewModel.chatModel.id}`,
+        this.updateMonthGrid
       );
       this.showToday();
       this.registerKeyStroke("-" /* Reset */, this.showToday);
@@ -4000,7 +4031,12 @@
         [selectedDate],
         () => selectedDate.value == parseInt(date)
       );
-      const isToday = monthGrid.isCurrentMonth == true && parseInt(date) == (/* @__PURE__ */ new Date()).getDate();
+      const isToday = createProxyState(
+        [coreViewModel2.todayDate],
+        () => {
+          return monthGrid.isCurrentMonth == true && date == coreViewModel2.unwrappedTodayDate.getDate().toString();
+        }
+      );
       const eventCount = createProxyState(
         [mapState],
         () => mapState.value.size

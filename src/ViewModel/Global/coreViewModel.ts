@@ -6,9 +6,10 @@ import ConnectionModel from "../../Model/Global/connectionModel";
 import ChatListModel from "../../Model/Chat/chatListModel";
 import FileTransferModel from "../../Model/Global/fileTransferModel";
 import { v4 } from "uuid";
+import { HandlerManager } from "../../Model/Utility/utility";
 
 export default class CoreViewModel {
-    readonly BUILD = "Build 26.04.15.B";
+    readonly BUILD = "Build 26.04.16.A";
 
     translations: Translations;
 
@@ -58,6 +59,23 @@ export default class CoreViewModel {
         }
     };
 
+    // CHRON
+    chronHandlerManager = new HandlerManager<void>();
+    todayDate = new React.State<Date>(new Date());
+    get unwrappedTodayDate() {
+        return new Date(this.todayDate.value);
+    }
+
+    startChron = (): void => {
+        setInterval(this.chronHandlerManager.trigger, 2000);
+    };
+
+    handleChron = (): void => {
+        const newDate = new Date();
+        if (this.unwrappedTodayDate.toDateString() == newDate.toDateString()) return;
+        this.todayDate.value = new Date();
+    };
+
     // DRAG & DROP
     draggedObject: React.State<any> = new React.State<any>(undefined);
 
@@ -85,6 +103,12 @@ export default class CoreViewModel {
         window.onpopstate = () => {
             this.closeContext(this.context.contextId, true);
         };
+
+        this.startChron();
+        this.chronHandlerManager.setHandler(
+            "core-view-model",
+            this.handleChron,
+        );
     }
 
     // util

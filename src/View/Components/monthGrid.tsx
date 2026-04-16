@@ -63,9 +63,16 @@ export function MonthGrid<T>(
                             () => selectedDate.value == parseInt(date),
                         );
 
-                        const isToday: boolean =
-                            monthGrid.isCurrentMonth == true &&
-                            parseInt(date) == new Date().getDate();
+                        const isToday = React.createProxyState(
+                            [coreViewModel.todayDate],
+                            () => {
+                                return (
+                                    monthGrid.isCurrentMonth == true &&
+                                    date ==
+                                        coreViewModel.unwrappedTodayDate.getDate().toString()
+                                );
+                            },
+                        );
 
                         const eventCount: React.State<number> =
                             React.createProxyState(

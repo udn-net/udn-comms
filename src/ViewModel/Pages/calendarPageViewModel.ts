@@ -28,6 +28,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
     };
 
     // state
+    currentTodayDate: string | undefined = undefined;
     selectedYear: React.State<number> = new React.State(0);
     selectedMonth: React.State<number> = new React.State(0);
     selectedDate: React.State<number> = new React.State(0);
@@ -121,7 +122,7 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
     };
 
     showToday = (): void => {
-        const today: Date = new Date();
+        const today: Date = this.coreViewModel.todayDate.value;
         this.selectedYear.value = today.getFullYear();
         this.selectedMonth.value = today.getMonth() + 1;
         this.selectedDate.value = today.getDate();
@@ -158,9 +159,21 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
         draggedObject.setDate(ISOString);
     };
 
+    updateMonthGrid = (): void => {
+        if (
+            this.currentTodayDate ==
+            this.coreViewModel.todayDate.value.toISOString()
+        )
+            return;
+        this.loadMonthTasks();
+        this.currentTodayDate =
+            this.coreViewModel.todayDate.value.toISOString();
+    };
+
     // load
     loadMonthTasks = (): void => {
         this.monthGrid.value = this.calendarModel.generateMonthGrid(
+            this.coreViewModel,
             this.selectedYear.value,
             this.selectedMonth.value,
             () => new React.MapState(),
@@ -205,6 +218,10 @@ export default class CalendarPageViewModel extends TaskContainingPageViewModel {
             (taskFileContent: TaskFileContent) => {
                 this.showTask(taskFileContent);
             },
+        );
+        this.coreViewModel.chronHandlerManager.setHandler(
+            `calendar-${this.chatViewModel.chatModel.id}`,
+            this.updateMonthGrid,
         );
 
         // initiate

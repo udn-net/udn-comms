@@ -5,6 +5,7 @@ import FileModel, { FileModelSubPath } from "./fileModel";
 import SettingsModel from "../Global/settingsModel";
 import StorageModel from "../Global/storageModel";
 import { TaskFileContent } from "./boardsAndTasksModel";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export default class CalendarModel {
     readonly storageModel: StorageModel;
@@ -57,12 +58,13 @@ export default class CalendarModel {
     };
 
     generateMonthGrid = <T>(
+        coreViewModel: CoreViewModel,
         year: number,
         month: number,
         defaultValueCreator: () => T,
     ): MonthGrid<T> => {
         // get today
-        const date: Date = new Date();
+        const date = coreViewModel.unwrappedTodayDate;
         const isCurrentMonth: boolean =
             year == date.getFullYear() && month == date.getMonth() + 1;
 
