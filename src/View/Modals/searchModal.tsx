@@ -1,10 +1,9 @@
-import * as React from "bloatless-react";
-
-import SearchViewModel from "../../ViewModel/Utility/searchViewModel";
-import { StringToOption } from "../Components/option";
 import { v4 } from "uuid";
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import * as React from "bloatless-react";
 import { ViewController } from "../viewController";
+import { StringToOption } from "../Components/option";
+import SearchViewModel from "../../ViewModel/Utility/searchViewModel";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function SearchModal<T>(
     coreViewModel: CoreViewModel,

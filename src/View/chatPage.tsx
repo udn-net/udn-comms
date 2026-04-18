@@ -1,16 +1,13 @@
-import "./homePage.css";
-
 import * as React from "bloatless-react";
-
-import ChatViewModel, { ChatPageTypes } from "../ViewModel/Chat/chatViewModel";
-
-import { CalendarPage } from "./ChatPages/calendarPage";
-import { ChatViewToggleButton } from "./Components/chatViewToggleButton";
-import { MessagePage } from "./ChatPages/messagePage";
-import { SettingsPage } from "./ChatPages/settingsPage";
-import { TaskPage } from "./ChatPages/taskPage";
-import CoreViewModel from "../ViewModel/Global/coreViewModel";
 import { ViewController } from "./viewController";
+import "./homePage.css";
+import { ChatViewToggleButton } from "./Components/chatViewToggleButton";
+import { TaskPage } from "./ChatPages/taskPage";
+import { SettingsPage } from "./ChatPages/settingsPage";
+import { MessagePage } from "./ChatPages/messagePage";
+import { CalendarPage } from "./ChatPages/calendarPage";
+import CoreViewModel from "../ViewModel/Global/coreViewModel";
+import ChatViewModel, { ChatPageTypes } from "../ViewModel/Chat/chatViewModel";
 
 export function ChatPage(
     coreViewModel: CoreViewModel,

@@ -1,8 +1,7 @@
 import * as React from "bloatless-react";
-
-import ConnectionViewModel from "../../ViewModel/Global/connectionViewModel";
 import { DeletableListItem } from "../Components/deletableListItem";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import ConnectionViewModel from "../../ViewModel/Global/connectionViewModel";
 
 export function ConnectionModal(
     coreViewModel: CoreViewModel,

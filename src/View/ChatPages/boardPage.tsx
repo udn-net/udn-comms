@@ -1,18 +1,16 @@
 import * as React from "bloatless-react";
-
+import { BoardStatusGridPage } from "./boardStatusGridPage";
+import { BoardKanbanPage } from "./boardKanbanPage";
+import { ViewController } from "../viewController";
+import { TaskSettingsModal } from "../Modals/taskSettingsModal";
+import { SearchModal } from "../Modals/searchModal";
+import { BoardSettingsModal } from "../Modals/boardSettingsModal";
+import { TaskViewModelToEntry } from "../Components/taskEntry";
+import { BoardViewToggleButton } from "../Components/boardViewToggleButton";
 import BoardViewModel, {
     BoardPageTypes,
 } from "../../ViewModel/Pages/boardViewModel";
-
-import { BoardKanbanPage } from "./boardKanbanPage";
-import { BoardSettingsModal } from "../Modals/boardSettingsModal";
-import { BoardStatusGridPage } from "./boardStatusGridPage";
-import { BoardViewToggleButton } from "../Components/boardViewToggleButton";
-import { SearchModal } from "../Modals/searchModal";
-import { TaskSettingsModal } from "../Modals/taskSettingsModal";
-import { TaskViewModelToEntry } from "../Components/taskEntry";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { ViewController } from "../viewController";
 
 export function BoardPage(
     coreViewModel: CoreViewModel,

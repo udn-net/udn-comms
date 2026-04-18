@@ -1,16 +1,14 @@
 import * as React from "bloatless-react";
-
+import SearchViewModel from "../Utility/searchViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
+import ChatMessageViewModel from "../Chat/chatMessageViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 import {
     ChatMessage,
     ChatMessageReaction,
     ReactionSymbols,
 } from "../../Model/Chat/chatModel";
-import ChatMessageViewModel from "../Chat/chatMessageViewModel";
-import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
-import CoreViewModel, { Context } from "../Global/coreViewModel";
-import SearchViewModel from "../Utility/searchViewModel";
-import { v4 } from "uuid";
-import { CommonKeys } from "../../View/keystrokes";
 
 export default class MessagePageViewModel extends Context {
     // state

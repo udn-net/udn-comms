@@ -1,29 +1,26 @@
 import * as React from "bloatless-react";
-
+import ChatListViewModel from "./chatListViewModel";
+import TaskPageViewModel from "../Pages/taskPageViewModel";
+import SettingsPageViewModel from "../Pages/settingsPageViewModel";
+import MessagePageViewModel from "../Pages/messagePageViewModel";
 import CalendarPageViewModel, {
     CALENDAR_EVENT_BOARD_ID,
 } from "../Pages/calendarPageViewModel";
-import ChatModel, {
-    ChatMessage,
-    ChatMessageReaction,
-} from "../../Model/Chat/chatModel";
+import SettingsViewModel from "../Global/settingsViewModel";
+import NotificationViewModel from "../Global/notificationViewModel";
+import CoreViewModel, { Context, ContextHost } from "../Global/coreViewModel";
+import ConnectionViewModel from "../Global/connectionViewModel";
+import { Colors } from "../../colors";
+import { CommonKeys } from "../../View/keystrokes";
+import { Entry } from "../../View/Components/option";
 import StorageModel, {
     StorageModelSubPaths,
     filePaths,
 } from "../../Model/Global/storageModel";
-
-import ChatListViewModel from "./chatListViewModel";
-import { Colors } from "../../colors";
-import CoreViewModel, { Context, ContextHost } from "../Global/coreViewModel";
-import { Entry } from "../../View/Components/option";
-import MessagePageViewModel from "../Pages/messagePageViewModel";
-import SettingsPageViewModel from "../Pages/settingsPageViewModel";
-import SettingsViewModel from "../Global/settingsViewModel";
-import TaskPageViewModel from "../Pages/taskPageViewModel";
-import ConnectionViewModel from "../Global/connectionViewModel";
-import NotificationViewModel from "../Global/notificationViewModel";
-import { v4 } from "uuid";
-import { CommonKeys } from "../../View/keystrokes";
+import ChatModel, {
+    ChatMessage,
+    ChatMessageReaction,
+} from "../../Model/Chat/chatModel";
 
 export default class ChatViewModel extends ContextHost<ChatPageTypes> {
     calendarViewModel: CalendarPageViewModel;

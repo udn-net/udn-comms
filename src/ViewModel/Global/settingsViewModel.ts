@@ -1,8 +1,7 @@
 import * as React from "bloatless-react";
-
 import CoreViewModel, { Context } from "./coreViewModel";
-import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
 import { CommonKeys } from "../../View/keystrokes";
+import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
 
 export default class SettingsViewModel extends Context {
     // state

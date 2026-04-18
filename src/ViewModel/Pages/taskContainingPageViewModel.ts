@@ -1,13 +1,11 @@
 import * as React from "bloatless-react";
-
+import TaskViewModel from "./taskViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
+import ChatViewModel from "../Chat/chatViewModel";
+import { IndexManager } from "../../Model/Utility/utility";
 import BoardsAndTasksModel, {
     TaskFileContent,
 } from "../../Model/Files/boardsAndTasksModel";
-
-import ChatViewModel from "../Chat/chatViewModel";
-import CoreViewModel, { Context } from "../Global/coreViewModel";
-import { IndexManager } from "../../Model/Utility/utility";
-import TaskViewModel from "./taskViewModel";
 
 export default class TaskContainingPageViewModel extends Context {
     // state

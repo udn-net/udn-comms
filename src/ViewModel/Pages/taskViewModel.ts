@@ -1,15 +1,13 @@
 import * as React from "bloatless-react";
-
+import TaskContainingPageViewModel from "./taskContainingPageViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
+import ChatViewModel from "../Chat/chatViewModel";
+import { ViewController } from "../../View/viewController";
+import { CommonKeys } from "../../View/keystrokes";
+import { localeCompare, padZero } from "../../Model/Utility/utility";
 import BoardsAndTasksModel, {
     TaskFileContent,
 } from "../../Model/Files/boardsAndTasksModel";
-import { localeCompare, padZero } from "../../Model/Utility/utility";
-
-import ChatViewModel from "../Chat/chatViewModel";
-import CoreViewModel, { Context } from "../Global/coreViewModel";
-import TaskContainingPageViewModel from "./taskContainingPageViewModel";
-import { CommonKeys } from "../../View/keystrokes";
-import { ViewController } from "../../View/viewController";
 
 export default class TaskViewModel extends Context {
     // util

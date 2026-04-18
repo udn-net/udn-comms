@@ -1,8 +1,8 @@
 import * as React from "bloatless-react";
-import { ReactionSymbols } from "../../Model/Chat/chatModel";
-import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { MessageReactionButton } from "./messageReactionButton";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
+import { ReactionSymbols } from "../../Model/Chat/chatModel";
 
 export function MessageReactionButtonRow(
     coreViewModel: CoreViewModel,

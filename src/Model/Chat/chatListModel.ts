@@ -1,64 +1,30 @@
+// cleanup: Phase A
+
+import { v4 } from "uuid";
+import { Message } from "udn-frontend";
 import ChatModel, { ChatMessage } from "./chatModel";
 import StorageModel, {
     StorageModelSubPaths,
     filePaths,
 } from "../Global/storageModel";
-
-import ConnectionModel from "../Global/connectionModel";
-import { Message } from "udn-frontend";
 import SettingsModel from "../Global/settingsModel";
-import { v4 } from "uuid";
+import ConnectionModel from "../Global/connectionModel";
 
 export default class ChatListModel {
+    // models
     readonly storageModel: StorageModel;
     readonly settingsModel: SettingsModel;
     readonly connectionModel: ConnectionModel;
 
     // data
-    chatModels = new Set<ChatModel>();
+    readonly chatModels = new Set<ChatModel>();
 
-    // handlers
-    messageHandler = (data: Message): void => {
-        const channel: string | undefined = data.messageChannel;
-        const body: string | undefined = data.messageBody;
-        if (channel == undefined) return;
-        if (body == undefined) return;
-
-        this.routeMessageToCorrectChatModel(channel, (chatModel: ChatModel) =>
-            chatModel.handleMessage(body),
-        );
-    };
-
-    messageSentHandler = (chatMessage: ChatMessage): void => {
-        const channel: string = chatMessage.channel;
-
-        this.routeMessageToCorrectChatModel(channel, (chatModel: ChatModel) =>
-            chatModel.handleMessageSent(chatMessage),
-        );
-    };
-
-    // methods
-    routeMessageToCorrectChatModel = (
-        channel: string,
-        fn: (chatModel: ChatModel) => void,
-    ): void => {
-        const allChannels: string[] = channel.split("/");
-
-        for (const chatModel of this.chatModels) {
-            for (const channel of allChannels) {
-                if (channel != chatModel.info.primaryChannel) continue;
-                fn(chatModel);
-                break;
-            }
-        }
-    };
-
-    // storage
-    addChatModel = (chatModel: ChatModel) => {
+    // chat handling
+    readonly addChatModel = (chatModel: ChatModel) => {
         this.chatModels.add(chatModel);
     };
 
-    createChat = (primaryChannel: string): ChatModel => {
+    readonly createChat = (primaryChannel: string): ChatModel => {
         const id: string = v4();
 
         const chatModel = new ChatModel(
@@ -74,12 +40,48 @@ export default class ChatListModel {
         return chatModel;
     };
 
-    untrackChat = (chat: ChatModel): void => {
+    readonly untrackChat = (chat: ChatModel): void => {
         this.chatModels.delete(chat);
     };
 
+    // message handlers
+    readonly messageHandler = (data: Message): void => {
+        const channel: string | undefined = data.messageChannel;
+        const body: string | undefined = data.messageBody;
+        if (channel == undefined) return;
+        if (body == undefined) return;
+
+        this.routeMessageToCorrectChatModel(channel, (chatModel: ChatModel) =>
+            chatModel.handleMessage(body),
+        );
+    };
+
+    readonly messageSentHandler = (chatMessage: ChatMessage): void => {
+        const channel: string = chatMessage.channel;
+
+        this.routeMessageToCorrectChatModel(channel, (chatModel: ChatModel) =>
+            chatModel.handleMessageSent(chatMessage),
+        );
+    };
+
+    // util
+    readonly routeMessageToCorrectChatModel = (
+        channel: string,
+        fn: (chatModel: ChatModel) => void,
+    ): void => {
+        const allChannels: string[] = channel.split("/");
+
+        for (const chatModel of this.chatModels) {
+            for (const channel of allChannels) {
+                if (channel != chatModel.info.primaryChannel) continue;
+                fn(chatModel);
+                break;
+            }
+        }
+    };
+
     // load
-    loadChats = (): void => {
+    readonly loadChats = (): void => {
         const chatDir = StorageModel.getPath(
             StorageModelSubPaths.Chat,
             filePaths.chat.base,

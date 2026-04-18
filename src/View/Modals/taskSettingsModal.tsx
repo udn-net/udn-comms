@@ -1,15 +1,13 @@
+import { v4 } from "uuid";
 import * as React from "bloatless-react";
-
 import {
     Entry,
     Option,
     StringToOption,
     VersionIdToOption,
 } from "../Components/option";
-
 import { DangerousActionButton } from "../Components/dangerousActionButton";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
-import { v4 } from "uuid";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function TaskSettingsModal(

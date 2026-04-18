@@ -1,14 +1,12 @@
-import "./calendarPage.css";
-
 import * as React from "bloatless-react";
-
-import CalendarPageViewModel from "../../ViewModel/Pages/calendarPageViewModel";
-import { MonthGrid } from "../Components/monthGrid";
+import "./calendarPage.css";
+import { ViewController } from "../viewController";
 import { TaskSettingsModal } from "../Modals/taskSettingsModal";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { PlaceholderView } from "../Components/placeholderView";
-import { ViewController } from "../viewController";
+import { MonthGrid } from "../Components/monthGrid";
+import CalendarPageViewModel from "../../ViewModel/Pages/calendarPageViewModel";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function CalendarPage(
     coreViewModel: CoreViewModel,

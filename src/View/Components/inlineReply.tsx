@@ -1,8 +1,6 @@
 import * as React from "bloatless-react";
-
-import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { ViewController } from "../viewController";
+import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 
 export function InlineReply(chatMessageViewModel: ChatMessageViewModel) {
     const reply = chatMessageViewModel.inlineReply;

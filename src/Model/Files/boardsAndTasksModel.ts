@@ -1,18 +1,17 @@
-// this file is responsible for managing boards within chats and tasks within boards.
+// cleanup: Phase A
 
+import { v4 } from "uuid";
+import FileModel, { FileContent, FileModelSubPath } from "./fileModel";
+import CalendarModel from "./calendarModel";
+import { HandlerManager } from "../Utility/utility";
 import {
     DATA_VERSION,
     checkMatchesObjectStructure,
 } from "../Utility/typeSafety";
-import FileModel, { FileContent, FileModelSubPath } from "./fileModel";
-
-import CalendarModel from "./calendarModel";
+import StorageModel from "../Global/storageModel";
+import SettingsModel from "../Global/settingsModel";
 import ChatModel from "../Chat/chatModel";
 import { Colors } from "../../colors";
-import { HandlerManager } from "../Utility/utility";
-import SettingsModel from "../Global/settingsModel";
-import StorageModel from "../Global/storageModel";
-import { v4 } from "uuid";
 
 export default class BoardsAndTasksModel {
     readonly storageModel: StorageModel;
@@ -27,43 +26,43 @@ export default class BoardsAndTasksModel {
     readonly taskHandlerManager = new HandlerManager<TaskFileContent>();
 
     // paths
-    getBasePath = (): string[] => {
+    readonly getBasePath = (): string[] => {
         return this.fileModel.getModelContainerPath(FileModelSubPath.ModelTask);
     };
 
-    getViewPath = (): string[] => {
+    readonly getViewPath = (): string[] => {
         return [...this.getBasePath(), FileModelSubPath.ModelView];
     };
 
-    getBoardFilePath = (boardId: string): string[] => {
+    readonly getBoardFilePath = (boardId: string): string[] => {
         return [...this.fileModel.getFilePath(boardId)];
     };
 
-    getTaskFilePath = (taskId: string): string[] => {
+    readonly getTaskFilePath = (taskId: string): string[] => {
         return [...this.fileModel.getFilePath(taskId)];
     };
 
-    getBoardContainerPath = (): string[] => {
+    readonly getBoardContainerPath = (): string[] => {
         return [...this.getBasePath(), TaskModelSubPaths.Boards];
     };
 
-    getBoardDirectoryPath = (boardId: string): string[] => {
+    readonly getBoardDirectoryPath = (boardId: string): string[] => {
         return [...this.getBoardContainerPath(), boardId];
     };
 
-    getTaskContainerPath = (boardId: string): string[] => {
+    readonly getTaskContainerPath = (boardId: string): string[] => {
         return [
             ...this.getBoardDirectoryPath(boardId),
             TaskModelSubPaths.BoardTasks,
         ];
     };
 
-    getTaskReferencePath = (boardId: string, fileId: string): string[] => {
+    readonly getTaskReferencePath = (boardId: string, fileId: string): string[] => {
         return [...this.getTaskContainerPath(boardId), fileId];
     };
 
     // handlers
-    handleFileContent = (fileContent: FileContent<string>): void => {
+    readonly handleFileContent = (fileContent: FileContent<string>): void => {
         if (
             checkMatchesObjectStructure(
                 fileContent,
@@ -81,16 +80,16 @@ export default class BoardsAndTasksModel {
         }
     };
 
-    handleBoard = (boardInfoFileContent: BoardInfoFileContent) => {
+    readonly handleBoard = (boardInfoFileContent: BoardInfoFileContent) => {
         this.updateBoard(boardInfoFileContent);
     };
 
-    handleTask = (taskFileContent: TaskFileContent) => {
+    readonly handleTask = (taskFileContent: TaskFileContent) => {
         this.updateTask(taskFileContent);
     };
 
     // boards
-    createBoard = (name: string): BoardInfoFileContent => {
+    readonly createBoard = (name: string): BoardInfoFileContent => {
         const boardInfoFileContent: BoardInfoFileContent =
             BoardsAndTasksModel.createBoardInfoFileContent(
                 v4(),
@@ -100,17 +99,17 @@ export default class BoardsAndTasksModel {
         return boardInfoFileContent;
     };
 
-    updateBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
+    readonly updateBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
         this.storeBoard(boardInfoFileContent);
         this.boardHandlerManager.trigger(boardInfoFileContent);
     };
 
-    updateBoardAndSend = (boardInfoFileContent: BoardInfoFileContent): void => {
+    readonly updateBoardAndSend = (boardInfoFileContent: BoardInfoFileContent): void => {
         this.updateBoard(boardInfoFileContent);
         this.chatModel.sendMessage("", undefined, boardInfoFileContent);
     };
 
-    storeBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
+    readonly storeBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
         // store info
         this.fileModel.storeFileContent(boardInfoFileContent);
 
@@ -121,7 +120,7 @@ export default class BoardsAndTasksModel {
         this.storageModel.write(boardDirectoryPath, "");
     };
 
-    deleteBoard = (boardId: string): void => {
+    readonly deleteBoard = (boardId: string): void => {
         const boardFilePath: string[] = this.getBoardFilePath(boardId);
         const boardDirectoryPath: string[] =
             this.getBoardDirectoryPath(boardId);
@@ -130,13 +129,13 @@ export default class BoardsAndTasksModel {
         this.storageModel.removeRecursively(boardDirectoryPath);
     };
 
-    listBoardIds = (): string[] => {
+    readonly listBoardIds = (): string[] => {
         const boardContainerPath: string[] = this.getBoardContainerPath();
         const boardIds: string[] = this.storageModel.list(boardContainerPath);
         return boardIds;
     };
 
-    getBoardInfo = (fileId: string): BoardInfoFileContent | null => {
+    readonly getBoardInfo = (fileId: string): BoardInfoFileContent | null => {
         const boardInfoFileContentOrNull: BoardInfoFileContent | null =
             this.fileModel.getLatestFileContent(
                 fileId,
@@ -145,7 +144,7 @@ export default class BoardsAndTasksModel {
         return boardInfoFileContentOrNull;
     };
 
-    getBoardName = (boardId: string): string => {
+    readonly getBoardName = (boardId: string): string => {
         const boardInfo: BoardInfoFileContent | null =
             this.getBoardInfo(boardId);
         if (boardInfo == null) return "";
@@ -153,23 +152,23 @@ export default class BoardsAndTasksModel {
     };
 
     //tasks
-    createTask = (boardId: string): TaskFileContent => {
+    readonly createTask = (boardId: string): TaskFileContent => {
         const taskFileContent: TaskFileContent =
             BoardsAndTasksModel.createTaskFileContent(v4(), "", boardId);
         return taskFileContent;
     };
 
-    updateTask = (taskFileContent: TaskFileContent): void => {
+    readonly updateTask = (taskFileContent: TaskFileContent): void => {
         this.storeTask(taskFileContent);
         this.taskHandlerManager.trigger(taskFileContent);
     };
 
-    updateTaskAndSend = (taskFileContent: TaskFileContent): void => {
+    readonly updateTaskAndSend = (taskFileContent: TaskFileContent): void => {
         this.updateTask(taskFileContent);
         this.chatModel.sendMessage("", undefined, taskFileContent);
     };
 
-    storeTask = (taskFileContent: TaskFileContent): void => {
+    readonly storeTask = (taskFileContent: TaskFileContent): void => {
         // store info
         this.fileModel.storeFileContent(taskFileContent);
 
@@ -184,18 +183,18 @@ export default class BoardsAndTasksModel {
         this.calendarModel.storeTaskReference(taskFileContent);
     };
 
-    listTaskIds = (boardId: string): string[] => {
+    readonly listTaskIds = (boardId: string): string[] => {
         const taskContainerPath: string[] = this.getTaskContainerPath(boardId);
         const fileIds: string[] = this.storageModel.list(taskContainerPath);
         return fileIds;
     };
 
-    listTaskVersionIds = (taskId: string): string[] => {
+    readonly listTaskVersionIds = (taskId: string): string[] => {
         const versionIds: string[] = this.fileModel.listFileContentIds(taskId);
         return versionIds;
     };
 
-    getLatestTaskFileContent = (taskId: string): TaskFileContent | null => {
+    readonly getLatestTaskFileContent = (taskId: string): TaskFileContent | null => {
         const taskFileContentOrNull: TaskFileContent | null =
             this.fileModel.getLatestFileContent(
                 taskId,
@@ -204,7 +203,7 @@ export default class BoardsAndTasksModel {
         return taskFileContentOrNull;
     };
 
-    getSpecificTaskFileContent = (
+    readonly getSpecificTaskFileContent = (
         taskId: string,
         versionId: string,
     ): TaskFileContent | null => {
@@ -217,14 +216,14 @@ export default class BoardsAndTasksModel {
         return taskFileContentOrNull;
     };
 
-    deleteTask = (boardId: string, taskId: string): void => {
+    readonly deleteTask = (boardId: string, taskId: string): void => {
         const taskFilePath: string[] = this.getTaskFilePath(taskId);
         this.storageModel.removeRecursively(taskFilePath);
 
         this.deleteTaskReference(boardId, taskId);
     };
 
-    deleteTaskReference = (boardId: string, taskId: string): void => {
+    readonly deleteTaskReference = (boardId: string, taskId: string): void => {
         const taskReferencePath: string[] = this.getTaskReferencePath(
             boardId,
             taskId,

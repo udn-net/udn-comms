@@ -1,5 +1,4 @@
 import * as React from "bloatless-react";
-
 import { Colors } from "../../colors";
 
 export function ColorPicker(selectedColor: React.State<Colors>) {

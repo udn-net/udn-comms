@@ -8,5 +8,8 @@
   },
   "scripts": {
     "build": "esbuild src/index.tsx --bundle --outdir=dist"
+  },
+  "devDependencies": {
+    "prettier-plugin-sort-imports": "^1.8.11"
   }
 }

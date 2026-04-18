@@ -1,21 +1,20 @@
-// this file is responsible for managing files within chats.
+// cleanup: Phase A
 
-import { DATA_VERSION, ValidObject } from "../Utility/typeSafety";
-import StorageModel, {
-    StorageModelSubPaths,
-    filePaths,
-} from "../Global/storageModel";
+import { v4 } from "uuid";
+import BoardsAndTasksModel from "./boardsAndTasksModel";
 import {
     StringEntryObject,
     createTimestamp,
     parseValidObject,
     stringify,
 } from "../Utility/utility";
-
-import BoardsAndTasksModel from "./boardsAndTasksModel";
-import ChatModel from "../Chat/chatModel";
+import { DATA_VERSION, ValidObject } from "../Utility/typeSafety";
+import StorageModel, {
+    StorageModelSubPaths,
+    filePaths,
+} from "../Global/storageModel";
 import SettingsModel from "../Global/settingsModel";
-import { v4 } from "uuid";
+import ChatModel from "../Chat/chatModel";
 
 export default class FileModel {
     readonly storageModel: StorageModel;
@@ -25,32 +24,32 @@ export default class FileModel {
     readonly boardsAndTasksModel: BoardsAndTasksModel;
 
     // paths
-    getBasePath = (): string[] => {
+    get basePath(): string[] {
         return StorageModel.getPath(
             StorageModelSubPaths.Chat,
             filePaths.chat.files(this.chatModel.id),
         );
     };
 
-    getFileContainerPath = (): string[] => {
-        return [...this.getBasePath(), FileModelSubPath.Data];
+    readonly getFileContainerPath = (): string[] => {
+        return [...this.basePath, FileModelSubPath.Data];
     };
 
-    getModelContainerPath = (modelName: FileModelSubPath): string[] => {
-        return [...this.getBasePath(), FileModelSubPath.Model, modelName];
+    readonly getModelContainerPath = (modelName: FileModelSubPath): string[] => {
+        return [...this.basePath, FileModelSubPath.Model, modelName];
     };
 
-    getFilePath = (fileId: string): string[] => {
+    readonly getFilePath = (fileId: string): string[] => {
         return [...this.getFileContainerPath(), fileId];
     };
 
-    getFileContentPath = (fileId: string, fileContentId: string): string[] => {
+    readonly getFileContentPath = (fileId: string, fileContentId: string): string[] => {
         const filePath: string[] = this.getFilePath(fileId);
         return [...filePath, fileContentId];
     };
 
     // handlers
-    handleStringifiedFileContent = (stringifiedFileContent: string): void => {
+    readonly handleStringifiedFileContent = (stringifiedFileContent: string): void => {
         const fileContent: FileContent<string> | null = parseValidObject(
             stringifiedFileContent,
             FileContentReference,
@@ -60,7 +59,7 @@ export default class FileModel {
         this.handleFileContent(fileContent);
     };
 
-    handleFileContent = (fileContent: FileContent<string>): void => {
+    readonly handleFileContent = (fileContent: FileContent<string>): void => {
         const didStore: boolean = this.storeFileContent(fileContent);
         if (didStore == false) return;
 
@@ -69,13 +68,13 @@ export default class FileModel {
     };
 
     // methods
-    addFileContentAndSend = (fileContent: FileContent<string>): void => {
+    readonly addFileContentAndSend = (fileContent: FileContent<string>): void => {
         this.handleFileContent(fileContent);
         this.chatModel.sendMessage("", undefined, fileContent);
     };
 
     // storage
-    storeFileContent = (fileContent: FileContent<string>): boolean => {
+    readonly storeFileContent = (fileContent: FileContent<string>): boolean => {
         const fileContentPath: string[] = this.getFileContentPath(
             fileContent.fileId,
             fileContent.fileContentId,
@@ -91,22 +90,22 @@ export default class FileModel {
         return true;
     };
 
-    listFileIds = (): string[] => {
-        return this.storageModel.list(this.getBasePath());
+    readonly listFileIds = (): string[] => {
+        return this.storageModel.list(this.basePath);
     };
 
-    listFileContentIds = (fileId: string): string[] => {
+    readonly listFileContentIds = (fileId: string): string[] => {
         const filePath: string[] = this.getFilePath(fileId);
         return this.storageModel.list(filePath);
     };
 
-    selectLatestFileContentId = (
+    readonly selectLatestFileContentId = (
         fileContentIds: string[],
     ): string | undefined => {
         return fileContentIds[fileContentIds.length - 1];
     };
 
-    getFileContent = <T extends FileContent<string>>(
+    readonly getFileContent = <T extends FileContent<string>>(
         fileId: string,
         fileContentName: string,
         reference: T,
@@ -122,7 +121,7 @@ export default class FileModel {
         return fileContentOrNull;
     };
 
-    getLatestFileContent = <T extends FileContent<string>>(
+    readonly getLatestFileContent = <T extends FileContent<string>>(
         fileId: string,
         reference: T,
     ): T | null => {

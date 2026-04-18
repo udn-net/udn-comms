@@ -1,7 +1,7 @@
 import * as React from "bloatless-react";
-import ChatModel, { ChatMessage } from "../../Model/Chat/chatModel";
-import ChatListViewModel from "../Chat/chatListViewModel";
 import { ChatPageTypes } from "../Chat/chatViewModel";
+import ChatListViewModel from "../Chat/chatListViewModel";
+import ChatModel, { ChatMessage } from "../../Model/Chat/chatModel";
 
 export default class NotificationViewModel {
     // data

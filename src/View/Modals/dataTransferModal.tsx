@@ -1,15 +1,13 @@
 import * as React from "bloatless-react";
-
+import { ViewController } from "../viewController";
+import { StringToTextSpan } from "../Components/textSpan";
 import FileTransferViewModel, {
     FileTransferModals,
     FileTransferOption,
 } from "../../ViewModel/Global/fileTransferViewModel";
-
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import ConnectionViewModel from "../../ViewModel/Global/connectionViewModel";
 import StorageModel from "../../Model/Global/storageModel";
-import { StringToTextSpan } from "../Components/textSpan";
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { ViewController } from "../viewController";
 
 export function DataTransferModalWrapper(
     coreViewModel: CoreViewModel,

@@ -1,5 +1,4 @@
 import * as React from "bloatless-react";
-
 import ChatViewModel from "../../ViewModel/Chat/chatViewModel";
 
 export function ChatEntry(chatViewModel: ChatViewModel) {

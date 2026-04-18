@@ -1,12 +1,10 @@
 import * as React from "bloatless-react";
-
-import { ChatMessageInfoModal } from "../Modals/chatMessageInfoModal";
-import { ChatMessageStatuses } from "../../Model/Chat/chatModel";
-import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import { MessageReactionButtonRow } from "./messageReactionButtonRow";
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { InlineReply } from "./inlineReply";
-import { ViewController } from "../viewController";
+import { ChatMessageInfoModal } from "../Modals/chatMessageInfoModal";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
+import { ChatMessageStatuses } from "../../Model/Chat/chatModel";
 
 export function ChatMessage(
     coreViewModel: CoreViewModel,

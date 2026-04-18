@@ -1,18 +1,15 @@
 import * as React from "bloatless-react";
-
+import { SplitModal } from "./splitModal";
 import { languageNames } from "../translations";
+import { PlaceholderView } from "../Components/placeholderView";
+import { OptionButtonList } from "../Components/optionButtonList";
+import { NavigationButton } from "../Components/navigationButton";
+import { InfoTile } from "../Components/infoTile";
 import SettingsViewModel, {
     SettingsModalPages,
 } from "../../ViewModel/Global/settingsViewModel";
-import { SplitModal } from "./splitModal";
-import { InfoTile } from "../Components/infoTile";
-import { Option } from "../Components/option";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import { Languages, ThemeSettings } from "../../Model/Global/settingsModel";
-import { OptionButtonList } from "../Components/optionButtonList";
-import { stringify } from "../../Model/Utility/utility";
-import { PlaceholderView } from "../Components/placeholderView";
-import { NavigationButton } from "../Components/navigationButton";
 
 export function SettingsModal(
     coreViewModel: CoreViewModel,

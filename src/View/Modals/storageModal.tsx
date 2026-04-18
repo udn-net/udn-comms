@@ -1,12 +1,10 @@
 import * as React from "bloatless-react";
-
-import { PATH_COMPONENT_SEPARATOR } from "../../Model/Global/storageModel";
-import StorageViewModel from "../../ViewModel/Global/storageViewModel";
-
 import { SplitModal } from "./splitModal";
-import { DangerousActionButton } from "../Components/dangerousActionButton";
 import { DirectoryItemList } from "../Components/directoryItemList";
+import { DangerousActionButton } from "../Components/dangerousActionButton";
+import StorageViewModel from "../../ViewModel/Global/storageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { PATH_COMPONENT_SEPARATOR } from "../../Model/Global/storageModel";
 
 export function StorageModal(
     coreViewModel: CoreViewModel,

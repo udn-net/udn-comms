@@ -1,14 +1,12 @@
 import * as React from "bloatless-react";
-
+import MessagePageViewModel from "../Pages/messagePageViewModel";
+import CoreViewModel from "../Global/coreViewModel";
 import {
     ChatMessage,
     ChatMessageReaction,
     ChatMessageStatuses,
     ReactionSymbols,
 } from "../../Model/Chat/chatModel";
-
-import CoreViewModel from "../Global/coreViewModel";
-import MessagePageViewModel from "../Pages/messagePageViewModel";
 
 export default class ChatMessageViewModel {
     // data

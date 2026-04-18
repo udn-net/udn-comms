@@ -1,17 +1,16 @@
-// this file is responsible for sending and handling files.
+// cleanup: Phase A
 
+import { Message } from "udn-frontend";
+import StorageModel from "./storageModel";
+import ConnectionModel from "./connectionModel";
 import {
     HandlerManager,
     generateRandomToken,
     parse,
     stringify,
 } from "../Utility/utility";
-import { decryptString, encryptString } from "../Utility/crypto";
-
-import ConnectionModel from "./connectionModel";
-import { Message } from "udn-frontend";
-import StorageModel from "./storageModel";
 import { checkMatchesObjectStructure } from "../Utility/typeSafety";
+import { decryptString, encryptString } from "../Utility/crypto";
 
 export default class FileTransferModel {
     readonly storageModel: StorageModel;
@@ -21,12 +20,14 @@ export default class FileTransferModel {
 
     // data
     transferData: TransferData | undefined;
-    readonly fileHandlerManager = new HandlerManager<string>();
-    readonly readyToSendHandlerManager = new HandlerManager<boolean>();
     direction: TransferDirections = TransferDirections.Send;
 
+    // handler managers
+    readonly fileHandlerManager = new HandlerManager<string>();
+    readonly readyToSendHandlerManager = new HandlerManager<boolean>();
+
     // general
-    generateTransferData = (): TransferData => {
+    readonly generateTransferData = (): TransferData => {
         const transferData: TransferData = {
             channel: generateRandomToken(4),
             key: generateRandomToken(6),
@@ -35,12 +36,12 @@ export default class FileTransferModel {
         return transferData;
     };
 
-    prepareToSend = (): void => {
+    readonly prepareToSend = (): void => {
         this.direction = TransferDirections.Send;
         this.connectionModel.addChannel(this.transferData.channel);
     };
 
-    prepareToReceive = (transferData: TransferData): void => {
+    readonly prepareToReceive = (transferData: TransferData): void => {
         this.direction = TransferDirections.Receive;
 
         this.connectionModel.addChannel(transferData.channel);
@@ -52,7 +53,7 @@ export default class FileTransferModel {
     };
 
     // handlers
-    handleMessage = (data: Message): void => {
+    readonly handleMessage = (data: Message): void => {
         if (this.transferData == undefined) return;
         if (data.messageChannel != this.transferData.channel) return;
         if (
@@ -68,7 +69,7 @@ export default class FileTransferModel {
         this.handleFile(data.messageBody);
     };
 
-    handleFile = async (encryptedFileData: string): Promise<void> => {
+    readonly handleFile = async (encryptedFileData: string): Promise<void> => {
         if (this.transferData == undefined) return;
 
         const decrypted: string = await decryptString(
@@ -93,7 +94,7 @@ export default class FileTransferModel {
     };
 
     // sending
-    sendFiles = (
+    readonly sendFiles = (
         directoryPaths: IteratorObject<string[]>,
         callback: (path: string) => void,
     ): void => {
@@ -108,7 +109,7 @@ export default class FileTransferModel {
         }
     };
 
-    sendFile = async (filePath: string[]): Promise<void> => {
+    readonly sendFile = async (filePath: string[]): Promise<void> => {
         if (this.transferData == undefined) return;
         const fileContent: string | null = this.storageModel.read(filePath);
         if (fileContent == null) return;

@@ -1,10 +1,8 @@
-import "./chatPage.css";
-
 import * as React from "bloatless-react";
-
-import ChatListViewModel from "../ViewModel/Chat/chatListViewModel";
+import "./chatPage.css";
 import { ChatPage } from "./chatPage";
 import CoreViewModel from "../ViewModel/Global/coreViewModel";
+import ChatListViewModel from "../ViewModel/Chat/chatListViewModel";
 
 export function ChatPageWrapper(
     coreViewModel: CoreViewModel,

@@ -1,7 +1,6 @@
 import * as React from "bloatless-react";
-
-import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import { ViewController } from "../viewController";
+import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 
 export function BoardEntry(boardViewModel: BoardViewModel) {
     const view = (

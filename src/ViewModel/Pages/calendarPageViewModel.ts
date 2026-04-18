@@ -1,15 +1,13 @@
 import * as React from "bloatless-react";
-
+import TaskViewModel from "./taskViewModel";
+import TaskContainingPageViewModel from "./taskContainingPageViewModel";
+import CoreViewModel from "../Global/coreViewModel";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
+import { CommonKeys } from "../../View/keystrokes";
+import CalendarModel, { MonthGrid } from "../../Model/Files/calendarModel";
 import BoardsAndTasksModel, {
     TaskFileContent,
 } from "../../Model/Files/boardsAndTasksModel";
-import CalendarModel, { MonthGrid } from "../../Model/Files/calendarModel";
-
-import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
-import CoreViewModel from "../Global/coreViewModel";
-import TaskContainingPageViewModel from "./taskContainingPageViewModel";
-import TaskViewModel from "./taskViewModel";
-import { CommonKeys } from "../../View/keystrokes";
 
 export const CALENDAR_EVENT_BOARD_ID = "events";
 

@@ -36,15 +36,15 @@ export async function decryptString(
 }
 
 // process
-export function encode(string: string): Uint8Array {
+function encode(string: string): Uint8Array {
     return new TextEncoder().encode(string);
 }
 
-export function decode(array: Uint8Array): string {
+function decode(array: Uint8Array): string {
     return new TextDecoder("utf-8").decode(array);
 }
 
-export async function encrypt(
+async function encrypt(
     iv: Uint8Array,
     key: CryptoKey,
     message: string,
@@ -57,7 +57,7 @@ export async function encrypt(
     return new Uint8Array(arrayBuffer);
 }
 
-export async function decrypt(
+async function decrypt(
     iv: Uint8Array,
     key: CryptoKey,
     cyphertext: Uint8Array,
@@ -70,16 +70,16 @@ export async function decrypt(
     return arrayBufferToString(arrayBuffer);
 }
 
-export async function hash(encoded: Uint8Array): Promise<ArrayBuffer> {
+async function hash(encoded: Uint8Array): Promise<ArrayBuffer> {
     return await crypto.subtle.digest("SHA-256", encoded);
 }
 
 // iv
-export function generateIV(): Uint8Array {
+function generateIV(): Uint8Array {
     return crypto.getRandomValues(new Uint8Array(IV_SIZE));
 }
 
-export function splitMergedString(mergedString: string): [Uint8Array, string] {
+function splitMergedString(mergedString: string): [Uint8Array, string] {
     const iv = mergedString.slice(0, IV_SIZE);
     const encryptedString = mergedString.slice(IV_SIZE);
 
@@ -87,7 +87,7 @@ export function splitMergedString(mergedString: string): [Uint8Array, string] {
 }
 
 // key
-export async function importKey(
+async function importKey(
     passphrase: string,
     purpose: "encrypt" | "decrypt",
 ): Promise<CryptoKey> {
@@ -101,15 +101,15 @@ export async function importKey(
 }
 
 // conversion
-export function arrayBufferToString(arrayBuffer: ArrayBuffer): string {
+function arrayBufferToString(arrayBuffer: ArrayBuffer): string {
     const uInt8Array = new Uint8Array(arrayBuffer);
     return decode(uInt8Array);
 }
 
-export function uInt8ToArray(uInt8Array: Uint8Array): number[] {
+function uInt8ToArray(uInt8Array: Uint8Array): number[] {
     return Array.from(uInt8Array);
 }
 
-export function arrayToUint8(array: number[]): Uint8Array {
+function arrayToUint8(array: number[]): Uint8Array {
     return new Uint8Array(array);
 }

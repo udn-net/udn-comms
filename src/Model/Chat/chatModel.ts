@@ -1,11 +1,7 @@
-// this file is responsible for managing chats.
+// cleanup: Phase A
 
-import {
-    checkMatchesObjectStructure,
-    DATA_VERSION,
-    ValidObject,
-} from "../Utility/typeSafety";
-import FileModel, { FileContent } from "../Files/fileModel";
+import { v4 } from "uuid";
+import ChatListModel from "./chatListModel";
 import {
     HandlerManager,
     createTimestamp,
@@ -13,24 +9,27 @@ import {
     parseValidObject,
     stringify,
 } from "../Utility/utility";
+import {
+    DATA_VERSION,
+    ValidObject,
+    checkMatchesObjectStructure,
+} from "../Utility/typeSafety";
+import { decryptString, encryptString } from "../Utility/crypto";
 import StorageModel, {
     StorageModelSubPaths,
     filePaths,
 } from "../Global/storageModel";
-import { decryptString, encryptString } from "../Utility/crypto";
-
-import ChatListModel from "./chatListModel";
-import { Colors } from "../../colors";
-import ConnectionModel from "../Global/connectionModel";
 import SettingsModel from "../Global/settingsModel";
-import { v4 } from "uuid";
+import ConnectionModel from "../Global/connectionModel";
+import FileModel, { FileContent } from "../Files/fileModel";
+import { Colors } from "../../colors";
 
 export default class ChatModel {
+    // models
     readonly connectionModel: ConnectionModel;
     readonly storageModel: StorageModel;
     readonly settingsModel: SettingsModel;
     readonly chatListModel: ChatListModel;
-
     readonly fileModel: FileModel;
 
     // data
@@ -38,61 +37,62 @@ export default class ChatModel {
     info: ChatInfo;
     color: Colors;
 
+    get secondaryChannels(): string[] {
+        return this.info.secondaryChannels.sort(localeCompare);
+    }
+
+    // handler managers
     chatMessageHandlerManager: HandlerManager<ChatMessage> =
         new HandlerManager();
     readonly reactionHandlerManager: HandlerManager<ChatMessageReaction> =
         new HandlerManager();
 
-    get secondaryChannels(): string[] {
-        return this.info.secondaryChannels.sort(localeCompare);
-    }
-
     // paths
-    getBasePath = (): string[] => {
+    readonly getBasePath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.Chat,
             filePaths.chat.chatBase(this.id),
         );
     };
 
-    getInfoPath = (): string[] => {
+    readonly getInfoPath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.Chat,
             filePaths.chat.info(this.id),
         );
     };
 
-    getColorPath = (): string[] => {
+    readonly getColorPath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.Chat,
             filePaths.chat.color(this.id),
         );
     };
 
-    getMessageDirPath = (): string[] => {
+    readonly getMessageDirPath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.Chat,
             filePaths.chat.messages(this.id),
         );
     };
 
-    getMessagePath = (id: string): string[] => {
+    readonly getMessagePath = (id: string): string[] => {
         return [...this.getMessageDirPath(), id];
     };
 
-    getReactionDirPath = (): string[] => {
+    readonly getReactionDirPath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.Chat,
             filePaths.chat.reactions(this.id),
         );
     };
 
-    getReactionPath = (id: string): string[] => {
+    readonly getReactionPath = (id: string): string[] => {
         return [...this.getReactionDirPath(), id];
     };
 
     // handlers
-    handleMessage = (body: string): void => {
+    readonly handleMessage = (body: string): void => {
         const chatMessage: ChatMessage | null = parseValidObject(
             body,
             ChatMessageReference,
@@ -107,7 +107,7 @@ export default class ChatModel {
         this.setReadStatus(true);
     };
 
-    handleReaction = (reaction: ChatMessageReaction | any): void => {
+    readonly handleReaction = (reaction: ChatMessageReaction | any): void => {
         if (
             !checkMatchesObjectStructure(reaction, ChatMessageReactionReference)
         )
@@ -122,35 +122,35 @@ export default class ChatModel {
         this.reactionHandlerManager.trigger(reaction);
     };
 
-    handleMessageSent = (chatMessage: ChatMessage): void => {
+    readonly handleMessageSent = (chatMessage: ChatMessage): void => {
         chatMessage.status = ChatMessageStatuses.Sent;
         this.addMessage(chatMessage);
     };
 
     // settings
-    setPrimaryChannel = (primaryChannel: string): void => {
+    readonly setPrimaryChannel = (primaryChannel: string): void => {
         this.info.primaryChannel = primaryChannel;
         this.storeInfo();
         this.subscribe();
     };
 
-    setSecondaryChannels = (secondaryChannels: string[]): void => {
+    readonly setSecondaryChannels = (secondaryChannels: string[]): void => {
         this.info.secondaryChannels = secondaryChannels;
         this.storeInfo();
     };
 
-    setEncryptionKey = (key: string): void => {
+    readonly setEncryptionKey = (key: string): void => {
         this.info.encryptionKey = key;
         this.storeInfo();
     };
 
-    setColor = (color: Colors): void => {
+    readonly setColor = (color: Colors): void => {
         this.color = color;
         this.storeColor();
     };
 
     // messaging
-    addMessage = async (chatMessage: ChatMessage): Promise<void> => {
+    readonly addMessage = async (chatMessage: ChatMessage): Promise<void> => {
         await this.decryptMessage(chatMessage);
 
         // message
@@ -166,7 +166,7 @@ export default class ChatModel {
         );
     };
 
-    getNameAndChannel = (): [string, string] | false => {
+    readonly getNameAndChannel = (): [string, string] | false => {
         const senderName: string = this.settingsModel.username;
         if (senderName == "") return false;
 
@@ -180,7 +180,7 @@ export default class ChatModel {
         return [senderName, combinedChannel];
     };
 
-    sendMessage = async (
+    readonly sendMessage = async (
         body: string,
         inlineReplyId?: string,
         fileContent?: FileContent<string>,
@@ -203,7 +203,9 @@ export default class ChatModel {
         return true;
     };
 
-    decryptMessage = async (chatMessage: ChatMessage): Promise<void> => {
+    readonly decryptMessage = async (
+        chatMessage: ChatMessage,
+    ): Promise<void> => {
         const decryptedBody: string = await decryptString(
             chatMessage.body,
             this.info.encryptionKey,
@@ -216,7 +218,7 @@ export default class ChatModel {
         chatMessage.stringifiedFile = decryptedFile;
     };
 
-    sendReaction = async (
+    readonly sendReaction = async (
         messageId: string,
         content: ReactionSymbols,
         isDeleting?: boolean,
@@ -235,25 +237,25 @@ export default class ChatModel {
         this.handleReaction(reaction);
     };
 
-    subscribe = (): void => {
+    readonly subscribe = (): void => {
         this.connectionModel.addChannel(this.info.primaryChannel);
     };
 
-    setReadStatus = (hasUnreadMessages: boolean): void => {
+    readonly setReadStatus = (hasUnreadMessages: boolean): void => {
         this.info.hasUnreadMessages = hasUnreadMessages;
         this.storeInfo();
     };
 
     // storage
-    storeInfo = (): void => {
+    readonly storeInfo = (): void => {
         this.storageModel.writeStringifiable(this.getInfoPath(), this.info);
     };
 
-    storeColor = (): void => {
+    readonly storeColor = (): void => {
         this.storageModel.write(this.getColorPath(), this.color);
     };
 
-    delete = () => {
+    readonly delete = () => {
         // untrack
         this.chatListModel.untrackChat(this);
 
@@ -263,7 +265,7 @@ export default class ChatModel {
     };
 
     // load
-    loadInfo = (): void => {
+    readonly loadInfo = (): void => {
         const info: ChatInfo | null = this.storageModel.readStringifiable(
             this.getInfoPath(),
             ChatInfoReference,
@@ -275,7 +277,7 @@ export default class ChatModel {
         }
     };
 
-    loadColor = (): void => {
+    readonly loadColor = (): void => {
         const path: string[] = this.getColorPath();
         const color: string | null = this.storageModel.read(path);
         if (!color) {

@@ -1,14 +1,12 @@
-import "./messagePage.css";
-
 import * as React from "bloatless-react";
-
+import "./messagePage.css";
+import { ViewController } from "../viewController";
+import { MessageFilterModal } from "../Modals/messageFilterModal";
+import { ReplyPreview } from "../Components/replyPreview";
+import { ChatMessage } from "../Components/chatMessage";
 import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
-import { ChatMessage } from "../Components/chatMessage";
-import { MessageFilterModal } from "../Modals/messageFilterModal";
-import { ViewController } from "../viewController";
-import { ReplyPreview } from "../Components/replyPreview";
 
 export function MessagePage(
     coreViewModel: CoreViewModel,

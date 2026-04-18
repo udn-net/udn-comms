@@ -1,22 +1,20 @@
 import * as React from "bloatless-react";
-
+import { ViewController } from "../viewController";
+import { TaskViewModelToEntry } from "../Components/taskEntry";
 import {
     PropertyValueList,
     collectPropertyValuesToState,
     createPropertyValueIndexState,
     createSortedPropertyValueState,
 } from "../Components/propertyValueList";
+import { FilteredList } from "../Components/filteredList";
 import {
     TaskCategoryBulkChangeViewModel,
     TaskStatusBulkChangeViewModel,
 } from "../../ViewModel/Utility/taskPropertyBulkChangeViewModel";
-
-import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
-import { FilteredList } from "../Components/filteredList";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
-import { TaskViewModelToEntry } from "../Components/taskEntry";
+import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { ViewController } from "../viewController";
 
 export function BoardStatusGridPage(
     coreViewModel: CoreViewModel,

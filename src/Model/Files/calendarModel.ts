@@ -1,10 +1,9 @@
-// it is responsible for managing calendar-realted reference files for tasks.
+// cleanup: Phase A
 
 import FileModel, { FileModelSubPath } from "./fileModel";
-
-import SettingsModel from "../Global/settingsModel";
-import StorageModel from "../Global/storageModel";
 import { TaskFileContent } from "./boardsAndTasksModel";
+import StorageModel from "../Global/storageModel";
+import SettingsModel from "../Global/settingsModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export default class CalendarModel {
@@ -13,26 +12,26 @@ export default class CalendarModel {
     readonly settingsModel: SettingsModel;
 
     // paths
-    getBasePath = (): string[] => {
+    get basePath (): string[] {
         return this.fileModel.getModelContainerPath(
             FileModelSubPath.ModelCalendar,
         );
     };
 
-    getViewPath = (): string[] => {
-        return [...this.getBasePath(), FileModelSubPath.ModelView];
+    readonly getViewPath = (): string[] => {
+        return [...this.basePath, FileModelSubPath.ModelView];
     };
 
-    getMonthContainerPath = (): string[] => {
-        return [...this.getBasePath(), CalendarModelSubPaths.Months];
+    readonly getMonthContainerPath = (): string[] => {
+        return [...this.basePath, CalendarModelSubPaths.Months];
     };
 
-    getMonthPath = (monthString: string): string[] => {
+    readonly getMonthPath = (monthString: string): string[] => {
         return [...this.getMonthContainerPath(), monthString];
     };
 
-    // main
-    storeTaskReference = (taskFileContent: TaskFileContent): void => {
+    // task references
+    readonly storeTaskReference = (taskFileContent: TaskFileContent): void => {
         if (taskFileContent.date == undefined) return;
 
         const monthString: string = CalendarModel.isoToMonthString(
@@ -45,19 +44,21 @@ export default class CalendarModel {
         this.storageModel.write(referencePath, "");
     };
 
-    deleteTaskReference = (monthString: string, taskId: string): void => {
+    readonly deleteTaskReference = (monthString: string, taskId: string): void => {
         const monthPath: string[] = this.getMonthPath(monthString);
         const referencePath: string[] = [...monthPath, taskId];
 
         this.storageModel.write(referencePath, "");
     };
 
-    listTaskIds = (monthString: string): string[] => {
+    // data
+    readonly listTaskIds = (monthString: string): string[] => {
         const monthPath: string[] = this.getMonthPath(monthString);
         return this.storageModel.list(monthPath);
     };
 
-    generateMonthGrid = <T>(
+    // util
+    readonly generateMonthGrid = <T>(
         coreViewModel: CoreViewModel,
         year: number,
         month: number,

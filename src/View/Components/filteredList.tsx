@@ -1,5 +1,4 @@
 import * as React from "bloatless-react";
-
 import {
     StringEntryObject,
     checkDoesObjectMatchReference,

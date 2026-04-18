@@ -1,28 +1,26 @@
-import "./base.css";
+import * as React from "bloatless-react";
 import "./colors.css";
 import "./coloredTile.css";
-
-import * as React from "bloatless-react";
-
-import ChatListModel from "./Model/Chat/chatListModel";
-import ChatListViewModel from "./ViewModel/Chat/chatListViewModel";
-import { ChatPageWrapper } from "./View/chatPageWrapper";
-import { ConnectionModal } from "./View/Modals/connectionModal";
-import ConnectionModel from "./Model/Global/connectionModel";
-import ConnectionViewModel from "./ViewModel/Global/connectionViewModel";
-import CoreViewModel from "./ViewModel/Global/coreViewModel";
-import { DataTransferModalWrapper } from "./View/Modals/dataTransferModal";
-import FileTransferModel from "./Model/Global/fileTransferModel";
-import FileTransferViewModel from "./ViewModel/Global/fileTransferViewModel";
-import { HomePage } from "./View/homePage";
-import SettingsModel from "./Model/Global/settingsModel";
-import SettingsViewModel from "./ViewModel/Global/settingsViewModel";
-import { StorageModal } from "./View/Modals/storageModal";
-import StorageModel from "./Model/Global/storageModel";
-import StorageViewModel from "./ViewModel/Global/storageViewModel";
-import v1Upgrader from "./Upgrader/v1";
-import { SettingsModal } from "./View/Modals/settingsModal";
+import "./base.css";
 import HomeViewModel from "./ViewModel/Pages/homeViewModel";
+import StorageViewModel from "./ViewModel/Global/storageViewModel";
+import SettingsViewModel from "./ViewModel/Global/settingsViewModel";
+import FileTransferViewModel from "./ViewModel/Global/fileTransferViewModel";
+import CoreViewModel from "./ViewModel/Global/coreViewModel";
+import ConnectionViewModel from "./ViewModel/Global/connectionViewModel";
+import ChatListViewModel from "./ViewModel/Chat/chatListViewModel";
+import { HomePage } from "./View/homePage";
+import { ChatPageWrapper } from "./View/chatPageWrapper";
+import { StorageModal } from "./View/Modals/storageModal";
+import { SettingsModal } from "./View/Modals/settingsModal";
+import { DataTransferModalWrapper } from "./View/Modals/dataTransferModal";
+import { ConnectionModal } from "./View/Modals/connectionModal";
+import v1Upgrader from "./Upgrader/v1";
+import StorageModel from "./Model/Global/storageModel";
+import SettingsModel from "./Model/Global/settingsModel";
+import FileTransferModel from "./Model/Global/fileTransferModel";
+import ConnectionModel from "./Model/Global/connectionModel";
+import ChatListModel from "./Model/Chat/chatListModel";
 
 // models
 const storageModel = new StorageModel();

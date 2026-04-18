@@ -1,12 +1,11 @@
 import * as React from "bloatless-react";
-
-import ChatModel from "../../Model/Chat/chatModel";
 import ChatViewModel from "./chatViewModel";
-import CoreViewModel from "../Global/coreViewModel";
-import { IndexManager } from "../../Model/Utility/utility";
 import SettingsViewModel from "../Global/settingsViewModel";
-import ConnectionViewModel from "../Global/connectionViewModel";
 import NotificationViewModel from "../Global/notificationViewModel";
+import CoreViewModel from "../Global/coreViewModel";
+import ConnectionViewModel from "../Global/connectionViewModel";
+import { IndexManager } from "../../Model/Utility/utility";
+import ChatModel from "../../Model/Chat/chatModel";
 
 export default class ChatListViewModel {
     notificationViewModel: NotificationViewModel;

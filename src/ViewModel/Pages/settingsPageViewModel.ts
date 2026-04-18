@@ -1,8 +1,7 @@
 import * as React from "bloatless-react";
-
+import CoreViewModel, { Context } from "../Global/coreViewModel";
 import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
 import { Colors } from "../../colors";
-import CoreViewModel, { Context } from "../Global/coreViewModel";
 
 export default class SettingsPageViewModel extends Context {
     // state

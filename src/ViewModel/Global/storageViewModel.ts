@@ -1,11 +1,9 @@
 import * as React from "bloatless-react";
-
+import CoreViewModel, { Context } from "./coreViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 import StorageModel, {
     PATH_COMPONENT_SEPARATOR,
 } from "../../Model/Global/storageModel";
-
-import CoreViewModel, { Context } from "./coreViewModel";
-import { CommonKeys } from "../../View/keystrokes";
 
 export default class StorageViewModel extends Context {
     // state

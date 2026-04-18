@@ -1,10 +1,8 @@
 import * as React from "bloatless-react";
-
+import { RibbonButton } from "./ribbonButton";
 import BoardViewModel, {
     BoardPageTypes,
 } from "../../ViewModel/Pages/boardViewModel";
-
-import { RibbonButton } from "./ribbonButton";
 
 export function BoardViewToggleButton(
     label: string,

@@ -1,7 +1,6 @@
 import * as React from "bloatless-react";
-
-import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import ChatMessageViewModel from "../../ViewModel/Chat/chatMessageViewModel";
 
 export function ReplyPreview(
     coreViewModel: CoreViewModel,

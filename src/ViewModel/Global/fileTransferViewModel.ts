@@ -1,16 +1,12 @@
 import * as React from "bloatless-react";
-
-import FileTransferModel, {
-    TransferData,
-} from "../../Model/Global/fileTransferModel";
+import CoreViewModel, { Context } from "./coreViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 import StorageModel, {
     StorageModelSubPaths,
     filePaths,
 } from "../../Model/Global/storageModel";
-
+import { TransferData } from "../../Model/Global/fileTransferModel";
 import ChatModel from "../../Model/Chat/chatModel";
-import CoreViewModel, { Context } from "./coreViewModel";
-import { CommonKeys } from "../../View/keystrokes";
 
 export default class FileTransferViewModel extends Context {
     // state

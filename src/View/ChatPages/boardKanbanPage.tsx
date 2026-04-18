@@ -1,17 +1,15 @@
 import * as React from "bloatless-react";
-
+import { ViewController } from "../viewController";
+import { TaskViewModelToEntry } from "../Components/taskEntry";
 import {
     PropertyValueList,
     createPropertyValueIndexState,
 } from "../Components/propertyValueList";
-
-import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import { FilteredList } from "../Components/filteredList";
 import { TaskCategoryBulkChangeViewModel } from "../../ViewModel/Utility/taskPropertyBulkChangeViewModel";
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
-import { TaskViewModelToEntry } from "../Components/taskEntry";
+import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { ViewController } from "../viewController";
 
 export function BoardKanbanPage(
     coreViewModel: CoreViewModel,

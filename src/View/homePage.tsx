@@ -1,17 +1,14 @@
-import "./homePage.css";
-
 import * as React from "bloatless-react";
-
-import { Option, StringToOption } from "./Components/option";
-
-import ChatListViewModel from "../ViewModel/Chat/chatListViewModel";
-import { ChatViewModelToChatEntry } from "./Components/chatEntry";
-import ConnectionViewModel from "../ViewModel/Global/connectionViewModel";
-import FileTransferViewModel from "../ViewModel/Global/fileTransferViewModel";
-import SettingsViewModel from "../ViewModel/Global/settingsViewModel";
-import StorageViewModel from "../ViewModel/Global/storageViewModel";
-import CoreViewModel from "../ViewModel/Global/coreViewModel";
+import "./homePage.css";
+import { StringToOption } from "./Components/option";
 import { HomePageButton } from "./Components/homePageButton";
+import { ChatViewModelToChatEntry } from "./Components/chatEntry";
+import StorageViewModel from "../ViewModel/Global/storageViewModel";
+import SettingsViewModel from "../ViewModel/Global/settingsViewModel";
+import FileTransferViewModel from "../ViewModel/Global/fileTransferViewModel";
+import CoreViewModel from "../ViewModel/Global/coreViewModel";
+import ConnectionViewModel from "../ViewModel/Global/connectionViewModel";
+import ChatListViewModel from "../ViewModel/Chat/chatListViewModel";
 
 export function HomePage(
     coreViewModel: CoreViewModel,

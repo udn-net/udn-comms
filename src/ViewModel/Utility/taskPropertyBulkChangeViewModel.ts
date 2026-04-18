@@ -1,5 +1,4 @@
 import * as React from "bloatless-react";
-
 import TaskViewModel from "../Pages/taskViewModel";
 
 export default class TaskPropertyBulkChangeViewModel {

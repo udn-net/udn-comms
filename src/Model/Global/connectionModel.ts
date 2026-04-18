@@ -1,13 +1,16 @@
-// this file is responsible for managing UDN connections.
+// cleanup: Phase A
 
-import { ChatMessage, ChatMessageReference } from "../Chat/chatModel";
-import { HandlerManager, stringify } from "../Utility/utility";
-import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
 import UDNFrontend, { Message } from "udn-frontend";
+import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
+import { HandlerManager, stringify } from "../Utility/utility";
+import { ChatMessage, ChatMessageReference } from "../Chat/chatModel";
 
 export default class ConnectionModel {
+    // models etc
     readonly udn: UDNFrontend;
     readonly storageModel: StorageModel;
+
+    // config
     reconnectInterval: number | undefined = undefined;
     shouldAttemptReconnect: boolean = false;
 
@@ -20,17 +23,18 @@ export default class ConnectionModel {
         return this.udn.ws?.url;
     }
 
+    // handler managers
     readonly connectionChangeHandlerManager = new HandlerManager<void>();
     readonly messageHandlerManager = new HandlerManager<Message>();
     readonly messageSentHandlerManager = new HandlerManager<ChatMessage>();
     readonly channelsToSubscribe = new Set<string>();
 
     // handlers
-    handleMessage = (data: Message): void => {
+    readonly handleMessage = (data: Message): void => {
         this.messageHandlerManager.trigger(data);
     };
 
-    handleConnectionChange = (): void => {
+    readonly handleConnectionChange = (): void => {
         console.log("connection status:", this.isConnected, this.address);
         this.connectionChangeHandlerManager.trigger();
         if (this.address == undefined) return;
@@ -41,13 +45,13 @@ export default class ConnectionModel {
     };
 
     // connection
-    connect = (address: string): void => {
+    readonly connect = (address: string): void => {
         console.log("connecting...", address);
         this.shouldAttemptReconnect = true;
         this.udn.connect(address);
     };
 
-    disconnect = (): void => {
+    readonly disconnect = (): void => {
         this.shouldAttemptReconnect = false;
         this.udn.disconnect();
 
@@ -59,7 +63,7 @@ export default class ConnectionModel {
         this.storageModel.remove(reconnectAddressPath);
     };
 
-    reconnect = (): void => {
+    readonly reconnect = (): void => {
         const reconnectAddressPath: string[] = this.getReconnectAddressPath();
         const reconnectAddress: string | null =
             this.storageModel.read(reconnectAddressPath);
@@ -70,7 +74,7 @@ export default class ConnectionModel {
     };
 
     // mailbox
-    getMailboxPath = (address: string): string[] => {
+    readonly getMailboxPath = (address: string): string[] => {
         const mailboxDirPath = StorageModel.getPath(
             StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.mailboxes,
@@ -79,12 +83,12 @@ export default class ConnectionModel {
         return mailboxFilePath;
     };
 
-    requestNewMailbox = (): void => {
+    readonly requestNewMailbox = (): void => {
         console.log("requesting new mailbox");
         this.udn.requestMailbox();
     };
 
-    connectMailbox = (): void => {
+    readonly connectMailbox = (): void => {
         if (this.address == undefined) return;
 
         const mailboxId = this.storageModel.read(
@@ -96,18 +100,18 @@ export default class ConnectionModel {
         this.udn.connectMailbox(mailboxId);
     };
 
-    storeMailbox = (mailboxId: string): void => {
+    readonly storeMailbox = (mailboxId: string): void => {
         if (this.address == undefined) return;
         this.storageModel.write(this.getMailboxPath(this.address), mailboxId);
     };
 
     // subscription
-    addChannel = (channel: string): void => {
+    readonly addChannel = (channel: string): void => {
         this.channelsToSubscribe.add(channel);
         this.sendSubscriptionRequest();
     };
 
-    sendSubscriptionRequest = (): void => {
+    readonly sendSubscriptionRequest = (): void => {
         if (this.isConnected == false) return;
 
         for (const channel of this.channelsToSubscribe) {
@@ -118,14 +122,14 @@ export default class ConnectionModel {
     };
 
     // outbox
-    getOutboxPath = (): string[] => {
+    readonly getOutboxPath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.outbox,
         );
     };
 
-    getOutboxMessags = (): ChatMessage[] => {
+    readonly getOutboxMessags = (): ChatMessage[] => {
         const outboxPath: string[] = this.getOutboxPath();
         const messageIds: string[] = this.storageModel.list(outboxPath);
 
@@ -144,17 +148,17 @@ export default class ConnectionModel {
         return chatMessages;
     };
 
-    addToOutbox = (chatMessage: ChatMessage): void => {
+    readonly addToOutbox = (chatMessage: ChatMessage): void => {
         const messagePath: string[] = [...this.getOutboxPath(), chatMessage.id];
         this.storageModel.writeStringifiable(messagePath, chatMessage);
     };
 
-    removeFromOutbox = (chatMessage: ChatMessage): void => {
+    readonly removeFromOutbox = (chatMessage: ChatMessage): void => {
         const messagePath: string[] = [...this.getOutboxPath(), chatMessage.id];
         this.storageModel.remove(messagePath);
     };
 
-    sendMessagesInOutbox = (): void => {
+    readonly sendMessagesInOutbox = (): void => {
         const messages: ChatMessage[] = this.getOutboxMessags();
 
         for (const message of messages) {
@@ -166,14 +170,14 @@ export default class ConnectionModel {
     };
 
     // messaging
-    sendMessageOrStore = (chatMessage: ChatMessage): void => {
+    readonly sendMessageOrStore = (chatMessage: ChatMessage): void => {
         const isSent = this.tryToSendMessage(chatMessage);
         if (isSent == true) return;
 
         this.addToOutbox(chatMessage);
     };
 
-    tryToSendMessage = (chatMessage: ChatMessage): boolean => {
+    readonly tryToSendMessage = (chatMessage: ChatMessage): boolean => {
         const stringifiedBody: string = stringify(chatMessage);
         const isSent: boolean = this.sendPlainMessage(
             chatMessage.channel,
@@ -183,31 +187,31 @@ export default class ConnectionModel {
         return isSent;
     };
 
-    sendPlainMessage = (channel: string, body: string): boolean => {
+    readonly sendPlainMessage = (channel: string, body: string): boolean => {
         return this.udn.sendMessage(channel, body);
     };
 
     // storage
-    getPreviousAddressPath = (): string[] => {
+    readonly getPreviousAddressPath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.previousAddresses,
         );
     };
 
-    getAddressPath = (address: string): string[] => {
+    readonly getAddressPath = (address: string): string[] => {
         const dirPath = this.getPreviousAddressPath();
         return [...dirPath, address];
     };
 
-    getReconnectAddressPath = (): string[] => {
+    readonly getReconnectAddressPath = (): string[] => {
         return StorageModel.getPath(
             StorageModelSubPaths.ConnectionModel,
             filePaths.connectionModel.reconnectAddress,
         );
     };
 
-    storeAddress = (address: string): void => {
+    readonly storeAddress = (address: string): void => {
         // history
         const addressPath = this.getAddressPath(address);
         this.storageModel.write(addressPath, "");
@@ -217,7 +221,7 @@ export default class ConnectionModel {
         this.storageModel.write(reconnectAddressPath, address);
     };
 
-    removeAddress = (address: string): void => {
+    readonly removeAddress = (address: string): void => {
         const addressPath = this.getAddressPath(address);
         this.storageModel.remove(addressPath);
     };

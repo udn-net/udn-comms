@@ -1,18 +1,16 @@
 import * as React from "bloatless-react";
-
+import TaskViewModel from "./taskViewModel";
+import TaskPageViewModel from "./taskPageViewModel";
+import TaskContainingPageViewModel from "./taskContainingPageViewModel";
+import SearchViewModel from "../Utility/searchViewModel";
+import CoreViewModel from "../Global/coreViewModel";
+import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
+import { Colors } from "../../colors";
+import { CommonKeys } from "../../View/keystrokes";
 import BoardsAndTasksModel, {
     BoardInfoFileContent,
     TaskFileContent,
 } from "../../Model/Files/boardsAndTasksModel";
-
-import ChatViewModel, { ChatPageTypes } from "../Chat/chatViewModel";
-import { Colors } from "../../colors";
-import CoreViewModel from "../Global/coreViewModel";
-import SearchViewModel from "../Utility/searchViewModel";
-import TaskContainingPageViewModel from "./taskContainingPageViewModel";
-import TaskPageViewModel from "./taskPageViewModel";
-import TaskViewModel from "./taskViewModel";
-import { CommonKeys } from "../../View/keystrokes";
 
 export default class BoardViewModel extends TaskContainingPageViewModel {
     // state

@@ -1,5 +1,14 @@
 // this file is responsible for migrating data from v1 to v2.
 
+import { v4 } from "uuid";
+import CoreViewModel from "../ViewModel/Global/coreViewModel";
+import {
+    getLocalStorageItemAndClear,
+    parseArray,
+    parseOrFallback,
+} from "../Model/Utility/utility";
+import { checkMatchesObjectStructure } from "../Model/Utility/typeSafety";
+import FileModel from "../Model/Files/fileModel";
 import {
     BoardInfoFileContent,
     TaskFileContent,
@@ -8,16 +17,6 @@ import ChatModel, {
     ChatMessage,
     ChatMessageStatuses,
 } from "../Model/Chat/chatModel";
-import {
-    getLocalStorageItemAndClear,
-    parseArray,
-    parseOrFallback,
-} from "../Model/Utility/utility";
-
-import FileModel from "../Model/Files/fileModel";
-import { checkMatchesObjectStructure } from "../Model/Utility/typeSafety";
-import { v4 } from "uuid";
-import CoreViewModel from "../ViewModel/Global/coreViewModel";
 
 export default class v1Upgrader {
     // general

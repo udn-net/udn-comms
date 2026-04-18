@@ -1,9 +1,7 @@
 import * as React from "bloatless-react";
-
-import { Colors } from "../../colors";
-import { ColorPicker } from "../Components/colorPicker";
-import { DangerousActionButton } from "../Components/dangerousActionButton";
 import { DeletableListItem } from "../Components/deletableListItem";
+import { DangerousActionButton } from "../Components/dangerousActionButton";
+import { ColorPicker } from "../Components/colorPicker";
 import SettingsPageViewModel from "../../ViewModel/Pages/settingsPageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 

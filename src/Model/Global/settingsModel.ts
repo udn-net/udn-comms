@@ -1,4 +1,4 @@
-// this file is responsible for all settings.
+// cleanup: Phase A
 
 import StorageModel, { StorageModelSubPaths, filePaths } from "./storageModel";
 
@@ -12,10 +12,10 @@ export default class SettingsModel {
     theme: string;
 
     // storage
-    private storeSetting(
+    private readonly storeSetting = (
         pathName: keyof typeof filePaths.settingsModel,
         value: string,
-    ): void {
+    ): void => {
         const path = StorageModel.getPath(
             StorageModelSubPaths.SettingsModel,
             filePaths.settingsModel[pathName],
@@ -23,28 +23,28 @@ export default class SettingsModel {
         this.storageModel.write(path, value);
     }
 
-    setName = (newValue: string): void => {
+    readonly setName = (newValue: string): void => {
         this.username = newValue;
         this.storeSetting("username", newValue);
     };
 
-    setFirstDayOfWeek = (newValue: string): void => {
+    readonly setFirstDayOfWeek = (newValue: string): void => {
         this.firstDayOfWeek = newValue;
         this.storeSetting("firstDayOfWeek", newValue);
     };
 
-    setLanguage = (newValue: string): void => {
+    readonly setLanguage = (newValue: string): void => {
         this.language = newValue;
         this.storeSetting("language", newValue);
     };
 
-    setTheme = (newValue: string): void => {
+    readonly setTheme = (newValue: string): void => {
         this.theme = newValue;
         this.storeSetting("theme", newValue);
     };
 
     // load
-    private readSetting = (
+    private readonly readSetting = (
         pathName: keyof typeof filePaths.settingsModel,
     ): string => {
         const path = StorageModel.getPath(
@@ -54,22 +54,22 @@ export default class SettingsModel {
         return this.storageModel.read(path);
     };
 
-    loadUsername = (): void => {
+    readonly loadUsername = (): void => {
         const content: string | null = this.readSetting("username");
         this.username = content ?? "";
     };
 
-    loadFirstDayofWeek = (): void => {
+    readonly loadFirstDayofWeek = (): void => {
         const content: string | null = this.readSetting("firstDayOfWeek");
         this.firstDayOfWeek = content ?? "0";
     };
 
-    loadLanguage = (): void => {
+    readonly loadLanguage = (): void => {
         const content: string | null = this.readSetting("language");
         this.language = content ?? SettingsModel.getSystemLanguage();
     };
 
-    loadTheme = (): void => {
+    readonly loadTheme = (): void => {
         const content: string | null = this.readSetting("theme");
         this.theme = content ?? ThemeSettings.System;
     };

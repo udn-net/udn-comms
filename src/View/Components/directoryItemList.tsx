@@ -1,10 +1,8 @@
 import * as React from "bloatless-react";
-
+import StorageViewModel from "../../ViewModel/Global/storageViewModel";
 import StorageModel, {
     PATH_COMPONENT_SEPARATOR,
 } from "../../Model/Global/storageModel";
-
-import StorageViewModel from "../../ViewModel/Global/storageViewModel";
 
 export function DirectoryItemList(
     storageViewModel: StorageViewModel,

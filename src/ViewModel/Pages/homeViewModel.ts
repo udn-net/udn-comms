@@ -1,9 +1,9 @@
-import { CommonKeys } from "../../View/keystrokes";
-import ConnectionViewModel from "../Global/connectionViewModel";
-import CoreViewModel, { Context } from "../Global/coreViewModel";
-import FileTransferViewModel from "../Global/fileTransferViewModel";
-import SettingsViewModel from "../Global/settingsViewModel";
 import StorageViewModel from "../Global/storageViewModel";
+import SettingsViewModel from "../Global/settingsViewModel";
+import FileTransferViewModel from "../Global/fileTransferViewModel";
+import CoreViewModel, { Context } from "../Global/coreViewModel";
+import ConnectionViewModel from "../Global/connectionViewModel";
+import { CommonKeys } from "../../View/keystrokes";
 
 export default class HomeViewModel extends Context {
     constructor(

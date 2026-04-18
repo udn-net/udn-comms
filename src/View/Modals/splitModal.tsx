@@ -1,7 +1,6 @@
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import "./splitModal.css";
-
 import * as React from "bloatless-react";
+import "./splitModal.css";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
 
 export function SplitModal<T>(
     coreViewModel: CoreViewModel,

@@ -1,11 +1,10 @@
-import "./monthGrid.css";
-
 import * as React from "bloatless-react";
-import { MonthGrid } from "../../Model/Files/calendarModel";
-import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
-import { localeCompare } from "../../Model/Utility/utility";
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import "./monthGrid.css";
 import { ViewController } from "../viewController";
+import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { localeCompare } from "../../Model/Utility/utility";
+import { MonthGrid } from "../../Model/Files/calendarModel";
 
 export function MonthGrid<T>(
     coreViewModel: CoreViewModel,
@@ -69,7 +68,9 @@ export function MonthGrid<T>(
                                 return (
                                     monthGrid.isCurrentMonth == true &&
                                     date ==
-                                        coreViewModel.unwrappedTodayDate.getDate().toString()
+                                        coreViewModel.unwrappedTodayDate
+                                            .getDate()
+                                            .toString()
                                 );
                             },
                         );

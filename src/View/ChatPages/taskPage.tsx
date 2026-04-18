@@ -1,14 +1,11 @@
-import "./taskPage.css";
-
 import * as React from "bloatless-react";
-
+import "./taskPage.css";
 import { BoardPage } from "./boardPage";
+import { ViewController } from "../viewController";
+import { PlaceholderView } from "../Components/placeholderView";
 import { BoardViewModelToEntry } from "../Components/boardEntry";
 import TaskPageViewModel from "../../ViewModel/Pages/taskPageViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import { PlaceholderView } from "../Components/placeholderView";
-import { v4 } from "uuid";
-import { ViewController } from "../viewController";
 
 export function TaskPage(
     coreViewModel: CoreViewModel,

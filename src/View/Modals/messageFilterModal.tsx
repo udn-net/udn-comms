@@ -1,10 +1,9 @@
 import * as React from "bloatless-react";
-
-import CoreViewModel from "../../ViewModel/Global/coreViewModel";
-import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
-import { MessageReactionFilterButton } from "../Components/messageReactionFilterButton";
-import { ReactionSymbols } from "../../Model/Chat/chatModel";
 import { ViewController } from "../viewController";
+import { MessageReactionFilterButton } from "../Components/messageReactionFilterButton";
+import MessagePageViewModel from "../../ViewModel/Pages/messagePageViewModel";
+import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import { ReactionSymbols } from "../../Model/Chat/chatModel";
 
 export function MessageFilterModal<T>(
     coreViewModel: CoreViewModel,

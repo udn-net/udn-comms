@@ -1,7 +1,7 @@
-// this file is responsible for reading and writing persistent data.
+// cleanup: Phase A
 
-import { DATA_VERSION, ValidObject } from "../Utility/typeSafety";
 import { localeCompare, parseValidObject, stringify } from "../Utility/utility";
+import { DATA_VERSION, ValidObject } from "../Utility/typeSafety";
 
 export const PATH_COMPONENT_SEPARATOR = "\\";
 
@@ -9,14 +9,14 @@ export default class StorageModel {
     storageEntryTree: StorageEntry = {};
 
     // read
-    read = (pathComponents: string[]): string | null => {
+    readonly read = (pathComponents: string[]): string | null => {
         const pathString: string = StorageModel.pathComponentsToString(
             ...pathComponents,
         );
         return localStorage.getItem(pathString);
     };
 
-    list = (pathComponents: string[]): string[] => {
+    readonly list = (pathComponents: string[]): string[] => {
         let currentParent: StorageEntry = this.storageEntryTree;
         for (const component of pathComponents) {
             const nextParent: StorageEntry | undefined =
@@ -29,7 +29,7 @@ export default class StorageModel {
     };
 
     // write
-    write = (pathComponents: string[], value: string): void => {
+    readonly write = (pathComponents: string[], value: string): void => {
         const pathString: string = StorageModel.pathComponentsToString(
             ...pathComponents,
         );
@@ -37,7 +37,7 @@ export default class StorageModel {
         this.updateTree(...pathComponents);
     };
 
-    remove = (
+    readonly remove = (
         pathComponents: string[],
         shouldInitialize: boolean = true,
     ): void => {
@@ -51,7 +51,7 @@ export default class StorageModel {
         }
     };
 
-    rename = (
+    readonly rename = (
         sourcePathComponents: string[],
         destinationPathComponents: string[],
         shouldInitialize: boolean = true,
@@ -69,7 +69,7 @@ export default class StorageModel {
     };
 
     // recursion
-    recurse = (rootDirectory: string[], fn: (path: string[]) => void): void => {
+    readonly recurse = (rootDirectory: string[], fn: (path: string[]) => void): void => {
         loop_over_files: for (const key of Object.keys(localStorage)) {
             // get path of current entity
             const pathComponentsOfCurrentEntity: string[] =
@@ -92,14 +92,14 @@ export default class StorageModel {
         this.initializeTree();
     };
 
-    removeRecursively = (pathComponents: string[]): void => {
+    readonly removeRecursively = (pathComponents: string[]): void => {
         this.recurse(pathComponents, (path: string[]) =>
             this.remove(path, false),
         );
         this.initializeTree();
     };
 
-    renameRecursively = (
+    readonly renameRecursively = (
         sourcePathComponents: string[],
         destinationPathComponents: string[],
     ): void => {
@@ -120,7 +120,7 @@ export default class StorageModel {
     };
 
     // stringifiable
-    writeStringifiable = (
+    readonly writeStringifiable = (
         pathComponents: string[],
         value: ValidObject,
     ): void => {
@@ -128,7 +128,7 @@ export default class StorageModel {
         this.write(pathComponents, valueString);
     };
 
-    readStringifiable = <T extends ValidObject>(
+    readonly readStringifiable = <T extends ValidObject>(
         pathComponents: string[],
         reference: T,
     ): T | null => {
@@ -142,7 +142,7 @@ export default class StorageModel {
     };
 
     // cleaning
-    removeJunk = (): void => {
+    readonly removeJunk = (): void => {
         this.recurse([], (path: string[]) => {
             if (path[0] == DATA_VERSION) return;
             this.remove(path);
@@ -150,7 +150,7 @@ export default class StorageModel {
     };
 
     // tree
-    initializeTree = (): void => {
+    readonly initializeTree = (): void => {
         console.log("initializing tree");
 
         this.storageEntryTree = {};
@@ -161,7 +161,7 @@ export default class StorageModel {
         }
     };
 
-    updateTree = (...pathComponents: string[]): void => {
+    readonly updateTree = (...pathComponents: string[]): void => {
         let currentParent: StorageEntry = this.storageEntryTree;
         for (const pathPart of pathComponents) {
             if (!currentParent[pathPart]) {
@@ -172,7 +172,7 @@ export default class StorageModel {
         }
     };
 
-    printTree = (): string => {
+    readonly printTree = (): string => {
         return stringify(this.storageEntryTree);
     };
 
