@@ -6004,7 +6004,7 @@
       const isToday = createProxyState(
         [coreViewModel2.todayDate],
         () => {
-          return monthGrid.isCurrentMonth == true && date == coreViewModel2.unwrappedTodayDate.getDate().toString();
+          return monthGrid.isCurrentMonth == true && date == coreViewModel2.unwrappedTodayDate.getDate().toString().padStart(2, "0");
         }
       );
       const eventCount = createProxyState(
