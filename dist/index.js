@@ -1112,7 +1112,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.04.16.A";
+      this.BUILD = "Build 26.05.03.A";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
