@@ -71,6 +71,7 @@ export function MonthGrid<T>(
                                         coreViewModel.unwrappedTodayDate
                                             .getDate()
                                             .toString()
+                                            .padStart(2, "0")
                                 );
                             },
                         );
