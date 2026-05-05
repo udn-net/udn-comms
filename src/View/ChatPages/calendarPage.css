@@ -62,12 +62,23 @@
     width: 3.1rem;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 750px) {
     #chat-page > div > #main > #calendar-page {
         flex-direction: column;
     }
 
     #chat-page > div > #main > #calendar-page .grid-pane-wrapper {
         border-bottom: 1px solid var(--border);
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 750px) {
+    #chat-page > div > #main > #calendar-page .pane-wrapper {
+        flex: 1;
+        min-width: unset;
+    }
+
+    #chat-page > div > #main > #calendar-page .grid-pane-wrapper {
+        border-right: 1px solid var(--border);
     }
 }

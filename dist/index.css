@@ -813,12 +813,21 @@ body[showing-chat] #chat-page-wrapper {
 #chat-page > div > #main > #calendar-page > .pane-wrapper > .pane > .toolbar .input-wrapper > .month-input {
   width: 3.1rem;
 }
-@media (max-width: 1024px) {
+@media (max-width: 750px) {
   #chat-page > div > #main > #calendar-page {
     flex-direction: column;
   }
   #chat-page > div > #main > #calendar-page .grid-pane-wrapper {
     border-bottom: 1px solid var(--border);
+  }
+}
+@media (max-width: 1024px) and (min-width: 750px) {
+  #chat-page > div > #main > #calendar-page .pane-wrapper {
+    flex: 1;
+    min-width: unset;
+  }
+  #chat-page > div > #main > #calendar-page .grid-pane-wrapper {
+    border-right: 1px solid var(--border);
   }
 }
 
@@ -887,7 +896,7 @@ body[showing-chat] #chat-page-wrapper {
 .month-grid .tile .event-list span {
   animation: slide-up var(--animation-duration);
 }
-@media (max-width: 640px) and (max-height: 1200px) {
+@media (max-width: 900px) {
   .month-grid .tile {
     padding: 0px;
   }
