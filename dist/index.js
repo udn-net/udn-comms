@@ -1112,7 +1112,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.05.03.A";
+      this.BUILD = "Build 26.05.05.A";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -1981,7 +1981,6 @@
     }
     static {
       this.setFocusWithDelay = () => {
-        console.trace("focus");
         setTimeout(this.setFocus, 100);
       };
     }
@@ -2764,7 +2763,6 @@
           this.color.value
         );
         this.taskPageViewModel.updateBoard(newBoardInfoFileContent);
-        this.taskPageViewModel.selectBoard(this);
       };
       this.applyColor = () => {
         this.taskPageViewModel.chatViewModel.setDisplayedColor(
@@ -3017,7 +3015,6 @@
       };
       this.updateBoard = (boardInfoFileContent) => {
         this.boardsAndTasksModel.updateBoardAndSend(boardInfoFileContent);
-        this.updateBoardIndices();
       };
       this.deleteBoard = (boardInfoFileContent) => {
         this.boardsAndTasksModel.deleteBoard(boardInfoFileContent.fileId);
@@ -3029,7 +3026,6 @@
         this.isShowingBoadList.value = !this.isShowingBoadList.value;
       };
       this.showBoardInList = (boardInfo) => {
-        if (this.boardViewModels.value.has(boardInfo.fileId)) return;
         const boardViewModel = new BoardViewModel(
           this.coreViewModel,
           this.chatViewModel,
@@ -6082,6 +6078,7 @@
         calendarPageViewModel.selectedDate
       ],
       () => {
+        console.log(calendarPageViewModel.selectedDate.value);
         const listState = calendarPageViewModel.getEventsForDate();
         if (listState == void 0) {
           return /* @__PURE__ */ createElement("div", null);

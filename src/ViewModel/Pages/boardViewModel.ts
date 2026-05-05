@@ -61,8 +61,6 @@ export default class BoardViewModel extends TaskContainingPageViewModel {
             );
 
         this.taskPageViewModel.updateBoard(newBoardInfoFileContent);
-
-        this.taskPageViewModel.selectBoard(this);
     };
 
     applyColor = (): void => {

@@ -66,7 +66,6 @@ export default class TaskPageViewModel extends ContextHost<string> {
 
     updateBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
         this.boardsAndTasksModel.updateBoardAndSend(boardInfoFileContent);
-        this.updateBoardIndices();
     };
 
     deleteBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
@@ -81,8 +80,6 @@ export default class TaskPageViewModel extends ContextHost<string> {
     };
 
     showBoardInList = (boardInfo: BoardInfoFileContent): void => {
-        if (this.boardViewModels.value.has(boardInfo.fileId)) return;
-
         const boardViewModel: BoardViewModel = new BoardViewModel(
             this.coreViewModel,
             this.chatViewModel,

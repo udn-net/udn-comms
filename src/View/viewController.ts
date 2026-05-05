@@ -66,7 +66,6 @@ export class ViewController {
     };
 
     static readonly setFocusWithDelay = () => {
-        console.trace("focus");
         setTimeout(this.setFocus, 100);
     };
 }
