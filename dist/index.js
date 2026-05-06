@@ -412,6 +412,9 @@
         settingsHeadline: "Settings",
         primaryChannelLabel: "Primary channel",
         setPrimaryChannelButtonAudioLabel: "set primary channel",
+        namespaceLabel: "Namespace",
+        namespacePlaceholder: "No namespace",
+        setNamespaceButtonAudioLabel: "set namespace",
         newSecondaryChannelPlaceholder: "Add secondary channel",
         newSecondaryChannelAudioLabel: "name of new secondary channel",
         addSecondaryChannelButtonAudioLabel: "add secondary channel",
@@ -624,6 +627,9 @@
           settingsHeadline: "Einstellungen",
           primaryChannelLabel: "Hauptkanal",
           setPrimaryChannelButtonAudioLabel: "Hauptkanal festlegen",
+          namespaceLabel: "Namensraum",
+          namespacePlaceholder: "Ohne Namensraum",
+          setNamespaceButtonAudioLabel: "Namensraum festlegen",
           newSecondaryChannelPlaceholder: "Sekund\xE4ren Kanal hinzuf\xFCgen",
           newSecondaryChannelAudioLabel: "Name des neuen sekund\xE4ren Kanals",
           addSecondaryChannelButtonAudioLabel: "Sekund\xE4ren Kanal hinzuf\xFCgen",
@@ -824,6 +830,9 @@
           settingsHeadline: "Configuraci\xF3n",
           primaryChannelLabel: "Canal principal",
           setPrimaryChannelButtonAudioLabel: "establecer canal principal",
+          namespaceLabel: "Espacio de nombres",
+          namespacePlaceholder: "Sin espacio de nombres",
+          setNamespaceButtonAudioLabel: "establecer espacio de nombres",
           newSecondaryChannelPlaceholder: "A\xF1adir canal secundario",
           newSecondaryChannelAudioLabel: "nombre del nuevo canal secundario",
           addSecondaryChannelButtonAudioLabel: "a\xF1adir canal secundario",
@@ -1112,7 +1121,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.05.05.A";
+      this.BUILD = "Build 26.05.06.A";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -1766,7 +1775,7 @@
         const chatModels = this.coreViewModel.chatListModel.chatModels;
         for (const chatModel of chatModels) {
           this.chatFileOptions.add({
-            label: chatModel.info.primaryChannel,
+            label: chatModel.unwrappedPrimaryChannel,
             path: chatModel.getBasePath()
           });
         }
@@ -3127,6 +3136,8 @@
       // state
       this.primaryChannel = new State("");
       this.primaryChannelInput = new State("");
+      this.namespace = new State("");
+      this.namespaceInput = new State("");
       this.secondaryChannels = new ListState();
       this.newSecondaryChannelInput = new State("");
       this.encryptionKeyInput = new State("");
@@ -3141,6 +3152,10 @@
         [this.primaryChannel, this.primaryChannelInput],
         () => this.primaryChannelInput.value == "" || this.primaryChannelInput.value == this.primaryChannel.value
       );
+      this.cannotSetNamespace = createProxyState(
+        [this.namespace, this.namespaceInput],
+        () => this.namespaceInput.value == this.namespace.value
+      );
       this.cannotAddSecondaryChannel = createProxyState(
         [this.newSecondaryChannelInput],
         () => this.newSecondaryChannelInput.value == ""
@@ -3152,6 +3167,12 @@
         );
         this.primaryChannel.value = this.chatViewModel.chatModel.info.primaryChannel;
         this.chatViewModel.chatListViewModel.updateIndices();
+      };
+      this.setNamespace = () => {
+        this.chatViewModel.chatModel.setNamespace(
+          this.namespaceInput.value
+        );
+        this.namespace.value = this.chatViewModel.chatModel.info.namespace;
       };
       this.addSecondaryChannel = () => {
         this.secondaryChannels.add(this.newSecondaryChannelInput.value);
@@ -3185,10 +3206,12 @@
       // load
       this.preloadData = () => {
         this.primaryChannel.value = this.chatViewModel.chatModel.info.primaryChannel;
+        this.namespace.value = this.chatViewModel.chatModel.info.namespace;
         this.color.value = this.chatViewModel.chatModel.color;
       };
       this.loadData = () => {
-        this.primaryChannelInput.value = this.chatViewModel.chatModel.info.primaryChannel;
+        this.primaryChannelInput.value = this.primaryChannel.value;
+        this.namespaceInput.value = this.namespace.value;
         this.loadSecondaryChannels();
         this.encryptionKeyInput.value = this.chatViewModel.chatModel.info.encryptionKey;
       };
@@ -3360,6 +3383,11 @@
         this.storeInfo();
         this.subscribe();
       };
+      this.setNamespace = (namespace) => {
+        this.info.namespace = namespace;
+        this.storeInfo();
+        this.subscribe();
+      };
       this.setSecondaryChannels = (secondaryChannels) => {
         this.info.secondaryChannels = secondaryChannels;
         this.storeInfo();
@@ -3387,7 +3415,7 @@
       this.getNameAndChannel = () => {
         const senderName = this.settingsModel.username;
         if (senderName == "") return false;
-        const allChannels = [this.info.primaryChannel];
+        const allChannels = [this.unwrappedPrimaryChannel];
         for (const secondaryChannel of this.info.secondaryChannels) {
           allChannels.push(secondaryChannel);
         }
@@ -3436,7 +3464,7 @@
         this.handleReaction(reaction);
       };
       this.subscribe = () => {
-        this.connectionModel.addChannel(this.info.primaryChannel);
+        this.connectionModel.addChannel(this.unwrappedPrimaryChannel);
       };
       this.setReadStatus = (hasUnreadMessages) => {
         this.info.hasUnreadMessages = hasUnreadMessages;
@@ -3489,6 +3517,9 @@
         this
       );
     }
+    get unwrappedPrimaryChannel() {
+      return this.info.namespace + this.info.primaryChannel;
+    }
     get secondaryChannels() {
       return this.info.secondaryChannels.sort(localeCompare);
     }
@@ -3538,6 +3569,7 @@
         return {
           dataVersion: DATA_VERSION,
           primaryChannel,
+          namespace: "",
           secondaryChannels: [],
           encryptionKey: "",
           hasUnreadMessages: false
@@ -3597,6 +3629,7 @@
   var ChatInfoReference = {
     dataVersion: DATA_VERSION,
     primaryChannel: "",
+    namespace: "",
     secondaryChannels: [""],
     encryptionKey: "",
     hasUnreadMessages: true
@@ -4252,7 +4285,7 @@
         const notification = _NotificationViewModel.createNotification(message);
         if (this.seenMessageIds.has(message.id)) return;
         if (this.chatListViewModel.selectedChat.value == void 0) return;
-        const currentChat = this.chatListViewModel.selectedChat.value.chatModel.info.primaryChannel;
+        const currentChat = this.chatListViewModel.selectedChat.value.chatModel.unwrappedPrimaryChannel;
         const currentPage = this.chatListViewModel.selectedChat.value.selectedPage.value;
         if (notification.chat == currentChat && currentPage == "messages" /* Messages */)
           return;
@@ -4265,7 +4298,7 @@
         const chat = [
           ...this.chatListViewModel.chatViewModels.value.values()
         ].find(
-          (chat2) => chat2.chatModel.info.primaryChannel == notification.chat
+          (chat2) => chat2.chatModel.unwrappedPrimaryChannel == notification.chat
         );
         chat.open();
         chat.openPage("messages" /* Messages */);
@@ -5510,6 +5543,22 @@
         "aria-label": coreViewModel2.translations.chatPage.settings.setPrimaryChannelButtonAudioLabel,
         "on:click": settingsPageViewModel.setPrimaryChannel,
         "toggle:disabled": settingsPageViewModel.cannotSetPrimaryChannel
+      },
+      coreViewModel2.translations.general.setButton,
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "check")
+    )), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("label", { class: "tile flex-no" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "category"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", null, coreViewModel2.translations.chatPage.settings.namespaceLabel), /* @__PURE__ */ createElement(
+      "input",
+      {
+        "bind:value": settingsPageViewModel.namespaceInput,
+        "on:enter": settingsPageViewModel.setNamespace
+      }
+    ))), /* @__PURE__ */ createElement("div", { class: "flex-row justify-end width-input" }, /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "width-50",
+        "aria-label": coreViewModel2.translations.chatPage.settings.setNamespaceButtonAudioLabel,
+        "on:click": settingsPageViewModel.setNamespace,
+        "toggle:disabled": settingsPageViewModel.cannotSetNamespace
       },
       coreViewModel2.translations.general.setButton,
       /* @__PURE__ */ createElement("span", { class: "icon" }, "check")
@@ -7571,7 +7620,7 @@
         const allChannels = channel.split("/");
         for (const chatModel of this.chatModels) {
           for (const channel2 of allChannels) {
-            if (channel2 != chatModel.info.primaryChannel) continue;
+            if (channel2 != chatModel.unwrappedPrimaryChannel) continue;
             fn(chatModel);
             break;
           }

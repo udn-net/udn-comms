@@ -8,6 +8,9 @@ export default class SettingsPageViewModel extends Context {
     primaryChannel: React.State<string> = new React.State("");
     primaryChannelInput: React.State<string> = new React.State("");
 
+    namespace: React.State<string> = new React.State("");
+    namespaceInput: React.State<string> = new React.State("");
+
     secondaryChannels: React.ListState<string> = new React.ListState();
     newSecondaryChannelInput: React.State<string> = new React.State("");
 
@@ -27,6 +30,11 @@ export default class SettingsPageViewModel extends Context {
             this.primaryChannelInput.value == "" ||
             this.primaryChannelInput.value == this.primaryChannel.value,
     );
+    cannotSetNamespace: React.State<boolean> = React.createProxyState(
+        [this.namespace, this.namespaceInput],
+        () =>
+            this.namespaceInput.value == this.namespace.value,
+    );
     cannotAddSecondaryChannel: React.State<boolean> = React.createProxyState(
         [this.newSecondaryChannelInput],
         () => this.newSecondaryChannelInput.value == "",
@@ -42,6 +50,14 @@ export default class SettingsPageViewModel extends Context {
             this.chatViewModel.chatModel.info.primaryChannel;
 
         this.chatViewModel.chatListViewModel.updateIndices();
+    };
+
+    setNamespace = (): void => {
+        this.chatViewModel.chatModel.setNamespace(
+            this.namespaceInput.value,
+        );
+        this.namespace.value =
+            this.chatViewModel.chatModel.info.namespace;
     };
 
     addSecondaryChannel = (): void => {
@@ -85,13 +101,17 @@ export default class SettingsPageViewModel extends Context {
     preloadData = (): void => {
         this.primaryChannel.value =
             this.chatViewModel.chatModel.info.primaryChannel;
+        this.namespace.value =
+            this.chatViewModel.chatModel.info.namespace;
 
         this.color.value = this.chatViewModel.chatModel.color;
     };
 
     loadData = (): void => {
         this.primaryChannelInput.value =
-            this.chatViewModel.chatModel.info.primaryChannel;
+            this.primaryChannel.value;
+        this.namespaceInput.value =
+            this.namespace.value;
 
         this.loadSecondaryChannels();
 

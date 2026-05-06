@@ -9,7 +9,7 @@ import ConnectionModel from "../../Model/Global/connectionModel";
 import ChatListModel from "../../Model/Chat/chatListModel";
 
 export default class CoreViewModel {
-    readonly BUILD = "Build 26.05.05.B";
+    readonly BUILD = "Build 26.05.06.A";
 
     translations: Translations;
 

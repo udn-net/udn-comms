@@ -98,7 +98,7 @@ export default class FileTransferViewModel extends Context {
             this.coreViewModel.chatListModel.chatModels;
         for (const chatModel of chatModels) {
             this.chatFileOptions.add({
-                label: chatModel.info.primaryChannel,
+                label: chatModel.unwrappedPrimaryChannel,
                 path: chatModel.getBasePath(),
             });
         }

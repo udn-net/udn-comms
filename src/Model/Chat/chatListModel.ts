@@ -73,7 +73,7 @@ export default class ChatListModel {
 
         for (const chatModel of this.chatModels) {
             for (const channel of allChannels) {
-                if (channel != chatModel.info.primaryChannel) continue;
+                if (channel != chatModel.unwrappedPrimaryChannel) continue;
                 fn(chatModel);
                 break;
             }

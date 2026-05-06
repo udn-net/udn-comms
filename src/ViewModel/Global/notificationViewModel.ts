@@ -20,8 +20,8 @@ export default class NotificationViewModel {
         if (this.chatListViewModel.selectedChat.value == undefined) return;
 
         const currentChat =
-            this.chatListViewModel.selectedChat.value.chatModel.info
-                .primaryChannel;
+            this.chatListViewModel.selectedChat.value.chatModel.
+                unwrappedPrimaryChannel
         const currentPage =
             this.chatListViewModel.selectedChat.value.selectedPage.value;
         if (
@@ -41,7 +41,7 @@ export default class NotificationViewModel {
         const chat = [
             ...this.chatListViewModel.chatViewModels.value.values(),
         ].find(
-            (chat) => chat.chatModel.info.primaryChannel == notification.chat,
+            (chat) => chat.chatModel.unwrappedPrimaryChannel == notification.chat,
         );
         chat.open();
         chat.openPage(ChatPageTypes.Messages);
@@ -79,7 +79,7 @@ export default class NotificationViewModel {
     };
 
     // init
-    constructor(public readonly chatListViewModel: ChatListViewModel) {}
+    constructor(public readonly chatListViewModel: ChatListViewModel) { }
 
     // util
     static createNotification(message: ChatMessage): Notification {

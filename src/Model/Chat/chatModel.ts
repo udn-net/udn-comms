@@ -37,6 +37,10 @@ export default class ChatModel {
     info: ChatInfo;
     color: Colors;
 
+    get unwrappedPrimaryChannel(): string {
+        return this.info.namespace + this.info.primaryChannel;
+    }
+
     get secondaryChannels(): string[] {
         return this.info.secondaryChannels.sort(localeCompare);
     }
@@ -133,6 +137,12 @@ export default class ChatModel {
         this.storeInfo();
         this.subscribe();
     };
+    
+    readonly setNamespace = (namespace: string): void => {
+        this.info.namespace = namespace;
+        this.storeInfo();
+        this.subscribe();
+    };
 
     readonly setSecondaryChannels = (secondaryChannels: string[]): void => {
         this.info.secondaryChannels = secondaryChannels;
@@ -170,7 +180,7 @@ export default class ChatModel {
         const senderName: string = this.settingsModel.username;
         if (senderName == "") return false;
 
-        const allChannels: string[] = [this.info.primaryChannel];
+        const allChannels: string[] = [this.unwrappedPrimaryChannel];
         for (const secondaryChannel of this.info.secondaryChannels) {
             allChannels.push(secondaryChannel);
         }
@@ -238,7 +248,7 @@ export default class ChatModel {
     };
 
     readonly subscribe = (): void => {
-        this.connectionModel.addChannel(this.info.primaryChannel);
+        this.connectionModel.addChannel(this.unwrappedPrimaryChannel);
     };
 
     readonly setReadStatus = (hasUnreadMessages: boolean): void => {
@@ -367,6 +377,7 @@ export default class ChatModel {
             dataVersion: DATA_VERSION,
 
             primaryChannel,
+            namespace: "",
             secondaryChannels: [],
             encryptionKey: "",
             hasUnreadMessages: false,
@@ -454,6 +465,7 @@ export enum ReactionSymbols {
 
 export interface ChatInfo extends ValidObject {
     primaryChannel: string;
+    namespace: string;
     secondaryChannels: string[];
     encryptionKey: string;
 
@@ -494,6 +506,7 @@ export const ChatInfoReference: ChatInfo = {
     dataVersion: DATA_VERSION,
 
     primaryChannel: "",
+    namespace: "",
     secondaryChannels: [""],
     encryptionKey: "",
 

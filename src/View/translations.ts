@@ -171,6 +171,10 @@ const englishTranslations = {
             primaryChannelLabel: "Primary channel",
             setPrimaryChannelButtonAudioLabel: "set primary channel",
 
+            namespaceLabel: "Namespace",
+            namespacePlaceholder: "No namespace",
+            setNamespaceButtonAudioLabel: "set namespace",
+
             newSecondaryChannelPlaceholder: "Add secondary channel",
             newSecondaryChannelAudioLabel: "name of new secondary channel",
             addSecondaryChannelButtonAudioLabel: "add secondary channel",
@@ -472,6 +476,10 @@ export const allTranslations: {
                 primaryChannelLabel: "Hauptkanal",
                 setPrimaryChannelButtonAudioLabel: "Hauptkanal festlegen",
 
+                namespaceLabel: "Namensraum",
+                namespacePlaceholder: "Ohne Namensraum",
+                setNamespaceButtonAudioLabel: "Namensraum festlegen",
+
                 newSecondaryChannelPlaceholder: "Sekundären Kanal hinzufügen",
                 newSecondaryChannelAudioLabel:
                     "Name des neuen sekundären Kanals",
@@ -748,6 +756,10 @@ export const allTranslations: {
 
                 primaryChannelLabel: "Canal principal",
                 setPrimaryChannelButtonAudioLabel: "establecer canal principal",
+
+                namespaceLabel: "Espacio de nombres",
+                namespacePlaceholder: "Sin espacio de nombres",
+                setNamespaceButtonAudioLabel: "establecer espacio de nombres",
 
                 newSecondaryChannelPlaceholder: "Añadir canal secundario",
                 newSecondaryChannelAudioLabel:
