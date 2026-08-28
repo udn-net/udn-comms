@@ -66,10 +66,10 @@ export default class FileTransferModel {
         if (this.transferData == undefined) return;
         if (data.messageBody == undefined) return;
 
-        this.handleFile(data.messageBody);
+        this.handleTransferredFile(data.messageBody);
     };
 
-    readonly handleFile = async (encryptedFileData: string): Promise<void> => {
+    readonly handleTransferredFile = async (encryptedFileData: string): Promise<void> => {
         if (this.transferData == undefined) return;
 
         const decrypted: string = await decryptString(
@@ -77,7 +77,11 @@ export default class FileTransferModel {
             this.transferData.key,
         );
 
-        const parsed: any = parse(decrypted);
+	this.handleDecryptedFile(decrypted);
+    };
+
+    readonly handleDecryptedFile = (data: string): void => {
+        const parsed: any = parse(data);
         const isFileData: boolean = checkMatchesObjectStructure(
             parsed,
             FileDataReference,
@@ -91,7 +95,7 @@ export default class FileTransferModel {
             ...fileData.path,
         );
         this.fileHandlerManager.trigger(pathString);
-    };
+    }
 
     // sending
     readonly sendFiles = (
@@ -109,7 +113,7 @@ export default class FileTransferModel {
         }
     };
 
-    readonly sendFile = async (filePath: string[]): Promise<void> => {
+    readonly prepareFileForSending = (filePath: string[]): void => {
         if (this.transferData == undefined) return;
         const fileContent: string | null = this.storageModel.read(filePath);
         if (fileContent == null) return;
@@ -119,6 +123,10 @@ export default class FileTransferModel {
             body: fileContent,
         };
         const stringifiedFileData: string = stringify(fileData);
+	this.sendFile(stringifiedFileData);
+    };
+
+    readonly sendFile = async (stringifiedFileData: string): Promise<void> => {
         const encryptedFileData: string = await encryptString(
             stringifiedFileData,
             this.transferData.key,
