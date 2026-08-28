@@ -104,7 +104,7 @@ export default class FileTransferModel {
     ): void => {
         for (const directoryPath of directoryPaths) {
             this.storageModel.recurse(directoryPath, (filePath: string[]) => {
-                this.sendFile(filePath);
+                this.prepareFileForSending(filePath);
                 const pathString: string = StorageModel.pathComponentsToString(
                     ...filePath,
                 );
