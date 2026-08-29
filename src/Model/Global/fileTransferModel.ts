@@ -69,7 +69,9 @@ export default class FileTransferModel {
         this.handleTransferredFile(data.messageBody);
     };
 
-    readonly handleTransferredFile = async (encryptedFileData: string): Promise<void> => {
+    readonly handleTransferredFile = async (
+        encryptedFileData: string,
+    ): Promise<void> => {
         if (this.transferData == undefined) return;
 
         const decrypted: string = await decryptString(
@@ -77,8 +79,21 @@ export default class FileTransferModel {
             this.transferData.key,
         );
 
-	this.handleDecryptedFile(decrypted);
+        this.handleDecryptedFile(decrypted);
     };
+
+    readonly handleBackupFile = async (encryptedBackup: string, passphrase: string): Promise<void> => {
+	const decrypted: string = await decryptString(encryptedBackup, passphrase);
+	const parsed = parse(decrypted);
+	if (!Array.isArray(parsed)) {
+	    console.error("Canceling backup - not an array", decrypted);
+	    return;
+	}
+
+	for (const file of parsed) {
+	    this.handleDecryptedFile(file);
+	}
+    }
 
     readonly handleDecryptedFile = (data: string): void => {
         const parsed: any = parse(data);
@@ -95,25 +110,40 @@ export default class FileTransferModel {
             ...fileData.path,
         );
         this.fileHandlerManager.trigger(pathString);
-    }
+    };
 
     // sending
     readonly sendFiles = (
         directoryPaths: IteratorObject<string[]>,
-        callback: (path: string) => void,
+        fileCallback: (path: string) => void,
     ): void => {
         for (const directoryPath of directoryPaths) {
             this.storageModel.recurse(directoryPath, (filePath: string[]) => {
-                this.prepareFileForSending(filePath);
+                const stringifiedFileData =
+                    this.prepareFileForSending(filePath);
+                this.sendFile(stringifiedFileData);
                 const pathString: string = StorageModel.pathComponentsToString(
                     ...filePath,
                 );
-                callback(pathString);
+                fileCallback(pathString);
             });
         }
     };
 
-    readonly prepareFileForSending = (filePath: string[]): void => {
+    readonly generateBackup = async (directoryPaths: IteratorObject<string[]>, passphrase: string): Promise<string> => {
+        const files: string[] = [];
+        for (const directoryPath of directoryPaths) {
+            this.storageModel.recurse(directoryPath, (filePath: string[]) => {
+                const stringifiedFileData =
+                    this.prepareFileForSending(filePath);
+                files.push(stringifiedFileData);
+            });
+        }
+	const rawBackup = stringify(files);
+	return await encryptString(rawBackup, passphrase);
+    };
+
+    readonly prepareFileForSending = (filePath: string[]): string => {
         if (this.transferData == undefined) return;
         const fileContent: string | null = this.storageModel.read(filePath);
         if (fileContent == null) return;
@@ -122,8 +152,7 @@ export default class FileTransferModel {
             path: filePath,
             body: fileContent,
         };
-        const stringifiedFileData: string = stringify(fileData);
-	this.sendFile(stringifiedFileData);
+        return stringify(fileData);
     };
 
     readonly sendFile = async (stringifiedFileData: string): Promise<void> => {

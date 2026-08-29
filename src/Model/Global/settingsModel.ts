@@ -21,7 +21,7 @@ export default class SettingsModel {
             filePaths.settingsModel[pathName],
         );
         this.storageModel.write(path, value);
-    }
+    };
 
     readonly setName = (newValue: string): void => {
         this.username = newValue;

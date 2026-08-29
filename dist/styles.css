@@ -28,7 +28,7 @@ body {
     --animation-duration: 0.4s;
 }
 
-.modal>div,
+.modal > div,
 .slide-up {
     animation: slide-up var(--animation-duration);
 }
@@ -65,7 +65,11 @@ body {
     --text-error: #da1e28;
     --text-info: #0043ce;
 
-    --highlight-background: linear-gradient(45deg, hsl(30, 100%, 50%), hsl(40, 100%, 50%));
+    --highlight-background: linear-gradient(
+        45deg,
+        hsl(30, 100%, 50%),
+        hsl(40, 100%, 50%)
+    );
     --highlight-color: black;
 
     --link: #0f62fe;
@@ -123,7 +127,7 @@ body {
     color: var(--text-placeholder);
 }
 
-.modal>div {
+.modal > div {
     background: var(--background-glass);
 }
 
@@ -348,7 +352,7 @@ select {
 /* backdrop-filter */
 header,
 menu,
-.modal>div,
+.modal > div,
 .blur {
     backdrop-filter: blur(var(--blur));
     -webkit-backdrop-filter: blur(var(--blur));
@@ -366,7 +370,9 @@ footer {
     border-top: 1px solid var(--surface-border);
 }
 
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(label.tile *),
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not(
+        label.tile *
+    ),
 label.tile,
 select:not(label.tile *),
 textarea:not(label.tile *) {
@@ -381,7 +387,9 @@ hr {
     border-bottom: 1px solid var(--border) !important;
 }
 
-input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus:not(label.tile *):not(.no-outline),
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):focus:not(
+        label.tile *
+    ):not(.no-outline),
 label.tile:has(input:focus),
 label.tile:has(textarea:focus),
 textarea:focus:not(label.tile *),
@@ -446,13 +454,13 @@ input[type="radio"],
 label.inline,
 main,
 .modal[open],
-.modal>div,
+.modal > div,
 .tile,
-.tile>div {
+.tile > div {
     display: flex;
 }
 
-header>span,
+header > span,
 .flex-column,
 .flex-row {
     display: flex;
@@ -479,7 +487,7 @@ textarea {
 
 main,
 .tile,
-.tile>div {
+.tile > div {
     flex: 1;
 }
 
@@ -491,9 +499,9 @@ main,
     flex: 0 !important;
 }
 
-.modal>div,
+.modal > div,
 .modal main,
-.tile>div {
+.tile > div {
     flex-direction: column;
 }
 
@@ -516,7 +524,7 @@ label.inline,
     gap: var(--gap-in-controls);
 }
 
-header>span,
+header > span,
 .gap {
     gap: var(--gap-between-tiles) !important;
 }
@@ -628,7 +636,7 @@ input[type="radio"] {
     padding: 0 !important;
 }
 
-article>div {
+article > div {
     padding: var(--content-padding);
 }
 
@@ -652,7 +660,7 @@ textarea,
     padding: var(--control-padding) !important;
 }
 
-header>span {
+header > span {
     padding: var(--gap-between-tiles);
 }
 
@@ -668,7 +676,7 @@ header>span {
     padding-top: var(--control-padding) !important;
 }
 
-article>div {
+article > div {
     padding-top: calc(var(--header-height) + var(--content-margin));
 }
 
@@ -700,8 +708,11 @@ select {
     padding-bottom: var(--control-padding) !important;
 }
 
-article>div {
-    padding-bottom: calc(var(--menu-height-mobile) + var(--control-height) + var(--content-padding));
+article > div {
+    padding-bottom: calc(
+        var(--menu-height-mobile) + var(--control-height) +
+            var(--content-padding)
+    );
 }
 
 label:not(.inline) {
@@ -718,10 +729,10 @@ label.tile:has(> span.icon) {
 }
 
 /* position etc */
-article>div,
+article > div,
 footer,
 header,
-select+.icon {
+select + .icon {
     position: absolute;
 }
 
@@ -752,7 +763,7 @@ label {
     position: sticky !important;
 }
 
-article>div,
+article > div,
 header,
 .modal {
     top: 0;
@@ -762,7 +773,7 @@ header,
     top: 0 !important;
 }
 
-article>div,
+article > div,
 footer,
 header,
 .modal {
@@ -773,7 +784,7 @@ header,
     left: 0px !important;
 }
 
-article>div,
+article > div,
 footer,
 header,
 .modal {
@@ -784,7 +795,7 @@ header,
     right: 0px !important;
 }
 
-select+.icon {
+select + .icon {
     right: var(--control-marker-padding);
 }
 
@@ -796,8 +807,8 @@ body:has(> menu) footer {
     bottom: var(--menu-height-mobile);
 }
 
-article>div,
-select+.icon,
+article > div,
+select + .icon,
 .modal {
     bottom: 0px;
 }
@@ -809,8 +820,8 @@ select+.icon,
 /* size */
 article,
 main,
-select+.icon,
-.modal>div,
+select + .icon,
+.modal > div,
 .modal main {
     height: 100%;
 }
@@ -827,7 +838,7 @@ button:not(.tile):not(header *),
 footer,
 input:not([type="checkbox"]):not([type="radio"]),
 select,
-select+.icon {
+select + .icon {
     height: var(--control-height);
 }
 
@@ -853,7 +864,7 @@ button:not(.tile):not(header *),
 footer,
 input:not([type="checkbox"]):not([type="radio"]),
 select,
-.modal>div> :is(button, div.flex-row) {
+.modal > div > :is(button, div.flex-row) {
     min-height: var(--control-height);
 }
 
@@ -876,9 +887,9 @@ header,
 main,
 select,
 textarea,
-.modal>div,
+.modal > div,
 .tile,
-.tile>div {
+.tile > div {
     width: 100%;
 }
 
@@ -932,7 +943,7 @@ code {
 .error,
 .warning,
 .success,
-label.tile>div>span:not(.icon) {
+label.tile > div > span:not(.icon) {
     font-size: 0.9rem;
 }
 
@@ -952,7 +963,7 @@ menu {
     z-index: 2;
 }
 
-.modal>div {
+.modal > div {
     z-index: 2;
 }
 
@@ -1048,8 +1059,11 @@ menu {
     font-size: 0.5rem;
 }
 
-article>div {
-    padding-bottom: calc(var(--menu-height-mobile) + var(--header-height) + var(--content-padding));
+article > div {
+    padding-bottom: calc(
+        var(--menu-height-mobile) + var(--header-height) +
+            var(--content-padding)
+    );
 }
 
 /* overflow */
@@ -1069,7 +1083,7 @@ main,
     overflow: hidden !important;
 }
 
-article>div,
+article > div,
 .modal main {
     overflow: auto;
 }
@@ -1121,7 +1135,7 @@ main::-webkit-scrollbar {
 }
 
 main,
-article>div {
+article > div {
     scroll-behavior: smooth;
 }
 
@@ -1135,30 +1149,29 @@ main {
 
 /* tablet & up */
 @media (min-width: 640px) {
-
     /* basic */
     .mobile-only {
         display: none !important;
     }
 
     /* border, outline, etc */
-    .modal>div {
+    .modal > div {
         border: 1px solid var(--surface-border);
     }
 
     menu,
-    main.split>article:first-of-type {
+    main.split > article:first-of-type {
         border-right: 1px solid var(--border);
     }
 
     /* size */
-    .modal>div {
+    .modal > div {
         height: auto;
         max-height: 100%;
     }
 
     p,
-    .modal>div {
+    .modal > div {
         max-width: var(--max-content-width);
     }
 
@@ -1187,7 +1200,7 @@ main {
         grid-template-columns: var(--split-pane-width-desktop) 1fr;
     }
 
-    article>div {
+    article > div {
         padding-bottom: calc(var(--content-padding) + var(--control-height));
     }
 
@@ -1234,11 +1247,13 @@ STATE
 }
 
 @keyframes highlight {
-    30%, 60% {
+    30%,
+    60% {
         opacity: 1;
     }
-    0%, 100% {
-        opacity: .1;
+    0%,
+    100% {
+        opacity: 0.1;
     }
 }
 
@@ -1247,11 +1262,17 @@ STATE
 }
 
 @keyframes scroll-highlight {
-    0%, 40%, 50%, 90% {
+    0%,
+    40%,
+    50%,
+    90% {
         opacity: 1;
     }
-    10%, 30%, 60%, 80% {
-        opacity: .5;
+    10%,
+    30%,
+    60%,
+    80% {
+        opacity: 0.5;
     }
 }
 

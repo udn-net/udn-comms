@@ -32,8 +32,7 @@ export default class SettingsPageViewModel extends Context {
     );
     cannotSetNamespace: React.State<boolean> = React.createProxyState(
         [this.namespace, this.namespaceInput],
-        () =>
-            this.namespaceInput.value == this.namespace.value,
+        () => this.namespaceInput.value == this.namespace.value,
     );
     cannotAddSecondaryChannel: React.State<boolean> = React.createProxyState(
         [this.newSecondaryChannelInput],
@@ -53,11 +52,8 @@ export default class SettingsPageViewModel extends Context {
     };
 
     setNamespace = (): void => {
-        this.chatViewModel.chatModel.setNamespace(
-            this.namespaceInput.value,
-        );
-        this.namespace.value =
-            this.chatViewModel.chatModel.info.namespace;
+        this.chatViewModel.chatModel.setNamespace(this.namespaceInput.value);
+        this.namespace.value = this.chatViewModel.chatModel.info.namespace;
     };
 
     addSecondaryChannel = (): void => {
@@ -101,17 +97,14 @@ export default class SettingsPageViewModel extends Context {
     preloadData = (): void => {
         this.primaryChannel.value =
             this.chatViewModel.chatModel.info.primaryChannel;
-        this.namespace.value =
-            this.chatViewModel.chatModel.info.namespace;
+        this.namespace.value = this.chatViewModel.chatModel.info.namespace;
 
         this.color.value = this.chatViewModel.chatModel.color;
     };
 
     loadData = (): void => {
-        this.primaryChannelInput.value =
-            this.primaryChannel.value;
-        this.namespaceInput.value =
-            this.namespace.value;
+        this.primaryChannelInput.value = this.primaryChannel.value;
+        this.namespaceInput.value = this.namespace.value;
 
         this.loadSecondaryChannels();
 

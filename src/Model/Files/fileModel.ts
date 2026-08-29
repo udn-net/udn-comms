@@ -29,13 +29,15 @@ export default class FileModel {
             StorageModelSubPaths.Chat,
             filePaths.chat.files(this.chatModel.id),
         );
-    };
+    }
 
     readonly getFileContainerPath = (): string[] => {
         return [...this.basePath, FileModelSubPath.Data];
     };
 
-    readonly getModelContainerPath = (modelName: FileModelSubPath): string[] => {
+    readonly getModelContainerPath = (
+        modelName: FileModelSubPath,
+    ): string[] => {
         return [...this.basePath, FileModelSubPath.Model, modelName];
     };
 
@@ -43,13 +45,18 @@ export default class FileModel {
         return [...this.getFileContainerPath(), fileId];
     };
 
-    readonly getFileContentPath = (fileId: string, fileContentId: string): string[] => {
+    readonly getFileContentPath = (
+        fileId: string,
+        fileContentId: string,
+    ): string[] => {
         const filePath: string[] = this.getFilePath(fileId);
         return [...filePath, fileContentId];
     };
 
     // handlers
-    readonly handleStringifiedFileContent = (stringifiedFileContent: string): void => {
+    readonly handleStringifiedFileContent = (
+        stringifiedFileContent: string,
+    ): void => {
         const fileContent: FileContent<string> | null = parseValidObject(
             stringifiedFileContent,
             FileContentReference,
@@ -68,7 +75,9 @@ export default class FileModel {
     };
 
     // methods
-    readonly addFileContentAndSend = (fileContent: FileContent<string>): void => {
+    readonly addFileContentAndSend = (
+        fileContent: FileContent<string>,
+    ): void => {
         this.handleFileContent(fileContent);
         this.chatModel.sendMessage("", undefined, fileContent);
     };

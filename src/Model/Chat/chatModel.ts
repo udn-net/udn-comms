@@ -137,7 +137,7 @@ export default class ChatModel {
         this.storeInfo();
         this.subscribe();
     };
-    
+
     readonly setNamespace = (namespace: string): void => {
         this.info.namespace = namespace;
         this.storeInfo();

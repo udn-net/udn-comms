@@ -103,9 +103,7 @@ export function SettingsPage(
                                     coreViewModel.translations.chatPage.settings
                                         .setNamespaceButtonAudioLabel
                                 }
-                                on:click={
-                                    settingsPageViewModel.setNamespace
-                                }
+                                on:click={settingsPageViewModel.setNamespace}
                                 toggle:disabled={
                                     settingsPageViewModel.cannotSetNamespace
                                 }

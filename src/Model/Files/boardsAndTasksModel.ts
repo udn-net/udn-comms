@@ -57,7 +57,10 @@ export default class BoardsAndTasksModel {
         ];
     };
 
-    readonly getTaskReferencePath = (boardId: string, fileId: string): string[] => {
+    readonly getTaskReferencePath = (
+        boardId: string,
+        fileId: string,
+    ): string[] => {
         return [...this.getTaskContainerPath(boardId), fileId];
     };
 
@@ -99,17 +102,23 @@ export default class BoardsAndTasksModel {
         return boardInfoFileContent;
     };
 
-    readonly updateBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
+    readonly updateBoard = (
+        boardInfoFileContent: BoardInfoFileContent,
+    ): void => {
         this.storeBoard(boardInfoFileContent);
         this.boardHandlerManager.trigger(boardInfoFileContent);
     };
 
-    readonly updateBoardAndSend = (boardInfoFileContent: BoardInfoFileContent): void => {
+    readonly updateBoardAndSend = (
+        boardInfoFileContent: BoardInfoFileContent,
+    ): void => {
         this.updateBoard(boardInfoFileContent);
         this.chatModel.sendMessage("", undefined, boardInfoFileContent);
     };
 
-    readonly storeBoard = (boardInfoFileContent: BoardInfoFileContent): void => {
+    readonly storeBoard = (
+        boardInfoFileContent: BoardInfoFileContent,
+    ): void => {
         // store info
         this.fileModel.storeFileContent(boardInfoFileContent);
 
@@ -194,7 +203,9 @@ export default class BoardsAndTasksModel {
         return versionIds;
     };
 
-    readonly getLatestTaskFileContent = (taskId: string): TaskFileContent | null => {
+    readonly getLatestTaskFileContent = (
+        taskId: string,
+    ): TaskFileContent | null => {
         const taskFileContentOrNull: TaskFileContent | null =
             this.fileModel.getLatestFileContent(
                 taskId,

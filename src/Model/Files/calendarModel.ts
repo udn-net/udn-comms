@@ -12,11 +12,11 @@ export default class CalendarModel {
     readonly settingsModel: SettingsModel;
 
     // paths
-    get basePath (): string[] {
+    get basePath(): string[] {
         return this.fileModel.getModelContainerPath(
             FileModelSubPath.ModelCalendar,
         );
-    };
+    }
 
     readonly getViewPath = (): string[] => {
         return [...this.basePath, FileModelSubPath.ModelView];
@@ -44,7 +44,10 @@ export default class CalendarModel {
         this.storageModel.write(referencePath, "");
     };
 
-    readonly deleteTaskReference = (monthString: string, taskId: string): void => {
+    readonly deleteTaskReference = (
+        monthString: string,
+        taskId: string,
+    ): void => {
         const monthPath: string[] = this.getMonthPath(monthString);
         const referencePath: string[] = [...monthPath, taskId];
 

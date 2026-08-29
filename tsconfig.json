@@ -5,6 +5,6 @@
         "jsxFactory": "React.createElement",
         "moduleResolution": "node",
         "esModuleInterop": true,
-        "target": "es2020",
+        "target": "es2020"
     }
 }

@@ -69,7 +69,10 @@ export default class StorageModel {
     };
 
     // recursion
-    readonly recurse = (rootDirectory: string[], fn: (path: string[]) => void): void => {
+    readonly recurse = (
+        rootDirectory: string[],
+        fn: (path: string[]) => void,
+    ): void => {
         loop_over_files: for (const key of Object.keys(localStorage)) {
             // get path of current entity
             const pathComponentsOfCurrentEntity: string[] =
