@@ -109,6 +109,7 @@ const englishTranslations = {
         exportHeadline: "Export Data",
         importHeadline: "Import Data",
         selectionDescription: "Select the data that you want to transfer.",
+        exportSelectionDescription: "Select the data that you want to export.",
         dataEntryDescription: "Enter this data on the other device.",
         dataEntryInputDescription:
             "Enter the data displayed on the other device.",

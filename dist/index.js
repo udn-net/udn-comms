@@ -373,6 +373,7 @@
       exportHeadline: "Export Data",
       importHeadline: "Import Data",
       selectionDescription: "Select the data that you want to transfer.",
+      exportSelectionDescription: "Select the data that you want to export.",
       dataEntryDescription: "Enter this data on the other device.",
       dataEntryInputDescription: "Enter the data displayed on the other device.",
       notConnectedError: "You are not connected to any server.",
@@ -1843,11 +1844,14 @@
       this.showTransferDataInputModal = () => {
         this.presentedModal.value = 4 /* TransferDataInput */;
       };
+      this.showExportSelectionModal = () => {
+        this.presentedModal.value = 6 /* ExportFileSelection */;
+      };
       this.showExportModal = () => {
-        this.presentedModal.value = 6 /* ExportModal */;
+        this.presentedModal.value = 7 /* Export */;
       };
       this.showImportModal = () => {
-        this.presentedModal.value = 7 /* ImportModal */;
+        this.presentedModal.value = 8 /* Import */;
       };
       this.prepareReceivingData = () => {
         if (this.cannotPrepareToReceive.value == true) return;
@@ -6691,7 +6695,26 @@
       coreViewModel2,
       connectionViewModel2,
       fileTransferViewModel2
-    ), FileSelectionModal(coreViewModel2, fileTransferViewModel2), TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDataInputModal(coreViewModel2, fileTransferViewModel2), DataReceptionModal(coreViewModel2, fileTransferViewModel2), ExportModal(coreViewModel2, fileTransferViewModel2), ImportModal(coreViewModel2, fileTransferViewModel2));
+    ), FileSelectionModal(coreViewModel2, fileTransferViewModel2), TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDataInputModal(coreViewModel2, fileTransferViewModel2), DataReceptionModal(coreViewModel2, fileTransferViewModel2), ExportFileSelectionModal(coreViewModel2, fileTransferViewModel2), ExportModal(coreViewModel2, fileTransferViewModel2), ImportModal(coreViewModel2, fileTransferViewModel2));
+  }
+  function OptionEntry(fileOption, fileTransferViewModel2) {
+    const isSelected = new State(false);
+    if (fileTransferViewModel2.selectedPaths.value.has(fileOption.path)) {
+      isSelected.value = true;
+    }
+    isSelected.subscribeSilent((isSelected2) => {
+      if (isSelected2 == true) {
+        fileTransferViewModel2.selectedPaths.add(fileOption.path);
+      } else {
+        fileTransferViewModel2.selectedPaths.remove(fileOption.path);
+      }
+    });
+    function toggle() {
+      isSelected.value = !isSelected.value;
+    }
+    return /* @__PURE__ */ createElement("button", { class: "tile", "toggle:selected": isSelected, "on:click": toggle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", { class: "ellipsis" }, fileOption.label), /* @__PURE__ */ createElement("span", { class: "secondary ellipsis" }, StorageModel.pathComponentsToString(
+      ...fileOption.path
+    ))));
   }
   function DirectionSelectionModal(coreViewModel2, connectionViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
@@ -6740,7 +6763,7 @@
         "button",
         {
           class: "tile",
-          "on:click": fileTransferViewModel2.showExportModal
+          "on:click": fileTransferViewModel2.showExportSelectionModal
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "file_save"),
         /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.exportButton)),
@@ -6762,25 +6785,6 @@
     const OptionConverter = (fileOption) => {
       return OptionEntry(fileOption, fileTransferViewModel2);
     };
-    function OptionEntry(fileOption, fileTransferViewModel3) {
-      const isSelected = new State(false);
-      if (fileTransferViewModel3.selectedPaths.value.has(fileOption.path)) {
-        isSelected.value = true;
-      }
-      isSelected.subscribeSilent((isSelected2) => {
-        if (isSelected2 == true) {
-          fileTransferViewModel3.selectedPaths.add(fileOption.path);
-        } else {
-          fileTransferViewModel3.selectedPaths.remove(fileOption.path);
-        }
-      });
-      function toggle() {
-        isSelected.value = !isSelected.value;
-      }
-      return /* @__PURE__ */ createElement("button", { class: "tile", "toggle:selected": isSelected, "on:click": toggle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", { class: "ellipsis" }, fileOption.label), /* @__PURE__ */ createElement("span", { class: "secondary ellipsis" }, StorageModel.pathComponentsToString(
-        ...fileOption.path
-      ))));
-    }
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 1 /* FileSelection */
@@ -6948,10 +6952,54 @@
       }
     )), /* @__PURE__ */ createElement("button", { "on:click": ViewController.reload }, coreViewModel2.translations.general.reloadAppButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "refresh"))));
   }
+  function ExportFileSelectionModal(coreViewModel2, fileTransferViewModel2) {
+    const OptionConverter = (fileOption) => {
+      return OptionEntry(fileOption, fileTransferViewModel2);
+    };
+    const isPresented = createProxyState(
+      [fileTransferViewModel2.presentedModal],
+      () => fileTransferViewModel2.presentedModal.value == 6 /* ExportFileSelection */
+    );
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.exportHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportSelectionDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.dataTransferModal.generalHeadline), /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "flex-column gap content-margin-bottom",
+        "children:append": [
+          fileTransferViewModel2.generalFileOptions,
+          OptionConverter
+        ]
+      }
+    ), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.dataTransferModal.chatsHeadline), /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "flex-column gap",
+        "children:append": [
+          fileTransferViewModel2.chatFileOptions,
+          OptionConverter
+        ]
+      }
+    )), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "flex",
+        "on:click": fileTransferViewModel2.showDirectionSelectionModal
+      },
+      coreViewModel2.translations.general.backButton
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "primary flex",
+        "on:click": fileTransferViewModel2.showExportModal,
+        "toggle:disabled": fileTransferViewModel2.hasNoPathsSelected
+      },
+      coreViewModel2.translations.general.continueButton,
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+    ))));
+  }
   function ExportModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
-      () => fileTransferViewModel2.presentedModal.value == 6 /* ExportModal */
+      () => fileTransferViewModel2.presentedModal.value == 7 /* Export */
     );
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.exportHeadline), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKey), /* @__PURE__ */ createElement(
       "input",
@@ -6969,7 +7017,7 @@
       "button",
       {
         class: "flex",
-        "on:click": fileTransferViewModel2.showDirectionSelectionModal
+        "on:click": fileTransferViewModel2.showExportSelectionModal
       },
       coreViewModel2.translations.general.backButton
     ), /* @__PURE__ */ createElement(
@@ -6986,7 +7034,7 @@
   function ImportModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
-      () => fileTransferViewModel2.presentedModal.value == 7 /* ImportModal */
+      () => fileTransferViewModel2.presentedModal.value == 8 /* Import */
     );
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement(
       "p",

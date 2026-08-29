@@ -157,12 +157,16 @@ export default class FileTransferViewModel extends Context {
         this.presentedModal.value = FileTransferModals.TransferDataInput;
     };
 
+    showExportSelectionModal = (): void => {
+        this.presentedModal.value = FileTransferModals.ExportFileSelection;
+    };
+
     showExportModal = (): void => {
-        this.presentedModal.value = FileTransferModals.ExportModal;
+        this.presentedModal.value = FileTransferModals.Export;
     };
 
     showImportModal = (): void => {
-        this.presentedModal.value = FileTransferModals.ImportModal;
+        this.presentedModal.value = FileTransferModals.Import;
     };
 
     prepareReceivingData = (): void => {
@@ -223,6 +227,7 @@ export enum FileTransferModals {
     ReceptionDisplay,
 
     // export
-    ExportModal,
-    ImportModal,
+    ExportFileSelection,
+    Export,
+    Import,
 }
