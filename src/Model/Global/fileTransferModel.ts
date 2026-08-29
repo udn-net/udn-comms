@@ -139,7 +139,7 @@ export default class FileTransferModel {
     readonly generateBackup = async (
         directoryPaths: IteratorObject<string[]>,
         passphrase: string,
-    ): Promise<string> => {
+    ): Promise<Blob> => {
         const files: string[] = [];
         for (const directoryPath of directoryPaths) {
             this.storageModel.recurse(directoryPath, (filePath: string[]) => {
@@ -149,7 +149,9 @@ export default class FileTransferModel {
             });
         }
         const rawBackup = stringify(files);
-        return await encryptString(rawBackup, passphrase);
+        const encrypted = await encryptString(rawBackup, passphrase);
+	const blob = new Blob([encrypted], {type: "text/plain"});
+	return blob;
     };
 
     readonly prepareFileForSending = (filePath: string[]): string => {

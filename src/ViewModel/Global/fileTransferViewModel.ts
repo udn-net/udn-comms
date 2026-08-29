@@ -120,6 +120,16 @@ export default class FileTransferViewModel extends Context {
         this.transferKey.value = transferData.key;
     };
 
+    downloadFile = async (): Promise<void> => {
+	const date = new Date().toISOString().split("T")[0];
+
+	const backup: Blob = await this.coreViewModel.fileTransferModel.generateBackup(this.selectedPaths.value.values(), this.exportKey.value);
+	const anchor = document.createElement("a");
+	anchor.href = window.URL.createObjectURL(backup); 
+	anchor.download = `comms-${date}.bak`;
+	anchor.click();
+    }
+
     // view
     showDirectionSelectionModal = (): void => {
         this.coreViewModel.context = this;

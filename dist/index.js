@@ -1814,6 +1814,14 @@
         this.transferChannel.value = transferData.channel;
         this.transferKey.value = transferData.key;
       };
+      this.downloadFile = async () => {
+        const date = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
+        const backup = await this.coreViewModel.fileTransferModel.generateBackup(this.selectedPaths.value.values(), this.exportKey.value);
+        const anchor = document.createElement("a");
+        anchor.href = window.URL.createObjectURL(backup);
+        anchor.download = `comms-${date}.bak`;
+        anchor.click();
+      };
       // view
       this.showDirectionSelectionModal = () => {
         this.coreViewModel.context = this;
@@ -7024,7 +7032,7 @@
       "button",
       {
         class: "primary flex",
-        "on:click": fileTransferViewModel2,
+        "on:click": fileTransferViewModel2.downloadFile,
         "toggle:disabled": fileTransferViewModel2.cannotExport
       },
       coreViewModel2.translations.dataTransferModal.downloadFileButton,
@@ -7399,7 +7407,9 @@
           });
         }
         const rawBackup = stringify(files);
-        return await encryptString(rawBackup, passphrase);
+        const encrypted = await encryptString(rawBackup, passphrase);
+        const blob = new Blob([encrypted], { type: "text/plain" });
+        return blob;
       };
       this.prepareFileForSending = (filePath) => {
         if (this.transferData == void 0) return;

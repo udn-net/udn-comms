@@ -750,7 +750,7 @@ function ExportModal(
 		    </button>
 		    <button
 			class="primary flex"
-			on:click={fileTransferViewModel}
+			on:click={fileTransferViewModel.downloadFile}
 			toggle:disabled={
 			    fileTransferViewModel.cannotExport
 			}
