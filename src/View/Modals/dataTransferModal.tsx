@@ -78,7 +78,7 @@ function DirectionSelectionModal(
                                 fileTransferViewModel.showFileSelectionModal
                             }
                         >
-                            <span class="icon">upload</span>
+                            <span class="icon">share_windows</span>
                             <div>
                                 <b>
                                     {
@@ -96,13 +96,31 @@ function DirectionSelectionModal(
                                 fileTransferViewModel.showTransferDataInputModal
                             }
                         >
-                            <span class="icon">download</span>
+                            <span class="icon">cloud_download</span>
                             <div>
                                 <b>
                                     {
                                         coreViewModel.translations
                                             .dataTransferModal
                                             .toThisDeviceButton
+                                    }
+                                </b>
+                            </div>
+                            <span class="icon">arrow_forward</span>
+                        </button>
+                        <button
+                            class="tile"
+                            on:click={
+                                fileTransferViewModel.showTransferDataInputModal
+                            }
+                        >
+                            <span class="icon">file_open</span>
+                            <div>
+                                <b>
+                                    {
+                                        coreViewModel.translations
+                                            .dataTransferModal
+                                            .importButton
                                     }
                                 </b>
                             </div>

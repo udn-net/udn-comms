@@ -62,7 +62,7 @@ const englishTranslations = {
 
         settingsButton: "Settings",
         manageStorageButton: "Manage storage",
-        transferDataButton: "Data Transfer",
+        transferDataButton: "Transfer or export data",
 
         scrollToChatButton: "Chats",
 
@@ -113,8 +113,9 @@ const englishTranslations = {
 
         ///
 
-        fromThisDeviceButton: "From this device",
-        toThisDeviceButton: "To this device",
+        fromThisDeviceButton: "Export or send from this device",
+        toThisDeviceButton: "Receive from other device",
+        importButton: "Import from file",
 
         ///
 
@@ -377,7 +378,7 @@ export const allTranslations: {
 
             settingsButton: "Einstellungen",
             manageStorageButton: "Daten verwalten",
-            transferDataButton: "Datenübertragung",
+            transferDataButton: "Daten übertragen",
 
             scrollToChatButton: "Chats",
 
@@ -424,8 +425,9 @@ export const allTranslations: {
 
             notConnectedError: "Du bist mit keinem Server verbunden.",
 
-            fromThisDeviceButton: "Von diesem Gerät",
-            toThisDeviceButton: "An dieses Gerät",
+            fromThisDeviceButton: "Exportieren oder an anderes Gerät senden",
+            toThisDeviceButton: "An dieses Gerät senden",
+            importButton: "Aus Datei importieren",
 
             generalHeadline: "Allgemein",
 
@@ -659,7 +661,7 @@ export const allTranslations: {
 
             settingsButton: "Ajustes",
             manageStorageButton: "Gestionar almacenamiento",
-            transferDataButton: "Transferencia de datos",
+            transferDataButton: "Enviar o exportar archivos",
 
             scrollToChatButton: "Chats",
 
@@ -705,8 +707,9 @@ export const allTranslations: {
 
             notConnectedError: "No estás conectado a ningún servidor.",
 
-            fromThisDeviceButton: "Desde este dispositivo",
-            toThisDeviceButton: "A este dispositivo",
+            fromThisDeviceButton: "Exportar o enviar a otro dispositivo",
+            toThisDeviceButton: "Enviar a este dispositivo",
+	    importButton: "Importar desde archivo",
 
             generalHeadline: "General",
 
