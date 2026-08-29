@@ -26,6 +26,7 @@ export function DataTransferModalWrapper(
             {TransferDisplayModal(coreViewModel, fileTransferViewModel)}
             {TransferDataInputModal(coreViewModel, fileTransferViewModel)}
             {DataReceptionModal(coreViewModel, fileTransferViewModel)}
+            {ExportModal(coreViewModel, fileTransferViewModel)}
             {ImportModal(coreViewModel, fileTransferViewModel)}
         </div>
     );
@@ -108,13 +109,13 @@ function DirectionSelectionModal(
                                 </b>
                             </div>
                             <span class="icon">arrow_forward</span>
-			</button>
+                        </button>
 
-			<hr></hr>
+                        <hr></hr>
 
                         <button
                             class="tile"
-                            on:click={fileTransferViewModel.showImportModal}
+                            on:click={fileTransferViewModel.showExportModal}
                         >
                             <span class="icon">file_save</span>
                             <div>
@@ -343,7 +344,7 @@ function TransferDataDisplayModal(
                                 ></b>
                             </div>
                         </div>
-		    </div>
+                    </div>
                 </main>
                 <div class="flex-row width-100">
                     <button
@@ -353,7 +354,7 @@ function TransferDataDisplayModal(
                         {coreViewModel.translations.general.backButton}
                     </button>
                     <button disabled class="flex">
-			{coreViewModel.translations.general.waitingLabel}
+                        {coreViewModel.translations.general.waitingLabel}
                     </button>
                 </div>
             </div>
@@ -580,6 +581,54 @@ function DataReceptionModal(
                 <button on:click={ViewController.reload}>
                     {coreViewModel.translations.general.reloadAppButton}
                     <span class="icon">refresh</span>
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function ExportModal(
+    coreViewModel: CoreViewModel,
+    fileTransferViewModel: FileTransferViewModel,
+) {
+    const isPresented = React.createProxyState(
+        [fileTransferViewModel.presentedModal],
+        () =>
+            fileTransferViewModel.presentedModal.value ==
+            FileTransferModals.ExportModal,
+    );
+
+    return (
+        <div class="modal" toggle:open={isPresented}>
+            <div>
+                <main>
+                    <h2>
+                        {
+                            coreViewModel.translations.dataTransferModal
+                                .exportHeadline
+                        }
+                    </h2>
+
+                    <p
+                        class="secondary"
+                        subscribe:innerText={
+                            fileTransferViewModel.filesReceivedText
+                        }
+                    ></p>
+
+                    <hr></hr>
+
+                    <div
+                        class="tile flex-column align-start"
+                        children:append={[
+                            fileTransferViewModel.filePathsReceived,
+                            StringToTextSpan,
+                        ]}
+                    ></div>
+                </main>
+                <button on:click={fileTransferViewModel.close}>
+                    {coreViewModel.translations.general.closeButton}
+                    <span class="icon">close</span>
                 </button>
             </div>
         </div>

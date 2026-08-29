@@ -28,10 +28,10 @@ nnoremap \1 :call SN("1")
 nmap \rn <Plug>(coc-rename)
 xmap gx <Plug>NetrwBrowseXVis
 nmap gx <Plug>NetrwBrowseX
-snoremap <silent> <BS> c
-snoremap <silent> <Del> c
-snoremap <silent> <C-H> c
 snoremap <C-R> "_c
+snoremap <silent> <C-H> c
+snoremap <silent> <Del> c
+snoremap <silent> <BS> c
 nnoremap <silent> <Plug>GitGutterPreviewHunk :call gitgutter#utility#warn('Please change your map <Plug>GitGutterPreviewHunk to <Plug>(GitGutterPreviewHunk)')
 nnoremap <silent> <Plug>(GitGutterPreviewHunk) :GitGutterPreviewHunk
 nnoremap <silent> <Plug>GitGutterUndoHunk :call gitgutter#utility#warn('Please change your map <Plug>GitGutterUndoHunk to <Plug>(GitGutterUndoHunk)')
@@ -154,19 +154,22 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +1 src/Model/Global/fileTransferModel.ts
+badd +135 src/Model/Global/fileTransferModel.ts
 badd +1 src/Model/Utility/utility.ts
 badd +1 src/View/Modals/dataTransferModal.tsx
 badd +1 src/View/translations.ts
 badd +133 src/View/homePage.tsx
-badd +0 src/ViewModel/Global/fileTransferViewModel.ts
+badd +1 src/ViewModel/Global/fileTransferViewModel.ts
+badd +10 src/View/Components/homePageButton.tsx
+badd +107 src/View/Modals/settingsModal.tsx
+badd +0 src/View/Components/navigationButton.tsx
 argglobal
 %argdel
 set stal=2
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
 tabrewind
-edit src/Model/Global/fileTransferModel.ts
+edit src/View/Modals/settingsModal.tsx
 let s:save_splitbelow = &splitbelow
 let s:save_splitright = &splitright
 set splitbelow splitright
@@ -174,7 +177,14 @@ wincmd _ | wincmd |
 vsplit
 wincmd _ | wincmd |
 vsplit
-2wincmd h
+wincmd _ | wincmd |
+vsplit
+3wincmd h
+wincmd w
+wincmd w
+wincmd _ | wincmd |
+split
+1wincmd k
 wincmd w
 wincmd w
 let &splitbelow = s:save_splitbelow
@@ -187,12 +197,15 @@ set winheight=1
 set winminwidth=0
 set winwidth=1
 exe 'vert 1resize ' . ((&columns * 54 + 127) / 255)
-exe 'vert 2resize ' . ((&columns * 196 + 127) / 255)
-exe 'vert 3resize ' . ((&columns * 3 + 127) / 255)
+exe 'vert 2resize ' . ((&columns * 98 + 127) / 255)
+exe '3resize ' . ((&lines * 21 + 23) / 46)
+exe 'vert 3resize ' . ((&columns * 97 + 127) / 255)
+exe '4resize ' . ((&lines * 21 + 23) / 46)
+exe 'vert 4resize ' . ((&columns * 97 + 127) / 255)
+exe 'vert 5resize ' . ((&columns * 3 + 127) / 255)
 argglobal
 enew
 file NERD_tree_tab_1
-balt src/Model/Global/fileTransferModel.ts
 let s:cpo_save=&cpo
 set cpo&vim
 nnoremap <buffer> <silent> <NL> :call nerdtree#ui_glue#invokeKeyMap("<C-j>")
@@ -382,6 +395,7 @@ setlocal nowrap
 setlocal wrapmargin=0
 wincmd w
 argglobal
+balt src/View/Components/homePageButton.tsx
 let s:cpo_save=&cpo
 set cpo&vim
 nmap <buffer> [c <Plug>(GitGutterPrevHunk)
@@ -431,8 +445,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=%+A\ %#%f\ %#(%l\\,%c):\ %m,%C%m
 setlocal noexpandtab
-if &filetype != 'typescript'
-setlocal filetype=typescript
+if &filetype != 'typescriptreact'
+setlocal filetype=typescriptreact
 endif
 setlocal fillchars=
 setlocal fixendofline
@@ -455,8 +469,8 @@ setlocal iminsert=0
 setlocal imsearch=-1
 setlocal include=
 setlocal includeexpr=
-setlocal indentexpr=GetTypescriptIndent()
-setlocal indentkeys=0{,0},0),0],:,0#,!^F,o,O,e,0],0)
+setlocal indentexpr=GetTsxIndent()
+setlocal indentkeys=0{,0},0),0],0,,!^F,o,O,e,*<Return>,<>>,<<>,/
 setlocal noinfercase
 setlocal iskeyword=@,48-57,_,192-255,$
 setlocal keywordprg=
@@ -504,8 +518,8 @@ setlocal statusline=
 setlocal suffixesadd=.ts,.tsx
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'typescript'
-setlocal syntax=typescript
+if &syntax != 'typescriptreact'
+setlocal syntax=typescriptreact
 endif
 setlocal tabstop=8
 setlocal tagcase=
@@ -529,12 +543,326 @@ setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 130 - ((0 * winheight(0) + 23) / 47)
+let s:l = 67 - ((18 * winheight(0) + 21) / 43)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 130
+keepjumps 67
+normal! 0
+wincmd w
+argglobal
+if bufexists(fnamemodify("src/View/Modals/settingsModal.tsx", ":p")) | buffer src/View/Modals/settingsModal.tsx | else | edit src/View/Modals/settingsModal.tsx | endif
+balt src/View/Components/homePageButton.tsx
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> [c <Plug>(GitGutterPrevHunk)
+nmap <buffer> \hp <Plug>(GitGutterPreviewHunk)
+nmap <buffer> \hu <Plug>(GitGutterUndoHunk)
+nmap <buffer> \hs <Plug>(GitGutterStageHunk)
+xmap <buffer> \hs <Plug>(GitGutterStageHunk)
+nmap <buffer> ]c <Plug>(GitGutterNextHunk)
+xmap <buffer> ac <Plug>(GitGutterTextObjectOuterVisual)
+omap <buffer> ac <Plug>(GitGutterTextObjectOuterPending)
+xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
+omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal backupcopy=
+setlocal balloonexpr=
+setlocal nobinary
+setlocal nobreakindent
+setlocal breakindentopt=
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),0],:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinscopedecls=public,protected,private
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=//\ %s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+setlocal nocursorline
+setlocal cursorlineopt=both
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=%+A\ %#%f\ %#(%l\\,%c):\ %m,%C%m
+setlocal noexpandtab
+if &filetype != 'typescriptreact'
+setlocal filetype=typescriptreact
+endif
+setlocal fillchars=
+setlocal fixendofline
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+setlocal foldmethod=manual
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldtext=foldtext()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal formatprg=
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=-1
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=GetTsxIndent()
+setlocal indentkeys=0{,0},0),0],0,,!^F,o,O,e,*<Return>,<>>,<<>,/
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,$
+setlocal keywordprg=
+setlocal nolinebreak
+setlocal nolisp
+setlocal lispoptions=
+setlocal lispwords=
+setlocal nolist
+setlocal listchars=
+setlocal makeencoding=
+setlocal makeprg=tsc\ \ $*\ %
+setlocal matchpairs=(:),{:},[:]
+setlocal nomodeline
+setlocal modifiable
+setlocal nrformats=bin,octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal scrolloff=-1
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal showbreak=
+setlocal sidescrolloff=-1
+set signcolumn=yes
+setlocal signcolumn=yes
+setlocal nosmartindent
+setlocal nosmoothscroll
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal spelloptions=
+setlocal statusline=
+setlocal suffixesadd=.ts,.tsx
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'typescriptreact'
+setlocal syntax=typescriptreact
+endif
+setlocal tabstop=8
+setlocal tagcase=
+setlocal tagfunc=
+setlocal tags=
+setlocal termwinkey=
+setlocal termwinscroll=10000
+setlocal termwinsize=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal thesaurusfunc=
+setlocal noundofile
+setlocal undolevels=-123456
+setlocal varsofttabstop=
+setlocal vartabstop=
+setlocal virtualedit=
+setlocal wincolor=
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 109 - ((15 * winheight(0) + 10) / 21)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 109
 normal! $
+wincmd w
+argglobal
+if bufexists(fnamemodify("src/View/Components/navigationButton.tsx", ":p")) | buffer src/View/Components/navigationButton.tsx | else | edit src/View/Components/navigationButton.tsx | endif
+balt src/View/Modals/settingsModal.tsx
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> [c <Plug>(GitGutterPrevHunk)
+nmap <buffer> \hp <Plug>(GitGutterPreviewHunk)
+nmap <buffer> \hu <Plug>(GitGutterUndoHunk)
+nmap <buffer> \hs <Plug>(GitGutterStageHunk)
+xmap <buffer> \hs <Plug>(GitGutterStageHunk)
+nmap <buffer> ]c <Plug>(GitGutterNextHunk)
+xmap <buffer> ac <Plug>(GitGutterTextObjectOuterVisual)
+omap <buffer> ac <Plug>(GitGutterTextObjectOuterPending)
+xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
+omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal keymap=
+setlocal noarabic
+setlocal autoindent
+setlocal backupcopy=
+setlocal balloonexpr=
+setlocal nobinary
+setlocal nobreakindent
+setlocal breakindentopt=
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),0],:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinscopedecls=public,protected,private
+setlocal cinwords=if,else,while,do,for,switch
+setlocal colorcolumn=
+setlocal comments=s1:/*,mb:*,ex:*/,://,b:#,:%,:XCOMM,n:>,fb:-
+setlocal commentstring=//\ %s
+setlocal complete=.,w,b,u,t,i
+setlocal concealcursor=
+setlocal conceallevel=0
+setlocal completefunc=
+setlocal nocopyindent
+setlocal cryptmethod=
+setlocal nocursorbind
+setlocal nocursorcolumn
+setlocal nocursorline
+setlocal cursorlineopt=both
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=%+A\ %#%f\ %#(%l\\,%c):\ %m,%C%m
+setlocal noexpandtab
+if &filetype != 'typescriptreact'
+setlocal filetype=typescriptreact
+endif
+setlocal fillchars=
+setlocal fixendofline
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+setlocal foldmethod=manual
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldtext=foldtext()
+setlocal formatexpr=
+setlocal formatoptions=croql
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal formatprg=
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=-1
+setlocal include=
+setlocal includeexpr=
+setlocal indentexpr=GetTsxIndent()
+setlocal indentkeys=0{,0},0),0],0,,!^F,o,O,e,*<Return>,<>>,<<>,/
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,$
+setlocal keywordprg=
+setlocal nolinebreak
+setlocal nolisp
+setlocal lispoptions=
+setlocal lispwords=
+setlocal nolist
+setlocal listchars=
+setlocal makeencoding=
+setlocal makeprg=tsc\ \ $*\ %
+setlocal matchpairs=(:),{:},[:]
+setlocal nomodeline
+setlocal modifiable
+setlocal nrformats=bin,octal,hex
+set number
+setlocal number
+setlocal numberwidth=4
+setlocal omnifunc=
+setlocal path=
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal norelativenumber
+setlocal norightleft
+setlocal rightleftcmd=search
+setlocal noscrollbind
+setlocal scrolloff=-1
+setlocal shiftwidth=4
+setlocal noshortname
+setlocal showbreak=
+setlocal sidescrolloff=-1
+set signcolumn=yes
+setlocal signcolumn=yes
+setlocal nosmartindent
+setlocal nosmoothscroll
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal spelloptions=
+setlocal statusline=
+setlocal suffixesadd=.ts,.tsx
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'typescriptreact'
+setlocal syntax=typescriptreact
+endif
+setlocal tabstop=8
+setlocal tagcase=
+setlocal tagfunc=
+setlocal tags=
+setlocal termwinkey=
+setlocal termwinscroll=10000
+setlocal termwinsize=
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal thesaurusfunc=
+setlocal noundofile
+setlocal undolevels=-123456
+setlocal varsofttabstop=
+setlocal vartabstop=
+setlocal virtualedit=
+setlocal wincolor=
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 15 - ((5 * winheight(0) + 10) / 21)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 15
+normal! 0
 wincmd w
 argglobal
 if bufexists(fnamemodify("src/Model/Utility/utility.ts", ":p")) | buffer src/Model/Utility/utility.ts | else | edit src/Model/Utility/utility.ts | endif
@@ -686,7 +1014,7 @@ setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 233 - ((0 * winheight(0) + 23) / 47)
+let s:l = 233 - ((0 * winheight(0) + 21) / 43)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
@@ -694,8 +1022,12 @@ keepjumps 233
 normal! 017|
 wincmd w
 exe 'vert 1resize ' . ((&columns * 54 + 127) / 255)
-exe 'vert 2resize ' . ((&columns * 196 + 127) / 255)
-exe 'vert 3resize ' . ((&columns * 3 + 127) / 255)
+exe 'vert 2resize ' . ((&columns * 98 + 127) / 255)
+exe '3resize ' . ((&lines * 21 + 23) / 46)
+exe 'vert 3resize ' . ((&columns * 97 + 127) / 255)
+exe '4resize ' . ((&lines * 21 + 23) / 46)
+exe 'vert 4resize ' . ((&columns * 97 + 127) / 255)
+exe 'vert 5resize ' . ((&columns * 3 + 127) / 255)
 tabnext
 edit src/View/translations.ts
 let s:save_splitbelow = &splitbelow
@@ -722,7 +1054,7 @@ exe 'vert 2resize ' . ((&columns * 111 + 127) / 255)
 exe 'vert 3resize ' . ((&columns * 111 + 127) / 255)
 argglobal
 enew
-file NERD_tree_tab_3
+file NERD_tree_tab_4
 let s:cpo_save=&cpo
 set cpo&vim
 nnoremap <buffer> <silent> <NL> :call nerdtree#ui_glue#invokeKeyMap("<C-j>")
@@ -745,14 +1077,6 @@ nnoremap <buffer> <silent> R :call nerdtree#ui_glue#invokeKeyMap("R")
 nnoremap <buffer> <silent> T :call nerdtree#ui_glue#invokeKeyMap("T")
 nnoremap <buffer> <silent> U :call nerdtree#ui_glue#invokeKeyMap("U")
 nnoremap <buffer> <silent> X :call nerdtree#ui_glue#invokeKeyMap("X")
-nmap <buffer> [c <Plug>(GitGutterPrevHunk)
-nmap <buffer> \hp <Plug>(GitGutterPreviewHunk)
-nmap <buffer> \hu <Plug>(GitGutterUndoHunk)
-nmap <buffer> \hs <Plug>(GitGutterStageHunk)
-xmap <buffer> \hs <Plug>(GitGutterStageHunk)
-nmap <buffer> ]c <Plug>(GitGutterNextHunk)
-xmap <buffer> ac <Plug>(GitGutterTextObjectOuterVisual)
-omap <buffer> ac <Plug>(GitGutterTextObjectOuterPending)
 nnoremap <buffer> <silent> cd :call nerdtree#ui_glue#invokeKeyMap("cd")
 nnoremap <buffer> <silent> e :call nerdtree#ui_glue#invokeKeyMap("e")
 nnoremap <buffer> <silent> f :call nerdtree#ui_glue#invokeKeyMap("f")
@@ -760,8 +1084,6 @@ nnoremap <buffer> <silent> go :call nerdtree#ui_glue#invokeKeyMap("go")
 nnoremap <buffer> <silent> gb :call nerdtree#ui_glue#invokeKeyMap("gb")
 nnoremap <buffer> <silent> gi :call nerdtree#ui_glue#invokeKeyMap("gi")
 nnoremap <buffer> <silent> gs :call nerdtree#ui_glue#invokeKeyMap("gs")
-xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
-omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
 nnoremap <buffer> <silent> i :call nerdtree#ui_glue#invokeKeyMap("i")
 nnoremap <buffer> <silent> m :call nerdtree#ui_glue#invokeKeyMap("m")
 nnoremap <buffer> <silent> o :call nerdtree#ui_glue#invokeKeyMap("o")
@@ -1060,22 +1382,20 @@ setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 123 - ((20 * winheight(0) + 23) / 47)
+let s:l = 706 - ((17 * winheight(0) + 21) / 43)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 123
-normal! 0
+keepjumps 706
+normal! $
 wincmd w
 argglobal
 if bufexists(fnamemodify("src/View/Modals/dataTransferModal.tsx", ":p")) | buffer src/View/Modals/dataTransferModal.tsx | else | edit src/View/Modals/dataTransferModal.tsx | endif
 balt src/View/homePage.tsx
 let s:cpo_save=&cpo
 set cpo&vim
-imap <buffer> <nowait> <silent> <C-K> <Cmd>:call coc#snippet#jump(0, 0)
 imap <buffer> <nowait> <silent> <C-J> <Cmd>:call coc#snippet#jump(1, 0)
-smap <buffer> <nowait> <silent> <NL> <Cmd>:call coc#snippet#jump(1, 0)
-smap <buffer> <nowait> <silent>  <Cmd>:call coc#snippet#jump(0, 0)
+imap <buffer> <nowait> <silent> <C-K> <Cmd>:call coc#snippet#jump(0, 0)
 nmap <buffer> [c <Plug>(GitGutterPrevHunk)
 nmap <buffer> \hp <Plug>(GitGutterPreviewHunk)
 nmap <buffer> \hu <Plug>(GitGutterUndoHunk)
@@ -1086,8 +1406,6 @@ xmap <buffer> ac <Plug>(GitGutterTextObjectOuterVisual)
 omap <buffer> ac <Plug>(GitGutterTextObjectOuterPending)
 xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
 omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
-smap <buffer> <nowait> <silent> <C-K> <Cmd>:call coc#snippet#jump(0, 0)
-smap <buffer> <nowait> <silent> <C-J> <Cmd>:call coc#snippet#jump(1, 0)
 imap <buffer> <nowait> <silent> <NL> <Cmd>:call coc#snippet#jump(1, 0)
 imap <buffer> <nowait> <silent>  <Cmd>:call coc#snippet#jump(0, 0)
 let &cpo=s:cpo_save
@@ -1225,11 +1543,11 @@ setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 31 - ((30 * winheight(0) + 23) / 47)
+let s:l = 12 - ((11 * winheight(0) + 21) / 43)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 31
+keepjumps 12
 normal! $
 wincmd w
 3wincmd w
@@ -1258,8 +1576,7 @@ exe 'vert 1resize ' . ((&columns * 31 + 127) / 255)
 exe 'vert 2resize ' . ((&columns * 223 + 127) / 255)
 argglobal
 enew
-file NERD_tree_tab_4
-balt src/ViewModel/Global/fileTransferViewModel.ts
+file NERD_tree_tab_3
 let s:cpo_save=&cpo
 set cpo&vim
 nnoremap <buffer> <silent> <NL> :call nerdtree#ui_glue#invokeKeyMap("<C-j>")
@@ -1297,9 +1614,9 @@ nnoremap <buffer> <silent> go :call nerdtree#ui_glue#invokeKeyMap("go")
 nnoremap <buffer> <silent> gb :call nerdtree#ui_glue#invokeKeyMap("gb")
 nnoremap <buffer> <silent> gi :call nerdtree#ui_glue#invokeKeyMap("gi")
 nnoremap <buffer> <silent> gs :call nerdtree#ui_glue#invokeKeyMap("gs")
-nnoremap <buffer> <silent> i :call nerdtree#ui_glue#invokeKeyMap("i")
 xmap <buffer> ic <Plug>(GitGutterTextObjectInnerVisual)
 omap <buffer> ic <Plug>(GitGutterTextObjectInnerPending)
+nnoremap <buffer> <silent> i :call nerdtree#ui_glue#invokeKeyMap("i")
 nnoremap <buffer> <silent> m :call nerdtree#ui_glue#invokeKeyMap("m")
 nnoremap <buffer> <silent> o :call nerdtree#ui_glue#invokeKeyMap("o")
 nnoremap <buffer> <silent> p :call nerdtree#ui_glue#invokeKeyMap("p")
@@ -1597,11 +1914,11 @@ setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 163 - ((34 * winheight(0) + 23) / 47)
+let s:l = 139 - ((9 * winheight(0) + 21) / 43)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 163
+keepjumps 139
 normal! $
 wincmd w
 exe 'vert 1resize ' . ((&columns * 31 + 127) / 255)
