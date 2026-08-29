@@ -51,6 +51,9 @@ export default class FileTransferViewModel extends Context {
             ),
     );
 
+    exportKey: React.State<string> = new React.State("");
+    exportKeyConfirmation: React.State<string> = new React.State("");
+
     // guards
     hasNoPathsSelected: React.State<boolean> = React.createProxyState(
         [this.selectedPaths],
@@ -62,6 +65,12 @@ export default class FileTransferViewModel extends Context {
         () =>
             this.receivingTransferChannel.value == "" ||
             this.receivingTransferKey.value == "",
+    );
+    
+    cannotExport: React.State<boolean> = React.createProxyState(
+        [this.exportKey, this.exportKeyConfirmation],
+        () =>
+            this.exportKey.value == "" ||  this.exportKey.value != this.exportKeyConfirmation.value
     );
 
     // handlers

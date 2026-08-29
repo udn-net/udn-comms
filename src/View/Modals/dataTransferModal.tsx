@@ -607,29 +607,65 @@ function ExportModal(
                             coreViewModel.translations.dataTransferModal
                                 .exportHeadline
                         }
-                    </h2>
+		    </h2>
 
-                    <p
-                        class="secondary"
-                        subscribe:innerText={
-                            fileTransferViewModel.filesReceivedText
-                        }
-                    ></p>
-
-                    <hr></hr>
-
-                    <div
-                        class="tile flex-column align-start"
-                        children:append={[
-                            fileTransferViewModel.filePathsReceived,
-                            StringToTextSpan,
-                        ]}
-                    ></div>
+                        <label class="tile">
+                            <span class="icon">key</span>
+                            <div>
+                                <span class="secondary">
+                                    {
+                                        coreViewModel.translations
+                                            .dataTransferModal
+                                            .exportKey
+                                    }
+                                </span>
+                                <input
+                                    bind:value={
+                                        fileTransferViewModel.exportKey
+                                    }
+				    type="password"
+                                ></input>
+                            </div>
+                        </label>
+                        <label class="tile">
+                            <span class="icon">check_circle</span>
+                            <div>
+                                <span class="secondary">
+                                    {
+                                        coreViewModel.translations
+                                            .dataTransferModal
+                                            .exportKeyConfirmation
+                                    }
+                                </span>
+                                <input
+                                    bind:value={
+                                        fileTransferViewModel.exportKeyConfirmation
+				    }
+				    type="password"
+                                ></input>
+                            </div>
+                        </label>
                 </main>
-                <button on:click={fileTransferViewModel.close}>
-                    {coreViewModel.translations.general.closeButton}
-                    <span class="icon">close</span>
-                </button>
+                <div class="flex-row width-100">
+                    <button
+                        class="flex"
+                        on:click={
+                            fileTransferViewModel.showDirectionSelectionModal
+                        }
+                    >
+                        {coreViewModel.translations.general.backButton}
+                    </button>
+                    <button
+                        class="primary flex"
+                        on:click={fileTransferViewModel}
+                        toggle:disabled={
+                            fileTransferViewModel.cannotExport
+                        }
+                    >
+                        {coreViewModel.translations.dataTransferModal.downloadFileButton}
+                        <span class="icon">download</span>
+                    </button>
+                </div>
             </div>
         </div>
     );

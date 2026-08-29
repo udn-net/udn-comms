@@ -394,7 +394,11 @@
       ///
       filesSentCount: (count) => `Files sent: ${count}.`,
       allFilesSent: "Done.",
-      filesReceivedCount: (count) => `Files received: ${count}.`
+      filesReceivedCount: (count) => `Files received: ${count}.`,
+      //
+      exportKey: "Encryption key",
+      exportKeyConfirmation: "Confirm",
+      downloadFileButton: "Download"
     },
     storage: {
       noItemSelected: "No item selected",
@@ -1755,6 +1759,8 @@
           this.filesReceivedCount.value
         )
       );
+      this.exportKey = new State("");
+      this.exportKeyConfirmation = new State("");
       // guards
       this.hasNoPathsSelected = createProxyState(
         [this.selectedPaths],
@@ -1764,6 +1770,10 @@
       this.cannotPrepareToReceive = createProxyState(
         [this.receivingTransferChannel, this.receivingTransferKey],
         () => this.receivingTransferChannel.value == "" || this.receivingTransferKey.value == ""
+      );
+      this.cannotExport = createProxyState(
+        [this.exportKey, this.exportKeyConfirmation],
+        () => this.exportKey.value == "" || this.exportKey.value != this.exportKeyConfirmation.value
       );
       // handlers
       this.handleReceivedFile = (path) => {
@@ -6943,22 +6953,35 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 6 /* ExportModal */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.exportHeadline), /* @__PURE__ */ createElement(
-      "p",
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.exportHeadline), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKey), /* @__PURE__ */ createElement(
+      "input",
       {
-        class: "secondary",
-        "subscribe:innerText": fileTransferViewModel2.filesReceivedText
+        "bind:value": fileTransferViewModel2.exportKey,
+        type: "password"
       }
-    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
-      "div",
+    ))), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "check_circle"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKeyConfirmation), /* @__PURE__ */ createElement(
+      "input",
       {
-        class: "tile flex-column align-start",
-        "children:append": [
-          fileTransferViewModel2.filePathsReceived,
-          StringToTextSpan
-        ]
+        "bind:value": fileTransferViewModel2.exportKeyConfirmation,
+        type: "password"
       }
-    )), /* @__PURE__ */ createElement("button", { "on:click": fileTransferViewModel2.close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+    )))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "flex",
+        "on:click": fileTransferViewModel2.showDirectionSelectionModal
+      },
+      coreViewModel2.translations.general.backButton
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "primary flex",
+        "on:click": fileTransferViewModel2,
+        "toggle:disabled": fileTransferViewModel2.cannotExport
+      },
+      coreViewModel2.translations.dataTransferModal.downloadFileButton,
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "download")
+    ))));
   }
   function ImportModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(

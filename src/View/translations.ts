@@ -145,6 +145,12 @@ const englishTranslations = {
         allFilesSent: "Done.",
 
         filesReceivedCount: (count: number) => `Files received: ${count}.`,
+
+	//
+	
+	exportKey: "Encryption key",
+	exportKeyConfirmation: "Confirm",
+	downloadFileButton: "Download",
     },
 
     storage: {
