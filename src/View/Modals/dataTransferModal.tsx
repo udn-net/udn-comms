@@ -26,6 +26,7 @@ export function DataTransferModalWrapper(
             {TransferDisplayModal(coreViewModel, fileTransferViewModel)}
             {TransferDataInputModal(coreViewModel, fileTransferViewModel)}
             {DataReceptionModal(coreViewModel, fileTransferViewModel)}
+            {ImportModal(coreViewModel, fileTransferViewModel)}
         </div>
     );
 }
@@ -107,20 +108,35 @@ function DirectionSelectionModal(
                                 </b>
                             </div>
                             <span class="icon">arrow_forward</span>
-                        </button>
+			</button>
+
+			<hr></hr>
+
                         <button
                             class="tile"
-                            on:click={
-                                fileTransferViewModel.showTransferDataInputModal
-                            }
+                            on:click={fileTransferViewModel.showImportModal}
                         >
-                            <span class="icon">file_open</span>
+                            <span class="icon">file_save</span>
                             <div>
                                 <b>
                                     {
                                         coreViewModel.translations
-                                            .dataTransferModal
-                                            .importButton
+                                            .dataTransferModal.exportButton
+                                    }
+                                </b>
+                            </div>
+                            <span class="icon">arrow_forward</span>
+                        </button>
+                        <button
+                            class="tile"
+                            on:click={fileTransferViewModel.showImportModal}
+                        >
+                            <span class="icon">upload_file</span>
+                            <div>
+                                <b>
+                                    {
+                                        coreViewModel.translations
+                                            .dataTransferModal.importButton
                                     }
                                 </b>
                             </div>
@@ -196,7 +212,7 @@ function FileSelectionModal(
                     <h2>
                         {
                             coreViewModel.translations.dataTransferModal
-                                .transferDataHeadline
+                                .sendHeadline
                         }
                     </h2>
                     <span class="secondary">
@@ -279,7 +295,7 @@ function TransferDataDisplayModal(
                     <h2>
                         {
                             coreViewModel.translations.dataTransferModal
-                                .transferDataHeadline
+                                .sendHeadline
                         }
                     </h2>
 
@@ -327,7 +343,7 @@ function TransferDataDisplayModal(
                                 ></b>
                             </div>
                         </div>
-                    </div>
+		    </div>
                 </main>
                 <div class="flex-row width-100">
                     <button
@@ -337,7 +353,7 @@ function TransferDataDisplayModal(
                         {coreViewModel.translations.general.backButton}
                     </button>
                     <button disabled class="flex">
-                        {coreViewModel.translations.general.waitingLabel}
+			{coreViewModel.translations.general.waitingLabel}
                     </button>
                 </div>
             </div>
@@ -441,7 +457,7 @@ function TransferDataInputModal(
                     <h2>
                         {
                             coreViewModel.translations.dataTransferModal
-                                .transferDataHeadline
+                                .receiveHeadline
                         }
                     </h2>
 
@@ -540,7 +556,55 @@ function DataReceptionModal(
                     <h2>
                         {
                             coreViewModel.translations.dataTransferModal
-                                .transferDataHeadline
+                                .receiveHeadline
+                        }
+                    </h2>
+
+                    <p
+                        class="secondary"
+                        subscribe:innerText={
+                            fileTransferViewModel.filesReceivedText
+                        }
+                    ></p>
+
+                    <hr></hr>
+
+                    <div
+                        class="tile flex-column align-start"
+                        children:append={[
+                            fileTransferViewModel.filePathsReceived,
+                            StringToTextSpan,
+                        ]}
+                    ></div>
+                </main>
+                <button on:click={ViewController.reload}>
+                    {coreViewModel.translations.general.reloadAppButton}
+                    <span class="icon">refresh</span>
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function ImportModal(
+    coreViewModel: CoreViewModel,
+    fileTransferViewModel: FileTransferViewModel,
+) {
+    const isPresented = React.createProxyState(
+        [fileTransferViewModel.presentedModal],
+        () =>
+            fileTransferViewModel.presentedModal.value ==
+            FileTransferModals.ImportModal,
+    );
+
+    return (
+        <div class="modal" toggle:open={isPresented}>
+            <div>
+                <main>
+                    <h2>
+                        {
+                            coreViewModel.translations.dataTransferModal
+                                .importHeadline
                         }
                     </h2>
 

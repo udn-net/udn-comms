@@ -82,18 +82,24 @@ export default class FileTransferModel {
         this.handleDecryptedFile(decrypted);
     };
 
-    readonly handleBackupFile = async (encryptedBackup: string, passphrase: string): Promise<void> => {
-	const decrypted: string = await decryptString(encryptedBackup, passphrase);
-	const parsed = parse(decrypted);
-	if (!Array.isArray(parsed)) {
-	    console.error("Canceling backup - not an array", decrypted);
-	    return;
-	}
+    readonly handleBackupFile = async (
+        encryptedBackup: string,
+        passphrase: string,
+    ): Promise<void> => {
+        const decrypted: string = await decryptString(
+            encryptedBackup,
+            passphrase,
+        );
+        const parsed = parse(decrypted);
+        if (!Array.isArray(parsed)) {
+            console.error("Canceling backup - not an array", decrypted);
+            return;
+        }
 
-	for (const file of parsed) {
-	    this.handleDecryptedFile(file);
-	}
-    }
+        for (const file of parsed) {
+            this.handleDecryptedFile(file);
+        }
+    };
 
     readonly handleDecryptedFile = (data: string): void => {
         const parsed: any = parse(data);
@@ -130,7 +136,10 @@ export default class FileTransferModel {
         }
     };
 
-    readonly generateBackup = async (directoryPaths: IteratorObject<string[]>, passphrase: string): Promise<string> => {
+    readonly generateBackup = async (
+        directoryPaths: IteratorObject<string[]>,
+        passphrase: string,
+    ): Promise<string> => {
         const files: string[] = [];
         for (const directoryPath of directoryPaths) {
             this.storageModel.recurse(directoryPath, (filePath: string[]) => {
@@ -139,8 +148,8 @@ export default class FileTransferModel {
                 files.push(stringifiedFileData);
             });
         }
-	const rawBackup = stringify(files);
-	return await encryptString(rawBackup, passphrase);
+        const rawBackup = stringify(files);
+        return await encryptString(rawBackup, passphrase);
     };
 
     readonly prepareFileForSending = (filePath: string[]): string => {

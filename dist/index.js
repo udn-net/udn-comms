@@ -368,13 +368,18 @@
     },
     dataTransferModal: {
       transferDataHeadline: "Data Transfer",
+      sendHeadline: "Transfer to other device",
+      receiveHeadline: "Transfer to This Device",
+      exportHeadline: "Export Data",
+      importHeadline: "Import Data",
       selectionDescription: "Select the data that you want to transfer.",
       dataEntryDescription: "Enter this data on the other device.",
       dataEntryInputDescription: "Enter the data displayed on the other device.",
       notConnectedError: "You are not connected to any server.",
       ///
-      fromThisDeviceButton: "Export or send from this device",
-      toThisDeviceButton: "Receive from other device",
+      fromThisDeviceButton: "Send to other device",
+      toThisDeviceButton: "Send to this device",
+      exportButton: "Export to file",
       importButton: "Import from file",
       ///
       generalHeadline: "General",
@@ -588,12 +593,17 @@
       },
       dataTransferModal: {
         transferDataHeadline: "Daten\xFCbertragung",
+        sendHeadline: "An anderes Ger\xE4t senden",
+        receiveHeadline: "An dieses Ger\xE4t senden",
+        exportHeadline: "Daten exportieren",
+        importHeadline: "Daten importieren",
         selectionDescription: "W\xE4hle die Daten aus, die du \xFCbertragen m\xF6chtest.",
         dataEntryDescription: "Gib diese Informationen auf dem anderen Ger\xE4t ein.",
         dataEntryInputDescription: "Gib die auf dem anderen Ger\xE4t angezeigten Informationen ein.",
         notConnectedError: "Du bist mit keinem Server verbunden.",
-        fromThisDeviceButton: "Exportieren oder an anderes Ger\xE4t senden",
+        fromThisDeviceButton: "An anderes Ger\xE4t senden",
         toThisDeviceButton: "An dieses Ger\xE4t senden",
+        exportButton: "Als Datei exportieren",
         importButton: "Aus Datei importieren",
         generalHeadline: "Allgemein",
         connectionData: "Verbindungsdaten",
@@ -763,7 +773,7 @@
         setNameButtonAudioLabel: "establecer nombre",
         settingsButton: "Ajustes",
         manageStorageButton: "Gestionar almacenamiento",
-        transferDataButton: "Enviar o guardar archivos",
+        transferDataButton: "Enviar o exportar archivos",
         scrollToChatButton: "Chats",
         backToOverviewAudioLabel: "volver al resumen",
         chatsHeadline: "Chats",
@@ -791,14 +801,19 @@
         connectButtonAudioLabel: "conectar"
       },
       dataTransferModal: {
-        transferDataHeadline: "Transferencia de Datos",
+        transferDataHeadline: "Transferencia de datos",
+        sendHeadline: "Enviar a otro dispositivo",
+        receiveHeadline: "Enviar a este dispositivo",
+        exportHeadline: "Exportar archivo",
+        importHeadline: "Importar archivo",
         selectionDescription: "Selecciona los datos que quieres transferir.",
         dataEntryDescription: "Introduce estos datos en el otro dispositivo.",
         dataEntryInputDescription: "Introduce los datos mostrados en el otro dispositivo.",
         notConnectedError: "No est\xE1s conectado a ning\xFAn servidor.",
-        fromThisDeviceButton: "Exportar o enviar a otro dispositivo",
+        fromThisDeviceButton: "Enviar a otro dispositivo",
         toThisDeviceButton: "Enviar a este dispositivo",
-        importButton: "Importar desde archivo",
+        exportButton: "Exportar archivo",
+        importButton: "Importar archivo",
         generalHeadline: "General",
         connectionData: "Datos de Conexi\xF3n",
         settingsData: "Datos de Configuraci\xF3n",
@@ -1817,6 +1832,9 @@
       };
       this.showTransferDataInputModal = () => {
         this.presentedModal.value = 4 /* TransferDataInput */;
+      };
+      this.showImportModal = () => {
+        this.presentedModal.value = 6 /* ImportModal */;
       };
       this.prepareReceivingData = () => {
         if (this.cannotPrepareToReceive.value == true) return;
@@ -6660,7 +6678,7 @@
       coreViewModel2,
       connectionViewModel2,
       fileTransferViewModel2
-    ), FileSelectionModal(coreViewModel2, fileTransferViewModel2), TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDataInputModal(coreViewModel2, fileTransferViewModel2), DataReceptionModal(coreViewModel2, fileTransferViewModel2));
+    ), FileSelectionModal(coreViewModel2, fileTransferViewModel2), TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDataInputModal(coreViewModel2, fileTransferViewModel2), DataReceptionModal(coreViewModel2, fileTransferViewModel2), ImportModal(coreViewModel2, fileTransferViewModel2));
   }
   function DirectionSelectionModal(coreViewModel2, connectionViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
@@ -6704,13 +6722,24 @@
         /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.toThisDeviceButton)),
         /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
       ),
+      /* @__PURE__ */ createElement("hr", null),
       /* @__PURE__ */ createElement(
         "button",
         {
           class: "tile",
-          "on:click": fileTransferViewModel2.showTransferDataInputModal
+          "on:click": fileTransferViewModel2.showImportModal
         },
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "file_open"),
+        /* @__PURE__ */ createElement("span", { class: "icon" }, "file_save"),
+        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.exportButton)),
+        /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+      ),
+      /* @__PURE__ */ createElement(
+        "button",
+        {
+          class: "tile",
+          "on:click": fileTransferViewModel2.showImportModal
+        },
+        /* @__PURE__ */ createElement("span", { class: "icon" }, "upload_file"),
         /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.importButton)),
         /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
       )
@@ -6743,7 +6772,7 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 1 /* FileSelection */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.selectionDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.dataTransferModal.generalHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.sendHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.selectionDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("h3", null, coreViewModel2.translations.dataTransferModal.generalHeadline), /* @__PURE__ */ createElement(
       "div",
       {
         class: "flex-column gap content-margin-bottom",
@@ -6784,7 +6813,7 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 2 /* TransferDataDisplay */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("div", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.sendHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("div", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
       "b",
       {
         "subscribe:innerText": fileTransferViewModel2.transferChannel
@@ -6794,7 +6823,14 @@
       {
         "subscribe:innerText": fileTransferViewModel2.transferKey
       }
-    ))))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+    )))), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
+      "button",
+      {
+        "on:click": null
+      },
+      coreViewModel2.translations.dataTransferModal.exportButton,
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "download")
+    )), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
       "button",
       {
         class: "flex",
@@ -6854,7 +6890,7 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 4 /* TransferDataInput */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryInputDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.receiveHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryInputDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
       "input",
       {
         "on:enter": fileTransferViewModel2.prepareReceivingData,
@@ -6889,7 +6925,29 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 5 /* ReceptionDisplay */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.receiveHeadline), /* @__PURE__ */ createElement(
+      "p",
+      {
+        class: "secondary",
+        "subscribe:innerText": fileTransferViewModel2.filesReceivedText
+      }
+    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
+      "div",
+      {
+        class: "tile flex-column align-start",
+        "children:append": [
+          fileTransferViewModel2.filePathsReceived,
+          StringToTextSpan
+        ]
+      }
+    )), /* @__PURE__ */ createElement("button", { "on:click": ViewController.reload }, coreViewModel2.translations.general.reloadAppButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "refresh"))));
+  }
+  function ImportModal(coreViewModel2, fileTransferViewModel2) {
+    const isPresented = createProxyState(
+      [fileTransferViewModel2.presentedModal],
+      () => fileTransferViewModel2.presentedModal.value == 6 /* ImportModal */
+    );
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement(
       "p",
       {
         class: "secondary",
@@ -7203,7 +7261,10 @@
         this.handleDecryptedFile(decrypted);
       };
       this.handleBackupFile = async (encryptedBackup, passphrase) => {
-        const decrypted = await decryptString(encryptedBackup, passphrase);
+        const decrypted = await decryptString(
+          encryptedBackup,
+          passphrase
+        );
         const parsed = parse(decrypted);
         if (!Array.isArray(parsed)) {
           console.error("Canceling backup - not an array", decrypted);
