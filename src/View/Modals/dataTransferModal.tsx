@@ -784,7 +784,7 @@ function ImportModal(
 		    <button
 			class="flex"
 			on:click={
-			    fileTransferViewModel.showImportModal
+			    fileTransferViewModel.showDirectionSelectionModal
 			}
 		    >
 			{coreViewModel.translations.general.backButton}

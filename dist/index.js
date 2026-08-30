@@ -7090,7 +7090,7 @@
       "button",
       {
         class: "flex",
-        "on:click": fileTransferViewModel2.showImportModal
+        "on:click": fileTransferViewModel2.showDirectionSelectionModal
       },
       coreViewModel2.translations.general.backButton
     ), /* @__PURE__ */ createElement(

@@ -646,6 +646,10 @@ select {
     padding: 0px var(--control-padding);
 }
 
+input[type="file"] {
+    padding: var(--control-padding);
+}
+
 .padding-h {
     padding: 0px var(--control-padding) !important;
 }
@@ -836,7 +840,7 @@ select + .icon,
 
 button:not(.tile):not(header *),
 footer,
-input:not([type="checkbox"]):not([type="radio"]),
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 select,
 select + .icon {
     height: var(--control-height);
@@ -862,7 +866,7 @@ header button {
 
 button:not(.tile):not(header *),
 footer,
-input:not([type="checkbox"]):not([type="radio"]),
+input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
 select,
 .modal > div > :is(button, div.flex-row) {
     min-height: var(--control-height);
