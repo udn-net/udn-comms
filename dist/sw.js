@@ -1,4 +1,4 @@
-const CACHE_VERSION = "26.08.30.E";
+const CACHE_VERSION = "3";
 
 self.addEventListener("fetch", (event) => {
     event.respondWith(handleRequest(event));
@@ -22,7 +22,7 @@ async function getFromCache(event) {
 
 async function fetchAndCache(event) {
     const request = event.request;
-    const response = await fetch(request);
+    const response = await fetch(request, {cache: "no-cache"});
     if (response.status === 200) {
         // Only cache successful responses
         const cache = await caches.open(CACHE_VERSION);

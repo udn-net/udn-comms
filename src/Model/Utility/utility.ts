@@ -279,28 +279,32 @@ export function localeCompare(a: string, b: string): number {
 }
 
 // ui
-export function implementPinchZoom(targetSelector: string) {
+export function implementPinchZoom(canvas: HTMLElement) {
     let pinching = false;
-    let lastElement: HTMLElement|undefined = undefined;
+    let lastElement: HTMLElement | undefined = undefined;
 
-    let initialDistance,
-	currentZoom, initialZoom,
-	currentX, currentY,
-	initialX, initialY,
-	initialTouchX, initialTouchY;
+    let initialDistance: number,
+        currentZoom: number,
+        initialZoom: number,
+        currentX: number,
+        currentY: number,
+        initialX: number,
+        initialY: number,
+        initialTouchX: number,
+        initialTouchY: number;
 
     function reset() {
-	initialDistance = 0;
+        initialDistance = 0;
 
-	currentZoom = 1;
-	initialZoom = 1;
+        currentZoom = 1;
+        initialZoom = 1;
 
-	currentX = 0;
-	currentY = 0;
-	initialX = 0;
-	initialY = 0;
-	initialTouchX = 0;
-	initialTouchY = 0;
+        currentX = 0;
+        currentY = 0;
+        initialX = 0;
+        initialY = 0;
+        initialTouchX = 0;
+        initialTouchY = 0;
     }
 
     reset();
@@ -308,30 +312,28 @@ export function implementPinchZoom(targetSelector: string) {
     const MIN = 0.25;
     const MAX = 5;
 
-    const element = (): HTMLElement => canvas.querySelector(targetSelector);
-    const parent = (): HTMLElement => element().parentElement;
+    const element = (): HTMLElement => canvas.querySelector(".zoom");
     const distance = (e: TouchEvent) =>
-	Math.hypot(
-	    e.touches[0].pageX - e.touches[1].pageX,
-	    e.touches[0].pageY - e.touches[1].pageY,
-	);
+        Math.hypot(
+            e.touches[0].pageX - e.touches[1].pageX,
+            e.touches[0].pageY - e.touches[1].pageY,
+        );
     const point = (e: TouchEvent, direction: "x" | "y", i: number) =>
-	e.touches[i][direction == "x" ? "clientX" : "clientY"];
+        e.touches[i][direction == "x" ? "clientX" : "clientY"];
     const midpoint = (e: TouchEvent, direction: "x" | "y") =>
-	(point(e, direction, 0) + point(e, direction, 1)) / 2;
+        (point(e, direction, 0) + point(e, direction, 1)) / 2;
 
     function apply(factor: number, offset: [number, number]) {
-	if (factor < MIN) return apply(MIN, offset);
-	if (factor > MAX) return apply(5, offset);
+        if (factor < MIN) return apply(MIN, offset);
+        if (factor > MAX) return apply(5, offset);
 
-	const [x, y] = offset;
-	element().style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()}) translate(${x}px, ${y}px)`;
-	currentX = x;
-	currentY = y;
-	currentZoom = factor;
+        const [x, y] = offset;
+        element().style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()}) translate(${x}px, ${y}px)`;
+        currentX = x;
+        currentY = y;
+        currentZoom = factor;
     }
 
-    const canvas = document.body;
     canvas.addEventListener("touchstart", (event: TouchEvent) => {
 	(document.activeElement as HTMLElement).blur();
 
@@ -357,8 +359,10 @@ export function implementPinchZoom(targetSelector: string) {
     canvas.addEventListener("touchmove", (event: TouchEvent) => {
 	if (!pinching) {
 	    apply(currentZoom, [
-		initialX + (((event.touches[0].clientX - initialTouchX)/initialZoom)),
-		initialY + ((event.touches[0].clientY - initialTouchY)/initialZoom),
+		initialX +
+		(event.touches[0].clientX - initialTouchX) / initialZoom,
+		initialY +
+		(event.touches[0].clientY - initialTouchY) / initialZoom,
 	    ]);
 	    return;
 	}
@@ -369,15 +373,24 @@ export function implementPinchZoom(targetSelector: string) {
 	const midY = midpoint(event, "y");
 	const ratio = currentDistance / initialDistance;
 	const difference = currentDistance - initialDistance;
-	apply(initialZoom * ratio, [initialX + (midX - difference - initialTouchX)/initialZoom, initialY + (midY - difference - initialTouchY)/initialZoom]);
+	apply(initialZoom * ratio, [
+	    initialX + (midX - difference - initialTouchX) / initialZoom,
+	    initialY + (midY - difference - initialTouchY) / initialZoom,
+	]);
     });
     canvas.addEventListener("wheel", (event: WheelEvent) => {
 	event.preventDefault();
 	if (!event.shiftKey) {
-	    apply(currentZoom, [currentX - event.deltaX, currentY - event.deltaY]);
+	    apply(currentZoom, [
+		currentX - event.deltaX,
+		currentY - event.deltaY,
+	    ]);
 	    return;
-	};
-	apply(currentZoom + (event.deltaY < 0 ? 1 : -1) * 0.1, [initialX, initialY]);
+	}
+	apply(currentZoom + (event.deltaY < 0 ? 1 : -1) * 0.1, [
+	    initialX,
+	    initialY,
+	]);
     });
     canvas.addEventListener("scroll", (event: MouseEvent) => {
 	event.preventDefault();

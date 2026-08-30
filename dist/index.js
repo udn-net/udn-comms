@@ -1136,7 +1136,7 @@
   function localeCompare(a, b) {
     return a.localeCompare(b);
   }
-  function implementPinchZoom(targetSelector) {
+  function implementPinchZoom(canvas) {
     let pinching = false;
     let lastElement = void 0;
     let initialDistance, currentZoom, initialZoom, currentX, currentY, initialX, initialY, initialTouchX, initialTouchY;
@@ -1154,8 +1154,7 @@
     reset();
     const MIN = 0.25;
     const MAX = 5;
-    const element = () => canvas.querySelector(targetSelector);
-    const parent = () => element().parentElement;
+    const element = () => canvas.querySelector(".zoom");
     const distance = (e) => Math.hypot(
       e.touches[0].pageX - e.touches[1].pageX,
       e.touches[0].pageY - e.touches[1].pageY
@@ -1171,7 +1170,6 @@
       currentY = y;
       currentZoom = factor;
     }
-    const canvas = document.body;
     canvas.addEventListener("touchstart", (event) => {
       document.activeElement.blur();
       if (lastElement != void 0 && lastElement != element()) reset();
@@ -1205,16 +1203,24 @@
       const midY = midpoint(event, "y");
       const ratio = currentDistance / initialDistance;
       const difference = currentDistance - initialDistance;
-      apply(initialZoom * ratio, [initialX + (midX - difference - initialTouchX) / initialZoom, initialY + (midY - difference - initialTouchY) / initialZoom]);
+      apply(initialZoom * ratio, [
+        initialX + (midX - difference - initialTouchX) / initialZoom,
+        initialY + (midY - difference - initialTouchY) / initialZoom
+      ]);
     });
     canvas.addEventListener("wheel", (event) => {
       event.preventDefault();
       if (!event.shiftKey) {
-        apply(currentZoom, [currentX - event.deltaX, currentY - event.deltaY]);
+        apply(currentZoom, [
+          currentX - event.deltaX,
+          currentY - event.deltaY
+        ]);
         return;
       }
-      ;
-      apply(currentZoom + (event.deltaY < 0 ? 1 : -1) * 0.1, [initialX, initialY]);
+      apply(currentZoom + (event.deltaY < 0 ? 1 : -1) * 0.1, [
+        initialX,
+        initialY
+      ]);
     });
     canvas.addEventListener("scroll", (event) => {
       event.preventDefault();
@@ -1230,7 +1236,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.08.30.E";
+      this.BUILD = "Build 26.08.30.F2";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -5493,6 +5499,8 @@
         }
       })
     );
+    const wrapper = /* @__PURE__ */ createElement("div", { class: "content main-content", "children:set": pages });
+    implementPinchZoom(wrapper);
     const taskSettingsModal = createProxyState(
       [boardViewModel.selectedTaskViewModel],
       () => {
@@ -5564,7 +5572,7 @@
         "on:click": boardViewModel.createTask
       },
       /* @__PURE__ */ createElement("span", { class: "icon" }, "add")
-    ))), /* @__PURE__ */ createElement("div", { class: "content main-content", "children:set": pages }), BoardSettingsModal(coreViewModel2, boardViewModel), SearchModal(
+    ))), wrapper, BoardSettingsModal(coreViewModel2, boardViewModel), SearchModal(
       coreViewModel2,
       boardViewModel.searchViewModel,
       coreViewModel2.translations.chatPage.task.filterTasksHeadline,
@@ -7031,12 +7039,14 @@
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.receiveHeadline), /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.dataEntryInputDescription), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "forum"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferChannelHeadline), /* @__PURE__ */ createElement(
       "input",
       {
+        type: "number",
         "on:enter": fileTransferViewModel2.prepareReceivingData,
         "bind:value": fileTransferViewModel2.receivingTransferChannel
       }
     ))), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.transferKeyHeadline), /* @__PURE__ */ createElement(
       "input",
       {
+        type: "number",
         "on:enter": fileTransferViewModel2.prepareReceivingData,
         "bind:value": fileTransferViewModel2.receivingTransferKey
       }

@@ -475,7 +475,8 @@ function TransferDataInputModal(
                                             .transferChannelHeadline
                                     }
                                 </span>
-                                <input
+				<input
+				    type="number"
                                     on:enter={
                                         fileTransferViewModel.prepareReceivingData
                                     }
@@ -496,6 +497,7 @@ function TransferDataInputModal(
                                     }
                                 </span>
                                 <input
+				    type="number"
                                     on:enter={
                                         fileTransferViewModel.prepareReceivingData
                                     }
