@@ -1138,15 +1138,20 @@
   }
   function implementPinchZoom(targetSelector) {
     let pinching = false;
-    let initialDistance = 0;
-    let currentZoom = 1;
-    let initialZoom = 1;
-    let currentX = 0;
-    let currentY = 0;
-    let initialX = 0;
-    let initialY = 0;
-    let initialTouchX = 0;
-    let initialTouchY = 0;
+    let lastElement = void 0;
+    let initialDistance, currentZoom, initialZoom, currentX, currentY, initialX, initialY, initialTouchX, initialTouchY;
+    function reset() {
+      initialDistance = 0;
+      currentZoom = 1;
+      initialZoom = 1;
+      currentX = 0;
+      currentY = 0;
+      initialX = 0;
+      initialY = 0;
+      initialTouchX = 0;
+      initialTouchY = 0;
+    }
+    reset();
     const MIN = 0.25;
     const MAX = 5;
     const element = () => canvas.querySelector(targetSelector);
@@ -1160,7 +1165,6 @@
     function apply(factor, offset) {
       if (factor < MIN) return apply(MIN, offset);
       if (factor > MAX) return apply(5, offset);
-      if (!element) return;
       const [x, y] = offset;
       element().style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()}) translate(${x}px, ${y}px)`;
       currentX = x;
@@ -1170,6 +1174,8 @@
     const canvas = document.body;
     canvas.addEventListener("touchstart", (event) => {
       document.activeElement.blur();
+      if (lastElement != void 0 && lastElement != element()) reset();
+      lastElement = element();
       initialZoom = currentZoom;
       initialX = currentX;
       initialY = currentY;

@@ -281,18 +281,29 @@ export function localeCompare(a: string, b: string): number {
 // ui
 export function implementPinchZoom(targetSelector: string) {
     let pinching = false;
+    let lastElement: HTMLElement|undefined = undefined;
 
-    let initialDistance = 0;
+    let initialDistance,
+	currentZoom, initialZoom,
+	currentX, currentY,
+	initialX, initialY,
+	initialTouchX, initialTouchY;
 
-    let currentZoom = 1;
-    let initialZoom = 1;
+    function reset() {
+	initialDistance = 0;
 
-    let currentX = 0;
-    let currentY = 0;
-    let initialX = 0;
-    let initialY = 0;
-    let initialTouchX = 0;
-    let initialTouchY = 0;
+	currentZoom = 1;
+	initialZoom = 1;
+
+	currentX = 0;
+	currentY = 0;
+	initialX = 0;
+	initialY = 0;
+	initialTouchX = 0;
+	initialTouchY = 0;
+    }
+
+    reset();
 
     const MIN = 0.25;
     const MAX = 5;
@@ -300,36 +311,38 @@ export function implementPinchZoom(targetSelector: string) {
     const element = (): HTMLElement => canvas.querySelector(targetSelector);
     const parent = (): HTMLElement => element().parentElement;
     const distance = (e: TouchEvent) =>
-        Math.hypot(
-            e.touches[0].pageX - e.touches[1].pageX,
-            e.touches[0].pageY - e.touches[1].pageY,
-        );
+	Math.hypot(
+	    e.touches[0].pageX - e.touches[1].pageX,
+	    e.touches[0].pageY - e.touches[1].pageY,
+	);
     const point = (e: TouchEvent, direction: "x" | "y", i: number) =>
-        e.touches[i][direction == "x" ? "clientX" : "clientY"];
+	e.touches[i][direction == "x" ? "clientX" : "clientY"];
     const midpoint = (e: TouchEvent, direction: "x" | "y") =>
-        (point(e, direction, 0) + point(e, direction, 1)) / 2;
+	(point(e, direction, 0) + point(e, direction, 1)) / 2;
 
     function apply(factor: number, offset: [number, number]) {
-        if (factor < MIN) return apply(MIN, offset);
-        if (factor > MAX) return apply(5, offset);
-        if (!element) return;
+	if (factor < MIN) return apply(MIN, offset);
+	if (factor > MAX) return apply(5, offset);
 
-        const [x, y] = offset;
-        element().style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()}) translate(${x}px, ${y}px)`;
-        currentX = x;
-        currentY = y;
-        currentZoom = factor;
+	const [x, y] = offset;
+	element().style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()}) translate(${x}px, ${y}px)`;
+	currentX = x;
+	currentY = y;
+	currentZoom = factor;
     }
 
     const canvas = document.body;
     canvas.addEventListener("touchstart", (event: TouchEvent) => {
 	(document.activeElement as HTMLElement).blur();
 
-        initialZoom = currentZoom;
+	if (lastElement != undefined && lastElement != element()) reset();
+	lastElement = element();
+
+	initialZoom = currentZoom;
 	initialX = currentX;
 	initialY = currentY;
 
-        if (event.touches.length != 2) {
+	if (event.touches.length != 2) {
 	    pinching = false;
 	    initialTouchX = event.touches[0].clientX;
 	    initialTouchY = event.touches[0].clientY;
