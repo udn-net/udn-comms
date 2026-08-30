@@ -1,6 +1,4 @@
 import * as React from "bloatless-react";
-import * as Utility from "../../Model/Utility/utility";
-
 import { ViewController } from "../viewController";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import {
@@ -17,6 +15,7 @@ import {
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
 import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import * as Utility from "../../Model/Utility/utility";
 
 export function BoardStatusGridPage(
     coreViewModel: CoreViewModel,
@@ -42,8 +41,8 @@ export function BoardStatusGridPage(
         return StatusNameCell(coreViewModel, statusName, index, boardViewModel);
     };
 
-    const main = (
-        <div class="status-page-content">
+    return (
+        <div class="status-page-content zoom">
             <div
                 class="status-name-row"
                 children:append={[statuses, statusNameCellConverter]}
@@ -85,8 +84,6 @@ export function BoardStatusGridPage(
             )}
         </div>
     );
-    Utility.implementPinchZoom(main);
-    return main;
 }
 
 function StatusNameCell(

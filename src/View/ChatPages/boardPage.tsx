@@ -11,6 +11,7 @@ import BoardViewModel, {
     BoardPageTypes,
 } from "../../ViewModel/Pages/boardViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import * as Utility from "../../Model/Utility/utility";
 
 export function BoardPage(
     coreViewModel: CoreViewModel,
@@ -148,6 +149,7 @@ export function BoardPage(
                     </button>
                 </span>
             </div>
+
             <div class="content main-content" children:set={pages}></div>
 
             {BoardSettingsModal(coreViewModel, boardViewModel)}

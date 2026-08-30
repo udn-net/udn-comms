@@ -475,6 +475,7 @@ body[showing-chat] #chat-page-wrapper {
   width: 100%;
   max-width: 100%;
   padding: 0px;
+  overflow: hidden;
 }
 #chat-page > div > #main > #task-page > .pane-wrapper > .pane > .main-content > div {
   animation: slide-up var(--animation-duration);
@@ -485,14 +486,12 @@ body[showing-chat] #chat-page-wrapper {
   gap: var(--gap-between-tiles);
   padding: var(--content-padding);
 }
-#chat-page > div > #main > #task-page .kanban-board-wrapper,
-#chat-page > div > #main > #task-page .status-page-content {
+#chat-page > div > #main > #task-page .zoom {
   display: flex;
   align-items: start;
   gap: var(--large-gap);
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+  width: auto;
+  height: auto;
   transform-origin: top left;
   padding: var(--content-padding);
 }

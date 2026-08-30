@@ -1136,32 +1136,82 @@
   function localeCompare(a, b) {
     return a.localeCompare(b);
   }
-  function implementPinchZoom(element) {
-    let initialDistance = 0;
+  function implementPinchZoom(targetSelector) {
     let pinching = false;
+    let initialDistance = 0;
+    let currentZoom = 1;
+    let initialZoom = 1;
+    let currentX = 0;
+    let currentY = 0;
+    let initialX = 0;
+    let initialY = 0;
+    let initialTouchX = 0;
+    let initialTouchY = 0;
+    const MIN = 0.25;
+    const MAX = 5;
+    const element = () => canvas.querySelector(targetSelector);
+    const parent = () => element().parentElement;
     const distance = (e) => Math.hypot(
       e.touches[0].pageX - e.touches[1].pageX,
       e.touches[0].pageY - e.touches[1].pageY
     );
-    function apply(factor) {
-      element.style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()})`;
+    const point = (e, direction, i) => e.touches[i][direction == "x" ? "clientX" : "clientY"];
+    const midpoint = (e, direction) => (point(e, direction, 0) + point(e, direction, 1)) / 2;
+    function apply(factor, offset) {
+      if (factor < MIN) return apply(MIN, offset);
+      if (factor > MAX) return apply(5, offset);
+      if (!element) return;
+      const [x, y] = offset;
+      element().style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()}) translate(${x}px, ${y}px)`;
+      currentX = x;
+      currentY = y;
+      currentZoom = factor;
     }
-    element.addEventListener("touchstart", (event) => {
-      if (event.touches.length != 2) return;
-      initialDistance = distance(event);
+    const canvas = document.body;
+    canvas.addEventListener("touchstart", (event) => {
+      document.activeElement.blur();
+      initialZoom = currentZoom;
+      initialX = currentX;
+      initialY = currentY;
+      if (event.touches.length != 2) {
+        pinching = false;
+        initialTouchX = event.touches[0].clientX;
+        initialTouchY = event.touches[0].clientY;
+        return;
+      }
       pinching = true;
-      apply(1);
+      initialDistance = distance(event);
+      initialTouchX = midpoint(event, "x");
+      initialTouchY = midpoint(event, "y");
     });
-    element.addEventListener("touchend", (event) => {
-      if (event.touches.length == 2) return;
-      pinching = false;
-    });
-    element.addEventListener("touchmove", (event) => {
-      if (!pinching) return;
+    canvas.addEventListener("touchmove", (event) => {
+      if (!pinching) {
+        apply(currentZoom, [
+          initialX + (event.touches[0].clientX - initialTouchX) / initialZoom,
+          initialY + (event.touches[0].clientY - initialTouchY) / initialZoom
+        ]);
+        return;
+      }
+      if (event.touches.length < 2) return;
       event.preventDefault();
       const currentDistance = distance(event);
-      const factor = currentDistance / initialDistance;
-      apply(factor);
+      const midX = midpoint(event, "x");
+      const midY = midpoint(event, "y");
+      const ratio = currentDistance / initialDistance;
+      const difference = currentDistance - initialDistance;
+      apply(initialZoom * ratio, [initialX + (midX - difference - initialTouchX) / initialZoom, initialY + (midY - difference - initialTouchY) / initialZoom]);
+    });
+    canvas.addEventListener("wheel", (event) => {
+      event.preventDefault();
+      if (!event.shiftKey) {
+        apply(currentZoom, [currentX - event.deltaX, currentY - event.deltaY]);
+        return;
+      }
+      ;
+      apply(currentZoom + (event.deltaY < 0 ? 1 : -1) * 0.1, [initialX, initialY]);
+    });
+    canvas.addEventListener("scroll", (event) => {
+      event.preventDefault();
     });
   }
 
@@ -1174,7 +1224,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.08.30.C";
+      this.BUILD = "Build 26.08.30.D";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -1858,7 +1908,10 @@
       };
       this.downloadFile = async () => {
         const date = (/* @__PURE__ */ new Date()).toISOString().split("T")[0];
-        const backup = await this.coreViewModel.fileTransferModel.generateBackup(this.selectedPaths.value.values(), this.exportKey.value);
+        const backup = await this.coreViewModel.fileTransferModel.generateBackup(
+          this.selectedPaths.value.values(),
+          this.exportKey.value
+        );
         const anchor = document.createElement("a");
         anchor.href = window.URL.createObjectURL(backup);
         anchor.download = `comms-${date}.bak`;
@@ -1888,7 +1941,10 @@
         if (!fileString || !key) return;
         this.cannotDecryptImport.value = true;
         try {
-          await this.coreViewModel.fileTransferModel.handleBackupFile(fileString, key);
+          await this.coreViewModel.fileTransferModel.handleBackupFile(
+            fileString,
+            key
+          );
           window.location.reload();
         } catch (e) {
           console.error(e);
@@ -4907,7 +4963,7 @@
       const index = createPropertyValueIndexState(sortedStatuses, statusName);
       return StatusNameCell(coreViewModel2, statusName, index, boardViewModel);
     };
-    const main = /* @__PURE__ */ createElement("div", { class: "status-page-content" }, /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "status-page-content zoom" }, /* @__PURE__ */ createElement(
       "div",
       {
         class: "status-name-row",
@@ -4941,8 +4997,6 @@
         );
       }
     ));
-    implementPinchZoom(main);
-    return main;
   }
   function StatusNameCell(coreViewModel2, statusName, index, boardViewModel) {
     const taskViewModelsWithMatchingStatus = new ListState();
@@ -5066,7 +5120,7 @@
 
   // src/View/ChatPages/boardKanbanPage.tsx
   function BoardKanbanPage(coreViewModel2, boardViewModel) {
-    const main = PropertyValueList(
+    return PropertyValueList(
       "category",
       (taskViewModel) => taskViewModel.task,
       boardViewModel.filteredTaskViewModels,
@@ -5086,14 +5140,12 @@
         return /* @__PURE__ */ createElement(
           "div",
           {
-            class: "kanban-board-wrapper",
+            class: "kanban-board-wrapper zoom",
             "children:append": [categories, categoryNameConverter]
           }
         );
       }
     );
-    implementPinchZoom(main);
-    return main;
   }
   function Column(coreViewModel2, categoryName, index, boardViewModel) {
     return FilteredList(
@@ -6800,9 +6852,7 @@
     function toggle() {
       isSelected.value = !isSelected.value;
     }
-    return /* @__PURE__ */ createElement("button", { class: "tile", "toggle:selected": isSelected, "on:click": toggle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", { class: "ellipsis" }, fileOption.label), /* @__PURE__ */ createElement("span", { class: "secondary ellipsis" }, StorageModel.pathComponentsToString(
-      ...fileOption.path
-    ))));
+    return /* @__PURE__ */ createElement("button", { class: "tile", "toggle:selected": isSelected, "on:click": toggle }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", { class: "ellipsis" }, fileOption.label), /* @__PURE__ */ createElement("span", { class: "secondary ellipsis" }, StorageModel.pathComponentsToString(...fileOption.path))));
   }
   function DirectionSelectionModal(coreViewModel2, connectionViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
@@ -6813,55 +6863,45 @@
       [connectionViewModel2.isConnected],
       () => connectionViewModel2.isConnected.value == false
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
-      "div",
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement(
+      "button",
       {
-        class: "flex-column gap content-margin-bottom"
+        class: "tile",
+        "toggle:disabled": isDisconnected,
+        "on:click": fileTransferViewModel2.showFileSelectionModal
       },
-      /* @__PURE__ */ createElement(
-        "button",
-        {
-          class: "tile",
-          "toggle:disabled": isDisconnected,
-          "on:click": fileTransferViewModel2.showFileSelectionModal
-        },
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "share_windows"),
-        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.fromThisDeviceButton)),
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
-      ),
-      /* @__PURE__ */ createElement(
-        "button",
-        {
-          class: "tile",
-          "toggle:disabled": isDisconnected,
-          "on:click": fileTransferViewModel2.showTransferDataInputModal
-        },
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "cloud_download"),
-        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.toThisDeviceButton)),
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
-      ),
-      /* @__PURE__ */ createElement("hr", null),
-      /* @__PURE__ */ createElement(
-        "button",
-        {
-          class: "tile",
-          "on:click": fileTransferViewModel2.showExportSelectionModal
-        },
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "file_save"),
-        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.exportButton)),
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
-      ),
-      /* @__PURE__ */ createElement(
-        "button",
-        {
-          class: "tile",
-          "on:click": fileTransferViewModel2.showImportModal
-        },
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "upload_file"),
-        /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.importButton)),
-        /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
-      )
-    )), /* @__PURE__ */ createElement("button", { "on:click": fileTransferViewModel2.close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "share_windows"),
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.fromThisDeviceButton)),
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "tile",
+        "toggle:disabled": isDisconnected,
+        "on:click": fileTransferViewModel2.showTransferDataInputModal
+      },
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "cloud_download"),
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.toThisDeviceButton)),
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "tile",
+        "on:click": fileTransferViewModel2.showExportSelectionModal
+      },
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "file_save"),
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.exportButton)),
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "tile",
+        "on:click": fileTransferViewModel2.showImportModal
+      },
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "upload_file"),
+      /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("b", null, coreViewModel2.translations.dataTransferModal.importButton)),
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+    ))), /* @__PURE__ */ createElement("button", { "on:click": fileTransferViewModel2.close }, coreViewModel2.translations.general.closeButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "close"))));
   }
   function FileSelectionModal(coreViewModel2, fileTransferViewModel2) {
     const OptionConverter = (fileOption) => {
@@ -7118,7 +7158,14 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 8 /* ImportSelection */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("input", { id: "file-transfer-input", type: "file", "on:change": fileTransferViewModel2.updateImportSelection }))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement(
+      "input",
+      {
+        id: "file-transfer-input",
+        type: "file",
+        "on:change": fileTransferViewModel2.updateImportSelection
+      }
+    ))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
       "button",
       {
         class: "flex",
@@ -8031,4 +8078,5 @@
     StorageModal(coreViewModel, storageViewModel),
     SettingsModal(coreViewModel, settingsViewModel)
   );
+  implementPinchZoom(".zoom");
 })();

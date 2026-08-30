@@ -149,14 +149,15 @@ export default class FileTransferModel {
             });
         }
         const rawBackup = stringify(files);
-	console.log(rawBackup);
+        console.log(rawBackup);
         const encrypted = await encryptString(rawBackup, passphrase);
-	const blob = new Blob([encrypted], {type: "text/plain"});
-	return blob;
+        const blob = new Blob([encrypted], { type: "text/plain" });
+        return blob;
     };
 
     readonly prepareFileForSending = (filePath: string[]): string => {
-        const fileContent: string | undefined = this.storageModel.read(filePath);
+        const fileContent: string | undefined =
+            this.storageModel.read(filePath);
         if (fileContent == null) return "";
 
         const fileData: FileData = {

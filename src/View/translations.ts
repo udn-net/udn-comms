@@ -145,14 +145,14 @@ const englishTranslations = {
 
         filesReceivedCount: (count: number) => `Files processed: ${count}.`,
 
-	//
-	
-	exportKey: "Encryption key",
-	exportKeyConfirmation: "Confirm",
-	downloadFileButton: "Download",
-	importFileButton: "Import",
-	decryptImportButton: "Decrypt",
-	incorrectPassphraseError: "The encryption key is incorrect",
+        //
+
+        exportKey: "Encryption key",
+        exportKeyConfirmation: "Confirm",
+        downloadFileButton: "Download",
+        importFileButton: "Import",
+        decryptImportButton: "Decrypt",
+        incorrectPassphraseError: "The encryption key is incorrect",
     },
 
     storage: {

@@ -1,6 +1,4 @@
 import * as React from "bloatless-react";
-import * as Utility from "../../Model/Utility/utility";
-
 import { ViewController } from "../viewController";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import {
@@ -12,12 +10,13 @@ import { TaskCategoryBulkChangeViewModel } from "../../ViewModel/Utility/taskPro
 import TaskViewModel from "../../ViewModel/Pages/taskViewModel";
 import BoardViewModel from "../../ViewModel/Pages/boardViewModel";
 import CoreViewModel from "../../ViewModel/Global/coreViewModel";
+import * as Utility from "../../Model/Utility/utility";
 
 export function BoardKanbanPage(
     coreViewModel: CoreViewModel,
     boardViewModel: BoardViewModel,
 ) {
-    const main = PropertyValueList(
+    return PropertyValueList(
         "category",
         (taskViewModel: TaskViewModel) => taskViewModel.task,
         boardViewModel.filteredTaskViewModels,
@@ -43,14 +42,12 @@ export function BoardKanbanPage(
 
             return (
                 <div
-                    class="kanban-board-wrapper"
+                    class="kanban-board-wrapper zoom"
                     children:append={[categories, categoryNameConverter]}
                 ></div>
             );
         },
     );
-    Utility.implementPinchZoom(main);
-    return main;
 }
 
 function Column(
