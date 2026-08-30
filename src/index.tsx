@@ -2,6 +2,7 @@ import * as React from "bloatless-react";
 import "./colors.css";
 import "./coloredTile.css";
 import "./base.css";
+import * as Utility from "./Model/Utility/utility";
 import HomeViewModel from "./ViewModel/Pages/homeViewModel";
 import StorageViewModel from "./ViewModel/Global/storageViewModel";
 import SettingsViewModel from "./ViewModel/Global/settingsViewModel";

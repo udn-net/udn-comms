@@ -1,4 +1,4 @@
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "26.08.30.C";
 
 self.addEventListener("fetch", (event) => {
     event.respondWith(handleRequest(event));

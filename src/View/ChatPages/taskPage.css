@@ -33,9 +33,14 @@
     width: 100%;
     height: 100%;
 
-    overflow: auto;
+    overflow: visible;
+    transform-origin: top left;
 
     padding: var(--content-padding);
+}
+
+#board-content .main-content {
+    overflow: auto;
 }
 
 #chat-page > div > #main > #task-page .kanban-board-wrapper .kanban-column,

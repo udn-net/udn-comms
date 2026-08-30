@@ -1,4 +1,6 @@
 import * as React from "bloatless-react";
+import * as Utility from "../../Model/Utility/utility";
+
 import { ViewController } from "../viewController";
 import { TaskViewModelToEntry } from "../Components/taskEntry";
 import {
@@ -15,7 +17,7 @@ export function BoardKanbanPage(
     coreViewModel: CoreViewModel,
     boardViewModel: BoardViewModel,
 ) {
-    return PropertyValueList(
+    const main = PropertyValueList(
         "category",
         (taskViewModel: TaskViewModel) => taskViewModel.task,
         boardViewModel.filteredTaskViewModels,
@@ -47,6 +49,8 @@ export function BoardKanbanPage(
             );
         },
     );
+    Utility.implementPinchZoom(main);
+    return main;
 }
 
 function Column(

@@ -277,3 +277,33 @@ export function parseArray(inputString: string): any[] {
 export function localeCompare(a: string, b: string): number {
     return a.localeCompare(b);
 }
+
+// ui 
+export function implementPinchZoom(element: HTMLElement) {
+    let initialDistance = 0;
+    let pinching = false;
+
+    const distance = (e: TouchEvent) => Math.hypot(e.touches[0].pageX - e.touches[1].pageX,
+        e.touches[0].pageY - e.touches[1].pageY);
+    function apply(factor) {
+	element.style.transform = `scale(${(Math.floor(factor*100)/100).toString()})`;
+    }
+
+    element.addEventListener("touchstart", (event: TouchEvent) => {
+	if (event.touches.length != 2) return;
+	initialDistance = distance(event);
+	pinching = true;
+	apply(1);
+    });
+    element.addEventListener("touchend", (event: TouchEvent) => {
+	if (event.touches.length == 2) return;
+	pinching = false;
+    })
+    element.addEventListener("touchmove", (event: TouchEvent) => {
+	if (!pinching) return;
+	event.preventDefault();
+	const currentDistance = distance(event);
+	const factor = currentDistance / initialDistance;
+	apply(factor);
+    })
+} 

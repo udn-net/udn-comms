@@ -1136,6 +1136,34 @@
   function localeCompare(a, b) {
     return a.localeCompare(b);
   }
+  function implementPinchZoom(element) {
+    let initialDistance = 0;
+    let pinching = false;
+    const distance = (e) => Math.hypot(
+      e.touches[0].pageX - e.touches[1].pageX,
+      e.touches[0].pageY - e.touches[1].pageY
+    );
+    function apply(factor) {
+      element.style.transform = `scale(${(Math.floor(factor * 100) / 100).toString()})`;
+    }
+    element.addEventListener("touchstart", (event) => {
+      if (event.touches.length != 2) return;
+      initialDistance = distance(event);
+      pinching = true;
+      apply(1);
+    });
+    element.addEventListener("touchend", (event) => {
+      if (event.touches.length == 2) return;
+      pinching = false;
+    });
+    element.addEventListener("touchmove", (event) => {
+      if (!pinching) return;
+      event.preventDefault();
+      const currentDistance = distance(event);
+      const factor = currentDistance / initialDistance;
+      apply(factor);
+    });
+  }
 
   // src/ViewModel/Global/coreViewModel.ts
   var CoreViewModel = class _CoreViewModel {
@@ -1146,7 +1174,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.08.30.B";
+      this.BUILD = "Build 26.08.30.C";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -4879,7 +4907,7 @@
       const index = createPropertyValueIndexState(sortedStatuses, statusName);
       return StatusNameCell(coreViewModel2, statusName, index, boardViewModel);
     };
-    return /* @__PURE__ */ createElement("div", { class: "status-page-content" }, /* @__PURE__ */ createElement(
+    const main = /* @__PURE__ */ createElement("div", { class: "status-page-content" }, /* @__PURE__ */ createElement(
       "div",
       {
         class: "status-name-row",
@@ -4913,6 +4941,8 @@
         );
       }
     ));
+    implementPinchZoom(main);
+    return main;
   }
   function StatusNameCell(coreViewModel2, statusName, index, boardViewModel) {
     const taskViewModelsWithMatchingStatus = new ListState();
@@ -5036,7 +5066,7 @@
 
   // src/View/ChatPages/boardKanbanPage.tsx
   function BoardKanbanPage(coreViewModel2, boardViewModel) {
-    return PropertyValueList(
+    const main = PropertyValueList(
       "category",
       (taskViewModel) => taskViewModel.task,
       boardViewModel.filteredTaskViewModels,
@@ -5062,6 +5092,8 @@
         );
       }
     );
+    implementPinchZoom(main);
+    return main;
   }
   function Column(coreViewModel2, categoryName, index, boardViewModel) {
     return FilteredList(
