@@ -694,6 +694,7 @@ function ExportModal(
 			}
 		    </h2>
 
+		    <div class="flex-column gap content-margin-bottom">
 		    <label class="tile">
 			<span class="icon">key</span>
 			<div>
@@ -730,6 +731,7 @@ function ExportModal(
 			    ></input>
 			</div>
 		    </label>
+		</div>
 		</main>
 		<div class="flex-row width-100">
 		    <button
@@ -778,8 +780,11 @@ function ImportModal(
 			}
 		    </h2>
 
-		    <input id="file-transfer-input" type="file" on:change={fileTransferViewModel.updateImportSelection}></input>
+		    <div class="flex-column gap content-margin-bottom">
+			<input id="file-transfer-input" type="file" on:change={fileTransferViewModel.updateImportSelection}></input>
+		    </div>
 		</main>
+
 		<div class="flex-row width-100">
 		    <button
 			class="flex"
@@ -827,6 +832,7 @@ function ImportDecryptionDataModal(
 			}
 		    </h2>
 
+		    <div class="flex-column gap content-margin-bottom">
 		    <label class="tile">
 			<span class="icon">key</span>
 			<div>
@@ -845,6 +851,7 @@ function ImportDecryptionDataModal(
 			    ></input>
 			</div>
 		    </label>
+		</div>
 
 		    <p 
 			class="error"

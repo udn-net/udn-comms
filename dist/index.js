@@ -1146,7 +1146,7 @@
       this.connectionModel = connectionModel2;
       this.chatListModel = chatListModel2;
       this.fileTransferModel = fileTransferModel2;
-      this.BUILD = "Build 26.08.30.A";
+      this.BUILD = "Build 26.08.30.B";
       // CONTEXT
       this.contextStack = /* @__PURE__ */ new Map();
       this.closeContext = (contextId, fromHistoryEvent = false) => {
@@ -7051,7 +7051,7 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 7 /* Export */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.exportHeadline), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKey), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.exportHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKey), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": fileTransferViewModel2.exportKey,
@@ -7063,7 +7063,7 @@
         "bind:value": fileTransferViewModel2.exportKeyConfirmation,
         type: "password"
       }
-    )))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+    ))))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
       "button",
       {
         class: "flex",
@@ -7086,7 +7086,7 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 8 /* ImportSelection */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("input", { id: "file-transfer-input", type: "file", "on:change": fileTransferViewModel2.updateImportSelection })), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("input", { id: "file-transfer-input", type: "file", "on:change": fileTransferViewModel2.updateImportSelection }))), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
       "button",
       {
         class: "flex",
@@ -7109,13 +7109,13 @@
       [fileTransferViewModel2.presentedModal],
       () => fileTransferViewModel2.presentedModal.value == 9 /* ImportDecryptData */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKey), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("div", { class: "flex-column gap content-margin-bottom" }, /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKey), /* @__PURE__ */ createElement(
       "input",
       {
         "bind:value": fileTransferViewModel2.importKey,
         type: "password"
       }
-    ))), /* @__PURE__ */ createElement(
+    )))), /* @__PURE__ */ createElement(
       "p",
       {
         class: "error",
