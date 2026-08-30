@@ -107,7 +107,7 @@ export default class FileTransferModel {
             parsed,
             FileDataReference,
         );
-        if (isFileData == false) return;
+        if (isFileData == false) throw "not file data";
 
         const fileData: FileData = parsed;
         this.storageModel.write(fileData.path, fileData.body);
@@ -149,15 +149,15 @@ export default class FileTransferModel {
             });
         }
         const rawBackup = stringify(files);
+	console.log(rawBackup);
         const encrypted = await encryptString(rawBackup, passphrase);
 	const blob = new Blob([encrypted], {type: "text/plain"});
 	return blob;
     };
 
     readonly prepareFileForSending = (filePath: string[]): string => {
-        if (this.transferData == undefined) return;
-        const fileContent: string | null = this.storageModel.read(filePath);
-        if (fileContent == null) return;
+        const fileContent: string | undefined = this.storageModel.read(filePath);
+        if (fileContent == null) return "";
 
         const fileData: FileData = {
             path: filePath,

@@ -30,6 +30,7 @@ export function DataTransferModalWrapper(
     {ExportFileSelectionModal(coreViewModel, fileTransferViewModel)}
     {ExportModal(coreViewModel, fileTransferViewModel)}
     {ImportModal(coreViewModel, fileTransferViewModel)}
+    {ImportDecryptionDataModal(coreViewModel, fileTransferViewModel)}
 </div>
     );
 }
@@ -97,22 +98,12 @@ function DirectionSelectionModal(
 			}
 		    </h2>
 
-		    <p
-			class="error"
-			toggle:hidden={connectionViewModel.isConnected}
-		    >
-			{
-			    coreViewModel.translations.dataTransferModal
-			    .notConnectedError
-			}
-		    </p>
-
 		    <div
 			class="flex-column gap content-margin-bottom"
-			toggle:hidden={isDisconnected}
 		    >
 			<button
 			    class="tile"
+			toggle:disabled={isDisconnected}
 			    on:click={
 				fileTransferViewModel.showFileSelectionModal
 			    }
@@ -131,6 +122,7 @@ function DirectionSelectionModal(
 			</button>
 			<button
 			    class="tile"
+			    toggle:disabled={isDisconnected}
 			    on:click={
 				fileTransferViewModel.showTransferDataInputModal
 			    }
@@ -772,7 +764,7 @@ function ImportModal(
 	[fileTransferViewModel.presentedModal],
 	() =>
 	fileTransferViewModel.presentedModal.value ==
-	FileTransferModals.Import,
+	FileTransferModals.ImportSelection,
     );
 
     return (
@@ -786,28 +778,101 @@ function ImportModal(
 			}
 		    </h2>
 
-		    <p
-			class="secondary"
-			subscribe:innerText={
-			    fileTransferViewModel.filesReceivedText
+		    <input id="file-transfer-input" type="file" on:change={fileTransferViewModel.updateImportSelection}></input>
+		</main>
+		<div class="flex-row width-100">
+		    <button
+			class="flex"
+			on:click={
+			    fileTransferViewModel.showImportModal
 			}
-		    ></p>
-
-		<hr></hr>
-
-		<div
-		    class="tile flex-column align-start"
-		    children:append={[
-			fileTransferViewModel.filePathsReceived,
-			StringToTextSpan,
-		    ]}
-		></div>
-	    </main>
-	    <button on:click={ViewController.reload}>
-		{coreViewModel.translations.general.reloadAppButton}
-		<span class="icon">refresh</span>
-	    </button>
+		    >
+			{coreViewModel.translations.general.backButton}
+		    </button>
+		    <button
+			class="primary flex"
+			on:click={fileTransferViewModel.importFile}
+			toggle:disabled={
+			    fileTransferViewModel.cannotImport
+			}
+		    >
+			{coreViewModel.translations.dataTransferModal.importFileButton}
+			<span class="icon">arrow_forward</span>
+		    </button>
+		</div>
+	    </div>
 	</div>
-    </div>
-);
+    );
+}
+
+function ImportDecryptionDataModal(
+    coreViewModel: CoreViewModel,
+    fileTransferViewModel: FileTransferViewModel,
+) {
+    const isPresented = React.createProxyState(
+	[fileTransferViewModel.presentedModal],
+	() =>
+	fileTransferViewModel.presentedModal.value ==
+	FileTransferModals.ImportDecryptData,
+    );
+
+    return (
+	<div class="modal" toggle:open={isPresented}>
+	    <div>
+		<main>
+		    <h2>
+			{
+			    coreViewModel.translations.dataTransferModal
+			    .importHeadline
+			}
+		    </h2>
+
+		    <label class="tile">
+			<span class="icon">key</span>
+			<div>
+			    <span class="secondary">
+				{
+				    coreViewModel.translations
+				    .dataTransferModal
+				    .exportKey
+				}
+			    </span>
+			    <input
+				bind:value={
+				    fileTransferViewModel.importKey
+				}
+				type="password"
+			    ></input>
+			</div>
+		    </label>
+
+		    <p 
+			class="error"
+			toggle:hidden={fileTransferViewModel.isImportKeyCorrect}>
+			{coreViewModel.translations.dataTransferModal.incorrectPassphraseError}
+		    </p>
+		</main>
+		<div class="flex-row width-100">
+		    <button
+			class="flex"
+			on:click={
+			    fileTransferViewModel.showImportModal
+			}
+		    >
+			{coreViewModel.translations.general.backButton}
+		    </button>
+		    <button
+			class="primary flex"
+			on:click={fileTransferViewModel.decryptImport}
+			toggle:disabled={
+			    fileTransferViewModel.cannotDecryptImport
+			}
+		    >
+			{coreViewModel.translations.dataTransferModal.decryptImportButton}
+			<span class="icon">arrow_forward</span>
+		    </button>
+		</div>
+	    </div>
+	</div>
+    );
 }

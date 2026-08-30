@@ -54,6 +54,11 @@ export default class FileTransferViewModel extends Context {
     exportKey: React.State<string> = new React.State("");
     exportKeyConfirmation: React.State<string> = new React.State("");
 
+    importedFile: React.State<File|undefined> = new React.State(undefined);
+    importedFileString: React.State<string> = new React.State("");
+    importKey: React.State<string> = new React.State("");
+    isImportKeyCorrect: React.State<boolean> = new React.State(true);
+
     // guards
     hasNoPathsSelected: React.State<boolean> = React.createProxyState(
         [this.selectedPaths],
@@ -71,6 +76,16 @@ export default class FileTransferViewModel extends Context {
         [this.exportKey, this.exportKeyConfirmation],
         () =>
             this.exportKey.value == "" ||  this.exportKey.value != this.exportKeyConfirmation.value
+    );
+    cannotImport: React.State<boolean> = React.createProxyState(
+        [this.importedFile],
+        () =>
+            this.importedFile.value == undefined
+    );
+    cannotDecryptImport: React.State<boolean> = React.createProxyState(
+        [this.importKey],
+        () =>
+            this.importKey.value == "" 
     );
 
     // handlers
@@ -130,92 +145,133 @@ export default class FileTransferViewModel extends Context {
 	anchor.click();
     }
 
+    updateImportSelection = (): void => {
+	const input = document.getElementById("file-transfer-input");
+	if (!input) return;
+	if (!(input instanceof HTMLInputElement)) return;
+
+	const file = input.files[0];
+	this.importedFile.value = file;
+    }
+
+    importFile = (): void => {
+	const file = this.importedFile.value;
+	if (!file) return;
+
+	const reader = new FileReader();
+	reader.readAsText(file, "utf8");
+	reader.onload = () => {
+	    const result = reader.result;
+	    this.importedFileString.value = result.toString();
+	    this.showImportDecryptDataModal();
+	}
+    }
+
+    decryptImport = async (): Promise<void> => {
+	const fileString = this.importedFileString.value;
+	const key = this.importKey.value;
+	if (!fileString || !key) return;
+
+	this.cannotDecryptImport.value = true;
+	try {
+	    await this.coreViewModel.fileTransferModel.handleBackupFile(fileString, key);
+	    window.location.reload();
+	} catch (e) {
+	    console.error(e);
+	    this.isImportKeyCorrect.value = false;
+	    this.cannotDecryptImport.value = false;
+	}
+    }
+
     // view
     showDirectionSelectionModal = (): void => {
-        this.coreViewModel.context = this;
-        this.presentedModal.value = FileTransferModals.DirectionSelection;
-        this.getOptions();
+	this.coreViewModel.context = this;
+	this.presentedModal.value = FileTransferModals.DirectionSelection;
+	this.getOptions();
     };
 
     showFileSelectionModal = (): void => {
-        this.presentedModal.value = FileTransferModals.FileSelection;
+	this.presentedModal.value = FileTransferModals.FileSelection;
     };
 
     showTransferDataModal = (): void => {
-        this.presentedModal.value = FileTransferModals.TransferDataDisplay;
-        this.getTransferData();
-        this.coreViewModel.fileTransferModel.prepareToSend();
+	this.presentedModal.value = FileTransferModals.TransferDataDisplay;
+	this.getTransferData();
+	this.coreViewModel.fileTransferModel.prepareToSend();
     };
 
     initiateTransfer = (): void => {
-        this.presentedModal.value = FileTransferModals.TransferDisplay;
-        this.didNotFinishSending.value = true;
-        this.filePathsSent.clear();
+	this.presentedModal.value = FileTransferModals.TransferDisplay;
+	this.didNotFinishSending.value = true;
+	this.filePathsSent.clear();
 
-        this.coreViewModel.fileTransferModel.sendFiles(
-            this.selectedPaths.value.values(),
-            (path: string) => {
-                console.log(path);
-                this.filePathsSent.add(path);
-            },
-        );
+	this.coreViewModel.fileTransferModel.sendFiles(
+	    this.selectedPaths.value.values(),
+	    (path: string) => {
+		this.filePathsSent.add(path);
+	    },
+	);
 
-        this.didNotFinishSending.value = false;
+	this.didNotFinishSending.value = false;
     };
 
     showTransferDataInputModal = (): void => {
-        this.presentedModal.value = FileTransferModals.TransferDataInput;
+	this.presentedModal.value = FileTransferModals.TransferDataInput;
     };
 
     showExportSelectionModal = (): void => {
-        this.presentedModal.value = FileTransferModals.ExportFileSelection;
+	this.presentedModal.value = FileTransferModals.ExportFileSelection;
     };
 
     showExportModal = (): void => {
-        this.presentedModal.value = FileTransferModals.Export;
+	this.presentedModal.value = FileTransferModals.Export;
     };
 
     showImportModal = (): void => {
-        this.presentedModal.value = FileTransferModals.Import;
+	this.presentedModal.value = FileTransferModals.ImportSelection;
+    };
+
+    showImportDecryptDataModal = (): void => {
+	this.presentedModal.value = FileTransferModals.ImportDecryptData;
     };
 
     prepareReceivingData = (): void => {
-        if (this.cannotPrepareToReceive.value == true) return;
-        this.presentedModal.value = FileTransferModals.ReceptionDisplay;
-        this.filePathsReceived.clear();
+	if (this.cannotPrepareToReceive.value == true) return;
+	this.presentedModal.value = FileTransferModals.ReceptionDisplay;
+	this.filePathsReceived.clear();
 
-        const transferData: TransferData = {
-            channel: this.receivingTransferChannel.value,
-            key: this.receivingTransferKey.value,
-        };
-        this.coreViewModel.fileTransferModel.prepareToReceive(transferData);
+	const transferData: TransferData = {
+	    channel: this.receivingTransferChannel.value,
+	    key: this.receivingTransferKey.value,
+	};
+	this.coreViewModel.fileTransferModel.prepareToReceive(transferData);
     };
 
     // exit
     close = (): void => {
-        this.coreViewModel.closeContext(this.contextId);
+	this.coreViewModel.closeContext(this.contextId);
     };
 
     handleContextClose = (): void => {
-        this.presentedModal.value = undefined;
+	this.presentedModal.value = undefined;
     };
 
     // init
     constructor(public readonly coreViewModel: CoreViewModel) {
-        super("file-transfer");
+	super("file-transfer");
 
-        this.coreViewModel.fileTransferModel.fileHandlerManager.setHandler(
-            "file-transfer-view-model",
-            this.handleReceivedFile,
-        );
+	this.coreViewModel.fileTransferModel.fileHandlerManager.setHandler(
+	    "file-transfer-view-model",
+	    this.handleReceivedFile,
+	);
 
-        this.coreViewModel.fileTransferModel.readyToSendHandlerManager.setHandler(
-            "file-transfer-view-model",
-            () => this.initiateTransfer(),
-        );
+	this.coreViewModel.fileTransferModel.readyToSendHandlerManager.setHandler(
+	    "file-transfer-view-model",
+	    () => this.initiateTransfer(),
+	);
 
-        // keystrokes
-        this.registerKeyStroke(CommonKeys.CloseOrCancel, this.close);
+	// keystrokes
+	this.registerKeyStroke(CommonKeys.CloseOrCancel, this.close);
     }
 }
 
@@ -227,17 +283,18 @@ export interface FileTransferOption {
 export enum FileTransferModals {
     DirectionSelection,
 
-    // sending
-    FileSelection,
-    TransferDataDisplay,
-    TransferDisplay,
+	// sending
+	FileSelection,
+	TransferDataDisplay,
+	TransferDisplay,
 
-    // receiving
-    TransferDataInput,
-    ReceptionDisplay,
+	// receiving
+	TransferDataInput,
+	ReceptionDisplay,
 
-    // export
-    ExportFileSelection,
-    Export,
-    Import,
+	// export
+	ExportFileSelection,
+	Export,
+	ImportSelection,
+	ImportDecryptData,
 }

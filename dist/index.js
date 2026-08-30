@@ -376,7 +376,6 @@
       exportSelectionDescription: "Select the data that you want to export.",
       dataEntryDescription: "Enter this data on the other device.",
       dataEntryInputDescription: "Enter the data displayed on the other device.",
-      notConnectedError: "You are not connected to any server.",
       ///
       fromThisDeviceButton: "Send to other device",
       toThisDeviceButton: "Send to this device",
@@ -395,11 +394,14 @@
       ///
       filesSentCount: (count) => `Files sent: ${count}.`,
       allFilesSent: "Done.",
-      filesReceivedCount: (count) => `Files received: ${count}.`,
+      filesReceivedCount: (count) => `Files processed: ${count}.`,
       //
       exportKey: "Encryption key",
       exportKeyConfirmation: "Confirm",
-      downloadFileButton: "Download"
+      downloadFileButton: "Download",
+      importFileButton: "Import",
+      decryptImportButton: "Decrypt",
+      incorrectPassphraseError: "The encryption key is incorrect"
     },
     storage: {
       noItemSelected: "No item selected",
@@ -1762,6 +1764,10 @@
       );
       this.exportKey = new State("");
       this.exportKeyConfirmation = new State("");
+      this.importedFile = new State(void 0);
+      this.importedFileString = new State("");
+      this.importKey = new State("");
+      this.isImportKeyCorrect = new State(true);
       // guards
       this.hasNoPathsSelected = createProxyState(
         [this.selectedPaths],
@@ -1775,6 +1781,14 @@
       this.cannotExport = createProxyState(
         [this.exportKey, this.exportKeyConfirmation],
         () => this.exportKey.value == "" || this.exportKey.value != this.exportKeyConfirmation.value
+      );
+      this.cannotImport = createProxyState(
+        [this.importedFile],
+        () => this.importedFile.value == void 0
+      );
+      this.cannotDecryptImport = createProxyState(
+        [this.importKey],
+        () => this.importKey.value == ""
       );
       // handlers
       this.handleReceivedFile = (path) => {
@@ -1822,6 +1836,38 @@
         anchor.download = `comms-${date}.bak`;
         anchor.click();
       };
+      this.updateImportSelection = () => {
+        const input = document.getElementById("file-transfer-input");
+        if (!input) return;
+        if (!(input instanceof HTMLInputElement)) return;
+        const file = input.files[0];
+        this.importedFile.value = file;
+      };
+      this.importFile = () => {
+        const file = this.importedFile.value;
+        if (!file) return;
+        const reader = new FileReader();
+        reader.readAsText(file, "utf8");
+        reader.onload = () => {
+          const result = reader.result;
+          this.importedFileString.value = result.toString();
+          this.showImportDecryptDataModal();
+        };
+      };
+      this.decryptImport = async () => {
+        const fileString = this.importedFileString.value;
+        const key = this.importKey.value;
+        if (!fileString || !key) return;
+        this.cannotDecryptImport.value = true;
+        try {
+          await this.coreViewModel.fileTransferModel.handleBackupFile(fileString, key);
+          window.location.reload();
+        } catch (e) {
+          console.error(e);
+          this.isImportKeyCorrect.value = false;
+          this.cannotDecryptImport.value = false;
+        }
+      };
       // view
       this.showDirectionSelectionModal = () => {
         this.coreViewModel.context = this;
@@ -1843,7 +1889,6 @@
         this.coreViewModel.fileTransferModel.sendFiles(
           this.selectedPaths.value.values(),
           (path) => {
-            console.log(path);
             this.filePathsSent.add(path);
           }
         );
@@ -1859,7 +1904,10 @@
         this.presentedModal.value = 7 /* Export */;
       };
       this.showImportModal = () => {
-        this.presentedModal.value = 8 /* Import */;
+        this.presentedModal.value = 8 /* ImportSelection */;
+      };
+      this.showImportDecryptDataModal = () => {
+        this.presentedModal.value = 9 /* ImportDecryptData */;
       };
       this.prepareReceivingData = () => {
         if (this.cannotPrepareToReceive.value == true) return;
@@ -6703,7 +6751,7 @@
       coreViewModel2,
       connectionViewModel2,
       fileTransferViewModel2
-    ), FileSelectionModal(coreViewModel2, fileTransferViewModel2), TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDataInputModal(coreViewModel2, fileTransferViewModel2), DataReceptionModal(coreViewModel2, fileTransferViewModel2), ExportFileSelectionModal(coreViewModel2, fileTransferViewModel2), ExportModal(coreViewModel2, fileTransferViewModel2), ImportModal(coreViewModel2, fileTransferViewModel2));
+    ), FileSelectionModal(coreViewModel2, fileTransferViewModel2), TransferDataDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDisplayModal(coreViewModel2, fileTransferViewModel2), TransferDataInputModal(coreViewModel2, fileTransferViewModel2), DataReceptionModal(coreViewModel2, fileTransferViewModel2), ExportFileSelectionModal(coreViewModel2, fileTransferViewModel2), ExportModal(coreViewModel2, fileTransferViewModel2), ImportModal(coreViewModel2, fileTransferViewModel2), ImportDecryptionDataModal(coreViewModel2, fileTransferViewModel2));
   }
   function OptionEntry(fileOption, fileTransferViewModel2) {
     const isSelected = new State(false);
@@ -6734,22 +6782,15 @@
       () => connectionViewModel2.isConnected.value == false
     );
     return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.transferDataHeadline), /* @__PURE__ */ createElement(
-      "p",
-      {
-        class: "error",
-        "toggle:hidden": connectionViewModel2.isConnected
-      },
-      coreViewModel2.translations.dataTransferModal.notConnectedError
-    ), /* @__PURE__ */ createElement(
       "div",
       {
-        class: "flex-column gap content-margin-bottom",
-        "toggle:hidden": isDisconnected
+        class: "flex-column gap content-margin-bottom"
       },
       /* @__PURE__ */ createElement(
         "button",
         {
           class: "tile",
+          "toggle:disabled": isDisconnected,
           "on:click": fileTransferViewModel2.showFileSelectionModal
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "share_windows"),
@@ -6760,6 +6801,7 @@
         "button",
         {
           class: "tile",
+          "toggle:disabled": isDisconnected,
           "on:click": fileTransferViewModel2.showTransferDataInputModal
         },
         /* @__PURE__ */ createElement("span", { class: "icon" }, "cloud_download"),
@@ -7042,24 +7084,61 @@
   function ImportModal(coreViewModel2, fileTransferViewModel2) {
     const isPresented = createProxyState(
       [fileTransferViewModel2.presentedModal],
-      () => fileTransferViewModel2.presentedModal.value == 8 /* Import */
+      () => fileTransferViewModel2.presentedModal.value == 8 /* ImportSelection */
     );
-    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement(
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("input", { id: "file-transfer-input", type: "file", "on:change": fileTransferViewModel2.updateImportSelection })), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "flex",
+        "on:click": fileTransferViewModel2.showImportModal
+      },
+      coreViewModel2.translations.general.backButton
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "primary flex",
+        "on:click": fileTransferViewModel2.importFile,
+        "toggle:disabled": fileTransferViewModel2.cannotImport
+      },
+      coreViewModel2.translations.dataTransferModal.importFileButton,
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+    ))));
+  }
+  function ImportDecryptionDataModal(coreViewModel2, fileTransferViewModel2) {
+    const isPresented = createProxyState(
+      [fileTransferViewModel2.presentedModal],
+      () => fileTransferViewModel2.presentedModal.value == 9 /* ImportDecryptData */
+    );
+    return /* @__PURE__ */ createElement("div", { class: "modal", "toggle:open": isPresented }, /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("main", null, /* @__PURE__ */ createElement("h2", null, coreViewModel2.translations.dataTransferModal.importHeadline), /* @__PURE__ */ createElement("label", { class: "tile" }, /* @__PURE__ */ createElement("span", { class: "icon" }, "key"), /* @__PURE__ */ createElement("div", null, /* @__PURE__ */ createElement("span", { class: "secondary" }, coreViewModel2.translations.dataTransferModal.exportKey), /* @__PURE__ */ createElement(
+      "input",
+      {
+        "bind:value": fileTransferViewModel2.importKey,
+        type: "password"
+      }
+    ))), /* @__PURE__ */ createElement(
       "p",
       {
-        class: "secondary",
-        "subscribe:innerText": fileTransferViewModel2.filesReceivedText
-      }
-    ), /* @__PURE__ */ createElement("hr", null), /* @__PURE__ */ createElement(
-      "div",
+        class: "error",
+        "toggle:hidden": fileTransferViewModel2.isImportKeyCorrect
+      },
+      coreViewModel2.translations.dataTransferModal.incorrectPassphraseError
+    )), /* @__PURE__ */ createElement("div", { class: "flex-row width-100" }, /* @__PURE__ */ createElement(
+      "button",
       {
-        class: "tile flex-column align-start",
-        "children:append": [
-          fileTransferViewModel2.filePathsReceived,
-          StringToTextSpan
-        ]
-      }
-    )), /* @__PURE__ */ createElement("button", { "on:click": ViewController.reload }, coreViewModel2.translations.general.reloadAppButton, /* @__PURE__ */ createElement("span", { class: "icon" }, "refresh"))));
+        class: "flex",
+        "on:click": fileTransferViewModel2.showImportModal
+      },
+      coreViewModel2.translations.general.backButton
+    ), /* @__PURE__ */ createElement(
+      "button",
+      {
+        class: "primary flex",
+        "on:click": fileTransferViewModel2.decryptImport,
+        "toggle:disabled": fileTransferViewModel2.cannotDecryptImport
+      },
+      coreViewModel2.translations.dataTransferModal.decryptImportButton,
+      /* @__PURE__ */ createElement("span", { class: "icon" }, "arrow_forward")
+    ))));
   }
 
   // src/View/Modals/connectionModal.tsx
@@ -7377,7 +7456,7 @@
           parsed,
           FileDataReference
         );
-        if (isFileData == false) return;
+        if (isFileData == false) throw "not file data";
         const fileData = parsed;
         this.storageModel.write(fileData.path, fileData.body);
         const pathString = StorageModel.pathComponentsToString(
@@ -7407,14 +7486,14 @@
           });
         }
         const rawBackup = stringify(files);
+        console.log(rawBackup);
         const encrypted = await encryptString(rawBackup, passphrase);
         const blob = new Blob([encrypted], { type: "text/plain" });
         return blob;
       };
       this.prepareFileForSending = (filePath) => {
-        if (this.transferData == void 0) return;
         const fileContent = this.storageModel.read(filePath);
-        if (fileContent == null) return;
+        if (fileContent == null) return "";
         const fileData = {
           path: filePath,
           body: fileContent

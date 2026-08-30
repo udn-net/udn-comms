@@ -114,8 +114,6 @@ const englishTranslations = {
         dataEntryInputDescription:
             "Enter the data displayed on the other device.",
 
-        notConnectedError: "You are not connected to any server.",
-
         ///
 
         fromThisDeviceButton: "Send to other device",
@@ -145,13 +143,16 @@ const englishTranslations = {
         filesSentCount: (count: number) => `Files sent: ${count}.`,
         allFilesSent: "Done.",
 
-        filesReceivedCount: (count: number) => `Files received: ${count}.`,
+        filesReceivedCount: (count: number) => `Files processed: ${count}.`,
 
 	//
 	
 	exportKey: "Encryption key",
 	exportKeyConfirmation: "Confirm",
 	downloadFileButton: "Download",
+	importFileButton: "Import",
+	decryptImportButton: "Decrypt",
+	incorrectPassphraseError: "The encryption key is incorrect",
     },
 
     storage: {
